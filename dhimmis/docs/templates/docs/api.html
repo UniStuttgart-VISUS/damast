@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}PostgreSQL REST API Description{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('docs.api-description.static', filename='api.css') }}">
+{% endblock %}
+
+{% block content %}
+  <h1>{{title}}</h1>
+
+  <div class="topmatter">
+    <div class="section intro">
+      This page serves as an overview of all methods, as well as a documentation thereof.
+      Using Python's and Flask's runtime information, all Flask routes can be listed, together with the method producing the response.
+      Each API endpoint's URL, HTTP methods, and the function docstring are listed.
+    </div>
+
+    <div class="section toc">
+      <h3 class="toc__title">Table of Contents</h3>
+      <ul>
+        {%- for route in route_data -%}
+        <li>
+          <a class="toc__link" href="#route{{route.number}}">{{route.link_title}}</a>
+        </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+
+{%- for route in route_data -%}
+    <div class="route" id="route{{route.number}}">
+      <h2 class="route__header">
+        <a href="{{route.href}}">{{route.link_title}}</a>
+        {%- for method in route.methods -%}
+          <span class="route__method route__method--{{method}}">{{method}}</span>
+        {%- endfor -%}
+      </h2>
+
+      <pre class="route__doc">
+        {{- route.doc -}}
+      </pre>
+    </div>
+{%- endfor -%}
+{% endblock %}

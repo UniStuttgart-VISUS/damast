@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Cookie Preferences{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('root-app.static_public', filename='dsgvo.css', _method='GET') }}">
+{% endblock %}
+{% block consent %}{% endblock %}
+{% block content %}
+
+{%- from 'consent_popup.html' import consent with context -%}
+{{ consent(true) }}
+
+{% endblock %}

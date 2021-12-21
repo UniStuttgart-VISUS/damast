@@ -1,0 +1,12 @@
+@use 'colors' as *;
+
+:target {
+  @keyframes highlight {
+    0% { background: $clr-bg; }
+    20% { background: #805050; }
+    100% { background: $clr-bg; }
+  }
+
+  animation: highlight 1s ease;
+}
+

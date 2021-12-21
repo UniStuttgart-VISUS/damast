@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('login.login_css', _method='GET') }}">
+{% endblock %}
+{% block content %}
+  <div class="login-form">
+{%- if user -%}
+  <p class="logged-in-as">
+    Logged in as <span class="user-name">{{ user.name }}</span>.
+  </p>
+  <div class="logged-in">
+    <form action="{{ url_for('login.change_password', _method='GET') }}" method="GET" id="change-form" class="hidden"></form>
+    <button class="submit-button button button--large" type="submit" form="change-form">
+      <i class="fa fa-pencil fa--pad-right"></i>
+      Change password
+    </button>
+    <form action="{{ url_for('login.logout', _method='POST', next=request.args.get('next', url_for('root-app.root'))) }}" method="POST" enctype="application/x-www-form-urlencoded" id="logout-form" class="hidden"></form>
+    <button class="submit-button button button--large button--red" type="submit" form="logout-form">
+      <i class="fa fa-sign-out fa--pad-right"></i>
+      Log out
+    </button>
+  </div>
+{%- else -%}
+    <form action="{{ url_for('login.login_submit', _method='POST', next=request.args.get('next', url_for('root-app.root'))) }}" method="post" enctype="application/x-www-form-urlencoded">
+      <label for="username">Username:</label>
+      <input type="text" name="username" autofocus required>
+      <label for="password">Password:</label>
+      <input type="password" name="password" required>
+      <input type="submit" name="_submit" class="submit">
+      <button class="submit-button button button--green button--large" for="_submit">
+        <i class="fa fa-sign-in fa--pad-right"></i>
+        Log in
+      </button>
+    </form>
+{%- endif -%}
+  </div>
+{% endblock %}

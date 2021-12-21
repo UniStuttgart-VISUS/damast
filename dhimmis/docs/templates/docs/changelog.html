@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Changelog{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('docs.changelog.static', filename='changelog.css') }}">
+{% endblock %}
+
+{% block content %}
+  <pre>
+    {% include "docs/changelog.txt" %}
+  </pre>
+{% endblock %}
+

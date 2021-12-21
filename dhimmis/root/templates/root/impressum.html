@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Impressum{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('root-app.static_public', filename='dsgvo.css', _method='GET') }}">
+{% endblock %}
+{% block content %}
+      <h1 class="title">Impressum</h1>
+
+      <p>
+      Die Website unter <a href="https://www2.visus.uni-stuttgart.de/damast/">https://www2.visus.uni-stuttgart.de/damast/</a> wird durch die Universität Stuttgart (<a href="https://www.uni-stuttgart.de/impressum/">Impressum</a>) bereitgestellt.
+      Für die auf der Website dargestellten Inhalte ist <a href="http://go.visus.uni-stuttgart.de/max.franke">Max Franke</a> verantwortlich.
+      Max Franke arbeitet für das Institut für Visualisierung und Interaktive Systeme an der Universität Stuttgart.
+      </p>
+      <table>
+        <tr>
+          <td class="td-first">
+            <i class="fa fa-fw fa-envelope"></i>
+            E-Mail:
+          </td>
+          <td id="mail"><a href="mailto:Max.Franke@vis.uni-stuttgart.de">Max.Franke@vis.uni-stuttgart.de</a></td>
+        </tr>
+        <tr>
+          <td class="td-first">
+            <i class="fa fa-fw fa-phone"></i>
+            Telefon:
+          </td>
+          <td>+49 711 685-88435</td>
+        </tr>
+      </table>
+{% endblock %}

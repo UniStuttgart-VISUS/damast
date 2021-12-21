@@ -1,0 +1,7 @@
+@mixin virtual-annotator-text() {
+  [data-virtual-text] {
+    &::after {
+      content: attr(data-virtual-text);
+    }
+  }
+};

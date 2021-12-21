@@ -1,0 +1,11 @@
+<% macro create_person(p) %>
+\section*{\hypertarget{person<<p.id>>}{\textsc{[pe<< p.id >>]}}
+    \emph{<< p.person_type | texsafe >>}
+    << p.name | texsafe >>
+    <%- if p.time_range -%>
+    \emph{ (<< p.time_range | texsafe>>)}
+    <%- endif -%>
+  }
+
+<< create_evidence_linklist(p.evidence_ids, before='', after='') >>
+<% endmacro %>

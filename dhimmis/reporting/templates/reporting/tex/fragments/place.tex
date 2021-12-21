@@ -1,0 +1,60 @@
+<% macro create_place(_p) %>
+<%- set p = _p.place -%>
+<%- set uris = _p.external_uris -%>
+<%- set alternative_names = _p.alternative_names -%>
+\section*{\hypertarget{place<<p.id>>}{\textsc{[e<< p.id >>]} << p.name | placename >>}}
+
+<% if p.place_type == 'Unknown' %>
+  \emph{Place}
+<% else %>
+  \emph{<< p.place_type | texsafe >>}
+<% endif %>
+at
+<< p.geoloc | render_geoloc >>
+\emph{(<< p.confidence or 'unknown location confidence' >>)}
+<%- if p.comment -%>
+: \emph{\enquote{<< p.comment | texsafe >>}}
+<%- else -%>
+.
+<%- endif %>
+
+
+<< create_evidence_linklist(p.evidence_ids, before='', middle=' in this place: ', after='') >>
+
+<% if alternative_names %>
+  \emph{<< p.name | placename >>} is also known as:
+
+  \begin{itemize}
+    <% for a in alternative_names %>
+    \item
+      \textbf{<< a.name | placename >>}
+      <% if a.transcription %>
+      \emph{(<< a.transcription | texsafe >>)}
+      <% endif %>
+      <% if a.language != 'Undefined' %>
+      in
+      \emph{<< a.language | texsafe >>}
+      <% endif %>
+    <% endfor %>
+  \end{itemize}
+<% endif %>
+
+<% if uris %>
+  \emph{<< p.name | placename >>} is linked to:
+
+  \begin{itemize}
+    <% for e in uris %>
+    \item
+      \textsc{<< e.short | texsafe >>} in
+      \emph{<< e.name | texsafe >>}
+      <%- if e.comment -%>
+      : \emph{\enquote{<< e.comment | texsafe >>}}
+      <%- else -%>
+      .
+      <%- endif -%>\\
+      \url{<< e.uri >>}
+    <% endfor %>
+  \end{itemize}
+<% endif %>
+
+<% endmacro %>

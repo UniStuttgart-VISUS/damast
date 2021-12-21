@@ -1,0 +1,13 @@
+@use 'colors' as *;
+@use 'mixins';
+
+.content {
+  @include mixins.baseFlexBlock();
+  color: $clr-fg;
+}
+
+pre {
+  font-size: 0.8rem;
+  width: max-content;
+  margin: 1rem auto;
+}

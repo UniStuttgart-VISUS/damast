@@ -1,0 +1,126 @@
+<p>
+  The map visualizes the geographical aspect of the data.
+  In can be interactively zoomed and panned.
+  <em>Clicking</em> on a map glyph will <em>brush</em> the represented places, and <em>link</em> the respective data in the rest of the views.
+  Likewise, brushing data somewhere else will link the respective places in the map.
+  Linking persists when zooming, even if clustered glyphs split up or merge.
+  Selecting a singular place in the location list will pan the map to center on that place.
+</p>
+
+
+<h2>Map Display Modes</h2>
+
+<h3>Clustered Mode</h3>
+
+<p>
+  By default, locations in the map are clustered (aggregated) to eliminate overlap.
+  The map glyphs consist of up to four circles, which by default represent the nodes on the first level of the hierarchy of religious denominations.
+  The individual circles are pie charts, representing the contained religious denominations or confidence values by number of evidences.
+</p>
+
+<p>
+  In <em>only active</em> mode, filtered-out data disappears from the map.
+  This can lead to glyphs having less circles, if, for example, all Christian data of a glyph is filtered out.
+  In <em>all data</em> mode, the filtered-out data is indicated by desaturated segments.
+</p>
+
+<p>
+  If <em>in all shown map glyphs,</em> no more than four nodes of a lower part in the religion hierarchy would be present, the data is aggregated on that lower level.
+  For example; if the map would only show two glyphs; one with the Latin Church, the Coptic Church, and the Georgian Orthodox Church; and the other with the Latin Church and the Rabbanites; each of these religious denominations could be represented by an individual circle.
+  This will only happen if it is possible in all glyphs, as doing otherwise would skew the perceived variety of religions.
+</p>
+
+<p>
+  On mouse-over, the glyphs lose opacity, and the aggregated locations are indicated on the map.
+  The represented data is further linked in other views.
+  The aggregation level of locations depends on the zoom level, such that the glyph scaling is constant.
+</p>
+
+
+<h3>Unclustered Mode</h3>
+
+<p>
+  The clustering of places can be turned off in the settings pane.
+  In the unclustered mode, each location is represented by an individual glyph.
+  The glyphs then consist of smaller circles, one for each religious denomination, which are arranged in a hexagonal pattern.
+  Overlap can and will happen in this mode, but <em>z</em>-ordering of the glyphs at least ensures that glyphs with fewer religions appear in front of larger glyphs with more religions.
+</p>
+
+
+<h2>Map Layers</h2>
+
+<p>
+  The map provides multiple layers, which can be controlled from the layer control in the upper right corner.
+  One of two <em>base layers</em> is always selected and shown:
+  By default, a custom <a href="https://www.mapbox.com/about/maps">MapBox</a> tile set is selected, which shows topological features, but no geopolitical borders.
+  As an alternative, the tiles provided by the <a href="https://imperium.ahlfeldt.se/">Digital Atlas of the Roman Empire (DARE)</a> can be selected.
+</p>
+
+<p>
+  In addition, one or more overlay layers can be shown:
+  By default, the <em>marker layer</em> is shown with the clustered or unclustered map glyphs.
+  An additional heatmap layer approximates the density of evidences.
+  Further, the diversity (i.e., the number of distinct religions present in each place) is represented in two layers, where one shows a density distribution, and the other represents the cities as distinct circular markers in the respective color.
+  The color scale <a href="https://github.com/d3/d3-scale-chromatic#interpolateViridis">Viridis</a> is used, where low values are mapped to violet, and high values to yellow.
+  The density and marker layers for diversity are alternative representations for the same thing and should not be shown together, as they interfere.
+  Similarly, the default marker layer and the diversity marker layer should not be shown together.
+</p>
+
+
+<h2>Geographical Filtering</h2>
+
+<p>
+  Evidence can be filtered by geographical location as well, by drawing the respective bounding shapes into the map.
+  For this, the Leaflet plugin for <a href="https://geoman.io/leaflet-geoman">Geoman</a> is used.
+  To start editing geographical bounds, click the
+  <i class="fa fa-filter"></i>
+  filter icon in the upper left of the map.
+  That section now expands to a set of controls, arranged in three blocks.
+</p>
+
+<p>
+  The first block is for <em>adding</em> new elements to the bounds.
+  A rectangular area can be added, where you first click in the map to select one corner, then move the mouse, and click again to select the opposite corner.
+  The second option is to add a polygon.
+  Here, a new point is appended to the polygon each time you click in the map.
+  To complete the polygon, click on the first node.
+  The last option is to add a circle.
+  Click once to select the center, move the mouse, then click again once the circle has the appropriate radius.
+  Keep in mind that, while during editing this is a circle, all shapes are converted to GeoJSON polygons when saving.
+</p>
+
+<p>
+  The second block contains controls for <em>editing</em> existing elements.
+  You can move points on existing shapes, move entire shapes, cut (subtract) a polygon from an existing shape, and remove entire shapes.
+</p>
+
+<p>
+  The last block contains controls to apply the bounds to the dataset filter.
+  The <i class="fa fa-trash"></i> trash can button removes all existing shapes.
+  The <i class="fa fa-undo"></i> undo button reverts the bounds back to the state of the currently active filter, and then closes the editor.
+  The <i class="fa fa-save"></i> save button applies the new bounds to the dataset filter, and then closes the editor.
+</p>
+
+
+<h2>What the Map Is <em>Not</em> Showing</h2>
+
+<p>
+  The map does not depict a representation of the population density in the medieval Middle East.
+  It also neither makes any claim to completeness, nor shows the distribution of religions in that area.
+  The goal is explicitly to visualize <em>coexistence</em> of institutionalized religion.
+  Empty areas on the map can have multiple reasons:
+</p>
+
+<ol>
+  <li>The area is outside the region of interest of the project, e.g. Europe.</li>
+  <li>We have no data for a city (yet).</li>
+  <li>The city in question was purely Muslim, with no other religious communities.
+    The existence of institutionalized Islam in that region and time period is more or less given, but not the main focus of the project.
+  </li>
+</ol>
+
+<p>
+  In the clustered mode, the scaling of the map glyphs does further <em>not</em> encode number of data points.
+  The glyphs are only scaled such that they occupy the same space regardless of number of circles.
+  The fixed radius is an artifact of the non-overlapping property.
+</p>

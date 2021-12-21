@@ -1,0 +1,465 @@
+import * as d3 from 'd3';
+import * as L from 'leaflet';
+import * as R from 'ramda';
+import 'leaflet.heat';
+import '@geoman-io/leaflet-geoman-free';
+import union from '@turf/union';
+import { polygon, feature, multiPolygon, MultiPolygon, Feature, Polygon } from '@turf/helpers';
+
+// @ts-ignore: Import not found
+import GoldenLayout from 'golden-layout';
+
+import {Place,MapPlaceData,LocationData,OwnHierarchyNode,Coordinate,Confidences,DisplayMode,MapState} from './datatypes';
+import {Dataset,ChangeScope} from './dataset';
+import * as cluster from './clustering';
+import * as message from './message';
+import MapGlyph from './map-glyph';
+import {ColorScales} from './colorscale';
+import * as modal from './modal';
+import View from './view';
+import {zoom_level, radius} from './default-map-zoomlevel';
+import {map_styles} from '../common/map-styles';
+import { MessageData } from './data-worker';
+import TooltipManager from './tooltip';
+import DiversityLayer from './diversity-layer';
+
+
+export default class MapPane extends View<any, Set<number> | null> {
+  private mapdiv: HTMLDivElement;
+  private map: L.Map;
+  private svg: d3.Selection<SVGSVGElement, any, any, any>;
+  private g: d3.Selection<SVGGElement, any, any, any>;
+  private scales: ColorScales;
+  private glyphs: Array<MapGlyph> = [];
+  private geoFilter: Feature<MultiPolygon | Polygon> | null = null;
+
+  private layer: L.Layer;
+  private layerControl: L.Control.Layers;
+  private diversityLayer: DiversityLayer;
+  private evidenceCountHeatLayer: L.HeatLayer;
+  private evidenceCountHeatOptions: L.HeatMapOptions;
+
+  private baseLayers: Map<string, L.Layer> = new Map<string, L.Layer>();
+
+  private readonly tooltipManager = new TooltipManager(500);
+
+  constructor(worker: Worker, container: GoldenLayout.Container) {
+    super(worker, container, 'map');
+
+    const div = container.getElement()[0];
+
+    div.classList.add('map-container');
+    div.innerHTML = require('html-loader!./html/map.template.html').default;
+    this.mapdiv = div.querySelector('#map');
+
+    this.setupLeaflet(this.mapdiv);
+
+    container.on('resize', this.onresize.bind(this));
+    this.worker.addEventListener('message', ({data}: {data: MessageData<any>}) => {
+      if (data.type === 'set-map-state') this.setMapState(data.data);
+    });
+  }
+
+  async setData(data: any) {
+    this.g.selectAll('*').remove();
+    this.glyphs = data.glyphs.map(glyph => new MapGlyph(
+      this.g,
+      glyph,
+      this.map,
+      radius,
+      this.sendToDataThread.bind(this),
+      this.tooltipManager,
+      data.map_mode,
+    ));
+
+    // filter from backend
+    this.geoFilter = data.filter;
+    if (!this.geometryEditorOpen) {
+      (<any>this.map.pm.getGeomanLayers()).forEach(d => d.remove());
+      if (this.geoFilter) L.geoJSON(this.geoFilter, { pmIgnore: false, ...this.map.pm.getGlobalOptions().pathOptions }).addTo(this.map);
+      this.onEndGeometryEdit();
+    }
+
+    // update linking
+    await this.linkData(this._cached_link_set);
+
+    this.diversityLayer.setData(data.diversity);
+
+    this.evidenceCountHeatOptions.maxZoom = this.map.getZoom();
+    this.evidenceCountHeatLayer.setOptions(this.evidenceCountHeatOptions);
+    this.evidenceCountHeatLayer.setLatLngs(data.distribution);
+  }
+
+  private _cached_link_set: Set<number> | null = null;
+  async linkData(loc_ids: Set<number> | null) {
+    this._cached_link_set = loc_ids;
+
+    if (loc_ids === null) {
+      this.g.classed('map-overlay--brushed', false);
+      this.glyphs.forEach(d => d.resetMapBrush());
+    } else {
+      this.g.classed('map-overlay--brushed', true);
+      this.glyphs.forEach(d => d.link(loc_ids));
+
+      // pan to location(s) if all one cluster
+      for (const glyph of this.glyphs) {
+        if (glyph.match(loc_ids)) {
+          this.map.panTo(this.map.layerPointToLatLng(glyph.center));
+          break;
+        }
+      }
+    }
+  }
+
+  colorscale(scale: ColorScales) {
+    this.scales = scale;
+  }
+
+  private onmove(): void {
+    let pos = (d3.select('div.leaflet-map-pane').node() as any)._leaflet_pos;
+    this.svg.style('transform', 'translate(' + (-pos.x) + 'px,' + (-pos.y) + 'px)');
+    this.g.attr('transform', 'translate(' + (pos.x) + ',' + (pos.y) + ')');
+  }
+
+  private onresize(): void {
+    const bbox = this.mapdiv.getBoundingClientRect();
+    this.svg.style('width', `${bbox.width}px`)
+      .style('height', `${bbox.height}px`);
+    this.map.invalidateSize();
+  }
+
+  private onclick(): void {
+    if (this.geometryEditorOpen) return;
+
+    this.g.selectAll('.currently-brushed')
+      .classed('currently-brushed', false);
+    this.sendToDataThread('clear-brush', null);
+  }
+
+  private updateLocations(): void {
+    this.onmove();
+    this.g.selectAll('*').remove();
+    this.worker.postMessage({type: 'set-zoom-level', data: this.map.getZoom()});
+  }
+
+  moveToLocation(coord: Coordinate | null): void {
+    if (coord === null) return;
+    this.map.setView(coord, this.map.getZoom());
+  }
+
+  protected openModal(): void {
+    const info = modal.create_modal(
+      400, 300,
+      'Map View',
+      'map.html'
+    );
+  }
+
+  private setMapStyle(layer_key: string): void {
+    map_styles.forEach(({key}) => {
+      this.svg.classed(`map__svg--${key}`, layer_key === key);
+    });
+  }
+
+  private setupLeaflet(div_: HTMLDivElement): void {
+    const mapOptions = {
+      worldCopyJump: true,
+      maxBoundsViscosity: 0.7
+    };
+    this.map = L.map(div_, mapOptions).setView([30, 68], zoom_level);
+    //L.PM.setOptIn(true);
+
+    const fun = this.updateLocations.bind(this);
+    this.map.on('zoomend', fun);
+    this.map.on('viewreset', fun);
+    this.map.on('resize', this.onmove.bind(this));
+    this.map.on('resize', this.onresize.bind(this));
+    this.map.on('move', this.onmove.bind(this));
+    this.map.on('click', this.onclick.bind(this));
+    this.map.on('moveend', () => this.transmitMapStateToData());
+
+    /* LAYERS */
+    this.layerControl = L.control.layers();
+    this.layerControl.addTo(this.map);
+
+    // marker layer
+    const container = L.DomUtil.create('div', 'markers');
+    this.layer = new L.Layer();
+    this.layer.onAdd = function(map) {
+      var pane = map.getPane('marker') || map.createPane('marker');
+      pane.appendChild(container);
+      return this;
+    };
+    this.layer.onRemove = function(map) {
+      L.DomUtil.remove(container);
+      return this;
+    };
+    this.layer.addTo(this.map);
+    this.layerControl.addOverlay(this.layer, '<b>Markers:</b> Aggregated markers for location clusters');
+
+
+    /* SVG OVERLAY */
+    this.svg = d3.select(container).append('svg');
+    this.svg.style('--clr-icon', 'black');
+
+    const div = d3.select(div_);
+    this.svg.style('width', div.style('width'))
+      .style('height', div.style('height'))
+      .classed('map__svg--dark', true);
+    this.g = this.svg.append('g')
+      .classed('leaflet-zoom-hide', true)
+      .classed('map-overlay', true);
+
+
+    const mapbox_layers = new Set<string>();
+    const mapbox_attribution = new L.Control({position: 'bottomleft'});
+    mapbox_attribution.onAdd = function(_) {
+      const div = L.DomUtil.create('div', 'attribution');
+      div.innerHTML = `<a href="http://mapbox.com/about/maps" class='mapbox-wordmark' target="_blank">Mapbox</a>`;
+      return div;
+    };
+
+    this.map.on('baselayerchange', (x: {layer}) => {
+      this.setMapStyle(x.layer.options.id)
+
+      if (mapbox_layers.has((<any>x).name)) {
+        mapbox_attribution.addTo(this.map);
+      } else {
+        mapbox_attribution.remove();
+      }
+
+      this.transmitMapStateToData();
+    });
+
+    this.map.on('overlayadd', () => this.transmitMapStateToData());
+    this.map.on('overlayremove', () => this.transmitMapStateToData());
+
+    const gradient = {};
+    d3.range(20).forEach(d => gradient[d/19] = d3.interpolateTurbo(d/19));
+
+    // heatmap
+    this.evidenceCountHeatOptions = {
+      radius: 1.6*radius,
+      max: 1,
+      maxZoom: this.map.getZoom(),
+      blur: 15,
+      gradient,
+      minOpacity: 0.2,
+    };
+
+    this.diversityLayer = new DiversityLayer();
+    this.layerControl.addOverlay(this.diversityLayer.markerLayer, '<b>Diversity Markers:</b> Places, colored by religious diversity');
+    this.layerControl.addOverlay(this.diversityLayer.densityLayer, '<b>Diversity Distribution:</b> Density map of distinct religious denominations per place');
+
+    this.evidenceCountHeatLayer = L.heatLayer([], this.evidenceCountHeatOptions);
+    this.layerControl.addOverlay(this.evidenceCountHeatLayer, '<b>Distribution:</b> Heatmap of count of evidence');
+
+    map_styles.forEach((style) => {
+      if (style.is_mapbox) mapbox_layers.add(style.name);
+
+      const layer = L.tileLayer(style.url, (style.options || {}) as L.TileLayerOptions);
+      this.layerControl.addBaseLayer(layer, style.name);
+      if (style.default_) {
+        layer.addTo(this.map);
+        if (style.is_mapbox) mapbox_attribution.addTo(this.map);
+      }
+
+      this.baseLayers.set(style.key, layer);
+    });
+
+
+    // Geoman
+    const o = this.map.pm.getGlobalOptions();
+    const l = L.layerGroup().addTo(this.map);
+    o.layerGroup = l;
+    o.templineStyle = {
+      color: 'steelblue',
+      weight: 2,
+    };
+    o.hintlineStyle = {
+      color: 'steelblue',
+      dashArray: [5,5],
+      weight: 2,
+    };
+    o.pathOptions = {
+      color: 'black',
+      fillColor: 'black',
+      fillOpacity: 0.1,
+      weight: 0.5
+    };
+
+    this.map.pm.setGlobalOptions(o);
+
+    this.map.pm.Toolbar.createCustomControl({
+      name: 'clearFilter',
+      block: 'custom',
+      title: 'Clear filter',
+      className: 'leaflet-pm-icon-clear-geometry',
+      onClick: () => {
+        (<any>this.map.pm.getGeomanLayers()).forEach(d => d.remove());
+      },
+      toggle: false,
+    });
+    this.map.pm.Toolbar.createCustomControl({
+      name: 'revertFilter',
+      block: 'custom',
+      title: 'Revert filter',
+      className: 'leaflet-pm-icon-revert-geometry',
+      onClick: () => {
+        (<any>this.map.pm.getGeomanLayers()).forEach(d => d.remove());
+        if (this.geoFilter) L.geoJSON(this.geoFilter, { pmIgnore: false, ...this.map.pm.getGlobalOptions().pathOptions }).addTo(this.map);
+
+        this.onEndGeometryEdit();
+      },
+      toggle: false,
+    });
+    this.map.pm.Toolbar.createCustomControl({
+      name: 'applyFilter',
+      block: 'custom',
+      title: 'Apply filter',
+      className: 'leaflet-pm-icon-save-geometry',
+      onClick: () => {
+        this.geoFilter = this.toGeoJSON();
+        (<any>this.map.pm.getGeomanLayers()).forEach(d => d.remove());
+        if (this.geoFilter) L.geoJSON(this.geoFilter, { pmIgnore: false, ...this.map.pm.getGlobalOptions().pathOptions }).addTo(this.map);
+
+        this.sendToDataThread('set-map-filter', this.geoFilter);
+        this.transmitMapStateToData();
+        this.onEndGeometryEdit();
+      },
+      toggle: false,
+    });
+    this.map.pm.Toolbar.createCustomControl({
+      name: 'editFilter',
+      block: 'custom',
+      title: 'Edit geographical filter',
+      className: 'leaflet-pm-icon-edit-geometry',
+      onClick: () => this.onStartGeometryEdit(),
+      toggle: false,
+    });
+
+    if (this.geoFilter) L.geoJSON(this.geoFilter, { pmIgnore: false }).addTo(this.map);
+
+    this.onEndGeometryEdit();
+  }
+
+  private toGeoJSON(): Feature<MultiPolygon | Polygon> | null {
+    const fs = (<any[]>this.map.pm.getGeomanLayers()).map(layer => {
+        if (layer.pm._shape === 'Polygon') return layer.toGeoJSON();
+        else if (layer.pm._shape === 'Rectangle') return layer.toGeoJSON();
+        else if (layer.pm._shape === 'Circle') return L.PM.Utils.circleToPolygon(layer).toGeoJSON();
+        else throw new Error(`Unknown Geoman layer type: ${layer.pm._shape}`);
+      });
+    if (fs.length === 0) return null;
+
+    let f = fs.shift();
+    while (fs.length > 0) {
+      const f2 = fs.shift();
+      f = union(f, f2);
+    }
+
+    return f;
+  }
+
+  private geometryEditorOpen: boolean = false;
+
+  private onStartGeometryEdit() {
+    this.mapdiv.classList.add('no-marker-interaction');
+    this.geometryEditorOpen = true;
+
+    this.map.pm.addControls(<any>{
+      position: 'topleft',
+
+      drawControls: true,
+      editControls: true,
+      optionsControls: true,
+      customControls: true,
+      oneBlock: false,
+
+      drawMarker: false,
+      drawCircleMarker: false,
+      drawPolyline: false,
+      rotateMode: false,
+
+      revertFilter: true,
+      applyFilter: true,
+      clearFilter: true,
+      editFilter: false,
+    });
+  }
+
+  private onEndGeometryEdit() {
+    this.mapdiv.classList.remove('no-marker-interaction');
+    this.geometryEditorOpen = false;
+
+    this.map.pm.addControls(<any>{
+      position: 'topleft',
+      drawControls: false,
+      editControls: false,
+      optionsControls: false,
+      customControls: true,
+      oneBlock: true,
+
+      revertFilter: false,
+      applyFilter: false,
+      clearFilter: false,
+      editFilter: true,
+    });
+  }
+
+  private transmitMapStateToData() {
+    const zoom = this.map.getZoom();
+    const center = this.map.getCenter();
+    const base_layer = (() => {
+      for (const [key, layer] of Array.from(this.baseLayers.entries())) {
+        if (this.map.hasLayer(layer)) return key;
+      }
+
+      return null;
+    })();
+    const overlay_layers = [];
+    if (this.map.hasLayer(this.layer)) overlay_layers.push('markerLayer');
+    if (this.map.hasLayer(this.diversityLayer.markerLayer)) overlay_layers.push('diversityMarkerLayer');
+    if (this.map.hasLayer(this.diversityLayer.densityLayer)) overlay_layers.push('diversityDensityLayer');
+    if (this.map.hasLayer(this.evidenceCountHeatLayer)) overlay_layers.push('evidenceCountHeatLayer');
+
+    const state = { zoom, center, base_layer, overlay_layers };
+
+    this.sendToDataThread('set-map-state', state);
+  }
+
+  private setMapState(state: MapState | null) {
+    if (state === null) {
+      console.error('Map state is null.');
+      this.transmitMapStateToData();
+    } else {
+      this.map.setView(state.center, state.zoom);
+      const layer = this.baseLayers.get(state.base_layer);
+      layer.addTo(this.map);
+
+      if (state.overlay_layers.includes('markerLayer')) {
+        if (!this.map.hasLayer(this.layer)) this.layer.addTo(this.map);
+      } else {
+        if (this.map.hasLayer(this.layer)) this.map.removeLayer(this.layer);
+      }
+
+      if (state.overlay_layers.includes('diversityMarkerLayer')) {
+        if (!this.map.hasLayer(this.diversityLayer.markerLayer)) this.diversityLayer.markerLayer.addTo(this.map);
+      } else {
+        if (this.map.hasLayer(this.diversityLayer.markerLayer)) this.map.removeLayer(this.diversityLayer.markerLayer);
+      }
+
+      if (state.overlay_layers.includes('diversityDensityLayer')) {
+        if (!this.map.hasLayer(this.diversityLayer.densityLayer)) this.diversityLayer.densityLayer.addTo(this.map);
+      } else {
+        if (this.map.hasLayer(this.diversityLayer.densityLayer)) this.map.removeLayer(this.diversityLayer.densityLayer);
+      }
+
+      if (state.overlay_layers.includes('evidenceCountHeatLayer')) {
+        if (!this.map.hasLayer(this.evidenceCountHeatLayer)) this.evidenceCountHeatLayer.addTo(this.map);
+      } else {
+        if (this.map.hasLayer(this.evidenceCountHeatLayer)) this.map.removeLayer(this.evidenceCountHeatLayer);
+      }
+    }
+  }
+};

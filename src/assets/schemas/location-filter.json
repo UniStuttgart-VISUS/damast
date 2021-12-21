@@ -1,0 +1,85 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://www2.visus.uni-stuttgart.de/damast/vis/schemas/location-filter.json",
+
+  "$defs": {
+    "coordinate_array": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "array",
+          "items": [
+            { "type": "number" },
+            { "type": "number" }
+          ],
+          "additionalItems": false
+        },
+        "additionalItems": false
+      },
+      "additionalItems": false
+    }
+  },
+
+  "anyOf": [
+    {
+      "const": null
+    },
+    {
+      "$comment": "GeoJSON Polygon feature",
+      "type": "object",
+      "required": [
+        "type",
+        "geometry"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "type": { "const": "Feature" },
+        "geometry": {
+          "type": "object",
+          "required": [
+            "type",
+            "coordinates"
+          ],
+          "additionalProperties": true,
+          "properties": {
+            "type": { "const": "Polygon" },
+            "coordinates": {
+              "$ref": "#/$defs/coordinate_array"
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "GeoJSON MultiPolygon feature",
+      "type": "object",
+      "required": [
+        "type",
+        "geometry"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "type": { "const": "Feature" },
+        "geometry": {
+          "type": "object",
+          "required": [
+            "type",
+            "coordinates"
+          ],
+          "additionalProperties": true,
+          "properties": {
+            "type": { "const": "MultiPolygon" },
+            "coordinates": {
+              "type": "array",
+              "additionalItems": false,
+              "items": {
+                "$ref": "#/$defs/coordinate_array"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Report{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('reporting.file', path='report-form.css') }}">
+{% endblock %}
+
+{% block content %}
+<h1>Generate a Report</h1>
+
+<p>
+  Upload a visualization state file to generate a report.
+  Alternatively, you can generate the report from inside the visualization with its current state by clicking on the <em><q>Generate report</q></em> button in the settings pane.
+</p>
+
+<form action="{{ url_for('reporting.create_report') }}" method="POST" enctype="multipart/form-data">
+  <label for="filter_file">Visualization state file:</label>
+  <input type="file" name="filter_file" accept="application/json" required>
+  <button type="submit" class="button button--medium button--green">
+    <i class="fa fa--pad-right fa-upload"></i>
+    Submit
+  </button>
+</form>
+{% endblock %}

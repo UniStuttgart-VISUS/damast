@@ -1,0 +1,37 @@
+<svg viewBox="-150 0 703 230">
+  <defs>
+    <marker id="head" orient="auto" markerWidth="4" markerHeight="5"
+        refX="4" refY="2.5">
+      <path d="M0,0 V5 L4,2.5 Z" />
+    </marker>
+  </defs>
+
+  <image x="0" y="0" width="563" height="213" href="{{ url_for('docs.annotator.static', filename='select-document.png') }}"></image>
+
+  <text x="-20" y="35" dx="-5" class="annotation">Document comment</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M -18 31 H 27 L 45 46" />
+  <text x="-20" y="50" dx="-5" class="annotation">Document ID</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M -18 46 H 27" />
+  <text x="-20" y="20" dx="-5" class="annotation">Source ID</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M -18 16 H 200 L 242 63" />
+  <text x="-20" y="65" dx="-5" class="annotation">Source long name</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M -18 61 H 27" />
+  <text x="-20" y="80" dx="-5" class="annotation">Source type and short name</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M -18 78 H 134" />
+
+  <text x="-20" y="95" dx="-5" class="annotation">Document version</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M -18 91 H 27" />
+  <text x="-20" y="110" dx="-5" class="annotation">Document content type</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M -18 106 H 82 L 92 96" />
+  <text x="-20" y="125" dx="-5" class="annotation">Number of annotations</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M -18 121 H 225 L 233 97" />
+
+  <text x="-20" y="160" dx="-5" class="annotation">Document preview</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M -18 156 H 27" />
+
+  <text x="150" y="220" text-anchor="middle">Click to open document</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M 150 208 V 180" />
+  <text x="424" y="220" text-anchor="middle">Click to create new document</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M 424 208 V 180" />
+</svg>
+

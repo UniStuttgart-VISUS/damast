@@ -1,0 +1,93 @@
+<h2>Hierarchy</h2>
+
+<p>
+  This view shows a hierarchy of all religious denominations contained in the database.
+  The hierarchy is represented by an indented tree visualization.
+  The main religions are on the first level.
+  For other religions beside Christianity, Islam and Judaism, we made the pragmatic choice to group them under a category of <em>other</em> religions.
+  The main reason is that those are not the focus, and that this grouping allows symbols in the map view with no more than four subelements.
+</p>
+
+<p>
+  The religious denominations each have a distinct color which is stored in the database.
+  The color hue is selected such that; for the three Abrahamic religions; red (Christianity), green (Islam), and blue (Judaism) hues are used.
+  However, the difference between colors is limited because of the amount of denominations.
+  In <em>Confidence Mode</em>, the nodes are colored based on the average confidence of the represented data.
+  Beside the nodes, a shorthand for the religious denomination is written.
+</p>
+
+
+<h2>Brushing and Linking</h2>
+
+<p>
+  When clicking a node (<em>brushing</em>), the node is highlighted.
+  Subsequently, data from those religious denominations is highlighted (<em>linked</em>) throughout all other views.
+  Non-brushed nodes are displayed darker than usual.
+  In the same manner, brushing in any other view will link the relevant religions in the hierarchy.
+</p>
+
+
+<h2>Partial Highlighting</h2>
+
+<p>
+  The color of the nodes is modified based on how much of the data for the node is filtered out.
+  In <em>only active</em> mode, a node is entirely colorful if <em>any</em> data with that religious denomination is not filtered out, and less colorful otherwise.
+  In <em>all data</em> mode, the node is split up into two areas, showing the ratio of filtered-out data.
+  The amount of filtered-out data is represented by an area with lower saturation.
+</p>
+
+<p>
+  In <em>Confidence Mode</em>, each node is split up into more areas:
+  One for each <em>active</em> confidence value, and one for each <em>inactive</em> confidence value.
+  Inactive values again have a lower saturation.
+  The aspect of confidence shown depends on which one is selected as visible in the confidence pane.
+</p>
+
+
+<h2>Filtering</h2>
+
+<p>
+  Religions can be deselected, and the respective religious denominations are filtered out of the data throughout the entire visualization.
+  Depending on whether the <em>only active</em> mode is activated, the filtered-out data is either hidden or greyed out.
+  There are two basic modes for filtering by religion:
+  In <em>simple mode</em>, evidence matching any of the checked religions is shown.
+  In <em>advanced mode</em>, only evidence from cities where selected combinations of religions exist are shown.
+  The filters are only applied to the dataset once you click the <em>Apply</em> button, which is enabled once there are changes to the filter.
+</p>
+
+
+<h3>Simple Mode</h3>
+
+<p>
+  In <em>simple</em> mode, all data on any checked religion is filtered.
+  Initially, all religions are selected.
+  To filter out a religion, uncheck it in the checkbox column, and then press <em>Apply.</em>
+</p>
+
+
+<h3>Advanced Mode</h3>
+
+<p>
+  In <em>advanced</em> mode, it is possible to create multiple groups of selected religions.
+  In this case, the data is filtered grouped by place as follows:
+  <em>A piece of evidence is active if for any group, all contained religions are present in the place.</em>
+  For instance, if analysis requires to only show places where the Syriac Orthodox Church (SYR), the Armenian Church (ARM), and the Church of the East (COE) coexist, but not those where only one of the three is present:
+</p>
+
+<ul>
+  <li>Switch to <em>advanced</em> mode.</li>
+  <li>Create two additional columns by pressing the &plus; plus button</li>
+  <li>In the first column, activate SYR and ARM.</li>
+  <li>In the second column, activate SYR and COE.</li>
+  <li>In the first column, activate ARM and COE.</li>
+  <li>Press <em>apply.</em></li>
+</ul>
+
+
+<h3>Controls</h3>
+
+<p>
+  In advanced mode, columns can be added after a column by using the <strong>&plus;</strong> plus button above the column.
+  Every column (except the last remaining one) can be deleted by pressing the <strong>&times;</strong> cross button above the column.
+  The column's checkbox selection can be <em>inverted</em> using the <strong>!</strong> exclamation sign button.
+</p>

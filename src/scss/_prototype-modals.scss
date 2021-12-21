@@ -1,0 +1,234 @@
+@use 'colors' as *;
+
+.modal {
+  position: relative;
+  z-index: 2000;
+  font-size: 1rem;
+
+  &--vis {
+    max-width: 0px;
+    max-height: 0px;
+  }
+
+  &-standalone-body {
+    margin: 0 auto;
+    padding: 2rem;
+    max-width: 400px;
+    min-height: calc(100vh - 4rem);
+    background: $clr-bg;
+  }
+
+  &--hidden {
+    display: none;
+  }
+
+  &__background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,0.5);
+    width: 100vw;
+    height: 100vh;
+  }
+
+  &__pane {
+    position: fixed;
+
+
+    border: 2px solid $clr-accent;
+    box-sizing: border-box;
+
+    display: grid;
+    grid-template-rows: max-content auto;
+  }
+
+  &__title-pane {
+    background: $clr-accent;
+    color: $clr-bg;
+
+    display: grid;
+    grid-template-columns: auto max-content max-content;
+  }
+
+  &__title {
+    font-size: 1rem;
+    margin: 2px;
+
+    &::before {
+      content: 'ⓘ';
+      padding-right: 0.2rem;
+    }
+  }
+
+  &__close-button,
+  &__unpin-button {
+    cursor: pointer;
+    padding: 0px 5px;
+  }
+
+  &__close-button--top-right {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.5rem;
+    background: $clr-bg;
+    color: $clr-accent;
+  }
+
+  &-open-link {
+    cursor: pointer;
+    padding: 0px 5px;
+
+    &::before {
+      content: '?';
+      font-size: 1.4ex;
+      vertical-align: middle;
+      font-weight: bold;
+      text-align: center;
+      display: inline-block;
+      width: 1.8ex;
+      height: 1.8ex;
+      border-radius: 1.2ex;
+      border: thin solid;
+      line-height: 1.8ex;
+    }
+  }
+
+  &__foreground {
+    background: $clr-bg;
+    color: $clr-accent;
+
+    overflow: auto;
+
+    padding: 1em;
+
+    font-size: 0.8rem;
+    font-weight: normal;
+
+    & h1 {
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    & h2 {
+      font-size: 1em;
+      font-weight: bold;
+    }
+
+    & h3 {
+      font-size: 0.8em;
+      font-weight: bold;
+    }
+
+    & p + ol,
+    & p + ul {
+      margin-top: -0.8em;
+    }
+
+    & dt {
+      font-weight: bold;
+      font-size: 0.9em;
+      margin-top: 0.3em;
+    }
+
+    & dd {
+      font-size: 0.9em;
+    }
+b
+    & pre {
+      padding: 0;
+    }
+
+    & p:first-child {
+      margin-top: 0;
+    }
+  }
+
+  & strong {
+    color: $clr-orange;
+  }
+
+  .modal__content--loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+  }
+}
+
+// Button to open
+.lm_stack .modal-button {
+  display: inline-block;
+  cursor: pointer;
+
+  // like GoldenLayout controls
+  opacity: 0.4;
+  color: white;
+  transition: opacity 0.3s ease;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+/* TOOLTIPS */
+.tooltip {
+  position: absolute;
+  z-index: 20000;
+
+  box-sizing: border-box;
+  border: 1px solid $clr-accent;
+  background: $clr-bg;
+
+  color: $clr-accent;
+  font-size: 0.7rem;
+
+  padding: 1em;
+  padding-left: calc(1em + 12px);
+
+  max-height: 100vh;
+  max-width: 400px;
+  overflow: hidden;
+
+  & h1 {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-left: -12px;
+  }
+
+  & dl {
+    & > dt {
+      font-weight: bold;
+    }
+
+    & > dd {
+      margin-left: 1em;
+      padding-bottom: 0.5em;
+    }
+  }
+
+  & td.alternative-name__language {
+    font-style: italic;
+    color: $clr-gray;
+    padding-left: 2em;
+  }
+
+  ul {
+    padding-inline-start: 1.5em;
+  }
+
+  li > p {
+    margin-block: 0.5em;
+  }
+
+  table {
+    line-height: 1;
+    border-spacing: 0.5em 0;
+
+    &.timeline-table {
+      td:not(:first-of-type) {
+        text-align: right;
+      }
+    }
+  }
+}

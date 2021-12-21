@@ -1,0 +1,86 @@
+@use 'colors' as *;
+@use 'prototype-variables' as *;
+@use 'mixins';
+
+svg {
+  display: block;
+  margin: auto;
+
+  polyline.axis {
+    stroke: $clr-fg;
+    stroke-width: 1;
+
+    @media print {
+      stroke: black;
+    }
+  }
+
+  line.grid-line {
+    stroke: $clr-gray;
+  }
+
+  text {
+    stroke: none;
+    fill: $clr-fg;
+
+    @media print {
+      fill: black;
+    }
+  }
+
+  marker {
+    stroke: none;
+    fill: currentColor;
+  }
+
+  text {
+    font-family: sans-serif;
+  }
+
+  .timespan {
+    fill: none;
+    stroke: var(--clr);
+    color: var(--clr);
+
+    & > marker,
+    &:is(circle) {
+      stroke: none;
+      fill: var(--clr);
+    }
+
+    &--certain {
+      &, & > marker,circle {
+        --clr: #{$clr-confidence-certain};
+      }
+    }
+    &--probable {
+      &, & > marker,circle {
+        --clr: #{$clr-confidence-probable};
+      }
+    }
+    &--contested {
+      &, & > marker,circle {
+        --clr: #{$clr-confidence-contested};
+
+        @media print {
+          --clr: #919191;
+        }
+      }
+    }
+    &--uncertain {
+      &, & > marker,circle {
+        --clr: #{$clr-confidence-uncertain};
+      }
+    }
+    &--false {
+      &, & > marker,circle {
+        --clr: #{$clr-confidence-false};
+      }
+    }
+    &--no-value {
+      &, & > marker,circle {
+        --clr: #{$clr-confidence-no-value};
+      }
+    }
+  }
+}

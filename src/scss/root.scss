@@ -1,0 +1,115 @@
+@use 'colors' as *;
+@use 'mixins';
+
+
+.content {
+  @include mixins.baseFlexBlock();
+
+  padding: 1rem;
+  padding-bottom: 2rem;
+  position: relative;
+
+  h1, h2, p, ul.publications {
+    max-width: 1000px;
+    margin: auto;
+  }
+
+  h1 {
+    margin-bottom: 2rem;
+  }
+
+  p {
+    font-size: 1.2rem;
+    max-width: 80ch;
+
+    margin-bottom: 1rem;
+
+    &:last-child {
+      margin-bottom: initial;
+    }
+  }
+
+  .language-selector {
+    position: absolute;
+    top: 1ex;
+    right: 1ex;
+
+    font-size: 0.9rem;
+
+    a[disabled] {
+      pointer-events: none;
+      color: $clr-fg;
+      font-weight: 800;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+
+  }
+
+  em {
+    color: $clr-orange;
+  }
+
+  .fa-sm {
+    font-size: 1rem;
+  }
+
+  ul.publications {
+    li {
+      .authors {
+        font-variant: small-caps;
+      }
+
+      .title {
+      }
+
+      .conference {
+        font-style: italic;
+      }
+    }
+  }
+
+  .logos {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+
+    margin-top: 3rem;
+
+    .logo {
+      img {
+        height: 3rem;
+      }
+
+      &.logo--larger img {
+        height: 5rem;
+      }
+    }
+  }
+
+  .infobox--temporary {
+    width: max-content;
+    border: 2px solid $clr-orange;
+    margin: 2rem auto 4rem;
+    padding: 1.2rem;
+
+    p,
+    .signature {
+      font-size: 1rem;
+    }
+
+    .signature {
+      display: block;
+      text-align: right;
+      font-style: oblique;
+
+      &::before {
+        content: '—';
+      }
+    }
+  }
+}

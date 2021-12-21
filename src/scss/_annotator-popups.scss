@@ -1,0 +1,72 @@
+@use 'colors' as *;
+@use 'prototype-variables' as *;
+@use 'mixins';
+
+.modal {
+  position: fixed;
+  z-index: 200;
+  inset: 0;
+  background: rgba(black, 20%);
+
+  &__frame {
+    position: fixed;
+    top: var(--position-y, 200px);
+    left: var(--position-x, 600px);
+    width: var(--width, 400px);
+    transform: translate(-50%, var(--offset-y, 0));
+
+    box-sizing: border-box;
+    background: $clr-bg;
+    color: $clr-fg;
+    box-shadow: $box-shadow;
+    font-size: small;
+
+    display: grid;
+    grid-template-rows: max-content max-content auto;
+  }
+
+  &__titlebar {
+    display: flex;
+    padding: 0.4ex;
+    background: $clr-gray;
+  }
+
+  &__title {
+    font-weight: 600;
+    flex-grow: 1;
+    padding-left: 1em;
+  }
+
+  &__close-button {
+    flex-shrink: 1;
+  }
+
+  &__description {
+    padding-inline: 1em;
+  }
+
+  &__options {
+    padding: 1em;
+    display: grid;
+    gap: 1ex;
+    grid-auto-flow: row;
+    grid-template-rows: repeat(1fr, auto);
+
+    button {
+      text-align: left;
+      padding-left: 1em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  blockquote {
+    color: $clr-accent;
+    position: relative;
+    margin-block: 1em;
+    margin-inline: 0;
+    padding: 0.5em 1em;
+    border-left: 3px solid;
+  }
+}

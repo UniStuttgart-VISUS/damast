@@ -1,0 +1,21 @@
+<svg viewBox="0 0 600 477">
+  <defs>
+    <marker id="circle" orient="auto" markerWidth="4" markerHeight="4"
+        refX="2" refY="2">
+      <circle cx="2" cy="2" r="2" />
+    </marker>
+    <path id="arrow" d="M 12.5 0 l -15 -15 v 7.5 h -10 v 15 h 10 v 7.5 z" />
+  </defs>
+
+  <image x="1" y="1" width="598" height="222" href="{{ url_for('docs.annotator.static', filename='evidence-edit-membership-1.png') }}"></image>
+  <rect x="1" y="1" width="598" height="222"></rect>
+
+  <image x="1" y="254" width="598" height="222" href="{{ url_for('docs.annotator.static', filename='evidence-edit-membership-2.png') }}"></image>
+  <rect x="1" y="254" width="598" height="222"></rect>
+
+  <text x="455" y="244" dx="-5" class="annotation">Click</text>
+  <path marker-end="url(#circle)" stroke-width="2" d="M 455 240 h 20 L 505 210" />
+
+  <use href="#arrow" class="filled-arrow" transform="translate(300, 238) rotate(90)" />
+</svg>
+

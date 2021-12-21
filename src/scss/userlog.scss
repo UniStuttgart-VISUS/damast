@@ -1,0 +1,71 @@
+@use 'colors' as *;
+@use 'mixins';
+
+.pagination-links {
+  @include mixins.baseFlexBlock();
+
+  width: max-content;
+  max-width: 600px;
+  padding: 1em 2em;
+  font-size: 0.8rem;
+
+  &__title {
+    font-size: small;
+    margin: 0;
+    margin-bottom: 1em;
+    text-align: right;
+    color: $clr-title;
+    font-variant: small-caps;
+  }
+
+  &__link,
+  &__link:visited {
+    color: $clr-link;
+  }
+
+  & ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+  }
+}
+
+
+.table {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(2rem, max-content)) auto auto auto;
+}
+
+
+.action {
+  @include mixins.baseFlexBlock();
+
+  display: grid;
+  grid-column: 1 / span 7;
+  grid-template-columns: 5rem 6rem 5rem 12rem 2fr 1fr 1fr;  // Chromium/WebKit fallback
+  grid-template-columns: subgrid;                           // Firefox
+
+  padding: 1ex 2ex;
+  font-size: 0.8rem;
+
+  &:not(.action--header) {
+    margin-top: 1ex;
+  }
+
+  &--header {
+    font-size: smaller;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: $clr-title;
+  }
+
+  & > * {
+    padding: 0.5ex 2ex;
+    overflow-x: auto;
+  }
+
+  & > pre {
+    font-size:xx-small;
+  }
+}
+

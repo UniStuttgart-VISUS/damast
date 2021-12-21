@@ -1,0 +1,25 @@
+{%- from 'reporting/fragments/macros.html' import download_filter_link, rerun_report_link, visualization_with_filter_link with context -%}
+{% extends "base.html" %}
+
+{% block title %}Report{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('reporting.file', path='report.css') }}">
+{% endblock %}
+
+{% block content %}
+<nav class="report-options">
+  {{ download_filter_link(report_id) }}
+  {%- if has_pdf -%}
+  <a class="pdf-link" href="{{ url_for('reporting.get_pdf_report', report_id=report_id) }}" target="_blank">
+    <i class="fa fa-file-pdf-o"></i>
+    PDF version
+  </a>
+  {%- endif -%}
+  {{ rerun_report_link(report_id) }}
+  {{ visualization_with_filter_link(report_id) }}
+</nav>
+
+{{ content | safe }}
+{% endblock %}

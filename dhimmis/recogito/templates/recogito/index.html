@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Recogito{% endblock %}
+{% block head %}
+{{ super() }}
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="recogito.min.css">
+  <script src="recogito.min.js"></script>
+  <script src="script.js" defer></script>
+{% endblock %}
+
+{% block content %}
+<div class="recogito-content" id="recogito">{{- content|safe -}}</div>
+{% endblock %}

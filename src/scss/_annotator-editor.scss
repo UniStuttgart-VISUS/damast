@@ -1,0 +1,147 @@
+@use 'colors' as *;
+@use 'prototype-variables' as *;
+@use 'mixins';
+@use 'encode-color' as encode;
+
+@forward 'annotator-forms';
+
+.editor {
+  border: 1px solid;
+  padding: 1rem;
+  margin: 1rem;
+  position: relative;
+
+  h1 {
+    font-size: 1.6rem;
+    margin-bottom: 0;
+  }
+
+  .subtitle {
+    font-style: italic;
+  }
+
+  h2 {
+    font-size: 1.1rem;
+    padding-bottom: 0;
+  }
+
+  a.goto-geodb {
+    margin-block: 1em;
+    display: block;
+  }
+
+  &__fields {
+    margin-top: 1rem;
+
+    .button--delete {
+      grid-column: 1 / span 1;
+    }
+
+    .button--save {
+      grid-column: 2 / span 1;
+    }
+
+    .time-instances {
+      grid-column: 1 / span 2;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min-content, 400px));
+      font-size: small;
+      gap: 0.5em;
+
+      .time-instance {
+        padding: 0.5em;
+        border: 1px solid;
+
+        display: grid;
+        align-items: center;
+        gap: 0.4em 0.2em;
+        grid-template-columns: auto 1fr;
+        grid-auto-rows: 1.6em;
+      }
+    }
+
+    .instance-info {
+      font-size: small;
+
+      &--missing {
+        color: $clr-red;
+      }
+    }
+
+    .annotation-span-editor {
+      display: grid;
+      grid-template-columns: 1fr max-content;
+      grid-template-rows: max-content 1fr;
+      grid-template-areas: "text-range button"
+                           "text-content text-content";
+      gap: 1ex;
+
+      span.text-range {
+        grid-area: text-range;
+      }
+
+      button {
+        grid-area: button;
+      }
+
+      span.text-content {
+        grid-area: text-content;
+        font-size: 0.75rem;
+        padding-inline: 1em;
+        padding-block: 0.5em;
+        border-inline-start: thick solid $clr-accent;
+        color: $clr-accent;
+        font-style: italic;
+
+        &::before {
+          content: open-quote;
+          color: $clr-lightgray;
+        }
+
+        &::after {
+          content: close-quote;
+          color: $clr-lightgray;
+        }
+
+        span.ellipsis::after {
+          content: '[...]';
+          color: $clr-lightgray;
+        }
+      }
+    }
+  }
+
+  &__buttons {
+    display: grid;
+    margin-top: 1em;
+
+    gap: 1em;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .button--close {
+    position: absolute;
+    top: 0.5em;
+    right: 0.5em;
+  }
+
+  .indented {
+    grid-column: 1 / span 2;
+    margin-left: 2rem;
+    box-sizing: border-box;
+  }
+
+  .tags {
+    hr {
+      margin-block: 1ex;
+      padding: 0;
+      border: none;
+      border-bottom: 1px solid;
+    }
+
+    .button {
+      margin: 0.5ex;
+    }
+  }
+}
+

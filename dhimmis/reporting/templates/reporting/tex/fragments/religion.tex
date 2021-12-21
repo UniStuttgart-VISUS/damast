@@ -1,0 +1,5 @@
+<% macro create_religion(r) %>
+\section*{\hypertarget{religion<<r.id>>}{\textsc{[r<< r.id >>]}} << r.name | texsafe >>}
+
+<< create_evidence_linklist(r.evidence_ids, before='', after='') >>
+<% endmacro %>

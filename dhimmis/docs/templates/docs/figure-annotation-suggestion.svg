@@ -1,0 +1,22 @@
+<svg viewBox="0 0 600 255">
+  <defs>
+    <marker id="head" orient="auto" markerWidth="4" markerHeight="5"
+        refX="4" refY="2.5">
+      <path d="M0,0 V5 L4,2.5 Z" />
+    </marker>
+    <marker id="circle" orient="auto" markerWidth="4" markerHeight="4"
+        refX="2" refY="2">
+      <circle cx="2" cy="2" r="2" />
+    </marker>
+  </defs>
+
+  <image x="0" y="0" width="600" height="228" href="{{ url_for('docs.annotator.static', filename='annotation-suggestion.png') }}"></image>
+
+  <text x="50" y="240" dx="5" class="annotation annotation--left">Annotation suggestion</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M 50 236 H 40 L 30 210" />
+  <text x="280" y="240" dx="5" class="annotation annotation--left">Suggestion source</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M 280 236 H 270 L 240 58" />
+  <text x="420" y="240" dx="5" class="annotation annotation--left">Pre-selected entity</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M 420 236 H 410 L 360 95" />
+</svg>
+

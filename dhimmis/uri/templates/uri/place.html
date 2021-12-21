@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% set footnote_lut = dict() %}
+{% set footnotes = namespace(i=1) %}
+
+{% block title %}{{ place.name }}{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link type="text/css" rel="stylesheet" href="{{ url_for('uri.file', path='leaflet.css') }}" />
+  <link type="text/css" rel="stylesheet" href="{{ url_for('uri.file', path='uri.css') }}">
+  <script src="{{ url_for('uri.file', path='map.js') }}" defer></script>
+{% endblock %}
+
+{% block content %}
+
+<h1>{{ place.name }}</h1>
+
+<section class="info-box">
+  {% if place.geoloc %}
+  <div class="map" data-lat="{{ place.geoloc.lat }}" data-lng="{{ place.geoloc.lng }}"></div>
+  {% else %}
+  <div class="map map--none">No Location</div>
+  {% endif %}
+  <table>
+    <tr>
+      <td>Name:</td>
+      <td>{{ place.name }}</td>
+    </tr>
+    <tr>
+      <td>URI:</td>
+      {% set uri = url_root + 'place/' + place.id|string %}
+      <td><a href="{{ uri }}">{{ uri }}</a></td>
+    </tr>
+    <tr>
+      <td>Place type:</td>
+      <td>{{ place_type.type }}</td>
+    </tr>
+    <tr>
+      <td>Geolocation:</td>
+      <td>
+        {% if place.geoloc %}
+        {{ place.geoloc_str | safe }}
+        {% else %}
+        <em>unknown</em>
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td>Location confidence</td>
+      <td>{{ place.confidence or 'unknown' }}</td>
+    </tr>
+  </table>
+</section>
+
+{% if place.comment %}
+<p class="place-comment">{{ place.comment }}</p>
+{% endif %}
+
+<section class="alternative-names">
+  <h2>Names</h2>
+
+  <ul>
+    {% for name in alternative_names %}
+    <li>
+      <strong>{{ name.name }}</strong>
+      {% if name.transcription %}
+      <em>({{ name.transcription }})</em>
+      {% endif %}
+      {% if name.language != 'Undefined' %}
+      in
+      <em>{{ name.language }}</em>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section class="see-also">
+  <h2>See Also</h2>
+
+  {% if external_uris|length %}
+    <ul>
+      {% for e in external_uris %}
+      <li>
+        <a href="{{ e.uri }}">
+          <span class="uri-short">{{ e.short }}</span>
+          in
+          <em>{{ e.name }}</em></a>
+        {%- if e.comment -%}
+        : <em><q>{{ e.comment }}</q></em>
+        {%- else -%}
+        .
+        {%- endif -%}
+      </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+  <p>This place is not linked to any external URIs.</p>
+  {% endif %}
+</section>
+
+<section class="religions">
+  <h2>Religions</h2>
+
+  <ul>
+    {% for e in by_religion %}
+    <li>
+      <strong>{{ e.religion.name }}:</strong>
+      <ul>
+        {% for t in e.time_spans %}
+        <li>
+          {%- if t[0] is none -%}
+          without any time information
+          {%- else -%}
+          from <em>{{ t[0].start }}</em> to <em>{{ t[0].end }}</em>
+          {%- endif -%}
+          {%- if t[1] -%}
+          {%- for sid in t[1] -%}
+          {%- if sid in footnote_lut -%}
+          {%- set footnote_nr = footnote_lut.get(sid) -%}
+          {%- else -%}
+          {%- set footnote_nr = footnotes.i -%}
+          {%- set footnotes.i = footnotes.i + 1 -%}
+          {%- set _dummy = footnote_lut.update({ sid: footnote_nr }) -%}
+          {%- endif -%}
+          <sup><a class="footnote footnote-source" href="#source-{{ sid }}">[{{ footnote_nr }}]</a></sup>
+          {%- endfor -%}
+          {%- endif -%}
+        </li>
+        {% endfor %}
+      </ul>
+    </li>
+    {%endfor%}
+  </ul>
+</section>
+
+<section class="persons">
+  <h2>Persons</h2>
+
+  {% if persons | length %}
+  <ul>
+    {% for p in persons %}
+    <li>
+      <strong>{{ p.name }}</strong>
+      {% if p.time_range %}
+      <em>({{ p.time_range }})</em>
+      {% endif %}
+
+      <ul>
+        {% for t in p.times %}
+        <li>
+          {{ t.timestr | safe }}
+          {%- if t.source_ids -%}
+          {%- for sid in t.source_ids -%}
+          {%- if sid in footnote_lut -%}
+          {%- set footnote_nr = footnote_lut.get(sid) -%}
+          {%- else -%}
+          {%- set footnote_nr = footnotes.i -%}
+          {%- set footnotes.i = footnotes.i + 1 -%}
+          {%- set _dummy = footnote_lut.update({ sid: footnote_nr }) -%}
+          {%- endif -%}
+          <sup><a class="footnote footnote-source" href="#source-{{ sid }}">[{{ footnote_nr }}]</a></sup>
+          {%- endfor -%}
+          {%- endif -%}
+        </li>
+        {% endfor %}
+      </ul>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>No person data.</p>
+  {% endif %}
+</section>
+
+<section class="sources">
+  <h2>Sources</h2>
+
+  <ol>
+    {% for sid, fnr in footnote_lut.items() %}
+    <li class="source" id="source-{{ sid }}" data-footnote-number="[{{ fnr }}]">
+      {{ sources[sid].name }}
+      <em>({{ sources[sid].source_type }})</em>
+      {%- if source_pages[sid] -%}
+      <em>: p. {{ source_pages[sid] }}.</em>
+      {%- else -%}.{%- endif -%}
+    </li>
+    {% endfor %}
+  </ol>
+</section>
+
+{% endblock %}

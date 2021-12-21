@@ -1,0 +1,54 @@
+<svg viewBox="0 0 600 614">
+  <defs>
+    <marker id="head" orient="auto" markerWidth="4" markerHeight="5"
+        refX="4" refY="2.5">
+      <path d="M0,0 V5 L4,2.5 Z" />
+    </marker>
+    <marker id="head2" orient="auto" markerWidth="5" markerHeight="5"
+        refX="2" refY="2">
+      <path d="M0,0 V5 L4,2.5 Z M 4 0 h 1 v 5 h -1 z" />
+    </marker>
+    <marker id="tail" orient="auto" markerWidth="1" markerHeight="5"
+        refX="0.5" refY="2.5">
+      <rect x="0" y="0" width="1" height="5" />
+    </marker>
+    <path id="editor-1" d="M 0 150 H 350 l -60 140 20 40 -60 140 H 0 Z" />
+    <path id="editor-2" d="M 600 150 H 350 l -60 140 20 40 -60 140 H 600 Z" />
+    <path id="arrow" d="M 12.5 0 l -15 -15 v 7.5 h -10 v 15 h 10 v 7.5 z" />
+    <clipPath id="editor-clip-1">
+      <use href="#editor-1" />
+    </clipPath>
+    <clipPath id="editor-clip-2">
+      <use href="#editor-2" />
+    </clipPath>
+  </defs>
+
+  <image x="2" y="2" width="292" height="103" href="{{ url_for('docs.annotator.static', filename='create-annotation-1.png') }}"></image>
+  <rect x="2" y="2" width="292" height="103"></rect>
+
+  <text x="106" y="20" class="annotation annotation--left">Click &amp; drag</text>
+  <path marker-start="url(#tail)" marker-end="url(#head)" stroke-width="1" d="M 106 22 H 148" />
+
+  <image x="302" y="2" width="292" height="103" href="{{ url_for('docs.annotator.static', filename='create-annotation-2.png') }}"></image>
+  <rect x="302" y="2" width="292" height="103"></rect>
+
+  <text x="494" y="20" class="annotation">Release</text>
+  <path marker-start="url(#tail)" marker-end="url(#head2)" stroke-width="1" d="M 406 22 H 494" />
+
+  <image x="0" y="150" width="600" height="320" clip-path="url(#editor-clip-1)" href="{{ url_for('docs.annotator.static', filename='create-annotation-3a.png') }}"></image>
+  <image x="0" y="150" width="600" height="320" clip-path="url(#editor-clip-2)" href="{{ url_for('docs.annotator.static', filename='create-annotation-3b.png') }}"></image>
+
+  <rect x="0" y="150" width="600" height="320"></rect>
+  <use href="#editor-1" fill="none" stroke-width="2" />
+  <use href="#editor-2" fill="none" stroke-width="2" />
+
+
+  <image x="150" y="510" width="292" height="103" href="{{ url_for('docs.annotator.static', filename='create-annotation-4.png') }}"></image>
+  <rect x="150" y="510" width="292" height="103"></rect>
+
+  <use href="#arrow" class="filled-arrow" transform="translate(300, 51) scale(1.25)" />
+  <use href="#arrow" class="filled-arrow" transform="translate(300, 125) rotate(90) scale(1.25)" />
+  <use href="#arrow" class="filled-arrow" transform="translate(300, 310) scale(1.25)" />
+  <use href="#arrow" class="filled-arrow" transform="translate(300, 490) rotate(90) scale(1.25)" />
+</svg>
+

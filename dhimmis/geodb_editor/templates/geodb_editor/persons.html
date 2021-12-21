@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% from "geodb_editor/macros.html" import button_block %}
+
+{% block title %}GeoDB-Editor: Persons{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="geodb.css">
+<link rel="stylesheet" href="{{ url_for('geodb_editor.file', path='tabulator.min.css') }}" />
+<link rel="stylesheet" href="{{ url_for('geodb_editor.file', path='leaflet.css') }}" />
+
+<script type="text/javascript" src="bundle.js" defer></script>
+{% endblock %}
+
+{% block content %}
+
+{% include "geodb_editor/editor_navigation.html" %}
+
+<div class="section" id="person">
+  <div class="section__head">
+    <h3>Persons <span id="section__head-detail"></span></h3>
+
+    {{ button_block('New person') }}
+  </div>
+
+  <div id="person-table"></div>
+</div>
+
+<div class="section" id="external-person-uris">
+  <div class="section__head">
+    <h3>External Person URIs <span id="section__head-detail"></span></h3>
+
+    {{ button_block('New URI') }}
+  </div>
+
+  <div id="external-person-uri-table"></div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,16 @@
+[Unit]
+Description=Flask application for Dhimmis Prototype (test server)
+Wants=network-online.target docker.service pgadmin4.service nginx.service
+After=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+Restart=no
+WorkingDirectory=/www-testing
+ExecStart=/bin/sh run_server.sh
+ExecStop=/bin/docker stop dhimmis-testing
+
+[Install]
+WantedBy=multi-user.target
+

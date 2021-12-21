@@ -1,0 +1,17 @@
+@use 'colors' as *;
+
+header {
+  font-size: 0.7rem;
+}
+
+header button.link {
+  font-size: inherit;
+}
+
+header .messages {
+  margin-right: 1rem;
+}
+
+div.messages {
+  top: 2rem;
+}

@@ -1,0 +1,25 @@
+@use 'colors' as *;
+@use 'mixins';
+
+.uri-fragment {
+  font-weight: 700;
+}
+
+.uri-representation {
+  font-family: sans-serif;
+
+  .tabulator & {
+    display: flex;
+    align-items: baseline;
+  }
+}
+
+.short-uri {
+  font-variant: small-caps;
+  font-size: x-small;
+
+  .tabulator & {
+    color: $clr-gray;
+    margin-inline-start: auto;
+  }
+}

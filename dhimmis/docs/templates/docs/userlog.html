@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Database Edit Log{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('docs.user-log.static', filename='userlog.css') }}">
+{% endblock %}
+
+{% block content %}
+  <div class="pagination-links">
+    <h3 class="pagination-links__title">Links</h3>
+    <ul>
+{%- for count, text in ((50, 'Last 50'), (200, 'Last 200'), ('0', 'All')) -%}
+      <li>
+        <a class="pagination-links__link" href="?count={{count}}">{{text}}</a>
+      </li>
+{%- endfor -%}
+    </ul>
+  </div>
+
+  <div class="table">
+    <div class="action action--header">
+      <span>EID</span>
+      <span>User</span>
+      <span>Action</span>
+      <span>Time</span>
+      <span>Description</span>
+      <span>Comment</span>
+      <span>Old Value</span>
+    </div>
+{%- for action in action_log -%}
+    <div id="action{{action['id']}}" class="action">
+      <span>{{action['evidence_id']}}</span>
+      <span>{{action['user_name']}}</span>
+      <span>{{action['action_name']}}</span>
+      <span>{{action['timestamp']}}</span>
+      <span>{{action['description']}}</span>
+      <span>{{action['comment']}}</span>
+      <pre>{{action['old_value']}}</pre>
+    </div>
+{%- endfor -%}
+  </div>
+{% endblock %}
+

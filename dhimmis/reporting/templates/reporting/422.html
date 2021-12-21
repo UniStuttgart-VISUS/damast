@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}422 Unprocessable Entity{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('reporting.file', path='422.css') }}">
+{% endblock %}
+
+{% block content %}
+  <h1>422 Unprocessable Entity</h1>
+
+  <p>
+    The visualization state sent in the request could not be processed.
+    It is valid JSON, but does not adhere to the required schema.
+    Please do not resend the request without changing the request payload.
+    Here is what went wrong:
+  </p>
+
+  <dl>
+    {% for path, message in errors %}
+    <dt>{{ path }}</dt>
+    <dd>{{ message }}</dd>
+    {% endfor %}
+  </dl>
+{% endblock %}

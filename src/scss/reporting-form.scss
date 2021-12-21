@@ -1,0 +1,33 @@
+@use 'colors' as *;
+@use 'prototype-variables' as *;
+@use 'mixins';
+
+@forward 'forms';
+
+.content {
+  @include mixins.baseFlexBlock();
+}
+
+h1 {
+  padding: revert;
+  margin: revert;
+  font-size: 2rem;
+}
+
+p,
+form {
+  width: clamp(40ch, 80%, 65ch);
+  margin-inline: auto;
+}
+
+form {
+  max-width: 50ch;
+  display: grid;
+  gap: 1em;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr auto;
+
+  button[type="submit"] {
+    grid-column: 2 / span 1;
+  }
+}

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+docker run \
+  --rm \
+  --detach \
+  --name !!SYSTEMD_SERVICE_NAME!! \
+  -v "$(pwd):/data:z" \
+  --net=host \
+  --env-file=docker.env \
+  !!DOCKER_IMAGE_NAME!!
+

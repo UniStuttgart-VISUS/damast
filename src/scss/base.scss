@@ -1,0 +1,41 @@
+@use 'colors' as *;
+@use 'mixins';
+
+@forward 'headings';
+@forward 'links';
+@forward 'flashes';
+@forward 'cookies';
+@forward 'header';
+@forward 'misc';
+@forward 'buttons';
+@forward 'accessibility';
+
+// main body
+
+:root {
+  background: $clr-bg-root;
+  font-family: sans-serif;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+header,
+footer {
+  @include mixins.baseFlexBlock();
+
+  padding: 1em;
+  font-size: 0.8rem;
+}
+
+// content
+
+.content {
+  min-height: 50vh;
+}
+
+.environment-label {
+  @include mixins.fixedLabel();
+}

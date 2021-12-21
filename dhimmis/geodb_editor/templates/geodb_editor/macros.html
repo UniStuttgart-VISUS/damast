@@ -1,0 +1,20 @@
+{% macro button_block(add_text) %}
+    <div class="controls">
+      <button id="manage-columns" class="button button--medium">
+        <i class="fa fa-columns fa--pad-right"></i>
+        Manage columns
+      </button>
+      <button id="download-current" class="button button--medium">
+        <i class="fa fa-download fa--pad-right"></i>
+        Download
+      </button>
+      <button id="clear-filter" class="button button--medium">
+        <i class="fa fa-eraser fa--pad-right"></i>
+        Clear filters
+      </button>
+      <button id="add-row" class="button button--medium">
+        <i class="fa fa-plus fa--pad-right"></i>
+        {{ add_text }}
+      </button>
+    </div>
+{% endmacro %}

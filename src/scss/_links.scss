@@ -1,0 +1,20 @@
+@use 'colors' as *;
+
+// links
+
+a,
+.link {
+  color: $clr-link;
+  text-decoration: none;
+  font-family: sans-serif;
+}
+
+a:hover,
+.link:hover {
+  text-decoration: underline;
+}
+
+.footer__links__link {
+  color: $clr-link;
+  padding-left: 1rem;
+}

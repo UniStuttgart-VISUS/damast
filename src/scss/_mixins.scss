@@ -1,0 +1,26 @@
+@use 'colors' as *;
+
+@mixin baseFlexBlock() {
+  background: $clr-bg;
+  margin: 1rem;
+  box-shadow: $box-shadow;
+  color: $clr-fg;
+}
+
+@mixin fixedLabel() {
+  position: fixed;
+  display: block;
+  top: 0;
+  right: 0;
+
+  font-size: 8px;
+  font-variant: small-caps;
+  font-family: serif;
+  font-weight: 600;
+
+  color: darkred;
+  background: white;
+  border: 1px solid currentColor;
+
+  pointer-events: none;
+}

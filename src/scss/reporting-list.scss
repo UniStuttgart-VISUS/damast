@@ -1,0 +1,65 @@
+@use 'colors' as *;
+@use 'prototype-variables' as *;
+@use 'mixins';
+
+@forward 'forms';
+
+.content {
+  @include mixins.baseFlexBlock();
+}
+
+h1 {
+  padding: revert;
+  margin: revert;
+  font-size: 2rem;
+}
+
+p,
+nav.prev-next {
+  width: clamp(40ch, 80%, 65ch);
+  margin-inline: auto;
+}
+
+a[disabled] {
+  color: $clr-gray;
+  pointer-events: none;
+  cursor: revert;
+}
+
+nav.prev-next {
+  display: grid;
+  grid-template-columns: auto max-content max-content auto;
+  gap: 1em;
+
+  padding: 1em;
+
+  a:first-child {
+    text-align: end;
+  }
+
+  a:last-child {
+    text-align: start;
+  }
+}
+
+table {
+  width: clamp(800px, 80%, 1400px);
+  margin-inline: auto;
+  border-spacing: 0.5em;
+
+  thead {
+    th {
+      font-size: 0.9rem;
+      font-weight: 800;
+      text-align: start;
+    }
+  }
+}
+
+span.no-value {
+  color: $clr-gray;
+}
+
+span.error-message {
+  color: $clr-red;
+}

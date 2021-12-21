@@ -1,0 +1,40 @@
+@use 'colors' as *;
+@use 'mixins';
+
+.column-visibility-option {
+  display: grid;
+  grid-template-columns: 35px 1fr;
+
+  input,
+  label {
+    align-self: center;
+  }
+
+  input[type="checkbox"] {
+    appearance: none;
+
+    &::after {
+      width: 1.3em;
+      text-align: center;
+      display: inline-block;
+      font: normal normal normal 14px/1 FontAwesome;
+      text-rendering: auto;
+
+      content: '\f070';
+      color: $clr-gray;
+    }
+
+    &:checked::after {
+      content: '\f06e';
+      color: $clr-accent;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &:focus-visible {
+      outline: 1px solid $clr-accent;
+    }
+  }
+}

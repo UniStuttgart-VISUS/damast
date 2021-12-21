@@ -1,0 +1,72 @@
+<p>
+This view shows the sources from which the evidence tuples were extracted.
+An evidence tuple can stem from more than one source, and therefore the total sum of all source instances can be larger than the number of evidence tuples.
+</p>
+
+<h1>Contents</h1>
+<p>
+The view consists of a table in which each row represents one source.
+The rows are sorted by descending number of evidence tuples.
+</p>
+
+<h2>Checkboxes</h2>
+<p>
+The first column contains a <em>checkbox</em> that toggles the visibility of evidence tuples of a source.
+Keep in mind that an evidence tuple can have multiple source instances.
+As long as <em>any</em> source instance's source is checked in this view, the evidence tuple will be active.
+</p>
+
+<h2>Short Names</h2>
+<p>
+The second column shows the short name of the source, generally an abbreviation.
+The full name of the source is available via a tooltip.
+</p>
+
+<h2>Religion/Confidence Segmentation Visualization</h2>
+<p>
+The third column visualizes the segmentation of the evidence tuples on the religions or on the levels of confidence, depending on the <em>mode.</em>
+In <em>Confidence Mode,</em> the currently selected aspect of confidence is used.
+The visualization used is a normalized stacked barchart.
+The width of each segment signifies the number of evidence tuples with that religion or confidence level <em>in relation to</em> the total evidence count for that source.
+The total width of the bars is constant regardless of the amount of evidence tuples.
+</p>
+
+<h2>Evidence Count Visualization</h2>
+<p>
+The fourth column visualizes the count of evidence tuples for each source.
+This column uses the same scaling in all rows, effectively creating a vertical histogram across the rows.
+</p>
+
+<h1>Interaction</h1>
+
+<h2>Selection</h2>
+<p>
+Clicking on a row will <em>select</em> the source, and <em>link</em> related data in all views.
+For instance, locations in the map with evidence from that source will be highlighted.
+Clicking on the same row again will reset the selection.
+Selecting a different row, or an element in a different view, will replace the selection.
+</p>
+
+<h2>Filtering</h2>
+<p>
+Sources can be filtered out from the visualized data in all views by unticking the appropriate checkbox or checkboxes.
+The selection of checked sources is not applied until the <em>Apply</em> button is clicked.
+Checking multiple (or all) sources works as a <em>logical disjunction,</em> that is, an evidence tuple is matched if it stems from <em>any</em> of the checked sources.
+The source filters work together with filters from other views in <em>logical conjunction;</em>
+for instance, if only source <em>X</em> and religion <em>Y</em> are selected in the respective views, only evidence tuples with that religion <em>and</em> source are matched.
+</p>
+
+<p>
+Three additional buttons in the top right make filtering more convenient:
+<dl>
+  <dt><i class="fa fa-fw fa-lg fa-circle-o"></i> Uncheck all</dt>
+  <dd>Uncheck all checkboxes.</dd>
+  <dt><i class="fa fa-fw fa-lg fa-rotate-90 fa-exchange"></i> Invert</dt>
+  <dd>
+    Invert all checkboxes.
+    Checked boxes are unchecked, unchecked boxes are checked.
+  </dd>
+  <dt><i class="fa fa-fw fa-lg fa-dot-circle-o"></i> Check all</dt>
+  <dd>Check all checkboxes.</dd>
+</dl>
+</p>

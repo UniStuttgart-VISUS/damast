@@ -1,0 +1,118 @@
+@use 'colors' as *;
+@use 'mixins';
+
+.section {
+  @include mixins.baseFlexBlock();
+
+  padding: 1rem;
+}
+
+.topmatter {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.intro {
+  max-width: 600px;
+  height: max-content;
+}
+
+.toc {
+  @include mixins.baseFlexBlock();
+
+  width: max-content;
+  max-width: 600px;
+  padding: 1rem;
+
+  &__title {
+    font-size: small;
+    margin: 0;
+    margin-bottom: 1em;
+    text-align: right;
+    color: $clr-title;
+    font-variant: small-caps;
+  }
+
+  &__link,
+  &__link:visited {
+    color: $clr-link;
+  }
+
+  & ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+  }
+}
+
+
+@keyframes highlight {
+  0% { background: $clr-bg; }
+  20% { background: #805050; }
+  100% { background: $clr-bg; }
+}
+
+
+.route {
+  @include mixins.baseFlexBlock();
+
+  padding: 1rem 2rem;
+  max-width: 800px;
+
+  &:target {
+    animation: highlight 2s ease;
+  }
+
+
+  &__method {
+    --base-color: #ccc;
+    font-size: x-small;
+
+    border: 1px solid var(--base-color);
+    border-radius: 3px;
+    background: white;
+    color: var(--base-color);
+
+    padding: 0.2em;
+    margin: 0.2rem 0.2em;
+    vertical-align: middle;
+
+
+    &:first-of-type {
+      margin-left: 1rem;
+    }
+
+    &--GET {
+      --base-color: #2a2;
+    }
+
+    &--HEAD {
+      --base-color: #24a;
+    }
+
+    &--OPTIONS {
+      --base-color: #881;
+    }
+
+    &--PATCH {
+      --base-color: #a2a;
+    }
+
+    &--DELETE {
+      --base-color: #a22;
+    }
+
+    &--PUT {
+      --base-color: #299;
+    }
+  }
+
+
+  &__doc {
+    font-family: monospace;
+    white-space: pre;
+    line-height: 80%;
+    padding-top: 1rem;
+  }
+}

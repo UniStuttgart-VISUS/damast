@@ -1,0 +1,11 @@
+@use 'colors' as *;
+
+h1 {
+  color: $clr-red !important;
+}
+
+.content {
+  margin: auto;
+  max-width: 1200px;
+  color: $clr-fg;
+}

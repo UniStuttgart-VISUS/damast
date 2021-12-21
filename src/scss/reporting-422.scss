@@ -1,0 +1,24 @@
+@use 'colors' as *;
+@use 'prototype-variables' as *;
+@use 'mixins';
+
+.content {
+  @include mixins.baseFlexBlock();
+}
+
+h1 {
+  color: $clr-red;
+}
+
+p,
+dl {
+  width: clamp(40ch, 100%, 80ch);
+  margin-inline: auto;
+}
+
+dl dt {
+  font-family: monospace;
+  font-size: 0.9rem;
+  margin-top: 0.5ex;
+}
+

@@ -1,0 +1,3 @@
+/Dockerfile
+/sql-data.d/30-create-dhimmis-users.sql
+/sql-data.d/*.generated.sql

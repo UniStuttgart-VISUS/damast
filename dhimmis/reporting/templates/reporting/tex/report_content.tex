@@ -1,0 +1,144 @@
+<% set footnote_lut = dict() %>
+<% set footnotes = namespace(i=1) %>
+<%- from 'reporting/tex/fragments/macros.tex' import create_evidence_linklist with context -%>
+<%- from 'reporting/tex/fragments/evidence.tex' import create_evidence with context -%>
+<%- from 'reporting/tex/fragments/place.tex' import create_place with context -%>
+<%- from 'reporting/tex/fragments/religion.tex' import create_religion with context -%>
+<%- from 'reporting/tex/fragments/person.tex' import create_person with context -%>
+<%- from 'reporting/tex/fragments/timeline.tex' import create_timeline with context -%>
+<%- from 'reporting/tex/fragments/metadata.tex' import creation_metadata, filter_description with context -%>
+
+\documentclass[fontsize=10pt,toc=chapterentrywithdots]{scrreprt}
+\usepackage{scrtime}
+\usepackage{scrlayer-scrpage}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{csquotes}
+\usepackage[hidelinks]{hyperref}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{lastpage}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
+
+\usepackage{fontspec}
+\newfontfamily{\defaultfont}{FreeSerif}
+\newfontfamily\syriacfont[Script=Syriac]{Estrangelo Talada}
+\newfontfamily\arabicfont[Script=Arabic]{Noto Naskh Arabic}
+\newfontfamily\hebrewfont[Script=Hebrew]{FreeSerif}
+\setmainfont{FreeSerif}
+\setsansfont{FreeSans}
+\setmonofont{FreeMono}
+
+\usepackage{polyglossia}
+\setmainlanguage{english}
+\setotherlanguages{arabic,armenian,coptic,georgian,greek,hebrew,hindi,kurdish,latin,macedonian,persian,russian,sanskrit,syriac,turkish,urdu}
+
+\setlength\parindent{0pt}
+\setlength\parsep{7pt}
+
+\begin{document}
+
+\title{Report \texttt{\href{<<report_url|texsafe>>}{<<report_id|texsafe>>}}}
+\subtitle{Damast \texttt{<<server_version|texsafe>>}}
+\date{\today{} at \thistime}
+\author{Provisioned by \texttt{<<metadata.current_user>>}}
+\publishers{VIS, University of Stuttgart, Germany}
+
+\maketitle
+
+\automark*{chapter}
+\pagestyle{scrheadings}
+\setkomafont{pageheadfoot}{\scriptsize}
+\ofoot*{\texttt{\href{<<report_url|texsafe>>}{<<report_id|texsafe>>}}}
+\cfoot*{}
+\ifoot*{Damast \texttt{<<server_version|texsafe>>}}
+\ohead*{Page \thepage{} of \pageref{LastPage}}
+\chead*{}
+\ihead*{\textsc{\rightmark}}
+
+\tableofcontents
+
+\chapter{Query Description}
+\label{sec:filters}
+
+<< creation_metadata(metadata) >>
+
+<< filter_description(filter_desc) >>
+
+This report contains:
+\textbf{<< evidences | length >>} distinct evidences,
+\textbf{<< places | length >>} distinct places,
+\textbf{<< religions | length >>} distinct religions,
+\textbf{<< persons | length >>} distinct persons,
+based on \textbf{<< sources | length >>} distinct sources.
+
+
+\clearpage
+\chapter{Evidences}
+\label{sec:evidences}
+
+<% for evidence in evidences %>
+  << create_evidence(evidence) >>
+<% endfor %>
+
+
+\clearpage
+\chapter{Places}
+\label{sec:places}
+
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{map.pdf}
+  \caption{Made with Natural Earth (\url{https://www.naturalearthdata.com/}).}
+\end{figure}
+
+<% for place in places %>
+<< create_place(place) >>
+<% endfor %>
+
+
+\clearpage
+\chapter{Religions}
+\label{sec:religions}
+
+<% for religion in religions %>
+  << create_religion(religion) >>
+<% endfor %>
+
+
+\clearpage
+\chapter{Persons}
+\label{sec:persons}
+
+<% for person in persons %>
+  << create_person(person) >>
+<% endfor %>
+
+
+\clearpage
+\chapter{Timeline}
+\label{sec:timeline}
+
+<< create_timeline(time_data) >>
+
+
+<% if sources %>
+\clearpage
+\chapter{Sources}
+\label{sec:sources}
+
+\begin{description}
+    <% for i, source in sources %>
+  \item[\textsc{<< source.short | texsafe >>}]
+      \hypertarget{source<<source.id>>}{<< source.name | texsafe >>
+        \emph{<< source.source_type | texsafe >>}}
+
+      << create_evidence_linklist(source_evidence[source.id], before='', middle=' based on this source: ', after='') >>
+    <% endfor %>
+\end{description}
+<% endif %>
+
+
+\end{document}

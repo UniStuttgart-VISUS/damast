@@ -1,0 +1,76 @@
+FROM continuumio/miniconda3
+RUN conda install -c conda-forge cartopy
+
+ENV TZ="Europe/Berlin"
+ENV DEBIAN_FRONTEND="noninteractive"
+
+ARG USER_ID
+ARG GROUP_ID
+
+RUN addgroup --gid $GROUP_ID www
+RUN adduser \
+      --disabled-password \
+      --home /www \
+      --gecos '' \
+      --uid $USER_ID \
+      --gid $GROUP_ID www
+
+RUN apt-get update && apt-get install -y apt-utils build-essential
+
+# configure timezone
+RUN ln -fs /usr/share/zoneinfo/Europe/Berlin /etc/localtime && \
+  apt-get install -y tzdata
+
+# install xelatex stuff
+RUN apt-get install -y \
+  texlive-base \
+  texlive-xetex \
+  texlive-lang-arabic \
+  fonts-freefont-ttf \
+  fonts-noto-core \
+  fontconfig \
+  zip
+
+# configure latex
+RUN echo 'main_memory = 9000000\nextra_mem_top = 6000000\nextra_mem_bot = 6000000\nhash_extra = 200000\npool_size = 3850000' >> /etc/texmf/web2c/texmf.cnf
+
+
+# get and install Syriac font
+WORKDIR /tmp
+RUN wget http://bethmardutho.org/wp-content/uploads/2018/06/melthofonts-1.zip \
+  && unzip melthofonts-1.zip \
+  && cp melthofonts-1/melthofonts-1.21/SyrCOMTalada.otf /usr/share/fonts/ \
+  && fc-cache -f -v \
+  && rm -rf melthofonts-1.zip melthofonts-1
+
+# install en_US locale
+RUN apt-get install -y locales \
+  && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
+  && locale-gen
+
+# install Python dependencies
+USER www
+
+RUN pip install --no-warn-script-location \
+  'flask==2.0.1' \
+  'gunicorn[gevent]' \
+  'requests' \
+  'Flask-HTTPAuth' \
+  'passlib[bcrypt]' \
+  'pyjwt>=2' \
+  'pyyaml' \
+  'postgres' \
+  'password-strength' \
+  'brotli' \
+  'apscheduler' \
+  'html5lib' \
+  'jsonschema==3.2.0' \
+  'python-dateutil' \
+  'beautifulsoup4' \
+  'Shapely==1.8a3' \
+  'geopandas' \
+  'geoplot' \
+  'pygeos' \
+  'python-Levenshtein'
+
+WORKDIR /

@@ -1,0 +1,53 @@
+@use 'colors' as *;
+@use 'mixins';
+
+a.card {
+  color: unset;
+  text-decoration: unset;
+}
+
+.cards {
+  display: flex;
+  flex-flow: row wrap;
+  max-width: 1400px;
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.card {
+  $unit: 100px;
+  width: #{4 * $unit};
+  height: $unit;
+  background: $clr-bg;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  margin: 2rem;
+  transition: transform 0.05s,
+              box-shadow 0.05s;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+  }
+
+  i.fa,
+  span.fa-stack {
+    justify-self: center;
+  }
+
+  i.fa.fa-inverse {
+    color: $clr-bg;
+  }
+
+  span.name {
+    padding-left: 1em;
+  }
+
+  i.fa,
+  span.fa-stack,
+  span.name {
+    color: $clr-fg;
+    align-self: center;
+  }
+}

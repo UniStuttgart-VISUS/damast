@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://www2.visus.uni-stuttgart.de/damast/vis/schemas/metadata.json",
+
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "createdBy",
+    "createdAt",
+    "source",
+    "evidenceCount",
+    "version"
+  ],
+  "properties": {
+    "createdBy": {
+      "anyOf": [
+        {
+          "const": null
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ]
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source": {
+      "anyOf": [
+        {
+          "enum": [
+            "visualization",
+            "filesystem"
+          ]
+        },
+        {
+          "type": "string",
+          "format": "uuid"
+        }
+      ]
+    },
+    "evidenceCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "version": {
+      "$comment": "Specifies the server version at the time of creation.",
+      "type": "string"
+    }
+  }
+}
+

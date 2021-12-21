@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% from "geodb_editor/macros.html" import button_block %}
+
+{% block title %}GeoDB-Editor{% endblock %}
+
+{% block head %}
+{{ super() }}
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="geodb.css">
+<link rel="stylesheet" href="{{ url_for('geodb_editor.file', path='tabulator.min.css') }}" />
+<link rel="stylesheet" href="{{ url_for('geodb_editor.file', path='leaflet.css') }}" />
+
+<script type="text/javascript" src="bundle.js" defer></script>
+{% endblock %}
+
+{% block content %}
+
+{% include "geodb_editor/editor_navigation.html" %}
+
+<div class="section" id="place">
+  <div class="section__head">
+    <h3>Place data <span id="section__head-detail"></span></h3>
+
+    {{ button_block('New place') }}
+  </div>
+
+  <div id="place-table"></div>
+</div>
+
+<div class="section" id="alt-names">
+  <div class="section__head">
+    <h3>Alternative Names <span id="section__head-detail"></span></h3>
+
+    {{ button_block('New name') }}
+  </div>
+
+  <div id="alt-name-table"></div>
+</div>
+
+<div class="map"></div>
+
+<div class="section" id="external-uris">
+  <div class="section__head">
+    <h3>External Place URIs <span id="section__head-detail"></span></h3>
+
+    {{ button_block('New URI') }}
+  </div>
+
+  <div id="external-uri-table"></div>
+</div>
+
+<div class="section" id="evidence">
+  <div class="section__head">
+    <h3>Evidence data <span id="section__head-detail"></span></h3>
+
+    {{ button_block('New evidence') }}
+  </div>
+
+  <div id="evidence-table"></div>
+</div>
+
+<div class="section" id="time">
+  <div class="section__head">
+    <h3>Time spans <span id="section__head-detail"></span></h3>
+
+    {{ button_block('New time span') }}
+  </div>
+
+  <div id="time-table"></div>
+</div>
+
+<div class="section" id="source">
+  <div class="section__head">
+    <h3>Source instances <span id="section__head-detail"></span></h3>
+
+    {{ button_block('New source instance') }}
+  </div>
+
+  <div id="source-table"></div>
+</div>
+
+{% endblock %}

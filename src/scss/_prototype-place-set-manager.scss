@@ -1,0 +1,63 @@
+@use 'colors' as *;
+
+.place-set-manager {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+
+  max-height: 400px;
+  overflow-y: auto;
+
+  button {
+    width: 100%;
+    font-weight: initial;
+    font-size: 0.9em;
+  }
+
+  .form-item {
+    display: flex;
+    align-items: baseline;
+
+    input[type="text"] {
+      width: 80%;
+      margin-bottom: 1em;
+      margin-inline: 1ex;
+    }
+  }
+}
+
+.place-set-description {
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  grid-template-rows: repeat(2, max-content);
+  grid-template-areas: "title source"
+                       "description description";
+
+  text-align: start;
+  padding: 1ex;
+
+  .title {
+    font-weight: 700;
+    grid-area: title;
+  }
+
+  .source {
+    color: $clr-accent;
+    font-size: 0.8em;
+    grid-area: source;
+  }
+
+  .description {
+    font-size: 0.8em;
+    grid-area: description;
+
+    strong {
+      font-weight: 700;
+      color: $clr-accent;
+    }
+
+    time {
+      color: $clr-accent;
+    }
+  }
+}

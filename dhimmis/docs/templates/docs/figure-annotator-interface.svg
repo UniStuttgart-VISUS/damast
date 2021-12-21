@@ -1,0 +1,37 @@
+<svg viewBox="-125 0 725 311">
+  <defs>
+    <marker id="head" orient="auto" markerWidth="4" markerHeight="5"
+        refX="4" refY="2.5">
+      <path d="M0,0 V5 L4,2.5 Z" />
+    </marker>
+    <marker id="circle" orient="auto" markerWidth="4" markerHeight="4"
+        refX="2" refY="2">
+      <circle cx="2" cy="2" r="2" />
+    </marker>
+  </defs>
+
+  <image x="0" y="0" width="600" height="311" href="{{ url_for('docs.annotator.static', filename='annotator-interface.png') }}"></image>
+
+  <text x="-20" y="20" dx="-5" class="annotation">New evidence button</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M -18 16 H 289 L 306 33" />
+  <text x="-20" y="39" dx="-5" class="annotation">Document information</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M -18 37 H 13" />
+
+  <text x="-20" y="65" dx="-5" text-anchor="end">Document area</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M -18 61 H 5" />
+
+  <text x="-20" y="130" dx="-5" class="annotation">Annotation</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M -18 125 H 178 V 107" />
+  <text x="-20" y="172" dx="-5" class="annotation">Evidence link</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M -18 167 H 38" />
+  <text x="-20" y="244" dx="-5" class="annotation">Swimlanes</text>
+  <path marker-end="url(#circle)" stroke-width="2" d="M -18 239 H 27 l 10 -10" />
+  <text x="-20" y="259" dx="-5" class="annotation">Text area</text>
+  <path marker-end="url(#circle)" stroke-width="2" d="M -18 254 H 127 l 15 -15" />
+  <text x="-20" y="274" dx="-5" class="annotation">Scrollbar</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M -18 269 H 336" />
+
+  <text x="450" y="220" text-anchor="middle">Editor pane</text>
+  <path marker-end="url(#circle)" stroke-width="2" d="M 450 208 V 160" />
+</svg>
+

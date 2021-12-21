@@ -1,0 +1,61 @@
+restricted_user:
+  roles:
+    - obscure_role
+  password: '6pneiw40r7CYUkpqAJS8uTda9E'
+normal_user:
+  roles:
+    - user
+    - readdb
+    - writedb
+    - vis
+    - geodb
+    - annotator
+    - reporting
+  password: '6carvj40e7PLHxcdNWF8hGqn9R'
+pgadmin_user:
+  roles:
+    - user
+    - readdb
+    - writedb
+    - geodb
+    - vis
+    - pgadmin
+  password: 'C3KTEVsrg4zlmHqikX5oljeIJg'
+administrator:
+  roles:
+    - user
+    - admin
+    - geodb
+    - annotator
+    - pgadmin
+    - vis
+    - dev
+    - readdb
+    - writedb
+  password: 'e0ih5GfKv0d8aaG7FZIAUCPze6'
+dev_user:
+  roles:
+    - user
+    - dev
+    - geodb
+    - vis
+    - readdb
+    - writedb
+  password: 'g0B69XYAjr9cDdUKawcesKxJy4'
+readonly_user_1:
+  roles:
+    - user
+    - vis
+    - reporting
+    - readdb
+  password: '8PSVJkWmbTU0H3tG43EM2emw0R'
+readonly_user_2:
+  roles:
+    - user
+    - vis
+    - readdb
+  password: 'Ygxk096dRzW52HyzzeXmkxTHsR'
+user_only:
+  roles:
+    - user
+  password: 'NVQAblbPgCgqBUKixdOczVBe13o4W5rS'

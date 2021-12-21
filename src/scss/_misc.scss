@@ -1,0 +1,31 @@
+@use 'colors';
+
+.inline {
+  display: inline;
+}
+
+.hidden {
+  display: none;
+}
+
+.no-text-select {
+  /* https://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting */
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+.fa--pad-right {
+  /* The class should be called fa--margin-right, but I'm too used to the old
+   * name, and it is all across the code base. The reason why it moved to
+   * margin is that this does not break fa-pulse or fa-spin. */
+  margin-right: 1ex;
+}
+
+.accent {
+  color: colors.$clr-accent;
+}

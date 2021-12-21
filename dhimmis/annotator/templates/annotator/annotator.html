@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Annotator{% endblock %}
+{% block head %}
+{{ super() }}
+  <link rel="stylesheet" href="{{ url_for('annotator.file', path='dom-tree-annotator.min.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('annotator.file', path='annotator.css') }}" />
+  <script src="{{ url_for('annotator.file', path='bundle.js') }}" defer></script>
+{% endblock %}
+
+{% block content %}
+<section class="annotation-area">
+  <div class="annotation-area__header">
+    <span class="document-info"></span>
+    <button class="button button--green button-add-evidence" disabled>
+      <i class="fa fa-plus fa--pad-right"></i>New evidence
+    </button>
+  </div>
+  <div class="scroll">
+    <div class="scroll-parent"></div>
+  </div>
+  <canvas class="minimap"></canvas>
+</section>
+<section class="sidebar"></section>
+{% endblock %}

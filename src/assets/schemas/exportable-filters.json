@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://www2.visus.uni-stuttgart.de/damast/vis/schemas/exportable-filters.json",
+  "$comment": "This is a robust subset of ./visualization-state.json",
+
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "filters",
+    "metadata"
+  ],
+  "properties": {
+    "metadata": {
+      "$ref": "https://www2.visus.uni-stuttgart.de/damast/vis/schemas/metadata.json"
+    },
+    "filters": {
+      "$ref": "https://www2.visus.uni-stuttgart.de/damast/vis/schemas/visualization-filter.json"
+    }
+  }
+}

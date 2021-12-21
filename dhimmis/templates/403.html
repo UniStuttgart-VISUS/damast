@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}403 Forbidden{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('root-app.static_public', filename='40x.css') }}">
+<link rel="next" href="{{ next }}">
+{% if cookie_preference is not none %}
+<meta http-equiv="refresh" content="3;url={{ next }}">
+{% endif %}
+{% endblock %}
+
+{% block content %}
+  <h1>403 Forbidden</h1>
+  <p>
+    You don't have the permission to access the requested resource.
+    It is either read-protected or not readable by the server.
+    You should be redirected automatically to target URL:
+    <a href="{{ next }}">{{ next }}</a>.
+    If not, click the link.
+  </p>
+{% endblock %}
+

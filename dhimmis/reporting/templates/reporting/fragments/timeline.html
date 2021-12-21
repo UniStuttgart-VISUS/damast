@@ -1,0 +1,106 @@
+{% from 'reporting/fragments/macros.html' import create_evidence_linklist with context %}
+
+{% macro create_timeline(td) %}
+{%- set y0 = td.year_start -%}
+{%- set y1 = td.year_end -%}
+{%- set scale = 600 / ([1, (y1 - y0)]|max) -%}
+{%- set height = td.num_evidences * 10 + 70 -%}
+{%- set width = 600 + 65 + 40 -%}
+{%- set x_axis_y = td.num_evidences * 10 + 5 -%}
+<svg viewBox="-15 -15 {{ width }} {{ height }}" width="{{ width }}" height="{{ height }}">
+  <defs>
+    <marker id="head" orient="auto" markerWidth="6" markerHeight="8" refX="0" refY="4">
+      <path d="M0 0V8L6 4Z"></path>
+    </marker>
+    <marker id="tick" orient="auto" markerWidth="2" markerHeight="6" refX="0" refY="3">
+      <path d="M-1 0v6h2v-6z" />
+    </marker>
+    <marker id="end-at" orient="auto" markerWidth="4" markerHeight="4" refX="4" refY="2">
+      <path d="M0 0 V4L3 2V4H4V0H3V2Z" />
+    </marker>
+    <marker id="end-after" orient="auto" markerWidth="4" markerHeight="4" refX="0" refY="2">
+      <path d="M0 0 V4L2 2 2 4 4 2 2 0 2 2 Z" />
+    </marker>
+    <marker id="start-at" orient="auto" markerWidth="4" markerHeight="4" refX="0" refY="2">
+      <path d="M4 0 V4L1 2V4H0V0H1V2Z" />
+    </marker>
+    <marker id="start-before" orient="auto" markerWidth="4" markerHeight="4" refX="0" refY="2">
+      <path d="M4 0 V4L2 2 2 4 0 2 2 0 2 2 Z" />
+    </marker>
+  </defs>
+
+  <polyline class="axis axis--x"
+            marker-end="url(#head)"
+            marker-mid="url(#tick)"
+            points="0 {{x_axis_y}} {% for t in td.ticks %}{{ (t - y0) * scale }} {{x_axis_y}} {% endfor %} 610 {{x_axis_y}}" />
+  {% for t in td.ticks %}
+  {%- set x = (t - y0) * scale -%}
+  {%- set y = x_axis_y + 10 -%}
+  <text x="{{ x }}"
+        y="{{ y }}"
+        font-size="10"
+        transform="rotate(45 {{ x }} {{ y }})"
+        >{{ t }}</text>
+  <line class="grid-line"
+        x1="{{ x }}"
+        x2="{{ x }}"
+        y1="-10"
+        y2="{{ x_axis_y }}"
+        stroke-width="1" />
+  {% endfor %}
+  {% for i, evidence_id, tis in td.time_instances %}
+    {%- set y = 10 * i -%}
+    <a href="#evidence{{ evidence_id }}">
+      <g>
+      {% for ti in tis %}
+        {#- we have to assume that no time instance has empty start and end, because those get filtered out before -#}
+        {%- if ti.start_year is none -%}
+        {%- set endx = (ti.end_year - y0) * scale -%}
+        {%- set x = endx - 50 -%}
+        {%- set width = endx - x -%}
+        {%- set start_marker = '' -%}
+        {%- set end_marker = 'url(#end-after)' if ti.end_year > y1 else 'url(#end-at)' -%}
+        {%- set linestyle = '2,2' -%}
+        {%- elif ti.end_year is none -%}
+        {%- set x = ( ti.start_year - y0 ) * scale -%}
+        {%- set width = 50 -%}
+        {%- set start_marker = 'url(#start-before)' if ti.start_year < y0 else 'url(#start-at)' -%}
+        {%- set end_marker = '' -%}
+        {%- set linestyle = '2,2' -%}
+        {%- else -%}
+        {%- set x = ( ti.start_year - y0 ) * scale -%}
+        {%- set width = ( ti.end_year - ti.start_year ) * scale -%}
+        {%- set start_marker = 'url(#start-before)' if ti.start_year < y0 else 'url(#start-at)' -%}
+        {%- set end_marker = 'url(#end-after)' if ti.end_year > y1 else 'url(#end-at)' -%}
+        {%- set linestyle = '' -%}
+        {%- endif -%}
+          <line class="timespan timespan--{{ ti.confidence or 'no-value' }}"
+                id="time-instance{{ ti.id }}"
+                x1="{{ -10 if x < -10 else x }}"
+                y1="{{ y + 5 }}"
+                y2="{{ y + 5 }}"
+                x2="{{ (x + width) if (x + width) <= 610 else 610 }}"
+                marker-start="{{ start_marker }}"
+                marker-end="{{ end_marker }}"
+                stroke-dasharray="{{ linestyle }}"
+                stroke-width="2" />
+          <rect opacity="0"
+                x="{{ -10 if x < -10 else x }}"
+                y="{{ y }}"
+                height="10"
+                width="{{ ((x + width) if (x + width) <= 610 else 610) - x }}" />
+
+      {% endfor %}
+      </g>
+    </a>
+  {% endfor %}
+  {% for i, conf in [(0,'certain'), (1,'probable'), (2, 'contested'), (3, 'uncertain'), (4, 'false'), (5, 'no-value')] %}
+    {%- set x = 640 -%}
+    {%- set y = 5 + 20 * i -%}
+    <g transform="translate({{ x }}, {{ y }})">
+      <circle cx="-7" cy="0" r="5" class="timespan timespan--{{ conf }}" />
+      <text font-size="10" dy="3">{{ conf | replace('-', ' ') }}</text>
+    </g>
+  {% endfor %}
+</svg>
+{% endmacro %}

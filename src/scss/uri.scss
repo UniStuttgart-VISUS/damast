@@ -1,0 +1,60 @@
+@use 'colors' as *;
+@use 'prototype-variables' as *;
+@use 'mixins';
+
+@forward 'target-highlight';
+@forward 'leaflet-mapbox-attribution';
+
+.content {
+  @include mixins.baseFlexBlock();
+
+  &::after {
+    clear: both;
+  }
+
+  & > :where(h1, h2, h3, h4, section, p, ul, ol, blockquote) {
+    width: clamp(30rem, calc(100% - 2rem), 65rem);
+    padding-inline: 1rem;
+    margin-inline: auto;
+  }
+}
+
+.info-box {
+  float: right;
+  width: 400px;
+  font-size: 0.8rem;
+
+  .map {
+    height: 200px;
+
+    &--none {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: $clr-gray;
+      color: $clr-lightgray;
+
+      font-size-adjust: smaller;
+      font-variant: small-caps;
+    }
+  }
+
+  table {
+    width: 100%;
+  }
+
+  table, th, td {
+    border: 1px solid $clr-gray;
+    border-collapse: collapse;
+  }
+}
+
+h2 + ul {
+  margin-block-start: 0;
+}
+
+li[data-footnote-number]::marker {
+  content: attr(data-footnote-number) " ";
+  color: $clr-gray;
+}

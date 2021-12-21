@@ -1,0 +1,1 @@
+5 0 * * *	/usr/bin/find /www \( -name 'access_log*' -o -name 'error_log*' \) -mtime +10 -exec rm -fv -- '{}' +

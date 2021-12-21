@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="{{ url_for('vis.file', path='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('root-app.static_public', filename='font-awesome/css/font-awesome.min.css') }}">
+</head>
+<body class="modal-standalone-body">
+  <span class="modal__close-button modal__close-button--top-right" onclick="window.close()" title="Close window">&times;</span>
+  <div class="modal__foreground">
+    {% include content %}
+  </div>
+</body>
+</html>

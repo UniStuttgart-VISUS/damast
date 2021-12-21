@@ -1,0 +1,85 @@
+@use 'colors' as *;
+@use 'mixins';
+
+/* MODALS */
+body {
+  position: relative;
+}
+
+.modal {
+  z-index: 2000;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &__background {
+    background: rgba(0, 0, 0, 0.4);
+  }
+
+  &__body {
+    background: $clr-bg;
+    color: $clr-fg;
+    padding: 1em 1em;
+    box-shadow: $box-shadow--modal;
+
+    font-size: 0.8rem;
+
+    width: max-content;
+    max-width: min(80vw, 600px);
+
+    .modal[data-role="delete"] & {
+      border: 5px solid $clr-dark-red;
+    }
+  }
+
+  &__content {
+    max-width: 80ch;
+
+    span.clear {
+      clear: left;
+      display: block;
+    }
+
+    .danger {
+      color: $clr-yellow;
+    }
+  }
+
+  &__footer {
+    margin-top: 1em;
+    display: flex;
+    /*justify-content: space-between;*/
+    flex-wrap: wrap;
+    flex-direction: row;
+
+    & .button {
+      justify-content: flex-end;
+      min-width: 5em;
+
+      &:first-of-type {
+        justify-content: flex-start;
+        margin-right: auto;
+      }
+      &:not(:first-of-type) {
+        margin-left: 1ex;
+      }
+    }
+
+    & .button--right,
+    & .button--right:first-of-type {
+      margin-right: 0;
+      margin-left: auto;
+    }
+  }
+
+  h1 { font-size: 1.25rem; }
+  h2 { font-size: 1.125rem; }
+  h3 { font-size: 1rem; }
+}
+

@@ -1,0 +1,29 @@
+ARG DHIMMIS_VERSION
+ARG DHIMMIS_ENVIRONMENT
+ARG DHIMMIS_PORT
+ENV DHIMMIS_VERSION="$DHIMMIS_VERSION"
+ENV DHIMMIS_ENVIRONMENT="$DHIMMIS_ENVIRONMENT"
+ENV DHIMMIS_PORT="$DHIMMIS_PORT"
+
+# server port
+EXPOSE $DHIMMIS_PORT
+
+# create user with uid and name as calling user
+ARG OWN_USER_ID
+ARG OWN_USER_NAME
+
+USER root
+RUN chmod -R g+rwx /www/.local/
+
+RUN adduser \
+      --disabled-password \
+      --gecos '' \
+      --uid $OWN_USER_ID \
+      --gid $GROUP_ID \
+      $OWN_USER_NAME
+
+USER $OWN_USER_NAME
+ENV PYTHONPATH=/www/.local/lib/python3.9/site-packages
+
+CMD ["sh", "-c", "/usr/bin/env python3 -m gunicorn -b 127.0.0.1:$DHIMMIS_PORT 'dhimmis:create_app()' --worker-class=gevent --workers=1 --threads=4 --timeout 0 --reload"]
+

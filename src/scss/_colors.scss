@@ -1,0 +1,46 @@
+$clr-bg-root: #303030;
+$clr-bg: #505050;
+$clr-fg: #bbc;
+$clr-title: #dde;
+
+$box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+$box-shadow--modal: 0 0 10px 4px rgba(0, 0, 0, 0.6);
+
+$clr-accent: #8fbcbb;
+$clr-accent-dark: #0e5958;
+$clr-accent-dark-red: #932426;
+$clr-error: #400;
+
+$clr-lightgray: #ccc;
+$clr-gray: #666;
+$clr-orange: #d61;
+$clr-red: #c55;
+$clr-dark-red: #820404;
+$clr-yellow: #dc1;
+$clr-green: #7c5;
+$clr-blue: #919cdb;
+$clr-dark-blue: #1a2c97;
+
+$clr-location-marker: $clr-accent;
+
+$clr-link: #00beff;
+
+$clr-scrollbar-fg: #444;
+$clr-scrollbar-bg: $clr-gray;
+$clrs-scrollbar: $clr-scrollbar-fg $clr-scrollbar-bg;
+
+
+// annotations
+$clr-annotation-place: rgb(121, 54, 9);
+$clr-annotation-religion: rgb(121, 20, 83);
+$clr-annotation-person: rgb(36, 25, 119);
+$clr-annotation-timegroup: rgb(6, 79, 48);
+
+
+// confidence values
+$clr-confidence-certain: #0571b0;
+$clr-confidence-probable: #92c5de;
+$clr-confidence-contested: #f7f7f7;
+$clr-confidence-uncertain: #f4a582;
+$clr-confidence-false: #ca0020;
+$clr-confidence-no-value: #a2b536;

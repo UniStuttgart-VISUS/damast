@@ -1,0 +1,22 @@
+<nav class="prev-next">
+  <a
+      href="{{ url_for('reporting.list_available_reports') }}"
+      {%- if not has_prev_page -%} disabled{%- endif -%}>
+    &laquo; First
+  </a>
+  <a
+      href="{{ url_for('reporting.list_available_reports') }}?offset={{ prev_page_offset }}"
+      {%- if not has_prev_page -%} disabled{%- endif -%}>
+    &lsaquo; Previous
+  </a>
+  <a
+      href="{{ url_for('reporting.list_available_reports') }}?offset={{ next_page_offset }}"
+      {%- if not has_next_page -%} disabled{%- endif -%}>
+    Next &rsaquo;
+  </a>
+  <a
+      href="{{ url_for('reporting.list_available_reports') }}?offset={{ last_page_offset }}"
+      {%- if not has_next_page -%} disabled{%- endif -%}>
+    Last &raquo;
+  </a>
+</nav>

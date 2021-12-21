@@ -1,0 +1,31 @@
+@use 'colors' as *;
+
+
+h1, h2, h3 {
+  color: $clr-title;
+}
+
+h1 {
+  text-align: center;
+  font-size: 4rem;
+  padding-bottom: 0.6rem;
+
+  .subtitle {
+    display: block;
+    font-size: 2rem;
+  }
+}
+
+h2, h3 {
+  padding: 0.5rem;
+  padding-bottom: 1rem;
+  margin: 0;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1.2rem;
+}

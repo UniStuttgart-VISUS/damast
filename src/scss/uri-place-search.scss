@@ -1,0 +1,106 @@
+@use 'colors' as *;
+@use 'prototype-variables' as *;
+@use 'mixins';
+
+@forward 'target-highlight';
+
+body {
+  height: calc(100vh - 1rem);
+  display: grid;
+  grid-template-rows: max-content auto max-content;
+}
+
+.content {
+  @include mixins.baseFlexBlock();
+
+  display: grid;
+  grid-template-rows: max-content auto;
+}
+
+.search-bar {
+  position: relative;
+  width: clamp(40ch, 80%, 65ch);
+  margin: 2rem auto;
+  display: flex;
+
+  font-size: 2rem;
+
+  input {
+    padding: 0.4em;
+    width: 100%;
+
+    font-size: inherit;
+
+    background: $clr-gray;
+    color: $clr-lightgray;
+
+    border: 2px solid $clr-lightgray;
+    border-radius: 0.5rem;
+
+    &:focus {
+      outline: none;
+      border-color: $clr-accent;
+    }
+
+    &:valid + .reset {
+      display: initial;
+    }
+  }
+
+  .reset {
+    position: absolute;
+    right: 0.6rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: none;
+
+    border: none;
+    color: $clr-red;
+    background: none;
+    cursor: pointer;
+  }
+}
+
+.search-results {
+  overflow-y: scroll;
+  margin-bottom: 2rem;
+
+  ol {
+    width: clamp(40ch, 80%, 65ch);
+    margin-inline: auto;
+
+    li {
+      line-height: 1.8;
+
+      a {
+        display: flex;
+
+        &:is(:hover, :focus) {
+          text-decoration: none;
+
+          span.place-name {
+            text-decoration-line: underline;
+          }
+        }
+      }
+
+      &::marker {
+        content: '[' attr(data-place-id) '] ';
+        color: $clr-gray;
+      }
+
+      span.place-name {
+        font-weight: 700;
+
+      }
+
+      span.match-description {
+        color: $clr-gray;
+        font-size: small;
+        font-style: italic;
+
+        margin-inline-start: auto;
+      }
+    }
+  }
+}

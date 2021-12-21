@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://www2.visus.uni-stuttgart.de/damast/vis/schemas/visualization-state.json",
+
+  "definitions": {
+    "confidence_range": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "certain",
+          "probable",
+          "contested",
+          "uncertain",
+          "false",
+          null
+        ]
+      }
+    }
+  },
+
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "filters",
+    "metadata"
+  ],
+  "properties": {
+    "metadata": {
+      "$ref": "https://www2.visus.uni-stuttgart.de/damast/vis/schemas/metadata.json"
+    },
+    "show-filtered": {
+      "type": "boolean"
+    },
+    "display-mode": {
+      "enum": ["religion", "confidence"]
+    },
+    "timeline-mode": {
+      "enum": ["qualitative", "quantitative"]
+    },
+    "map-mode": {
+      "enum": ["clustered", "cluttered"]
+    },
+    "confidence-aspect": {
+      "enum": [
+        "time_confidence",
+        "location_confidence",
+        "place_attribution_confidence",
+        "source_confidences",
+        "interpretation_confidence",
+        "religion_confidence"
+      ]
+    },
+    "map-state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "zoom",
+        "center",
+        "base_layer",
+        "overlay_layers"
+      ],
+      "properties": {
+        "zoom": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18
+        },
+        "center": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["lat", "lng"],
+          "properties": {
+            "lat": { "type": "number" },
+            "lng": { "type": "number" }
+          }
+        },
+        "base_layer": { "enum": ["light", "dare"] },
+        "overlay_layers": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "enum": [
+            "markerLayer",
+            "diversityMarkerLayer",
+            "diversityDensityLayer",
+            "evidenceCountHeatLayer"
+          ]}
+        }
+      }
+    },
+    "filters": {
+      "$ref": "https://www2.visus.uni-stuttgart.de/damast/vis/schemas/visualization-filter.json"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+<nav class="tables-nav">
+  <h2>View tables:</h2>
+  <ul>
+    <li>
+      <a href="{{ url_for('geodb_editor.root') }}"{%- if current == 'places' -%} disabled{%- endif -%}>
+        <i class="fa fa-globe"></i>
+        Place data
+      </a>
+    </li>
+    <li>
+      <a href="{{ url_for('geodb_editor.persons') }}"{%- if current == 'persons' -%} disabled{%- endif -%}>
+        <i class="fa fa-users"></i>
+        Person data
+      </a>
+    </li>
+  </ul>
+</nav>

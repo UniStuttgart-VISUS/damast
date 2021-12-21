@@ -1,0 +1,159 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://www2.visus.uni-stuttgart.de/damast/vis/schemas/visualization-filter.json",
+
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "religion",
+    "confidence",
+    "tags",
+    "time",
+    "sources",
+    "location",
+    "places"
+  ],
+  "properties": {
+    "religion": {
+      "anyOf": [
+        {
+          "const": true
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "filter"
+          ],
+          "properties": {
+            "type": {
+              "const": "simple"
+            },
+            "filter": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "filter"
+          ],
+          "properties": {
+            "type": {
+              "const": "complex"
+            },
+            "filter": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "confidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "religion_confidence",
+        "location_confidence",
+        "place_attribution_confidence",
+        "time_confidence",
+        "source_confidences",
+        "interpretation_confidence"
+      ],
+      "properties": {
+        "religion_confidence": {
+          "$ref": "https://www2.visus.uni-stuttgart.de/damast/vis/schemas/confidence-range.json"
+        },
+        "location_confidence": {
+          "$ref": "https://www2.visus.uni-stuttgart.de/damast/vis/schemas/confidence-range.json"
+        },
+        "place_attribution_confidence": {
+          "$ref": "https://www2.visus.uni-stuttgart.de/damast/vis/schemas/confidence-range.json"
+        },
+        "time_confidence": {
+          "$ref": "https://www2.visus.uni-stuttgart.de/damast/vis/schemas/confidence-range.json"
+        },
+        "source_confidences": {
+          "$ref": "https://www2.visus.uni-stuttgart.de/damast/vis/schemas/confidence-range.json"
+        },
+        "interpretation_confidence": {
+          "$ref": "https://www2.visus.uni-stuttgart.de/damast/vis/schemas/confidence-range.json"
+        }
+      }
+    },
+    "tags": {
+      "anyOf": [
+        {
+          "const": true
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      ]
+    },
+    "time": {
+      "anyOf": [
+        {
+          "const": null
+        },
+        {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "number"
+          }
+        }
+      ]
+    },
+    "sources": {
+      "anyOf": [
+        {
+          "const": null
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      ]
+    },
+    "location": {
+      "$ref": "https://www2.visus.uni-stuttgart.de/damast/vis/schemas/location-filter.json"
+    },
+    "places": {
+      "anyOf": [
+        {
+          "const": null
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      ]
+    }
+  }
+}
+

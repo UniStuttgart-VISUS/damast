@@ -1,0 +1,156 @@
+@use 'colors' as *;
+@use 'mixins';
+@forward 'misc';
+@forward 'leaflet-mapbox-attribution';
+@forward 'uri-helpers';
+@forward 'modals';
+@forward 'geodb-visibility-modal';
+
+.content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+
+  color: $clr-fg;
+}
+
+.section,
+.map,
+nav.tables-nav {
+  @include mixins.baseFlexBlock();
+
+  padding: 1em 1em;
+}
+
+.section#alt-names,
+.section#time,
+.section#source,
+.section#person {
+  flex: 1;
+  min-width: 600px;
+}
+
+.section#place,
+.section#external-uris,
+.section#evidence,
+.section#external-person-uris {
+  flex: 2;
+  min-width: 1200px;
+}
+
+.map {
+  width: 600px;
+}
+
+.map,
+.section#alt-names {
+  height: 400px;
+}
+
+.section h3 {
+  display: inline-block;
+}
+
+.controls {
+  float: right;
+  margin-bottom: 1ex;
+}
+
+.section__head {
+  overflow: auto;
+}
+
+.section__head::after {
+  clear: both;
+}
+
+nav.tables-nav {
+  display: flex;
+  flex-direction: row;
+
+  width: 100%;
+  padding-block: 0;
+
+  h2 {
+    display: inline-block;
+    font-size: 1.1rem;
+    padding-block: 0;
+    align-self: center;
+  }
+
+  ul {
+    display: flex;
+    gap: 2em;
+    list-style: none;
+
+    li {
+
+    }
+  }
+
+  a[disabled] {
+    cursor: default;
+    color: $clr-gray;
+    pointer-events: none;
+  }
+}
+
+/* Tabulator */
+.tabulator .fa.new-row-indicator {
+  font-size: initial;
+  color: #a83;
+}
+.tabulator .fa.new-row-indicator::after {
+  content: 'new';
+  font-family: sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  padding-left: 0.5ex;
+}
+
+.fa.delete-button,
+.fa.cancel-button {
+  color: darkred;
+}
+
+.fa.save-button,
+.fa.upload-button,
+.fa.external-link-button {
+  color: darkblue;
+}
+.tabulator-row:not([dirty]) .fa.save-button,
+.tabulator-row:not([dirty]) .fa.revert-button {
+  color: grey;
+  cursor: not-allowed;
+}
+
+.tabulator-row.tabulator-row-odd[dirty] {
+  background: #cfc;
+}
+.tabulator-row.tabulator-row-even[dirty] {
+  background: #beb;
+}
+
+.tabulator-row.tabulator-row-odd[new-row] {
+  background: #ffc;
+}
+.tabulator-row.tabulator-row-even[new-row] {
+  background: #eec;
+}
+
+.tabulator-row .fa.selected-row-indicator {
+  font-size: 0.8rem;
+  display: none;
+}
+.tabulator-row.tabulator-selected .fa.selected-row-indicator {
+  display: initial;
+}
+.tabulator-row:not(.tabulator-selected):hover .fa.selected-row-indicator {
+  display: initial;
+  color: lightgray;
+}
+
+.tabulator-cell.tabulator-cell--crosshair {
+  cursor: crosshair;
+}

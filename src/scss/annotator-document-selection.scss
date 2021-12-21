@@ -1,0 +1,176 @@
+@use 'colors' as *;
+@use 'prototype-variables' as *;
+@use 'mixins';
+@use 'annotator-virtual-text' as virtual;
+
+.content {
+  @include mixins.baseFlexBlock();
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+.documents {
+  display: flex;
+  gap: 2em;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  padding-inline: 2em;
+  padding-bottom: 2em;
+
+  a.document {
+    all: unset;
+
+    background: $clr-gray;
+    box-shadow: $box-shadow;
+
+    width: 500px;
+    height: 300px;
+
+    transition: transform 0.2s linear;
+
+    display: grid;
+    grid-template-rows: repeat(3, min-content) auto;
+
+    .header {
+      background: $clr-accent;
+      color: $clr-bg-root;
+      font-weight: 700;
+      font-size: 8px;
+
+      display: grid;
+      grid-template-columns: 30px 1fr;
+
+      .document-id {
+        background: $clr-bg;
+        color: $clr-accent;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .comment {
+        padding: 1em;
+      }
+    }
+
+    .source-data {
+      font-size: 10px;
+
+      display: grid;
+      grid-template-columns: 1fr 80px;
+
+      .source-id {
+        grid-row: 1;
+        grid-column: 2;
+
+        background: $clr-bg;
+        color: $clr-green;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.125rem;
+      }
+
+      .source-name {
+        grid-row: 1;
+        grid-column: 1;
+
+        padding: 1em;
+
+        &:first-line {
+          font-weight: 600;
+        }
+
+        &__details {
+          float: right;
+          font-style: italic;
+          color: $clr-accent;
+
+          &::after {
+            clear: both;
+          }
+        }
+      }
+    }
+
+    .document-data {
+      font-size: 8px;
+      font-weight: 700;
+
+      display: grid;
+      grid-template-columns: 2fr 3fr 4fr;
+
+      background: $clr-blue;
+      color: $clr-title;
+
+      .version,
+      .content-type,
+      .num-annotations {
+        display: flex;
+        justify-content: start;
+        align-items: center;
+
+        padding: 1em;
+      }
+
+      .content-type {
+        font-family: monospace;
+        justify-content: center;
+      }
+
+      .num-annotations {
+        justify-content: end;
+      }
+    }
+
+    .document-preview {
+      overflow: hidden;  // for older browsers
+      overflow: clip;
+      text-overflow: ellipsis;
+      margin: 1em;
+      font-size: 12px;
+      color: $clr-fg;
+
+      * {
+        all: revert;
+
+        font-family: sans-serif;
+        font-size: 12px;
+        color: $clr-fg;
+      }
+
+      // show virtual text
+      @include virtual.virtual-annotator-text();
+    }
+
+    user-select: none;
+    cursor: pointer;
+
+    position: relative;
+
+    &:hover,
+    &:focus-visible {
+      transform: translateY(-5px);
+
+      &::before {
+        position: absolute;
+        inset: 0;
+        content: '';
+        box-shadow: 0 0 20px 3px rgba($clr-accent, 0.5);
+      }
+    }
+
+    // create new document
+    &__new {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 32px;
+    }
+  }
+}

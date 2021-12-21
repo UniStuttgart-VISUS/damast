@@ -1,0 +1,70 @@
+{# https://www.bundesgerichtshof.de/SharedDocs/Pressemitteilungen/DE/2020/2020067.html?nn=10690868 #}
+
+{%- macro consent_popup() -%}
+  {%- if cookie_preference is none -%}
+    <div class="cookies cookies__bg">
+      {{ consent() }}
+    </div>
+  {%- endif %}
+{%- endmacro %}
+
+
+{%- macro consent(own_page=false) -%}
+<div class="cookies cookies__content{% if own_page %} cookies__content--own-page{% endif %}">
+<h3>Cookie Policy</h3>
+
+<p>
+  This website uses <em>cookies</em> and other technologies to enable and support certain functionalities, and to improve user experience.
+  These cookies are stored in your browser, on your computer.
+  Your explicit consent is required before storing such cookies.
+  You are free to reject all cookies.
+  However, in that case some functionalities may be limited or not available.
+  {% if not own_page %}
+  You may change your preferences at any time under
+  <a href="{{ url_for('root-app.cookie_preferences') }}">
+    <i class="fa fa-link"></i>
+    Cookie Preferences</a>.
+  {% endif %}
+</p>
+
+<form autocomplete="off" class="cookies__options content__block">
+  <input type="radio"
+         id="none"
+         name="policy"
+         value="none"
+         {% if cookie_preference is none %}checked{% endif %}>
+  <label for="none">
+    <strong>No cookies:</strong>
+    Reject all cookies.
+    Some functionalities might not be available.
+  </label>
+  <input type="radio"
+         id="essential"
+         name="policy"
+         value="essential"
+         {% if cookie_preference == 'essential' %}checked{% endif %}>
+  <label for="essential">
+    <strong>Essential cookies:</strong>
+    Allow only storage of essential cookies.
+    Basic functionalities, such as login, are available.
+  </label>
+  <input type="radio"
+         id="all"
+         name="policy"
+         value="all"
+         {% if cookie_preference == 'all' %}checked{% endif %}>
+  <label for="all">
+    <strong>All cookies:</strong>
+    Allow storage of all cookies.
+  </label>
+</form>
+<div class="content__block">
+  <button id="save-cookie-policy"
+          class="button button--green button--medium"
+          data-standalone="{{ 'true' if own_page else 'false' }}">
+    <i class="fa fa-save fa-fw fa--pad-right"></i>
+    Save preferences
+  </button>
+</div>
+</div>
+{%- endmacro -%}

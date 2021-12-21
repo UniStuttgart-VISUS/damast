@@ -1,0 +1,9 @@
+@use 'colors' as *;
+
+.yellow-icon {
+  color: $clr-yellow;
+}
+
+.no-break {
+  display: inline-block;
+}

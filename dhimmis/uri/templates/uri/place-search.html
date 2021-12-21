@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% set footnote_lut = dict() %}
+{% set footnotes = namespace(i=1) %}
+
+{% block title %}Place Search{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link type="text/css" rel="stylesheet" href="{{ url_for('uri.file', path='place-search.css') }}">
+  <script src="{{ url_for('uri.file', path='place-search.js') }}" defer></script>
+{% endblock %}
+
+{% block content %}
+
+<div class="search-bar">
+  <input type="text" placeholder="Type to search place" pattern="\S+" required autofocus>
+  <button class="reset">
+    <i class="fa fa-fw fa-times fa-3x"></i>
+  </button>
+</div>
+
+<section class="search-results"><ol></ol></section>
+
+{% endblock %}

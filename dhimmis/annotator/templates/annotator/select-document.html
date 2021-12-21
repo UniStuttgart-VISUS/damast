@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Select Annotator Document{% endblock %}
+{% block head %}
+{{ super() }}
+  <link rel="stylesheet" href="{{ url_for('annotator.file', path='document-selection.css') }}" />
+{% endblock %}
+
+{% block content %}
+<section class="select-document">
+
+  <h1>Select Document</h1>
+
+  <div class="documents">
+    {% for doc in documents %}
+    <a class="document" href="?document_id={{doc.document_id}}">
+      <div class="header">
+        <span class="document-id">{{doc.document_id}}</span>
+        <span class="comment">{{doc.comment}}</span>
+      </div>
+      <div class="source-data">
+        <span class="source-id">
+          <i class="fa fa-book fa--pad-right"></i>
+          {{doc.source_id}}
+        </span>
+        <span class="source-name">{{doc.source_name}}
+          <span class="source-name__details">({{doc.source_type}}, {{doc.source_name_short}})
+          </span>
+        </span>
+      </div>
+      <div class="document-data">
+        <span class="version">
+          <i class="fa fa-hashtag fa--pad-right"></i>
+          Version {{doc.version}}
+        </span>
+        <span class="content-type">
+          <i class="fa fa-file fa--pad-right"></i>
+          {{doc.content_type}}
+        </span>
+        <span class="num-annotations">
+          <i class="fa fa-comments fa--pad-right"></i>
+          {{doc.num_annotations}} annotations
+        </span>
+      </div>
+      <div class="document-preview">
+        {{doc.content|safe}}
+      </div>
+    </a>
+    {% endfor %}
+    {% if True %}
+    <a class="document document__new" href="{{ url_for('annotator.add_document') }}" title="Create a new document">
+        <i class="fa fa-3x fa--pad-right fa-plus"></i>
+        New document
+      </a>
+    {% endif %}
+  </div>
+
+</section>
+{% endblock %}

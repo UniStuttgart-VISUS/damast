@@ -1,0 +1,63 @@
+@use 'colors' as *;
+
+.settings-pane {
+  font-size: 10px;
+  overflow-y: auto;
+
+  section {
+    padding-inline: 1em;
+    margin-block-end: 1em;
+  }
+
+  h4 {
+    color: $clr-title;
+    font-size: 11px;
+  }
+
+  .buttons {
+    display: flex;
+
+    button {
+      margin-inline: 0.5ex;
+      margin-block-start: 1ex;
+      margin-block-end: 0.5ex;
+    }
+  }
+
+  dt {
+    margin-inline-start: 1em;
+    font-weight: 600;
+  }
+
+  .timeline__controls {
+    margin-block-end: 1em;
+  }
+
+  .error-message {
+    margin-block-start: 1em;
+    padding: 1em;
+    color: white;
+    font-weight: 600;
+    background: $clr-red;
+    border: 1px solid $clr-dark-red;
+    border-radius: 4px;
+
+    pre {
+      font-weight: initial;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  }
+
+  details summary {
+    cursor: pointer;
+  }
+
+  details {
+    margin-block: 1em;
+
+    &[open] {
+      margin-block-end: initial;
+    }
+  }
+}

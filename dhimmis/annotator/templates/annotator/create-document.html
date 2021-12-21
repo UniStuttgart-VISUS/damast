@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+{% block title %}Create Annotator Document{% endblock %}
+{% block head %}
+{{ super() }}
+  <link rel="stylesheet" href="{{ url_for('annotator.file', path='document-creation.css') }}" />
+{% endblock %}
+
+{% block content %}
+<h1>Add a new document</h1>
+
+<p>
+  Please fill out the form below and select a file to create a new <code>document</code> entry.
+  The document can then be used for digital annotation, creating evidences that are attributed to the source of the document.
+  A source for the document must therefore be selected below, and that source entry must already be in the database.
+  At the moment, we only support annotation of plain text (<code>text/plain;charset=UTF-8</code>) and HTML documents (<code>text/html;charset=UTF-8</code>).
+</p>
+
+<p>
+  HTML documents should be prepared carefully before being submitted here, as changes to their content later on will mess up existing annotations.
+  If you need to make larger changes to an existing document, consider uploading a new <em>version</em> of the document.
+  The main criteria and guidelines for HTML documents are detailed below:
+</p>
+
+<details>
+  <summary><strong>Criteria and guidelines for HTML documents:</strong></summary>
+
+  <ul>
+    <li>
+      <h4>Limit to the body content</h4>
+
+      The HTML document does not need to be complete;
+      e.g., it does not require a <code>DOCTYPE</code>, a <code>&lt;html&gt;</code> tag, a <code>&lt;head&gt;</code> tag, or a <code>&lt;body&gt;</code> tag.
+      The content of the document can just be the content of the <code>&lt;body&gt;</code> tag.
+      An example for a complete, valid HTML document:
+
+      <pre><code>&lt;h1&gt;Heading&lt;/h1&gt;
+
+&lt;p&gt;
+  This is the first paragraph. It has two sentences.
+&lt;/p&gt;</code></pre>
+    </li>
+
+    <li>
+      <h4>Avoid use of certain tags and attributes</h4>
+
+      The HTML document will be <strong>sanitized</strong> on import.
+      This will remove potentially harmful content, as the document will later be inserted into a web page in user's browsers.
+      If the imported document contains such content, it will be removed, but the import will still succeed.
+      However, the document should not depend on that content.
+      In particular, the following element types will be <strong>removed</strong> from the document:
+
+      <ul>
+        <li>
+          <code>&lt;script&gt;</code> tags, both with inline JavaScript code, and with external links.
+        </li>
+        <li>
+          <code>&lt;style&gt;</code> tags, both for inline styles, and with external links.
+        </li>
+        <li>
+          The <code>&lt;head&gt;</code> element.
+        </li>
+      </ul>
+
+      In addition, some tags will be removed, but their contents will be preserved.
+      This includes the <code>&lt;html&gt;</code> and <code>&lt;body&gt;</code> tags.
+      The sanitization will also remove the <code>DOCTYPE</code>, comments, and <code>CDATA</code> blocks.
+      Finally, most <em>attributes</em> will be removed from tags, except for the following ones:
+
+      <ul>
+        <li>
+          The <code>id</code> attribute will always be preserved.
+        </li>
+        <li>
+          The <code>data-virtual-text</code> attribute will always be preserved.
+        </li>
+        <li>
+          On <code>a</code> (anchor) elements, the attributes <code>href</code>, <code>title</code>, and <code>hreflang</code> will be preserved.
+        </li>
+        <li>
+          On <code>img</code> elements, the <code>src</code>, <code>width</code>, <code>height</code>, <code>alt</code>, and <code>title</code> attributes will be preserved.
+        </li>
+      </ul>
+    </li>
+
+    <li>
+      <h4>Use the right HTML elements for the job</h4>
+
+      The document format is supposed to convey structure, but not layout, of the document.
+      This is also enforced by allowing neither <code>&lt;style&gt;</code> tags nor inline <code>style</code> attributes on elements.
+      Therefore, it is important to use the right HTML elements for their specific purpose:
+
+      <ul>
+        <li>
+          Use <code>&lt;h1&gt;</code> through <code>&lt;h6&gt;</code> for headings.
+        </li>
+        <li>
+          Use <code>&lt;section&gt;</code> and <code>&lt;article&gt;</code> if you want to logically structure the document into smaller pieces.
+          This is optional.
+        </li>
+        <li>
+          Use <code>&lt;p&gt;</code> (paragraph) elements for paragraphs.
+        </li>
+        <li>
+          Use <code>&lt;em&gt;</code> for <em>emphasized</em> text.
+        </li>
+        <li>
+          Use <code>&lt;strong&gt;</code> for <strong>strong</strong> text.
+        </li>
+      </ul>
+    </li>
+
+    <li>
+      <h4>Adding virtual text</h4>
+
+      In some cases, it is necessary to have text in the document that <em>is not really there.</em>
+      For example for indicating page numbers, paragraph numbers, or even comments.
+      When creating an annotation that spans past this virtual text, the virtual text should not be part of it.
+      We realize this feature via a custom attribute, <code>data-virtual-text</code>, which is added to an appropriate element.
+      Within that attribute value, put the virtual text that should appear, and leave the rest of the element empty.
+      Use the type of HTML element that the virtual text should appear as;
+      i.e., a block-level element such as an <code>&lt;h1&gt;</code> for block-level text, and an inline element such as <code>&lt;span&gt;</code> or <code>&lt;strong&gt;</code> for inline text.
+      Example with a virtual heading and two virtual paragraph numbers:
+
+      <pre><code>&lt;p&gt;
+  &lt;strong data-virtual-text=&quot;&para;23 &quot;&gt;&lt;/strong&gt;This is a paragraph.
+  It has the number 23.
+  This paragraph is slightly shorter than the next one.
+&lt;/p&gt;
+
+&lt;h3 data-virtual-text=&quot;Page 16&quot;&gt;&lt;/h3&gt;
+
+&lt;p&gt;
+  &lt;strong data-virtual-text=&quot;&para;24 &quot;&gt;&lt;/strong&gt;This is the next paragraph.
+  Amet ullam commodi cum quam aut Illum veritatis error voluptas provident
+  fugit perspiciatis? Tenetur dicta itaque dolore veniam quo? Tenetur animi
+  quam odit a aspernatur Excepturi elit eaque fuga id ipsam provident.
+  &lt;strong data-virtual-text=&quot;&para;25 &quot;&gt;&lt;/strong&gt;Omnis reprehenderit animi
+  repellendus provident pariatur, magni. Voluptas voluptates ut aspernatur
+  harum optio! Assumenda quae excepturi explicabo expedita.
+&lt;/p&gt;
+      </code></pre>
+
+      This is the result of the document above.
+      Notice how you cannot select the virtual text at all, and how you can do a selection across it:
+
+      <div class="example-result">
+        <p>
+        <strong data-virtual-text="¶23 "></strong>This is a paragraph.
+        It has the number 23.
+        This paragraph is slightly shorter than the next one.
+        </p>
+
+        <h3 data-virtual-text="Page 16"></h3>
+
+        <p>
+        <strong data-virtual-text="¶24 "></strong>This is the next paragraph.
+        Amet ullam commodi cum quam aut Illum veritatis error voluptas provident
+        fugit perspiciatis? Tenetur dicta itaque dolore veniam quo? Tenetur animi
+        quam odit a aspernatur Excepturi elit eaque fuga id ipsam provident.
+        <strong data-virtual-text="¶25 "></strong>Omnis reprehenderit animi
+        repellendus provident pariatur, magni. Voluptas voluptates ut aspernatur
+        harum optio! Assumenda quae excepturi explicabo expedita.
+        </p>
+      </div>
+    </li>
+  </ul>
+</details>
+
+
+<form action="{{ url_for('annotator.add_document') }}" method="post" enctype="multipart/form-data">
+  <label for="source_id">Source:</label>
+  <select id="source_id" name="source_id" required>
+    <option value="" selected hidden></option>
+    {% for source_id, source_name in sources %}
+    <option value="{{ source_id }}">{{ source_name }}</option>
+    {% endfor %}
+  </select>
+  <label for="version">Version:</label>
+  <input type="number" name="version" required>
+  <label for="comment">Comment:</label>
+  <input type="text" name="comment" required>
+  <label for="content_type">Content type:</label>
+  <select id="content_type" name="content_type" required>
+    <option value="" selected hidden></option>
+    <option value="text/plain;charset=UTF-8">Plain text (UTF-8)</option>
+    <option value="text/html;charset=UTF-8">HTML (UTF-8)</option>
+  </select>
+  <label for="content">Content:</label>
+  <input type="file" name="content" accept="text/plain,text/html" required>
+
+  <button class="button button--medium" type="reset">
+    <i class="fa fa-fw fa--pad-right fa-undo"></i>
+    Reset form
+  </button>
+  <button type="submit" class="button button--medium button--green">
+    <i class="fa fa-fw fa--pad-right fa-upload"></i>
+    Submit
+  </button>
+</form>
+{% endblock %}

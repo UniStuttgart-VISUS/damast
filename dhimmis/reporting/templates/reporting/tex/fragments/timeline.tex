@@ -1,0 +1,55 @@
+<% macro create_timeline(td) %>
+<%- set y0 = td.year_start -%>
+<%- set y1 = td.year_end -%>
+<%- set width = 15 -%>
+<%- set scale = width / ([1, (y1 - y0)]|max) -%>
+<%- set height = 0.1 * td.num_evidences -%>
+<%- if height > 16 -%>
+  <%- set height = 16 -%>
+<%- endif -%>
+<%- set yscale = height / td.num_evidences -%>
+<%- set x_axis_y = -0.4 -%>
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \draw [black,-Latex] (-0.5cm,<<x_axis_y>>cm) -- (<<width>>cm+0.5cm,<<x_axis_y>>cm);
+    <% for t in td.ticks %>
+    <%- set x = (t - y0) * scale -%>
+    <%- set y = x_axis_y -%>
+    \draw [black] (<<x>>cm, <<y>>cm) -- (<<x>>cm,<<y-0.1>>cm);
+    \node [rotate=-45,anchor=north west,inner sep=0pt] at (<<x>>cm,<<y-0.2>>cm) {\tiny <<t>>};
+    <% endfor %>
+
+    <% for i, evidence_id, tis in td.time_instances %>
+      <%- set y = i * yscale -%>
+      <% for ti in tis %>
+      <%- if ti.start_year is none -%>
+      <%- set x2 = (ti.end_year - y0) * scale -%>
+      <%- set x = x2 - 1 -%>
+      <%- set start_marker = '' -%>
+      <%- set end_marker = '{Straight Barb[width=1.2mm,length=1.5mm]}' if ti.end_year > y1 else '{Triangle[width=1.2mm,length=1.5mm] . Bar[width=1.2mm]}' -%>
+      <%- set linestyle = ',densely dashed' -%>
+      <%- elif ti.end_year is none -%>
+      <%- set x = ( ti.start_year - y0 ) * scale -%>
+      <%- set x2 = x + 1 -%>
+      <%- set start_marker = '{Straight Barb[width=1.2mm,length=1.5mm]}' if ti.start_year < y0 else '{Bar[width=1.2mm] . Triangle[width=1.2mm,length=1.5mm]}' -%>
+      <%- set end_marker = '' -%>
+      <%- set linestyle = ',densely dashed' -%>
+      <%- else -%>
+      <%- set x = ( ti.start_year - y0 ) * scale -%>
+      <%- set x2 = ( ti.end_year - y0 ) * scale -%>
+      <%- set start_marker = '{Straight Barb[width=1.2mm,length=1.5mm]}' if ti.start_year < y0 else '{Bar[width=1.2mm] . Triangle[width=1.2mm,length=1.5mm]}' -%>
+      <%- set end_marker = '{Straight Barb[width=1.2mm,length=1.5mm]}' if ti.end_year > y1 else '{Triangle[width=1.2mm,length=1.5mm] . Bar[width=1.2mm]}' -%>
+      <%- set linestyle = '' -%>
+      <%- endif -%>
+      <% if x == x2 %>
+        \node [inner xsep=0.1mm,inner ysep=0.5mm,rectangle,fill=black] at (<<x>>cm, <<y>>cm) {};
+      <% else %>
+        \draw [black,thick,<< start_marker >>-<< end_marker >><< linestyle >>] (<<x>>cm, <<y>>cm) -- (<<x2>>cm, <<y>>cm);
+      <% endif %>
+      <% endfor %>
+    <% endfor %>
+  \end{tikzpicture}
+  \caption{Timeline.}
+\end{figure}
+<% endmacro %>

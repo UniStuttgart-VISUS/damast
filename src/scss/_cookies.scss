@@ -1,0 +1,54 @@
+@use 'colors' as *;
+@use 'mixins';
+
+.cookies {
+  &.cookies__bg {
+    position: fixed;
+    inset: 0;
+    z-index: 19;
+
+    background: hsl(0 0% 20% / 0.8);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__content {
+    width: max-content;
+    max-width: min(80vw, 600px);
+    padding: 1em 2em;
+
+    color: $clr-fg;
+    background: $clr-bg;
+    border: 0.5ex solid $clr-accent;
+
+    &--own-page {
+      width: initial;
+      max-width: initial;
+      border: none;
+    }
+  }
+
+  &__options {
+    display: grid;
+    grid-template-columns: max-content auto;
+    gap: 1em 1ex;
+    align-items: baseline;
+
+    input {
+      grid-column: 1 / span 1;
+    }
+
+    label {
+      grid-column: 2 / span 1;
+      text-align: start;
+    }
+  }
+
+  #save-cookie-policy {
+    margin-inline: auto 1em;
+    margin-block: 1em;
+    display: block;
+  }
+}

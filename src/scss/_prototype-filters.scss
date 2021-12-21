@@ -1,0 +1,20 @@
+// filter: grayscale
+
+@mixin muted() {
+  filter: url(#filter-muted);
+}
+
+@mixin darker() {
+  filter: url(#filter-darker);
+}
+
+@mixin muted-darker() {
+  filter: url(#filter-muted-darker);
+}
+
+@mixin drop-shadow-white() {
+  filter: url(#filter-drop-shadow-white);
+}
+@mixin drop-shadow-black() {
+  filter: url(#filter-drop-shadow-black);
+}

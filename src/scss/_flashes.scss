@@ -1,0 +1,64 @@
+@use 'colors' as *;
+
+div.messages {
+  position: fixed;
+  top: 4rem;
+  right: 1rem;
+  z-index: 20;
+}
+
+ul.flashes {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+
+  width: max-content;
+  min-width: 40ch;
+  max-width: 65ch;
+
+  font-size: 0.7rem;
+}
+
+li.flash {
+  --color: #444;
+  --bg-color: #ccc;
+
+  padding: 1ex 1.5ex;
+  margin: 1ex;
+  border-radius: 0.4ex;
+
+  border: 1px solid var(--color);
+  background: var(--bg-color);
+  color: var(--color);
+
+  display: grid;
+  display: flex;
+  grid-template-columns: 1fr auto;
+  flex-direction: row;
+  align-items: baseline;
+
+  button.flash__close {
+    margin: 0;
+    margin-inline-start: auto;
+    padding: 0.2ex 0.3ex;
+
+    background: none;
+    border: none;
+    color: var(--color);
+
+    &:hover,
+    &:focus-visible {
+      outline: 1px solid var(--color);
+    }
+  }
+}
+
+.flash.flash--error {
+  --color: #f44;
+  --bg-color: #fcc;
+}
+
+.flash.flash--success {
+  --color: #282;
+  --bg-color: #cfc;
+}

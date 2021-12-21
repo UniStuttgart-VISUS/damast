@@ -1,0 +1,100 @@
+<svg viewBox="-5 -5 610 370">
+  <defs>
+    <marker id="head" orient="auto" markerWidth="4" markerHeight="5"
+        refX="4" refY="2.5">
+      <path d="M0,0 V5 L4,2.5 Z" />
+    </marker>
+  </defs>
+
+  <g transform="translate(0, 250)">
+    <rect x="0" y="-25" width="150" height="50"></rect>
+    <text x="75" y="5">evidence</text>
+  </g>
+
+  <g transform="translate(225, 155)">
+    <rect x="0" y="-25" width="150" height="50"></rect>
+    <text x="75" y="5">religion_instance</text>
+  </g>
+  <g transform="translate(225, 215)">
+    <rect x="0" y="-25" width="150" height="50"></rect>
+    <text x="75" y="5">place_instance</text>
+  </g>
+  <g transform="translate(225, 275)">
+    <rect x="0" y="-25" width="150" height="50"></rect>
+    <text x="75" y="5">person_instance</text>
+  </g>
+  <g transform="translate(225, 335)">
+    <rect x="0" y="-25" width="150" height="50"></rect>
+    <text x="75" y="5">time_group</text>
+  </g>
+
+  <path marker-end="url(#head)" stroke-width="2" d="M 150,250 L 225,155" />
+  <text x="225" y="145" dx="-5" class="annotation">1</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M 150,250 L 225,215" />
+  <text x="225" y="205" dx="-5" class="annotation">1</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M 150,250 L 225,275" />
+  <text x="225" y="290" dx="-5" class="annotation">0..1</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M 150,250 L 225,335" />
+  <text x="225" y="350" dx="-5" class="annotation">0..1</text>
+
+  <g transform="translate(450, 155)">
+    <rect x="0" y="-25" width="150" height="50"></rect>
+    <text x="75" y="5">religion</text>
+  </g>
+  <g transform="translate(450, 215)">
+    <rect x="0" y="-25" width="150" height="50"></rect>
+    <text x="75" y="5">place</text>
+  </g>
+  <g transform="translate(450, 275)">
+    <rect x="0" y="-25" width="150" height="50"></rect>
+    <text x="75" y="5">person</text>
+  </g>
+  <g transform="translate(450, 335)">
+    <rect x="0" y="-25" width="150" height="50"></rect>
+    <text x="75" y="5">time_instance</text>
+  </g>
+
+  <g transform="translate(450, 25)">
+    <rect x="0" y="-25" width="150" height="50"></rect>
+    <text x="75" y="5">annotation</text>
+  </g>
+
+  <path marker-end="url(#head)" stroke-width="2" d="M 375,155 H 450" />
+  <text x="450" y="145" dx="-5" class="annotation">1</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M 375,215 H 450" />
+  <text x="450" y="205" dx="-5" class="annotation">1</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M 375,275 H 450" />
+  <text x="450" y="265" dx="-5" class="annotation">1</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M 375,335 H 450" />
+  <text x="450" y="325" dx="-5" class="annotation">0..*</text>
+
+  <path marker-end="url(#head)" stroke-width="2"
+        d="M 375,335 h 15 a 15 15 0 0 0 15 -15 V 90 a 15 15 0 0 1 15 -15
+        M 375,275 h 10 a 15 15 0 0 0 15 -15 V 90 a 15 15 0 0 1 15 -15
+        M 375,215 h 5 a 15 15 0 0 0 15 -15 V 90 a 15 15 0 0 1 15 -15
+        M 375,155 h 0 a 15 15 0 0 0 15 -15 V 90 a 15 15 0 0 1 15 -15 H 510 a 15 15 0 0 0 15 -15 V 50" />
+  <text x="530" y="60" dx="5" class="annotation annotation--left">4 × (0..1)</text>
+
+  <g transform="translate(225, 25)">
+    <rect x="0" y="-25" width="150" height="50"></rect>
+    <text x="75" y="5">document</text>
+  </g>
+  <g transform="translate(0, 25)">
+    <rect x="0" y="-25" width="150" height="50"></rect>
+    <text x="75" y="5">source</text>
+  </g>
+  <g transform="translate(0, 137)">
+    <rect x="0" y="-25" width="150" height="50"></rect>
+    <text x="75" y="5">source_instance</text>
+  </g>
+
+  <path marker-end="url(#head)" stroke-width="2" d="M 450,25 H 375" />
+  <text x="375" y="40" dx="5" class="annotation annotation--left">1</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M 225,25 H 150" />
+  <text x="150" y="40" dx="5" class="annotation annotation--left">1</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M 75,112 V 50" />
+  <text x="80" y="60" dx="5" class="annotation annotation--left">1</text>
+  <path marker-end="url(#head)" stroke-width="2" d="M 75,225 V 162" />
+  <text x="80" y="172" dx="5" class="annotation annotation--left">0..*</text>
+</svg>
+

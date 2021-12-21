@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}401 Unauthorized{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('root-app.static_public', filename='40x.css') }}">
+<link rel="next" href="{{ next }}">
+{% if cookie_preference is not none %}
+<meta http-equiv="refresh" content="3;url={{ next }}">
+{% endif %}
+{% endblock %}
+
+{% block content %}
+  <h1>401 Unauthorized</h1>
+  <p>
+    You need to log in to see the requested content.
+    You should be redirected automatically to target URL:
+    <a href="{{ next }}">{{ next }}</a>.
+    If not, click the link.
+  </p>
+{% endblock %}
+
