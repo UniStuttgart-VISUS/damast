@@ -1,0 +1,62 @@
+\chapter{Frontend Structure}
+
+
+\section{Home Page}
+
+
+\section{Visualization}
+
+
+\section{GeoDB-Editor}
+
+
+\section{Annotator}
+
+
+\section{Place URI List}
+
+
+\section{Reporting}
+\label{sec:reporting}
+
+
+\section{Other Pages}
+
+
+\subsection{Documents}
+
+The documents page contains links to a few smaller pages and utilities.
+Some of these are not available to all users, but only to developers or administrators.
+Besides the page links listed in the following, the documents page also has links to the report creation page and the list of existing reports detailed in \cref{sec:reporting}.
+
+\paragraph*{Database edit log.}
+This page is visible only to administrators (role \verb!admin!).
+It details the contents of the \verb!user_action! table in reverse chronological format.
+This data can be reviewed for provenance, or to quickly retrieve an old value from a database entry after a mistake in an edit.
+
+\paragraph*{REST API documentation.}
+This page is visible to all developers (role \verb!dev!), and contains a list of the endpoints in the REST API (see~\cref{sec:rest-api}).
+They are the HTTP endpoints under \verb!/rest/!, which are listed in the form they are defined in Flask.
+The URL and possible HTTP verbs are extracted from Flask runtime information, and the documentation string is taken directly from the Python \emph{docstring} of that method.
+The REST API methods' docstring are all quite detailed and show request and response content types, possible values and data entries, and payload or response examples, where applicable.
+
+\paragraph*{Annotator user guide.}
+The annotator user guide explains how the annotator works and is used in great detail\todo{Extract the guide and images into the Annotator section of this document.}, and with example images.
+This page is visible to all users with the \verb!annotator! role.
+
+\paragraph*{PostgreSQL Database Schema.}
+Download link to a PDF of the database structure.
+This link is available to all developers (role \verb!dev!) and to users with the \verb!pgadmin! role.
+The PDF is the same as \cref{fig:db-structure}, enclosed in a page with headers and footers.
+
+\paragraph*{Download database dump.}
+Download link to a SQL dump of the entire database.
+The file is served as GZIP-ed SQL, and is generated on the fly.
+This functionality is available to all users.
+However, if the requesting user does \emph{not} have the \verb!admin! role, the dump is data-only, and also omits the \verb!action_type!, \verb!user!, and \verb!user_action! provenance tables described in \cref{sec:provenance-tables}.
+
+
+\subsection{DSGVO, Impressum, Cookie Preferences}
+
+
+\subsection{Password Management}

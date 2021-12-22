@@ -1,0 +1,45 @@
+\documentclass{scrreprt}
+
+\usepackage{graphicx}
+\usepackage[a4paper,top=1in,bottom=1in,right=0.6in,left=0.6in]{geometry}
+\usepackage{scrlayer-scrpage}
+\usepackage{cleveref}
+
+\usepackage[textsize=footnotesize,textwidth=0.5in]{todonotes}
+
+\begin{document}
+
+\newcommand\versionstring{\input{|"git describe --tags"}}
+
+\titlehead{\hfill\parbox{4.5cm}{Universitätsstraße 38 \\
+70569 Stuttgart \\
+Germany }}
+\subject{System Description}
+\title{Damast}
+\subtitle{\versionstring{}}
+\author{Max Franke}
+\date{\today}
+\publishers{\parbox{11cm}{Institute for Visualization and Interactive Systems\\University of Stuttgart\\Germany}}
+
+\maketitle
+
+\setkomafont{pagehead}{\rmfamily\footnotesize\upshape}
+\setkomafont{pagefoot}{\rmfamily\footnotesize\upshape}
+
+\ofoot*{\pagemark}
+\cfoot*{}
+\ifoot*{}
+\ohead*{}
+\renewcommand*{\chaptermark}[1]{ \ohead*{\thechapter\ \MakeUppercase{#1}}}
+\chead*{}
+\ihead*{Damast \texttt{\versionstring}}
+
+\setcounter{tocdepth}{1}
+\tableofcontents
+
+\input{content/introduction}
+\input{content/database}
+\input{content/backend}
+\input{content/frontend}
+
+\end{document}

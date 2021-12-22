@@ -1,0 +1,22 @@
+\chapter{Backend Structure}
+
+
+\section{Server Specifications}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{structure/structure.pdf}
+  \caption{Backend system structure: The Flask server runs in a Docker container, and a single directory from the host system is exposed to the container as a volume. This directory contains configuration and logging files. The PostgreSQL database can be anywhere, but usually runs on the same host as a Docker image. If the Flask server does not manage its own SSL certificates, an nginx server handles incoming HTTP and HTTPS requests as a reverse proxy.}
+  \label{fig:structure}
+\end{figure}
+
+
+\section{User Authentication}
+
+
+\section{Flask Blueprints}
+
+
+\section{REST API}
+\label{sec:rest-api}
+
