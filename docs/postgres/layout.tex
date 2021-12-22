@@ -225,11 +225,14 @@
       { table=place\_type/{{type},{visible}}/2 };
       \pic (name_var) at (4,2.25)
       { table=name\_var/{{name},{transcription},{simplified},{main\_form},{comment},{place\_id},{language\_id}}/7 };
+      \pic (language) at (4,4)
+      { table=language/{{name}}/1 };
       \pic (place_set) at (0,3.125)
       { table with uuid=place\_set/{{description},{filter},{date},{user}}/4};
 
       \draw [myarrow] (place-6-e) -- (place_type-id-w);
       \draw [myarrow] (name_var-6-w) -- (place-id-e);
+      \draw [myarrow] (name_var-7-w) -- ++(-0.3,0) |- (language-id-w);
       \draw [myarrow,one to many] (place_set-2-e) -- ++(0.5,0) |- (place-id-e);
     \end{scope}
 
