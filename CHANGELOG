@@ -1,6 +1,14 @@
                                 CHANGELOG
 
 
+2021-12-28                                                           v1.0.1
+
+Updated default map center and zoom level to better match public dataset
+extent. Cleaned up and documented clustering radius constants. Renamed the
+navigation link to the visualization to "Visualization" (from "Prototype"),
+and renamed references in the sources to "vis" also.
+
+
 2021-12-21                                                           v1.0.0
 
 Bump version to 1.0.0 for public release. Remove some historical clutter,

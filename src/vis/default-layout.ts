@@ -2,7 +2,7 @@
 import GoldenLayout from 'golden-layout';
 import { getConsentCookie } from '../common/cookies';
 
-const ls_key = 'dhimmis-prototype-layout';
+const ls_key = 'damast-vis-layout';
 
 // Increment this if there are breaking changes in the default layout so old
 // layouts are no longer loaded from localStorage. For example, if new views

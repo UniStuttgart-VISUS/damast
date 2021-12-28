@@ -1,7 +1,7 @@
 // Based on https://github.com/golden-layout/golden-layout/blob/master/src/less/themes/goldenlayout-dark-theme.less
 
 @use 'colors' as *;
-@use 'prototype-variables' as *;
+@use 'vis-variables' as *;
 @use 'mixins';
 
 // ".lm_dragging" is applied to BODY tag during Drag and is also directly applied to the root of the object being dragged

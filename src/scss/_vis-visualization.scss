@@ -1,8 +1,8 @@
 @use 'colors' as *;
-@use 'prototype-variables' as *;
-@use 'prototype-filters' as filters;
+@use 'vis-variables' as *;
+@use 'vis-filters' as filters;
 
-@forward 'prototype-place-set-manager';
+@forward 'vis-place-set-manager';
 
 :root {
   --clr-accent: #{$clr-accent};

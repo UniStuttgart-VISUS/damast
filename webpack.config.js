@@ -33,11 +33,11 @@ module.exports = function(env, argv) {
     // prototype
     {
       entry: {
-        'bundle': './src/prototype/entry.ts',
-        'style.css': `./src/scss/prototype.scss`,
+        'bundle': './src/vis/entry.ts',
+        'style.css': `./src/scss/vis.scss`,
       },
       output: {
-        path: path.resolve(__dirname, 'dhimmis/prototype/static/'),
+        path: path.resolve(__dirname, 'dhimmis/vis/static/'),
       },
       mode: argv.mode || 'development',
       devtool: (argv.mode === 'production') ? false : 'eval-cheap-source-map',
@@ -71,7 +71,7 @@ module.exports = function(env, argv) {
             loader: 'ts-loader',
             exclude: /node_modules/,
             include: [
-              path.resolve(__dirname, "src/prototype"),
+              path.resolve(__dirname, "src/vis"),
               path.resolve(__dirname, "src/common"),
             ],
             options: {
