@@ -17,10 +17,10 @@
     <script src="{{ url_for('root-app.static_public', filename='flash.js') }}" type="module"></script>
     <script src="{{ url_for('vis.file', path='bundle.js') }}" defer></script>
 
-    <title>Prototype - Damast</title>
+    <title>Visualization - Damast</title>
   </head>
   <body>
-    {% include 'prototype/defs.svg' %}
+    {% include 'vis/defs.svg' %}
     {%- from 'consent_popup.html' import consent_popup with context -%}
     {{ consent_popup() }}
     <header class="section navbar">

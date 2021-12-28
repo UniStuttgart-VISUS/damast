@@ -10,11 +10,11 @@ def create_app():
     with app.app_context():
         app.config['auth'] = app.auth
 
-        from . import docs, prototype, geodb_editor, login, root, generic_directory_serve
+        from . import docs, vis, geodb_editor, login, root, generic_directory_serve
         root.app.register(app, url_prefix='/')
         login.app.register(app, url_prefix='/')
         docs.app.register(app, url_prefix='/docs')
-        prototype.app.register(app, url_prefix='/vis')
+        vis.app.register(app, url_prefix='/vis')
         geodb_editor.app.register(app, url_prefix='/GeoDB-Editor')
 
         # generic dirs
