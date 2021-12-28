@@ -2,7 +2,7 @@ import * as d3shape from 'd3-shape';
 import * as d3array from 'd3-array';
 
 import {DataWorker,MessageData} from './data-worker';
-import {zoom_level as _zoom_level, radius} from './default-map-zoomlevel';
+import { zoom_level as _zoom_level, radius, unclustered_radius } from './default-map-zoomlevel';
 import * as T from './datatypes';
 import {Cluster} from './clustering';
 import * as glyph from './map-data';
@@ -68,7 +68,7 @@ class MapWorker extends DataWorker<any> {
     const poss: Array<number> = [];
     active.forEach(d => { poss.push(d.geoloc.lat); poss.push(d.geoloc.lng); });
     const f32 = Float32Array.from(poss);
-    const res: number[] = Array.from(this.wasm_clustering.cluster(f32, 4*radius, this.zoom_level));
+    const res: number[] = Array.from(this.wasm_clustering.cluster(f32, 2*radius, this.zoom_level));
 
     // recreate clusters
     const clusters: Cluster<CollectedPlace>[] = [];
@@ -150,8 +150,8 @@ class MapWorker extends DataWorker<any> {
     const center = { x: cluster.x, y: cluster.y };
 
     const symbol_radius = (this.map_mode === T.MapMode.Clustered)
-      ? radius * 0.8
-      : 4;
+      ? radius * 0.4
+      : unclustered_radius;
     const d = calculateOffsets(by_religion.length, this.map_mode, symbol_radius);
 
     const arc = d3shape.arc<any, any>()

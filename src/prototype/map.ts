@@ -17,7 +17,7 @@ import MapGlyph from './map-glyph';
 import {ColorScales} from './colorscale';
 import * as modal from './modal';
 import View from './view';
-import {zoom_level, radius} from './default-map-zoomlevel';
+import { zoom_level as default_zoomlevel, center as initial_map_center, radius } from './default-map-zoomlevel';
 import {map_styles} from '../common/map-styles';
 import { MessageData } from './data-worker';
 import TooltipManager from './tooltip';
@@ -167,7 +167,7 @@ export default class MapPane extends View<any, Set<number> | null> {
       maxBoundsViscosity: 0.7,
       zoomSnap: 0.25,
     };
-    this.map = L.map(div_, mapOptions).setView([28.7, 48.9], zoom_level);
+    this.map = L.map(div_, mapOptions).setView(initial_map_center, default_zoomlevel);
 
     const fun = this.updateLocations.bind(this);
     this.map.on('zoomend', fun);
@@ -239,7 +239,7 @@ export default class MapPane extends View<any, Set<number> | null> {
 
     // heatmap
     this.evidenceCountHeatOptions = {
-      radius: 1.6*radius,
+      radius: 0.8*radius,
       max: 1,
       maxZoom: this.map.getZoom(),
       blur: 15,
