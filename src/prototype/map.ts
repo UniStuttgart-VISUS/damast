@@ -164,10 +164,10 @@ export default class MapPane extends View<any, Set<number> | null> {
   private setupLeaflet(div_: HTMLDivElement): void {
     const mapOptions = {
       worldCopyJump: true,
-      maxBoundsViscosity: 0.7
+      maxBoundsViscosity: 0.7,
+      zoomSnap: 0.25,
     };
-    this.map = L.map(div_, mapOptions).setView([30, 68], zoom_level);
-    //L.PM.setOptIn(true);
+    this.map = L.map(div_, mapOptions).setView([28.7, 48.9], zoom_level);
 
     const fun = this.updateLocations.bind(this);
     this.map.on('zoomend', fun);
