@@ -40,23 +40,7 @@ def get_software_version():
     if vs is not None:
         return vs
 
-    # check if git repo
-    try:
-        git = subprocess.run(['git', 'describe', '--tags'], capture_output=True, encoding='utf-8')
-        if git.returncode == 0:
-            return git.stdout.strip()
-    except FileNotFoundError:
-        pass
-    except OSError as err:
-        logging.getLogger('flask.error').error(F'{type(err)} {err.strerror}')
-
-    if os.environ.get('VIRTUAL_ENV', None) is not None:
-        pip = subprocess.Popen(['pip', 'list'], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, encoding='utf-8')
-        awk = subprocess.run(['awk', '/dhimmis-muslims/ {print $2}'], stdin=pip.stdout, capture_output=True, encoding='utf-8')
-        return awk.stdout.strip()
-
     return '<unknown>'
-get_software_version()
 
 
 class FlaskApp(flask.Flask):
