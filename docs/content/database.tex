@@ -52,12 +52,32 @@ The individual groups and tables are described in more detail in \cref{sec:data-
   \end{tabular}
 \end{table}
 
+\begin{table}[htb]
+  \centering
+  \caption{Aspects of confidence.}
+  \label{table:confidence-aspects}
+  \begin{tabular}{@{}llp{8.5cm}@{}}
+    \toprule
+    Aspect & Table & Description \\
+    \midrule
+    Religion confidence & \verb!religion_instance! & How confident are we that this is the correct religion for the evidence? \\
+    Person confidence & \verb!person_instance! & How confident are we that this is the correct person for the evidence? \\
+    Location confidence & \verb!place! & How confident are we about the geographical location of this place? \\
+    Place attribution confidence & \verb!place_instance! & How confident are we that this is the correct place for the evidence? \\
+    Time confidence & \verb!time_instance! & How confident are we that this is the correct time span for the evidence? \\
+    Interpretation confidence & \verb!evidence! & How confident are we in the general interpretation of this evidence? \\
+    Source confidence & \verb!source_instance! & How confident are we that the information about the evidence we extracted from that source is correct? \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 \paragraph{Data types.}
 Most data columns have standard PostgreSQL data types such as \verb!text!, \verb!integer!, or \verb!boolean!.
 Time and text ranges are stored as the PostgreSQL \verb!int4range! type, and geographical locations are stored in the PostgreSQL \verb!point! type.
 To qualify the historical data, most tables also have a \emph{confidence} column, which contains a \verb!NULL!-able confidence value.
 These are stored as an \verb!enum!, the contents of which are explained in \cref{table:confidence-values}.
 For more details on our choice of levels of confidence and the confidence data model, please refer to our 2019 publication\footfullcite{Franke_2019}.
+The aspects of confidence, and where they are stored, are explained in \cref{table:confidence-aspects}.
 To accommodate for unstructured metadata and notes, most tables also have a \verb!NULL!-able \verb!comment! column.
 
 
@@ -75,7 +95,7 @@ We also store a time range for persons, which is a free-text field.
 The name combined with the time range must be unique;
 for instance, there can be multiple persons with the name \emph{\enquote{Marcus},} but each must have a different time range; which could, for example, consist of a year range, or a qualifier such as \enquote{the Third.}
 Finally, religions are stored in the \verb!religion! table, with their name, abbreviation, and color used in the visualization.
-As religions can be hierarchically represented, a religion can optionally reference a parent religion.
+Religions are hierarchical, so a religion can optionally reference a parent religion.
 
 
 \paragraph{External URIs.}
@@ -95,7 +115,7 @@ The structuring of these tables means that
       This happened with DARE in 2019, when the old site at \url{http://dare.ht.lu.se} was deactivated and moved to \url{https://dh.gu.se/dare/}.
       The new site, however, was not as functional.
       The creator Johan Åhlfeldt then re-hosted everything at \url{https://imperium.ahlfeldt.se}, but all already-entered URIs had to be updated.
-      }
+      }.
 \end{enumerate*}
 
 
