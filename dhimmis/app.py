@@ -485,7 +485,7 @@ class FlaskApp(flask.Flask):
                 logging.getLogger('flask.error').warn('Could not rebuild materialized views (%s): %s', str(type(e)), str(e))
         rebuild_fn = partial(rebuild_view, self)
 
-        self.scheduler = GeventScheduler()
+        self.scheduler = GeventScheduler(timezone='Europe/Berlin')
         self.scheduler.add_job(rebuild_fn, trigger='interval', minutes=10, start_date=datetime.datetime.now()+datetime.timedelta(seconds=10))
 
         register_scheduler_for_annotation_suggestions(self.scheduler)
