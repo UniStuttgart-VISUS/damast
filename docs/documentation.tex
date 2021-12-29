@@ -4,8 +4,20 @@
 \usepackage[a4paper,top=1in,bottom=1in,right=0.6in,left=0.6in]{geometry}
 \usepackage{scrlayer-scrpage}
 \usepackage{cleveref}
+\usepackage{csquotes}
+\usepackage{booktabs}
+\usepackage[backend=biber,natbib]{biblatex}
 
 \usepackage[textsize=footnotesize,textwidth=0.5in]{todonotes}
+
+\usepackage{pgfmath}
+\usepackage{tikz}
+\usetikzlibrary{shapes}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc}
+
+\addbibresource{bibliography.bib}
 
 \begin{document}
 
@@ -41,5 +53,7 @@ Germany }}
 \input{content/database}
 \input{content/backend}
 \input{content/frontend}
+
+\printbibliography
 
 \end{document}

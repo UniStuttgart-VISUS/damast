@@ -5,4 +5,7 @@
 *.pdf
 *.fls
 *.toc
-
+*.bbl
+*.bcf
+*.blg
+*.run.xml

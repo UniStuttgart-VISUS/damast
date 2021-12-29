@@ -1,16 +1,82 @@
 \chapter{Database}
 
+The main database is a PostgreSQL 10 database.
+Additionally, the PostGIS plugin is installed into the database.
+An easy way to obtain a base database system into which the schema can just be imported is to use the \verb!postgis/postgis:10-3.1! Docker image.
+
+
 \section{Table Structure}
 
 \begin{figure}[tb]
   \centering
   \includegraphics[width=\textwidth]{postgres/layout.pdf}
-  \caption{tba}
+  \caption{%
+    Schematic structure of the PostgreSQL database.
+    The tables are represented by boxes, which in turn are grouped by function.
+    Relationships between tables are indicated by arrows.
+    }
   \label{fig:db-structure}
 \end{figure}
 
+\Cref{fig:db-structure} shows the schematic structure of the PostgreSQL database.
+Tables are represented as boxes consisting of three parts, with the table name in the first part, the primary key (if it exists) in the second part, and the remaining columns in the third part.
+Foreign key references are indicated by
+\tikz{\path [use as bounding box] (0,0) -- (7mm,2mm); \draw [{Diamond[open]}-{Latex}] (0cm,1mm) -- (0.7cm,1mm);}
+arrows with a diamond at the starting point.
+Weak references are indicated with
+\tikz{\path [use as bounding box] (0,0) -- (7mm,2mm); \draw [{Circle[open]}-{Latex}] (0cm,1mm) -- (0.7cm,1mm);}
+open circles at the starting point, and one-to-many references\footnote{One-to-many references are realized with PostgreSQL arrays, and are weak references.}
+\tikz{\path [use as bounding box] (0,0) -- (7mm,2mm); \draw [{Rays[n=6,length=1.6mm,width=1.6mm]}-Latex] (0cm,1mm) -- (0.7cm,1mm);}
+are indicated with six rays at the starting point.
+The tables are grouped by function.
+The individual groups and tables are described in more detail in \cref{sec:data-tables,sec:provenance-tables}.
+
 
 \subsection{Data Tables}
+\label{sec:data-tables}
+
+\begin{table}[htb]
+  \centering
+  \caption{Confidence values.}
+  \label{table:confidence-values}
+  \begin{tabular}{@{}rl@{}}
+    \toprule
+    Value & Comment \\
+    \midrule
+    \verb!false! & We know the information is not true. \\
+    \verb!uncertain! & We are mostly convinced that the information is not true. \\
+    \verb!contested! & We are unsure whether the information is true. \\
+    \verb!probable! & We are mostly convinced that the information is true. \\
+    \verb!certain! & We are as sure as one can be with historical information that the information is true. \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph*{Data types.}
+Most data columns have standard PostgreSQL data types such as \verb!text!, \verb!integer!, or \verb!boolean!.
+Time and text ranges are stored as the PostgreSQL \verb!int4range! type, and geographical locations are stored in the PostgreSQL \verb!point! type.
+To qualify the historical data, most tables also have a \emph{confidence} column, which contains a \verb!NULL!-able confidence value.
+These are stored as an \verb!enum!, the contents of which are explained in \cref{table:confidence-values}.
+For more details on our choice of levels of confidence and the confidence data model, please refer to our 2019 publication\footfullcite{Franke_2019}.
+To accommodate for unstructured metadata and notes, most tables also have a \verb!NULL!-able \verb!comment! column.
+
+
+\paragraph*{Base data.}
+Places, or cities, are stored in the \verb!place! table.
+This contains the primary name for that place, its geographical location, if known, and a boolean flag indicating whether the place should be included in the visualization.
+A place also has a place type (stored in the \verb!place_type! table).
+Alternative names for places are stored as entries in the \verb!name_var! table.
+An alternative name has a primary name, an optional transcription of the name (for example, if the name is in Arabic script), and optionally one or more simplified forms that can be used for full-text search.
+For an alternative name, we also store which language (stored in the \verb!language! table) it is a name in, and whether it is a main form of the name that should be displayed to visitors.
+Persons are stored in the \verb!person! table.
+They have a type (stored in the \verb!person_type! table).
+We also store a time range for persons, which is a free-text field.
+The name combined with the time range must be unique;
+for instance, there can be multiple persons with the name \emph{\enquote{Marcus},} but each must have a different time range; which could, for example, consist of a year range, or a qualifier such as \enquote{the Third.}
+Finally, religions are stored in the \verb!religion! table, with their name, abbreviation, and color used in the visualization.
+As religions can be hierarchically represented, a religion can optionally reference a parent religion.
+
+
 \subsection{Provenance}
 \label{sec:provenance-tables}
 \subsection{Utilities}
