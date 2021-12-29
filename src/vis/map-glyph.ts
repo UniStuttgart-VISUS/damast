@@ -39,7 +39,7 @@ export default class MapGlyph {
 
     if (this.map_mode === T.MapMode.Clustered) {
       this._total_group.append('circle')
-        .attr('r', 2*this._radius)
+        .attr('r', this._radius)
         .classed('cluster__mouseover-hidden', true)
         .on('mouseenter', this.mouseenter.bind(this))
         .on('mouseleave', this.mouseleave.bind(this))

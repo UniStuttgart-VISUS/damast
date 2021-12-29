@@ -200,40 +200,6 @@ ALTER SEQUENCE public.action_type_id_seq OWNED BY public.action_type.id;
 
 
 --
--- Name: advanced_religion_filter; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.advanced_religion_filter (
-    id integer NOT NULL,
-    description text NOT NULL
-);
-
-
-ALTER TABLE public.advanced_religion_filter OWNER TO postgres;
-
---
--- Name: advanced_religion_filter_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.advanced_religion_filter_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.advanced_religion_filter_id_seq OWNER TO postgres;
-
---
--- Name: advanced_religion_filter_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.advanced_religion_filter_id_seq OWNED BY public.advanced_religion_filter.id;
-
-
---
 -- Name: annotation; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -423,151 +389,6 @@ ALTER TABLE public.annotation_suggestion_id_seq OWNER TO postgres;
 --
 
 ALTER SEQUENCE public.annotation_suggestion_id_seq OWNED BY public.annotation_suggestion.id;
-
-
---
--- Name: bishopric; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.bishopric (
-    id integer NOT NULL,
-    name text NOT NULL,
-    bishopric_type_id integer NOT NULL,
-    religion_id integer NOT NULL,
-    comment text,
-    time_span int4range
-);
-
-
-ALTER TABLE public.bishopric OWNER TO postgres;
-
---
--- Name: bishopric_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.bishopric_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.bishopric_id_seq OWNER TO postgres;
-
---
--- Name: bishopric_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.bishopric_id_seq OWNED BY public.bishopric.id;
-
-
---
--- Name: bishopric_place; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.bishopric_place (
-    id integer NOT NULL,
-    place_id integer NOT NULL,
-    bishopric_id integer NOT NULL,
-    time_start integer,
-    time_end integer
-);
-
-
-ALTER TABLE public.bishopric_place OWNER TO postgres;
-
---
--- Name: bishopric_place_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.bishopric_place_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.bishopric_place_id_seq OWNER TO postgres;
-
---
--- Name: bishopric_place_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.bishopric_place_id_seq OWNED BY public.bishopric_place.id;
-
-
---
--- Name: bishopric_residence; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.bishopric_residence (
-    id integer NOT NULL,
-    place_id integer NOT NULL,
-    bishopric_id integer NOT NULL,
-    timespan int4range
-);
-
-
-ALTER TABLE public.bishopric_residence OWNER TO postgres;
-
---
--- Name: bishopric_residence_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.bishopric_residence_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.bishopric_residence_id_seq OWNER TO postgres;
-
---
--- Name: bishopric_residence_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.bishopric_residence_id_seq OWNED BY public.bishopric_residence.id;
-
-
---
--- Name: bishopric_type; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.bishopric_type (
-    id integer NOT NULL,
-    description text NOT NULL
-);
-
-
-ALTER TABLE public.bishopric_type OWNER TO postgres;
-
---
--- Name: bishopric_type_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.bishopric_type_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.bishopric_type_id_seq OWNER TO postgres;
-
---
--- Name: bishopric_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.bishopric_type_id_seq OWNED BY public.bishopric_type.id;
 
 
 --
@@ -809,43 +630,6 @@ CREATE TABLE public.person (
 
 
 ALTER TABLE public.person OWNER TO postgres;
-
---
--- Name: person_bishopric; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.person_bishopric (
-    id integer NOT NULL,
-    bishopric_id integer NOT NULL,
-    person_id integer NOT NULL,
-    predecessor_id integer,
-    timespan int4range
-);
-
-
-ALTER TABLE public.person_bishopric OWNER TO postgres;
-
---
--- Name: person_bishopric_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.person_bishopric_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.person_bishopric_id_seq OWNER TO postgres;
-
---
--- Name: person_bishopric_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.person_bishopric_id_seq OWNED BY public.person_bishopric.id;
-
 
 --
 -- Name: person_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -1171,75 +955,6 @@ CREATE TABLE public.religion (
 ALTER TABLE public.religion OWNER TO postgres;
 
 --
--- Name: religion_filter_group; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.religion_filter_group (
-    id integer NOT NULL,
-    religion_id integer NOT NULL,
-    set_id integer NOT NULL
-);
-
-
-ALTER TABLE public.religion_filter_group OWNER TO postgres;
-
---
--- Name: religion_filter_group_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.religion_filter_group_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.religion_filter_group_id_seq OWNER TO postgres;
-
---
--- Name: religion_filter_group_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.religion_filter_group_id_seq OWNED BY public.religion_filter_group.id;
-
-
---
--- Name: religion_filter_group_set; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.religion_filter_group_set (
-    id integer NOT NULL,
-    filter_id integer NOT NULL
-);
-
-
-ALTER TABLE public.religion_filter_group_set OWNER TO postgres;
-
---
--- Name: religion_filter_group_set_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.religion_filter_group_set_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.religion_filter_group_set_id_seq OWNER TO postgres;
-
---
--- Name: religion_filter_group_set_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.religion_filter_group_set_id_seq OWNED BY public.religion_filter_group_set.id;
-
-
---
 -- Name: religion_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -1322,42 +1037,6 @@ CREATE TABLE public.source (
 
 
 ALTER TABLE public.source OWNER TO postgres;
-
---
--- Name: source_bishopric; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.source_bishopric (
-    id integer NOT NULL,
-    bishopric_id integer NOT NULL,
-    source_id integer NOT NULL,
-    citation text
-);
-
-
-ALTER TABLE public.source_bishopric OWNER TO postgres;
-
---
--- Name: source_bishopric_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.source_bishopric_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.source_bishopric_id_seq OWNER TO postgres;
-
---
--- Name: source_bishopric_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.source_bishopric_id_seq OWNED BY public.source_bishopric.id;
-
 
 --
 -- Name: source_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -1664,13 +1343,6 @@ ALTER TABLE ONLY public.action_type ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
--- Name: advanced_religion_filter id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.advanced_religion_filter ALTER COLUMN id SET DEFAULT nextval('public.advanced_religion_filter_id_seq'::regclass);
-
-
---
 -- Name: annotation id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1682,34 +1354,6 @@ ALTER TABLE ONLY public.annotation ALTER COLUMN id SET DEFAULT nextval('public.a
 --
 
 ALTER TABLE ONLY public.annotation_suggestion ALTER COLUMN id SET DEFAULT nextval('public.annotation_suggestion_id_seq'::regclass);
-
-
---
--- Name: bishopric id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.bishopric ALTER COLUMN id SET DEFAULT nextval('public.bishopric_id_seq'::regclass);
-
-
---
--- Name: bishopric_place id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.bishopric_place ALTER COLUMN id SET DEFAULT nextval('public.bishopric_place_id_seq'::regclass);
-
-
---
--- Name: bishopric_residence id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.bishopric_residence ALTER COLUMN id SET DEFAULT nextval('public.bishopric_residence_id_seq'::regclass);
-
-
---
--- Name: bishopric_type id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.bishopric_type ALTER COLUMN id SET DEFAULT nextval('public.bishopric_type_id_seq'::regclass);
 
 
 --
@@ -1745,13 +1389,6 @@ ALTER TABLE ONLY public.name_var ALTER COLUMN id SET DEFAULT nextval('public.nam
 --
 
 ALTER TABLE ONLY public.person ALTER COLUMN id SET DEFAULT nextval('public.person_id_seq'::regclass);
-
-
---
--- Name: person_bishopric id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.person_bishopric ALTER COLUMN id SET DEFAULT nextval('public.person_bishopric_id_seq'::regclass);
 
 
 --
@@ -1804,20 +1441,6 @@ ALTER TABLE ONLY public.religion ALTER COLUMN id SET DEFAULT nextval('public.rel
 
 
 --
--- Name: religion_filter_group id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.religion_filter_group ALTER COLUMN id SET DEFAULT nextval('public.religion_filter_group_id_seq'::regclass);
-
-
---
--- Name: religion_filter_group_set id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.religion_filter_group_set ALTER COLUMN id SET DEFAULT nextval('public.religion_filter_group_set_id_seq'::regclass);
-
-
---
 -- Name: religion_instance id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1829,13 +1452,6 @@ ALTER TABLE ONLY public.religion_instance ALTER COLUMN id SET DEFAULT nextval('p
 --
 
 ALTER TABLE ONLY public.source ALTER COLUMN id SET DEFAULT nextval('public.source_id_seq'::regclass);
-
-
---
--- Name: source_bishopric id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.source_bishopric ALTER COLUMN id SET DEFAULT nextval('public.source_bishopric_id_seq'::regclass);
 
 
 --
@@ -1911,22 +1527,6 @@ ALTER TABLE ONLY public.action_type
 
 
 --
--- Name: advanced_religion_filter advanced_religion_filter_description_key; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.advanced_religion_filter
-    ADD CONSTRAINT advanced_religion_filter_description_key UNIQUE (description);
-
-
---
--- Name: advanced_religion_filter advanced_religion_filter_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.advanced_religion_filter
-    ADD CONSTRAINT advanced_religion_filter_pkey PRIMARY KEY (id);
-
-
---
 -- Name: annotation annotation_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1948,38 +1548,6 @@ ALTER TABLE ONLY public.annotation_suggestion_document_state
 
 ALTER TABLE ONLY public.annotation_suggestion
     ADD CONSTRAINT annotation_suggestion_pkey PRIMARY KEY (id);
-
-
---
--- Name: bishopric bishopric_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.bishopric
-    ADD CONSTRAINT bishopric_pkey PRIMARY KEY (id);
-
-
---
--- Name: bishopric_place bishopric_place_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.bishopric_place
-    ADD CONSTRAINT bishopric_place_pkey PRIMARY KEY (id);
-
-
---
--- Name: bishopric_residence bishopric_residence_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.bishopric_residence
-    ADD CONSTRAINT bishopric_residence_pkey PRIMARY KEY (id);
-
-
---
--- Name: bishopric_type bishopric_type_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.bishopric_type
-    ADD CONSTRAINT bishopric_type_pkey PRIMARY KEY (id);
 
 
 --
@@ -2055,14 +1623,6 @@ ALTER TABLE ONLY public.person
 
 
 --
--- Name: person_bishopric person_bishopric_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.person_bishopric
-    ADD CONSTRAINT person_bishopric_pkey PRIMARY KEY (id);
-
-
---
 -- Name: person_instance person_instance_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2135,22 +1695,6 @@ ALTER TABLE ONLY public.place_type
 
 
 --
--- Name: religion_filter_group religion_filter_group_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.religion_filter_group
-    ADD CONSTRAINT religion_filter_group_pkey PRIMARY KEY (id);
-
-
---
--- Name: religion_filter_group_set religion_filter_group_set_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.religion_filter_group_set
-    ADD CONSTRAINT religion_filter_group_set_pkey PRIMARY KEY (id);
-
-
---
 -- Name: religion_instance religion_instance_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2164,14 +1708,6 @@ ALTER TABLE ONLY public.religion_instance
 
 ALTER TABLE ONLY public.religion
     ADD CONSTRAINT religion_pkey PRIMARY KEY (id);
-
-
---
--- Name: source_bishopric source_bishopric_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.source_bishopric
-    ADD CONSTRAINT source_bishopric_pkey PRIMARY KEY (id);
 
 
 --
@@ -2311,54 +1847,6 @@ ALTER TABLE ONLY public.annotation_suggestion_document_state
 
 
 --
--- Name: bishopric bishopric_bishopric_type_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.bishopric
-    ADD CONSTRAINT bishopric_bishopric_type_id_fkey FOREIGN KEY (bishopric_type_id) REFERENCES public.bishopric_type(id) ON UPDATE CASCADE ON DELETE RESTRICT;
-
-
---
--- Name: bishopric_place bishopric_place_bishopric_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.bishopric_place
-    ADD CONSTRAINT bishopric_place_bishopric_id_fkey FOREIGN KEY (bishopric_id) REFERENCES public.bishopric(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: bishopric_place bishopric_place_place_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.bishopric_place
-    ADD CONSTRAINT bishopric_place_place_id_fkey FOREIGN KEY (place_id) REFERENCES public.place(id) ON UPDATE CASCADE ON DELETE RESTRICT;
-
-
---
--- Name: bishopric bishopric_religion_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.bishopric
-    ADD CONSTRAINT bishopric_religion_id_fkey FOREIGN KEY (religion_id) REFERENCES public.religion(id) ON UPDATE CASCADE ON DELETE RESTRICT;
-
-
---
--- Name: bishopric_residence bishopric_residence_bishopric_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.bishopric_residence
-    ADD CONSTRAINT bishopric_residence_bishopric_id_fkey FOREIGN KEY (bishopric_id) REFERENCES public.bishopric(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: bishopric_residence bishopric_residence_place_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.bishopric_residence
-    ADD CONSTRAINT bishopric_residence_place_id_fkey FOREIGN KEY (place_id) REFERENCES public.place(id) ON UPDATE CASCADE ON DELETE RESTRICT;
-
-
---
 -- Name: document document_source_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2447,30 +1935,6 @@ ALTER TABLE ONLY public.name_var
 
 
 --
--- Name: person_bishopric person_bishopric_bishopric_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.person_bishopric
-    ADD CONSTRAINT person_bishopric_bishopric_id_fkey FOREIGN KEY (bishopric_id) REFERENCES public.bishopric(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: person_bishopric person_bishopric_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.person_bishopric
-    ADD CONSTRAINT person_bishopric_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(id) ON UPDATE CASCADE ON DELETE RESTRICT;
-
-
---
--- Name: person_bishopric person_bishopric_predecessor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.person_bishopric
-    ADD CONSTRAINT person_bishopric_predecessor_id_fkey FOREIGN KEY (predecessor_id) REFERENCES public.person_bishopric(id);
-
-
---
 -- Name: person_instance person_instance_annotation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2527,30 +1991,6 @@ ALTER TABLE ONLY public.place_time_range
 
 
 --
--- Name: religion_filter_group religion_filter_group_religion_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.religion_filter_group
-    ADD CONSTRAINT religion_filter_group_religion_id_fkey FOREIGN KEY (religion_id) REFERENCES public.religion(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: religion_filter_group_set religion_filter_group_set_filter_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.religion_filter_group_set
-    ADD CONSTRAINT religion_filter_group_set_filter_id_fkey FOREIGN KEY (filter_id) REFERENCES public.advanced_religion_filter(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: religion_filter_group religion_filter_group_set_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.religion_filter_group
-    ADD CONSTRAINT religion_filter_group_set_id_fkey FOREIGN KEY (set_id) REFERENCES public.religion_filter_group_set(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
 -- Name: religion_instance religion_instance_annotation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -2572,22 +2012,6 @@ ALTER TABLE ONLY public.religion_instance
 
 ALTER TABLE ONLY public.religion
     ADD CONSTRAINT religion_parent_id_fkey FOREIGN KEY (parent_id) REFERENCES public.religion(id) ON UPDATE CASCADE ON DELETE RESTRICT;
-
-
---
--- Name: source_bishopric source_bishopric_bishopric_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.source_bishopric
-    ADD CONSTRAINT source_bishopric_bishopric_id_fkey FOREIGN KEY (bishopric_id) REFERENCES public.bishopric(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: source_bishopric source_bishopric_source_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.source_bishopric
-    ADD CONSTRAINT source_bishopric_source_id_fkey FOREIGN KEY (source_id) REFERENCES public.source(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -2721,24 +2145,6 @@ GRANT ALL ON SEQUENCE public.action_type_id_seq TO users;
 
 
 --
--- Name: TABLE advanced_religion_filter; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT SELECT ON TABLE public.advanced_religion_filter TO ro_dump;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.advanced_religion_filter TO api;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.advanced_religion_filter TO users;
-
-
---
--- Name: SEQUENCE advanced_religion_filter_id_seq; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT SELECT ON SEQUENCE public.advanced_religion_filter_id_seq TO ro_dump;
-GRANT SELECT,UPDATE ON SEQUENCE public.advanced_religion_filter_id_seq TO api;
-GRANT ALL ON SEQUENCE public.advanced_religion_filter_id_seq TO users;
-
-
---
 -- Name: TABLE annotation; Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -2834,78 +2240,6 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.annotation_suggestion_document
 GRANT SELECT ON SEQUENCE public.annotation_suggestion_id_seq TO ro_dump;
 GRANT SELECT,UPDATE ON SEQUENCE public.annotation_suggestion_id_seq TO api;
 GRANT ALL ON SEQUENCE public.annotation_suggestion_id_seq TO users;
-
-
---
--- Name: TABLE bishopric; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT SELECT ON TABLE public.bishopric TO ro_dump;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.bishopric TO api;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.bishopric TO users;
-
-
---
--- Name: SEQUENCE bishopric_id_seq; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT SELECT ON SEQUENCE public.bishopric_id_seq TO ro_dump;
-GRANT SELECT,UPDATE ON SEQUENCE public.bishopric_id_seq TO api;
-GRANT ALL ON SEQUENCE public.bishopric_id_seq TO users;
-
-
---
--- Name: TABLE bishopric_place; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT SELECT ON TABLE public.bishopric_place TO ro_dump;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.bishopric_place TO api;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.bishopric_place TO users;
-
-
---
--- Name: SEQUENCE bishopric_place_id_seq; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT SELECT ON SEQUENCE public.bishopric_place_id_seq TO ro_dump;
-GRANT SELECT,UPDATE ON SEQUENCE public.bishopric_place_id_seq TO api;
-GRANT ALL ON SEQUENCE public.bishopric_place_id_seq TO users;
-
-
---
--- Name: TABLE bishopric_residence; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT SELECT ON TABLE public.bishopric_residence TO ro_dump;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.bishopric_residence TO api;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.bishopric_residence TO users;
-
-
---
--- Name: SEQUENCE bishopric_residence_id_seq; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT SELECT ON SEQUENCE public.bishopric_residence_id_seq TO ro_dump;
-GRANT SELECT,UPDATE ON SEQUENCE public.bishopric_residence_id_seq TO api;
-GRANT ALL ON SEQUENCE public.bishopric_residence_id_seq TO users;
-
-
---
--- Name: TABLE bishopric_type; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT SELECT ON TABLE public.bishopric_type TO ro_dump;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.bishopric_type TO api;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.bishopric_type TO users;
-
-
---
--- Name: SEQUENCE bishopric_type_id_seq; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT SELECT ON SEQUENCE public.bishopric_type_id_seq TO ro_dump;
-GRANT SELECT,UPDATE ON SEQUENCE public.bishopric_type_id_seq TO api;
-GRANT ALL ON SEQUENCE public.bishopric_type_id_seq TO users;
 
 
 --
@@ -3048,24 +2382,6 @@ GRANT ALL ON SEQUENCE public.name_var_id_seq TO users;
 GRANT SELECT ON TABLE public.person TO ro_dump;
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.person TO api;
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.person TO users;
-
-
---
--- Name: TABLE person_bishopric; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT SELECT ON TABLE public.person_bishopric TO ro_dump;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.person_bishopric TO api;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.person_bishopric TO users;
-
-
---
--- Name: SEQUENCE person_bishopric_id_seq; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT SELECT ON SEQUENCE public.person_bishopric_id_seq TO ro_dump;
-GRANT SELECT,UPDATE ON SEQUENCE public.person_bishopric_id_seq TO api;
-GRANT ALL ON SEQUENCE public.person_bishopric_id_seq TO users;
 
 
 --
@@ -3220,42 +2536,6 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.religion TO users;
 
 
 --
--- Name: TABLE religion_filter_group; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT SELECT ON TABLE public.religion_filter_group TO ro_dump;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.religion_filter_group TO api;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.religion_filter_group TO users;
-
-
---
--- Name: SEQUENCE religion_filter_group_id_seq; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT SELECT ON SEQUENCE public.religion_filter_group_id_seq TO ro_dump;
-GRANT SELECT,UPDATE ON SEQUENCE public.religion_filter_group_id_seq TO api;
-GRANT ALL ON SEQUENCE public.religion_filter_group_id_seq TO users;
-
-
---
--- Name: TABLE religion_filter_group_set; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT SELECT ON TABLE public.religion_filter_group_set TO ro_dump;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.religion_filter_group_set TO api;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.religion_filter_group_set TO users;
-
-
---
--- Name: SEQUENCE religion_filter_group_set_id_seq; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT SELECT ON SEQUENCE public.religion_filter_group_set_id_seq TO ro_dump;
-GRANT SELECT,UPDATE ON SEQUENCE public.religion_filter_group_set_id_seq TO api;
-GRANT ALL ON SEQUENCE public.religion_filter_group_set_id_seq TO users;
-
-
---
 -- Name: SEQUENCE religion_id_seq; Type: ACL; Schema: public; Owner: postgres
 --
 
@@ -3289,24 +2569,6 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.religions_per_place TO users;
 GRANT SELECT ON TABLE public.source TO ro_dump;
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.source TO api;
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.source TO users;
-
-
---
--- Name: TABLE source_bishopric; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT SELECT ON TABLE public.source_bishopric TO ro_dump;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.source_bishopric TO api;
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE public.source_bishopric TO users;
-
-
---
--- Name: SEQUENCE source_bishopric_id_seq; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT SELECT ON SEQUENCE public.source_bishopric_id_seq TO ro_dump;
-GRANT SELECT,UPDATE ON SEQUENCE public.source_bishopric_id_seq TO api;
-GRANT ALL ON SEQUENCE public.source_bishopric_id_seq TO users;
 
 
 --

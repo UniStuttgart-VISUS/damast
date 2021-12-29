@@ -39,7 +39,7 @@ def load_schema(uri):
     root_path = 'https://www2.visus.uni-stuttgart.de/damast/vis/schemas/'
     if uri.startswith(root_path):
         path = uri.replace(root_path, '')
-        schema_path = os.path.join(flask.current_app.root_path, 'prototype/static/schemas', path)
+        schema_path = os.path.join(flask.current_app.root_path, 'vis/static/schemas', path)
 
         with open(schema_path) as f:
             schema = json.load(f)
