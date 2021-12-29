@@ -52,7 +52,7 @@ The individual groups and tables are described in more detail in \cref{sec:data-
   \end{tabular}
 \end{table}
 
-\paragraph*{Data types.}
+\paragraph{Data types.}
 Most data columns have standard PostgreSQL data types such as \verb!text!, \verb!integer!, or \verb!boolean!.
 Time and text ranges are stored as the PostgreSQL \verb!int4range! type, and geographical locations are stored in the PostgreSQL \verb!point! type.
 To qualify the historical data, most tables also have a \emph{confidence} column, which contains a \verb!NULL!-able confidence value.
@@ -61,10 +61,11 @@ For more details on our choice of levels of confidence and the confidence data m
 To accommodate for unstructured metadata and notes, most tables also have a \verb!NULL!-able \verb!comment! column.
 
 
-\paragraph*{Base data.}
+\paragraph{Base data.}
 Places, or cities, are stored in the \verb!place! table.
 This contains the primary name for that place, its geographical location, if known, and a boolean flag indicating whether the place should be included in the visualization.
 A place also has a place type (stored in the \verb!place_type! table).
+Place types also have a visibility flag, which affects the visibility of all places with that type in the visualization.
 Alternative names for places are stored as entries in the \verb!name_var! table.
 An alternative name has a primary name, an optional transcription of the name (for example, if the name is in Arabic script), and optionally one or more simplified forms that can be used for full-text search.
 For an alternative name, we also store which language (stored in the \verb!language! table) it is a name in, and whether it is a main form of the name that should be displayed to visitors.
@@ -77,9 +78,71 @@ Finally, religions are stored in the \verb!religion! table, with their name, abb
 As religions can be hierarchically represented, a religion can optionally reference a parent religion.
 
 
+\paragraph{External URIs.}
+Part of the data collection effort was put into aligning our base data entities with those of other databases for historical data, such as Syriaca.org, the Digital Atlas of the Roman Empire (DARE), or Pleiades.
+Such external databases are stored in the \verb!external_database! table with a long and short name, a URL, and a comment.
+Namespaces for URIs in those databases are then stored in the \verb!uri_namespace! table, with a reference to the external database entry, a name, and a comment.
+The URI namespace entry further contains a \emph{URI pattern,} which is a \verb!printf(3)!-style string with one \verb!%s! placeholder.
+External URI references for places and persons are then stored in the \verb!external_place_uri! and \verb!external_person_uri! tables.
+These reference the respective base datum and the URI namespace the URI is based on, and contain a comment.
+They further contain a \emph{URI fragment}, which is the part of the URI that is represented by the placeholder in the URI namespace entry.
+For example, the place \emph{Edessa} on Syriaca.org\footnote{\url{http://syriaca.org/place/78}} could be represented by a URI namespace with the URI pattern \verb!http://syriaca.org/place/%s! and a external place URI entry with the URI fragment \verb!78!.
+The structuring of these tables means that
+\begin{enumerate*}[label=(\arabic*)]
+  \item an external database can have more than one URI namespace,
+  \item only storing the fragment in the URI references reduces data entry errors, and
+  \item it is easier to update all URIs of a database in case it moves hosts\footnote{%
+      This happened with DARE in 2019, when the old site at \url{http://dare.ht.lu.se} was deactivated and moved to \url{https://dh.gu.se/dare/}.
+      The new site, however, was not as functional.
+      The creator Johan Åhlfeldt then re-hosted everything at \url{https://imperium.ahlfeldt.se}, but all already-entered URIs had to be updated.
+      }
+\end{enumerate*}
+
+
+\paragraph{Documents and annotations.}
+Historical sources are stored in the \verb!source! table with a long and short version of their name, where the long version is a proper citation.
+A source also has a source type, which is a reference to an entry in the \verb!source_type! table, as well as a default interpretation confidence value, which is suggested for new source instances (see paragraph \enquote{Evidence} on p.~\pageref{par:evidence}).
+Digital versions of sources can be stored in the \verb!document! table.
+A document references its source, has a version number, a comment, content type and content length fields, and the content itself, which is a byte array.
+Documents can be annotated, and these annotations are then stored in the \verb!annotation! table with a reference to the document, the start and end position of the annotation as an \verb!int4range! range, and a comment.
+Annotations are used in evidence parts (see paragraph \enquote{Evidence part data} on p.~\pageref{par:evidence-part-data}), and based on data already in the database, new annotations are suggested (see also~\cref{sec:annotator}).
+These are stored in the \verb!annotation_suggestion! table with some metadata, alongside a \emph{weak reference} to the base datum (place, person, or religion) they refer to.
+The weak reference consists of an ID and a type string, which can be one of \verb!'place'!, \verb!'person'!, or \verb!'religion'!.
+Because recalculating the suggestions is expensive, intermediate hashes that only change if there might be new suggestion results are stored for each document in the \verb!annotation_suggestion_document_state! table, and the annotation suggestions are only recalculated if the calculated hashes do not match the stored ones.
+
+
+\paragraph{Evidence part data.}\label{par:evidence-part-data}
+For each piece of historical evidence, \emph{instances} of the base data are created.
+An instance contains a reference to the respective datum, a confidence value, and a comment.
+Additionally, it may contain a reference to an annotation.
+Instances for places, persons, and religions are stored in the \verb!place_instance!, \verb!person_instance!, and \verb!religion_instance! tables, respectively.
+Time spans are grouped via the \verb!time_group! table, which consists of only an ID column, and an optional reference to an annotation.
+Individual time spans are stored in the \verb!time_instance! table, with a confidence value, a comment, and a reference to the time group.
+The time span itself is stored as an \verb!int4range!; that is, time is stored in years.
+
+
+\paragraph{Evidence.}\label{par:evidence}
+Pieces of historical evidence are stored in the \verb!evidence! table.
+Evidence consists of a time group, a place instance, a religion instance, and optionally a person instance.
+Instances may be part of multiple evidences, which is a typical use case with the annotation system (see~\cref{sec:annotator}), but are often connected to only one evidence.
+Each evidence tuple also has a visibility flag, as well as a confidence value and a comment.
+Evidence tuples can be \emph{tagged} with zero to many tags to categorize them.
+Tags are stored in the \verb!tag! table, with a short name and a comment.
+Evidence is attributed to tags via entries in the \verb!tag_evidence! table.
+Evidence can also be attributed to zero to many sources via the \verb!source_instance! table.
+Each source instance references a source and an evidence and also contains a free-text page reference in the source, the interpretation confidence value for that evidence, and a comment.
+
+
+
 \subsection{Provenance}
 \label{sec:provenance-tables}
-\subsection{Utilities}
+
+For provenance, data edits relating to evidence tuples are recorded in the \verb!user_action! table.
+This stores a reference to the evidence and the type of action (a reference to an entry in the \verb!action_type! table, but typically one of \textsc{Create}, \textsc{Update}, or \textsc{Delete}), alongside a timestamp, a short description of the action, and the old data entry value before the change, if it exists.
+Further, the user that did the change is recorded, which is a reference to an entry in the \verb!users! table.
+This table needs to contain an entry for each user that can log in to the front-end and has the \verb!writedb! role (see also~\cref{sec:user-authentication}).
+
+
 \section{Roles}
 \section{Backups}
 \section{Other Databases}

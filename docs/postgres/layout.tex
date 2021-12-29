@@ -100,7 +100,7 @@
       \node [anchor=north west,draw=none,text=black!80!brown!50] at (-0.2,3.1) {Documents \& Annotations};
 
       \pic (source) at (4,0)
-      {table=source/{{name},{source\_type\_id},{default\_confidence}}/3};
+      {table=source/{{name},{source\_type\_id},{default\_confidence},{short}}/4};
       \pic (source_type) at (0,-0.625)
       {table=source\_type/{{name}}/1};
       \pic (document) at (0,2.125)
@@ -110,7 +110,7 @@
 
       \pic (annotation_suggestion) at (0,-2.125)
       {table=annotation\_suggestion/{{document\_id},{span},{source},{type},{entity\_id}}/5};
-      \pic (annotation_suggestion_document_state) at (4,-2.125)
+      \pic (annotation_suggestion_document_state) at (4,-2.25)
       {table without id=a...ion\_document\_state/{{document\_id},{suggestion\_hash}}/2};
 
       \draw [myarrow] (source-2-w) -- (source_type-id-e);
