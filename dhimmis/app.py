@@ -40,27 +40,12 @@ def get_software_version():
     if vs is not None:
         return vs
 
-    # check if git repo
-    try:
-        git = subprocess.run(['git', 'describe', '--tags'], capture_output=True, encoding='utf-8')
-        if git.returncode == 0:
-            return git.stdout.strip()
-    except FileNotFoundError:
-        pass
-    except OSError as err:
-        logging.getLogger('flask.error').error(F'{type(err)} {err.strerror}')
-
-    if os.environ.get('VIRTUAL_ENV', None) is not None:
-        pip = subprocess.Popen(['pip', 'list'], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, encoding='utf-8')
-        awk = subprocess.run(['awk', '/dhimmis-muslims/ {print $2}'], stdin=pip.stdout, capture_output=True, encoding='utf-8')
-        return awk.stdout.strip()
-
     return '<unknown>'
-get_software_version()
 
 
 class FlaskApp(flask.Flask):
     def __init__(self, *args, **kwargs):
+        kwargs.update(template_folder=None)
         super().__init__(*args, **kwargs)
         self.json_encoder = NumericRangeEncoder
 
@@ -103,25 +88,27 @@ class FlaskApp(flask.Flask):
         self.scheduler = None
         self._init_scheduler()
 
-        self.processes = []
-        self._init_teardown()
-
-
-    def _init_teardown(self):
-        @self.teardown_appcontext
-        def onteardown(ctx):
-            for proc in self.processes:
-                if proc.is_alive():
-                    logging.getLogger('flask.error').info(F'Terminating worker "{proc.name}" because of shutdown or reload.')
-                    proc.terminate()
-
-            self.processes = []
+        self._init_base_blueprints()
 
 
     def __del__(self):
-        print(self.processes)
         if self.scheduler is not None:
             self.scheduler.shutdown()
+
+
+    def _init_base_blueprints(self):
+        # if a template override path is provided, try to load templates from there first
+        overpath = os.environ.get('DHIMMIS_TEMPLATE_OVERRIDE_PATH', None)
+        if overpath is not None:
+            override = flask.Blueprint('override', __name__, template_folder=overpath)
+            self.register_blueprint(override)
+
+            for tpl in sorted(self.jinja_env.list_templates()):
+                logging.getLogger('flask.error').info('Template override path provides template "%s".', tpl)
+
+        # load base templates from here (if not provided from override)
+        base = flask.Blueprint('base', __name__, template_folder='templates')
+        self.register_blueprint(base)
 
 
     def _init_logging(self):

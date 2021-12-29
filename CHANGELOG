@@ -3,7 +3,8 @@
 
 2021-12-xx                                                           v1.0.2
 
-
+Jinja2 templates can now be selectively overridden in an external
+directory, for example to replace the impressum or title page.
 
 
 2021-12-28                                                           v1.0.1
