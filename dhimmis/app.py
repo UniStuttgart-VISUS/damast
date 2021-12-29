@@ -45,6 +45,7 @@ def get_software_version():
 
 class FlaskApp(flask.Flask):
     def __init__(self, *args, **kwargs):
+        kwargs.update(template_folder=None)
         super().__init__(*args, **kwargs)
         self.json_encoder = NumericRangeEncoder
 
@@ -87,25 +88,17 @@ class FlaskApp(flask.Flask):
         self.scheduler = None
         self._init_scheduler()
 
-        self.processes = []
-        self._init_teardown()
-
-
-    def _init_teardown(self):
-        @self.teardown_appcontext
-        def onteardown(ctx):
-            for proc in self.processes:
-                if proc.is_alive():
-                    logging.getLogger('flask.error').info(F'Terminating worker "{proc.name}" because of shutdown or reload.')
-                    proc.terminate()
-
-            self.processes = []
+        self._init_base_blueprints()
 
 
     def __del__(self):
-        print(self.processes)
         if self.scheduler is not None:
             self.scheduler.shutdown()
+
+
+    def _init_base_blueprints(self):
+        base = flask.Blueprint('base', __name__, template_folder='templates')
+        self.register_blueprint(base)
 
 
     def _init_logging(self):
