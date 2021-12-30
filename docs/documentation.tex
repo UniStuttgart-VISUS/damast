@@ -11,6 +11,7 @@
 
 \usepackage[textsize=footnotesize,textwidth=0.5in]{todonotes}
 
+\usepackage{pgf}
 \usepackage{pgfmath}
 \usepackage{tikz}
 \usetikzlibrary{shapes}
@@ -20,9 +21,10 @@
 
 \addbibresource{bibliography.bib}
 
-\begin{document}
+\begingroup\makeatletter\endlinechar=\m@ne\everyeof{\noexpand}
+\edef\x{\endgroup\def\noexpand\versionstring{\@@input|"git describe --tags" }}\x
 
-\newcommand\versionstring{\input{|"git describe --tags"}}
+\begin{document}
 
 \titlehead{\hfill\parbox{4.5cm}{Universitätsstraße 38 \\
 70569 Stuttgart \\
