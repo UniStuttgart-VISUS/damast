@@ -8,6 +8,7 @@
 \usepackage{booktabs}
 \usepackage[inline]{enumitem}
 \usepackage[backend=biber,natbib]{biblatex}
+\usepackage{listings}
 
 \usepackage[textsize=footnotesize,textwidth=0.5in]{todonotes}
 
@@ -23,6 +24,28 @@
 
 \begingroup\makeatletter\endlinechar=\m@ne\everyeof{\noexpand}
 \edef\x{\endgroup\def\noexpand\versionstring{\@@input|"git describe --tags" }}\x
+
+
+
+\lstdefinelanguage{html5}{
+  language=html,
+  sensitive=true,
+  alsoletter={<>=-},
+  otherkeywords={
+    <, </, >,
+    </h2, <h2, </h2>,
+    </strong, <strong, </strong>,
+    </p, <p, </p>,
+    />, <!
+  },
+  ndkeywords={
+    =,
+    data-virtual-text=,
+  },
+  morecomment=[s]{<!--}{-->},
+  tag=[s]
+}
+
 
 \begin{document}
 

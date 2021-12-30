@@ -128,13 +128,42 @@ Before clicking the button, no data will be sent to the server, and you can clea
 
 
 \begin{figure}[htb]
-  % <img width="414" height="282" src="{{ url_for('docs.annotator.static', filename='virtual-text.png') }}"></img>
-  % <pre>{%- include "docs/code-listing-virtual-text.html" -%}</pre>
+  \centering
+  \begin{minipage}{6cm}
+    \includegraphics[width=\textwidth]{../src/assets/annotator-documentation/virtual-text.png}
+  \end{minipage}%
+  \quad%
+  \begin{minipage}{9cm}
+    \lstset{%
+      basicstyle={\scriptsize\ttfamily},
+      language=html5,
+      showspaces=false,
+      showstringspaces=false,
+      keywordstyle=\color{blue}\bfseries,
+      ndkeywordstyle=\color{green!40!black}\bfseries,
+      stringstyle=\color{brown!80!black},
+    }
+    \begin{lstlisting}
+...
+<p>
+  <strong data-virtual-text="Page 2 "></strong>Elit...
+  Dolore explicabo excepturi hic nam odit.
+  ...
+</p>
+...
+<h2 data-virtual-text="Section 2"></h2>
+<p>
+  Sit minima ex dignissimos ea nam ullam!
+  ...
+</p>
+...
+    \end{lstlisting}
+  \end{minipage}
 
   \caption{
-    (a) Virtual text in a document cannot be selected, and is not part of annotations.
-    Virtual text can be placed inline, or as a block element.\\
-    (b) The HTML source code to produce the virtual text above.
+    (l) Virtual text in a document cannot be selected, and is not part of annotations.
+    Virtual text can be placed inline, or as a block element.
+    (r) The HTML source code to produce the virtual text above.
   }
   \label{fig:virtual-text}
 \end{figure}
