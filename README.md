@@ -120,7 +120,7 @@ The following configuration environment variables exist, although most have a se
 | `DHIMMIS_SECRET_FILE` | `/dev/null` | File with JWT and app secret keys. These are randomly generated if not passed, but that is impractical for testing with hot reload (user sessions do not persist). For a production server, this should be empty. |
 | `DHIMMIS_PROXYCOUNT` | `1` | How many reverse proxies the server is behind. This is necessary for proper HTTP redirection and cookie paths. |
 | `DHIMMIS_PROXYPREFIX` | `/` | Reverse proxy prefix. |
-| `DHIMMIS_TEMPLATE_OVERRIDE_PATH` | | A directory path under which a Jinja2 template structure exists. If passed, templates within this directory are prioritized over the internal ones. This can be used to provide a different template for a certain page, such as the impressum. |
+| `DHIMMIS_OVERRIDE_PATH` | | A directory path under which a `template/` and `static/` directory can be placed. Templates within the `template/` directory will be prioritized over the internal ones. This can be used to provide a different template for a certain page, such as the impressum. The files in the `static/` directory will be served without requiring any authentication under the URL `${DHIMMIS_PROXYPREFIX}/override/static/<file path>` (use `url_for('override.static', filename='<file path>')` in templates). |
 | `FLASK_ACCESS_LOG` | `/data/access_log` | Path to `access_log` (for logging). |
 | `FLASK_ERROR_LOG` | `/data/error_log` | Path to `error_log` (for logging). |
 | `DHIMMIS_PORT` | `8000` | Port at which `gunicorn` serves the content. **Note:** This is set via the Dockerfile, and also only used in the Dockerfile. |
