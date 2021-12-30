@@ -97,15 +97,17 @@ class FlaskApp(flask.Flask):
 
 
     def _init_base_blueprints(self):
-        # if a template override path is provided, try to load templates from there first
-        overpath = os.environ.get('DHIMMIS_TEMPLATE_OVERRIDE_PATH', None)
+        # if a override path is provided, try to load templates from there first
+        overpath = os.environ.get('DHIMMIS_OVERRIDE_PATH', None)
 
         if overpath is None:
-            logging.getLogger('flask.error').info('No template override path provided.')
+            logging.getLogger('flask.error').info('No override path provided.')
 
         else:
-            override = flask.Blueprint('override', __name__, template_folder=overpath)
-            self.register_blueprint(override)
+            override = flask.Blueprint('override', __name__,
+                    template_folder=os.path.join(overpath, 'templates'),
+                    static_folder=os.path.join(overpath, 'static'))
+            self.register_blueprint(override, url_prefix='/override')
             tpls = sorted(self.jinja_env.list_templates())
 
             if len(tpls) == 0:
