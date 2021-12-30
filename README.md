@@ -120,7 +120,7 @@ The following configuration environment variables exist, although most have a se
 | `DHIMMIS_SECRET_FILE` | `/dev/null` | File with JWT and app secret keys. These are randomly generated if not passed, but that is impractical for testing with hot reload (user sessions do not persist). For a production server, this should be empty. |
 | `DHIMMIS_PROXYCOUNT` | `1` | How many reverse proxies the server is behind. This is necessary for proper HTTP redirection and cookie paths. |
 | `DHIMMIS_PROXYPREFIX` | `/` | Reverse proxy prefix. |
-| `DHIMMIS_OVERRIDE_PATH` | | A directory path under which a `template/` and `static/` directory can be placed. Templates within the `template/` directory will be prioritized over the internal ones. This can be used to provide a different template for a certain page, such as the impressum. The files in the `static/` directory will be served without requiring any authentication under the URL `${DHIMMIS_PROXYPREFIX}/override/static/<file path>` (use `url_for('override.static', filename='<file path>')` in templates). |
+| `DHIMMIS_OVERRIDE_PATH` | | A directory path under which a `template/` and `static/` directory can be placed. Templates within the `template/` directory will be prioritized over the internal ones. This can be used to provide a different template for a certain page, such as the impressum. |
 | `FLASK_ACCESS_LOG` | `/data/access_log` | Path to `access_log` (for logging). |
 | `FLASK_ERROR_LOG` | `/data/error_log` | Path to `error_log` (for logging). |
 | `DHIMMIS_PORT` | `8000` | Port at which `gunicorn` serves the content. **Note:** This is set via the Dockerfile, and also only used in the Dockerfile. |
@@ -129,3 +129,47 @@ The following configuration environment variables exist, although most have a se
 | `PGPORT` | `5432` | PostgreSQL port |
 | `PGUSER` | `api` | PostgreSQL user |
 
+
+#### Overriding Pages
+
+When running the server, it might be necessary to override some pages;
+for example, one might want a different home page, or a different impressum.
+The server uses the `DHIMMIS_OVERRIDE_PATH` environment variable to load such overrides.
+If it is set, the Flask server creates an extra blueprint, and the directory `${DHIMMIS_OVERRIDE_PATH}/templates/` is added to the Jinja2 template search path with precedence.
+Further, the files in the `${DHIMMIS_OVERRIDE_PATH}/static/` directory will be served without requiring any authentication under the URL `${DHIMMIS_PROXYPREFIX}/override/static/<file path>` (use `url_for('override.static', filename='<file path>')` in templates).
+
+An example how this could be used to use an own home page with a separate stylesheet is listed below.
+In this example, the `/data` directory in the Docker image is already mapped to the `/www` directory on the host.
+In the `/www` directory on the host, we create the directories `override/static/` and `override/templates/`.
+Then, we can pass the environment variable `DHIMMIS_OVERRIDE_PATH` to the Docker container as `/data/override`.
+
+Content of `/www/override/templates/root/index.html`:
+``` html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>New home page</title>
+  <link rel="stylesheet" href="{{ url_for('override.static', filename='home.css') }}">
+</head>
+<body>
+  <h1>This is the new home page</h1>
+
+  <p>
+    There is not much content yet.
+  </p>
+</body>
+</html>
+```
+
+Content of `/www/override/static/home.css`:
+``` css
+h1 {
+  color: blue;
+}
+```
+
+Now, when running the server and navigating to `https://<host>/${DHIMMIS_PROXYPREFIX}/`, the new home page should be served, and the stylesheet loaded.
+Keep in mind that all contents of the static directory will be served without user authentication.
+For details on which paths templates must be put under for proper override, refer to the `template/` directories of the blueprints in the repository.
+For details on how to inherit from the base template, refer to the [base template](./dhimmis/templates/base.html) and other, inheriting templates.
