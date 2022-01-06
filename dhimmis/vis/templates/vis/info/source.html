@@ -1,6 +1,6 @@
 <p>
-This view shows the sources from which the evidence tuples (i.e., a set of data concerning a place, religion, time span and the respective confidences) were extracted.
-An evidence tuple can stem from more than one source. Therefore, the sum total of all source instances can be larger than the number of evidence tuples.
+This view shows the sources from which the evidence tuples (i.e. a set of data concerning a place, religion, time span, and the respective confidences) were gathered.
+Note that an evidence tuple can stem from more than one source. Therefore, the sum total of all source instances can be larger than the number of evidence tuples.
 </p>
 
 <h1>Contents</h1>
@@ -13,19 +13,19 @@ In what follows, the respective columns of one given row are described.
 <h2>Checkboxes</h2>
 <p>
 The first column contains a <em>checkbox</em> that toggles the visibility of evidence tuples of a source.
-Keep in mind that an evidence tuple can have multiple source instances: as long as <em>any</em> source instance's source is checked in this view, the evidence tuple will be active.
+Keep in mind that an evidence tuple can stem from more than one source, i.e. have multiple source instances: as long as <em>any</em> source instance's source is checked in this view, the evidence tuple will be active.
 </p>
 
 <h2>Short Names</h2>
 <p>
 The second column shows the short name of the source, generally an abbreviation.
-The full name of the source with some bibliographical details is available via a tooltip, i.e. when hovering over the name with the mouse.
+The full name of the source with bibliographical details is available via a tooltip, i.e. when hovering over the name with the mouse.
 </p>
 
 <h2>Religion/Confidence Segmentation Visualization</h2>
 <p>
-The third column visualizes the segmentation of the evidence tuples on the religions or on the levels of confidence, depending on the <em>mode</em> (cf. "Display mode" in the <em>Settings view</em>).
-In <em>Confidence Mode</em>, instead of religion, the currently selected aspect of confidence is used.
+The third column visualizes the segmentation of the evidence tuples on the religions or on the levels of confidence, depending on the <em>mode</em> (cf. "Display mode" in the <em>Settings view</em>.
+In <em>Confidence Mode</em>, instead of religion, the currently selected aspect of confidence is used.)
 The visualization used is a normalized stacked barchart.
 Because the total width of the bars is the same regardless of the amount of evidence tuples, the width of each segment signifies the number of evidence tuples with that religion or confidence level <em>in relation to</em> the total evidence count for that source.
 </p>
@@ -41,9 +41,9 @@ This column uses the same scaling in all rows: the longer the bar, the more evid
 <h2>Selection</h2>
 <p>
 Clicking on a row will <em>select</em> the source and <em>link</em> related data in all views.
-For instance, locations in the map with evidences from the selected source will be highlighted, other locations will be grayed out.
+For instance, locations in the map with evidences from the selected source will be highlighted, other locations will be represented by less saturated colors.
 Clicking on the same row again will reset the selection.
-Selecting a different row, or an element in a different view, will replace the selection. Only one source at a time can be selected.
+Selecting a different row, or an element in a different view, will replace the selection. Only one source can be selected at a time.
 </p>
 
 <h2>Filtering</h2>
@@ -51,8 +51,8 @@ Selecting a different row, or an element in a different view, will replace the s
 Sources can be filtered out from the visualized data in all views by (un-)checking the appropriate checkbox or checkboxes.
 Note that the selection is not applied until the <em>Apply</em> button is clicked.
 Checking multiple (or all) sources works as a <em>logical disjunction</em>: an evidence tuple is matched if it stems from <em>any</em> of the checked sources.
-The source filters work together with filters from other views in <em>logical conjunction</em>;
-for instance, if only source <em>X</em> and religion <em>Y</em> are selected in the respective views, only evidence tuples with religion Y <em>and</em> source X are matched.
+The source filter works together with filters from other views in <em>logical conjunction</em>;
+for instance, if only source X and religion Y are selected in the respective views, only evidence tuples with source X <em>and</em> religion Y are matched.
 </p>
 
 <p>

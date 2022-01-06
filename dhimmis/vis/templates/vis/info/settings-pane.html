@@ -1,5 +1,5 @@
 <p>
-  In this view, different settings and features can be controlled.
+  This view shows different settings and features.
 </p>
 
 <h1>Visualization Settings</h1>
@@ -23,7 +23,7 @@
   This switch controls which aspect of the data is mapped to color.
   If <em>Religion</em> is selected, religion is used for coloring, using the color scheme in the <em>Religion view</em>.
   If <em>Confidence</em> is selected, the level of confidence is used, using the color scheme in the <em>Confidence view</em>.
-  The <em>Aspect of Confidence</em> used can be selected in the <em>Confidence view</em> as well; there, the currently used aspect is indicated with an
+  The <em>Aspect of Confidence</em> used for the visualization can be selected in the <em>Confidence view</em>; there, the currently used aspect is indicated with an
   <i class="fa fa-eye"></i> eye symbol below the column.
 </p>
 
@@ -46,6 +46,7 @@
   This mode may lead to overlap of symbols when zooming out even to a relative small scale and should thus be used with due caution when interpreting the results.
 </p>
 
+
 <h1>Generate Report</h1>
 
 <p>
@@ -53,31 +54,37 @@
   The report will also contain information on the filter criteria that led to the selection of data.
   This report will show up in a new tab.
   A report can also be created by uploading a <em>visualization state</em> that was safed and downloaded beforehand (see below).
-  Be careful not to do this with very broad filter criteria, as the report will get very long in that case.
+  It is discouraged to create a report with very broad filter criteria, as it will become very long and thus difficult to handle.
 </p>
 
 <p>
-  This section also has a button labeled <em><q>Describe filters.</q></em>
-  Clicking this button will open a modal window within the visualization that describes the currently active filters in text form.
-  This description is the same as at the top of a generated report.
+  This section also has a button labeled <em>Describe filters</em>.
+  Clicking this button will open a small window (a so-called modal window) within the visualization that describes the currently active filters in text form.
+  This description is the same as the one at the top of a generated report.
 </p>
 
 
 <h1>Layout Settings</h1>
 
 <p>
-  You can save the current layout.
-  This setting will only persist for your current browser and computer (using <code>localStorage</code>).
-  You can also reset to the initial layout (<em>Note:</em> this will reload the page).
+  The current layout of the visualization, i.e. the arrangement of the views, can be saved. This feature is only possible if the option <em>All cookies</em> is accepted in the <em>Cookie preferences</em> (accessible through the menu bar on top). The settings will only persist for the currently used browser and computer (using <code>localStorage</code>). Note that, depending on your browser settings, cookies can be deleted after closing the browser losing the saved settings. In this case, the <em>Persist state</em> feature (see below) can be used as an alternative.
+</p>
+<p>
+  You can also reset the layout to the initial state. Note that this will reload the page.
 </p>
 
 
 <h1>Persist State</h1>
 
 <p>
-  Also, the current state of the visualization can be saved.
-  In particular, this will save the <em>filters</em> you currently have applied, the center point, zoom level, and visible layers of the <em>map</em>, and the <em>visualization settings</em> applied above.
+  Also, the current overall state of the visualization can be saved.
+  In particular, this will save
+  <ul>
+    <li>the <em>filters</em> you currently have applied,</li>
+    <li>the center point, zoom level, and visible layers of the <em>map</em>, and</li>
+    <li>the <em>visualization settings</em> applied above.</li>
+  </ul>
   These settings are <span class="no-break"><i class="fa fa-download"></i> <em>downloaded</em></span> as a file to the computer.
   Later, such a file can be <span class="no-break"><i class="fa fa-upload"></i> <em>uploaded</em></span> to restore the state.
-  What is more, that file can be shared to either present one’s results or to generate a report based on the filters (cf. also ###).
+  What is more, that file can be shared to either present one’s results or to (re-)generate a report based on the filters.
 </p>
