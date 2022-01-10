@@ -8,7 +8,9 @@ directory, for example to replace the impressum or title page. External
 static files can also be hosted. Fixes PEP495 warnings from apscheduler.
 Fixes an issue with loading map states with non-integer zoom levels. Users
 that are not allowed to see the GeoDB-Editor now have links to the place
-URI pages from the visualization location list instead.
+URI pages from the visualization location list instead. Adds a button to
+restore the default confidence selection in the visualization confidence
+view. Remove some historical clutter and naming.
 
 
 2021-12-28                                                           v1.0.1
