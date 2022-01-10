@@ -180,7 +180,10 @@ export default class LocationList extends View<any, any> {
       p.select('span.confidence-color')
         .style('--confidence-color', ref.confidenceColorscale[`${d.location_confidence}`]);
       p.select('a')
-        .attr('href', `../GeoDB-Editor/places#${urlData}`);
+        .attr('href', ref.user.geodb
+          ? `../GeoDB-Editor/places#${urlData}`
+          : `../place/${d.id}`
+        );
     };
 
     let s = this.unplaced_content.selectAll('.location-list__location-name')
