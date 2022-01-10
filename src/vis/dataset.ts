@@ -159,7 +159,10 @@ export class Dataset {
 
   private _map_state: T.MapState = {
     zoom: DefaultMapState.zoom_level,
-    center: { lat: 30, lng: 68 },
+    center: {
+      lat: DefaultMapState.center[0],
+      lng: DefaultMapState.center[1],
+    },
     base_layer: 'light',
     overlay_layers: [ 'markerLayer' ],
   };
