@@ -13,7 +13,7 @@ import TooltipManager from './tooltip';
 // @ts-ignore: Import not found
 import GoldenLayout from 'golden-layout';
 
-export default class Hierarchy extends View<any, number[] | null> {
+export default class ReligionHierarchy extends View<any, number[] | null> {
   private div: d3.Selection<HTMLDivElement, any, any, any>;
   private svg: d3.Selection<SVGSVGElement, any, any, any>;
   private g: d3.Selection<SVGGElement, any, any, any>;
@@ -409,7 +409,7 @@ export default class Hierarchy extends View<any, number[] | null> {
   }
 
   private on_brush(
-    ref: Hierarchy,
+    ref: ReligionHierarchy,
     datum: {node: d3.HierarchyNode<T.OwnHierarchyNode>},
     sel: d3.Selection<SVGGElement, {node: d3.HierarchyNode<T.OwnHierarchyNode>}, any, any>
   ): void {

@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
 import Timeline from './timeline';
-import Hierarchy from './hierarchy';
+import ReligionHierarchy from './religion-hierarchy';
 import MapPane from './map';
 import LocationList from './location-list';
 import Untimed from './untimed-display';
@@ -52,7 +52,7 @@ const layout_config = getConfig();
 const layout = new GoldenLayout(layout_config, d3.select('#goldenlayout-root').node());
 
 import ReligionWorker from 'worker-loader?filename=[name].js!./religion.worker';
-createView(ReligionWorker, Hierarchy, 'religion', dataLoader, messageReceivers, workerListener, layout);
+createView(ReligionWorker, ReligionHierarchy, 'religion', dataLoader, messageReceivers, workerListener, layout);
 
 import UntimedWorker from 'worker-loader?filename=[name].js!./untimed.worker';
 createView(UntimedWorker, Untimed, 'untimed', dataLoader, messageReceivers, workerListener, layout);
