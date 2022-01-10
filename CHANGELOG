@@ -1,7 +1,7 @@
                                 CHANGELOG
 
 
-2021-12-xx                                                           v1.0.2
+2022-01-10                                                           v1.0.2
 
 Jinja2 templates can now be selectively overridden in an external
 directory, for example to replace the impressum or title page. External
