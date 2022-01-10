@@ -1,6 +1,11 @@
                                 CHANGELOG
 
 
+2022-01-xx                                                           v1.0.3
+
+.
+
+
 2022-01-10                                                           v1.0.2
 
 Jinja2 templates can now be selectively overridden in an external
