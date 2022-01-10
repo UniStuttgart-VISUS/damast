@@ -10,7 +10,7 @@ import pointsWithinPolygon from '@turf/points-within-polygon';
 import * as T from './datatypes';
 import * as tld from './timeline-data';
 import * as brush from './brush';
-import {UncertaintyHierarchy,confidence_keys,confidence_aspects,tupleActive} from './confidence-filter';
+import {ConfidenceAspects,confidence_keys,confidence_aspects,tupleActive} from './confidence-filter';
 import default_selection from './default-confidence-filter-selection';
 import * as color from './colorscale';
 import * as ReligionFilter from './religion-filter';
@@ -55,7 +55,7 @@ interface ExportableFilters {
   religion: ReligionFilter.ReligionFilter;
   time: tld.TimeFilter;
   sources: SourceFilter.ExportableSourceFilter;
-  confidence: UncertaintyHierarchy;
+  confidence: ConfidenceAspects;
   tags: TagFilter.ExportableTagFilter;
   location: LocationFilter;
   places: PlaceFilter;
@@ -101,7 +101,7 @@ export class Dataset {
   private _religion_filter: ReligionFilter.ReligionFilter = true;
   private _time_filter: tld.TimeFilter = null;;
   private _source_filter: SourceFilter.SourceFilter = null;
-  private _confidence_filter: UncertaintyHierarchy = default_selection;
+  private _confidence_filter: ConfidenceAspects = default_selection;
   private _tag_filter: TagFilter.TagFilter = true;
   private _map_filter: LocationFilter = null;
   private _map_filter_matcher: LocationMatcher = {
@@ -689,7 +689,7 @@ export class Dataset {
     }, p1).data.id;
   }
 
-  updateHierarchyFilters(uh: UncertaintyHierarchy) {
+  updateHierarchyFilters(uh: ConfidenceAspects) {
     this._confidence_filter = uh;
     this.changed(ChangeScope.Certainty);
   }
@@ -877,7 +877,7 @@ export class Dataset {
     return this._religion_filter;
   }
 
-  get confidence_filter(): UncertaintyHierarchy {
+  get confidence_filter(): ConfidenceAspects {
     return this._confidence_filter;
   }
 

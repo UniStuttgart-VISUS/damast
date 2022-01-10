@@ -11,10 +11,10 @@ import View from './view';
 // @ts-ignore: Import not found
 import GoldenLayout from 'golden-layout';
 
-export default class UncertaintyPane extends View<any, any> {
+export default class ConfidencePane extends View<any, any> {
   private _div: d3.Selection<HTMLDivElement, any, any, any>;
 
-  private _cached_filters: CF.UncertaintyHierarchy = null;
+  private _cached_filters: CF.ConfidenceAspects = null;
 
   private _columns: {value:string}[];
 
@@ -152,8 +152,8 @@ export default class UncertaintyPane extends View<any, any> {
     this.onchange();
   }
 
-  private read_filters(): CF.UncertaintyHierarchy {
-    const cf = {} as CF.UncertaintyHierarchy;
+  private read_filters(): CF.ConfidenceAspects {
+    const cf = {} as CF.ConfidenceAspects;
 
     this._columns.forEach(d => {
       const set =  this._div.selectAll<HTMLInputElement, any>('input.cell-check')

@@ -8,7 +8,7 @@ import Untimed from './untimed-display';
 import * as T from './datatypes';
 import {createColorscales} from './colorscale';
 import {getDataset,Dataset} from './dataset';
-import UncertaintyPane from './uncertainty-pane';
+import ConfidencePane from './confidence-pane';
 import SourcePane from './source-pane';
 import TagsPane from './tags';
 import SettingsPane from './settings-pane';
@@ -57,7 +57,7 @@ import UntimedWorker from 'worker-loader?filename=[name].js!./untimed.worker';
 createView(UntimedWorker, Untimed, 'untimed', dataLoader, messageReceivers, workerListener, layout);
 
 import ConfidenceWorker from 'worker-loader?filename=[name].js!./confidence.worker';
-createView(ConfidenceWorker, UncertaintyPane, 'confidence', dataLoader, messageReceivers, workerListener, layout);
+createView(ConfidenceWorker, ConfidencePane, 'confidence', dataLoader, messageReceivers, workerListener, layout);
 
 import LocationListWorker from 'worker-loader?filename=[name].js!./location-list.worker';
 createView(LocationListWorker, LocationList, 'location-list', dataLoader, messageReceivers, workerListener, layout);
