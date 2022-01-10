@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import * as T from './datatypes';
 import {DataWorker,MessageData} from './data-worker';
-import {confidence_keys} from './uncertainty-hierarchy';
+import {confidence_keys} from './confidence-aspects';
 import * as ReligionFilter from './religion-filter';
 
 class MessageWorker extends DataWorker<any> {

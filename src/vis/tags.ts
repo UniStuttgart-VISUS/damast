@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import * as R from 'ramda';
 import {Dataset,ChangeScope} from './dataset';
-import {UncertaintyHierarchy,confidence_aspects} from './uncertainty-hierarchy';
+import {confidence_aspects} from './confidence-aspects';
 import * as T from './datatypes';
 import {ColorScales} from './colorscale';
 import * as modal from './modal';

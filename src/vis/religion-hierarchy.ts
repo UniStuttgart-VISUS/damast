@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 import * as T from './datatypes';
 import * as R from 'ramda';
 import {Dataset, ChangeScope} from './dataset';
-import {confidence_keys} from './uncertainty-hierarchy';
+import {confidence_keys} from './confidence-aspects';
 import {ColorScales} from './colorscale';
 import {SourceTuple} from './timeline-data';
 import * as modal from './modal';

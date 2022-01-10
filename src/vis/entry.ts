@@ -9,7 +9,6 @@ import * as T from './datatypes';
 import {createColorscales} from './colorscale';
 import {getDataset,Dataset} from './dataset';
 import UncertaintyPane from './uncertainty-pane';
-import {UncertaintyHierarchy} from './uncertainty-hierarchy';
 import SourcePane from './source-pane';
 import TagsPane from './tags';
 import SettingsPane from './settings-pane';
