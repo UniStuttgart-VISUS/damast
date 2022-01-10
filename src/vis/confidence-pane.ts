@@ -46,6 +46,15 @@ export default class ConfidencePane extends View<any, any> {
           .each(function() { this.checked = true; });
         this.onchange();
       });
+    hdr.select<HTMLButtonElement>('#confidence-filter-default')
+      .on('click', () => {
+        this._div.selectAll<HTMLInputElement, any>('input.cell-check')
+          .each(function(d) {
+            // if default selection has this checkbox, check it
+            this.checked = default_selection[d[1].value].includes(d[0].value);
+          });
+        this.onchange();
+      });
   }
 
   async linkData(data: any) {}
