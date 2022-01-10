@@ -1,15 +1,14 @@
 import * as d3 from 'd3';
 
 import Timeline from './timeline';
-import Hierarchy from './hierarchy';
+import ReligionHierarchy from './religion-hierarchy';
 import MapPane from './map';
 import LocationList from './location-list';
 import Untimed from './untimed-display';
 import * as T from './datatypes';
 import {createColorscales} from './colorscale';
 import {getDataset,Dataset} from './dataset';
-import UncertaintyPane from './uncertainty-pane';
-import {UncertaintyHierarchy} from './uncertainty-hierarchy';
+import ConfidencePane from './confidence-pane';
 import SourcePane from './source-pane';
 import TagsPane from './tags';
 import SettingsPane from './settings-pane';
@@ -52,13 +51,13 @@ const layout_config = getConfig();
 const layout = new GoldenLayout(layout_config, d3.select('#goldenlayout-root').node());
 
 import ReligionWorker from 'worker-loader?filename=[name].js!./religion.worker';
-createView(ReligionWorker, Hierarchy, 'religion', dataLoader, messageReceivers, workerListener, layout);
+createView(ReligionWorker, ReligionHierarchy, 'religion', dataLoader, messageReceivers, workerListener, layout);
 
 import UntimedWorker from 'worker-loader?filename=[name].js!./untimed.worker';
 createView(UntimedWorker, Untimed, 'untimed', dataLoader, messageReceivers, workerListener, layout);
 
 import ConfidenceWorker from 'worker-loader?filename=[name].js!./confidence.worker';
-createView(ConfidenceWorker, UncertaintyPane, 'confidence', dataLoader, messageReceivers, workerListener, layout);
+createView(ConfidenceWorker, ConfidencePane, 'confidence', dataLoader, messageReceivers, workerListener, layout);
 
 import LocationListWorker from 'worker-loader?filename=[name].js!./location-list.worker';
 createView(LocationListWorker, LocationList, 'location-list', dataLoader, messageReceivers, workerListener, layout);

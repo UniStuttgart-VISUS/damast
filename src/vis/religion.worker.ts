@@ -2,7 +2,7 @@ import * as d3array from 'd3-array';
 import * as d3hier from 'd3-hierarchy';
 import * as T from './datatypes';
 import {DataWorker,MessageData} from './data-worker';
-import {confidence_keys} from './uncertainty-hierarchy';
+import {confidence_keys} from './confidence-aspects';
 import * as ReligionFilter from './religion-filter';
 
 class ReligionWorker extends DataWorker<any> {
