@@ -38,7 +38,9 @@ def whoami():
     else:
         data = dict(user=u.name,
             readdb=('readdb' in u.roles or 'admin' in u.roles),
-            writedb=('writedb' in u.roles or 'admin' in u.roles))
+            writedb=('writedb' in u.roles or 'admin' in u.roles),
+            geodb=('geodb' in u.roles or 'admin' in u.roles),
+            )
 
     return flask.jsonify(data)
 

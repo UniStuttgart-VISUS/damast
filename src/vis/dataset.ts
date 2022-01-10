@@ -163,7 +163,7 @@ export class Dataset {
     base_layer: 'light',
     overlay_layers: [ 'markerLayer' ],
   };
-  private _user: T.User = { user: null, readdb: false, writedb: false }
+  private _user: T.User = { user: null, readdb: false, writedb: false, geodb: false }
   private _server_version: string;
 
   constructor() {
