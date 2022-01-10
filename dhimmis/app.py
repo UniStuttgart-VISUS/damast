@@ -40,27 +40,12 @@ def get_software_version():
     if vs is not None:
         return vs
 
-    # check if git repo
-    try:
-        git = subprocess.run(['git', 'describe', '--tags'], capture_output=True, encoding='utf-8')
-        if git.returncode == 0:
-            return git.stdout.strip()
-    except FileNotFoundError:
-        pass
-    except OSError as err:
-        logging.getLogger('flask.error').error(F'{type(err)} {err.strerror}')
-
-    if os.environ.get('VIRTUAL_ENV', None) is not None:
-        pip = subprocess.Popen(['pip', 'list'], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, encoding='utf-8')
-        awk = subprocess.run(['awk', '/dhimmis-muslims/ {print $2}'], stdin=pip.stdout, capture_output=True, encoding='utf-8')
-        return awk.stdout.strip()
-
     return '<unknown>'
-get_software_version()
 
 
 class FlaskApp(flask.Flask):
     def __init__(self, *args, **kwargs):
+        kwargs.update(template_folder=None)
         super().__init__(*args, **kwargs)
         self.json_encoder = NumericRangeEncoder
 
@@ -103,25 +88,38 @@ class FlaskApp(flask.Flask):
         self.scheduler = None
         self._init_scheduler()
 
-        self.processes = []
-        self._init_teardown()
-
-
-    def _init_teardown(self):
-        @self.teardown_appcontext
-        def onteardown(ctx):
-            for proc in self.processes:
-                if proc.is_alive():
-                    logging.getLogger('flask.error').info(F'Terminating worker "{proc.name}" because of shutdown or reload.')
-                    proc.terminate()
-
-            self.processes = []
+        self._init_base_blueprints()
 
 
     def __del__(self):
-        print(self.processes)
         if self.scheduler is not None:
             self.scheduler.shutdown()
+
+
+    def _init_base_blueprints(self):
+        # if a override path is provided, try to load templates from there first
+        overpath = os.environ.get('DHIMMIS_OVERRIDE_PATH', None)
+
+        if overpath is None:
+            logging.getLogger('flask.error').info('No override path provided.')
+
+        else:
+            override = flask.Blueprint('override', __name__,
+                    template_folder=os.path.join(overpath, 'templates'),
+                    static_folder=os.path.join(overpath, 'static'))
+            self.register_blueprint(override, url_prefix='/override')
+            tpls = sorted(self.jinja_env.list_templates())
+
+            if len(tpls) == 0:
+                logging.getLogger('flask.error').warn('Template override path provided, but no templates overridden. This might be an oversight.')
+
+            else:
+                for tpl in tpls:
+                    logging.getLogger('flask.error').info('Template override path provides template "%s".', tpl)
+
+        # load base templates from here (if not provided from override)
+        base = flask.Blueprint('base', __name__, template_folder='templates')
+        self.register_blueprint(base)
 
 
     def _init_logging(self):
@@ -498,7 +496,7 @@ class FlaskApp(flask.Flask):
                 logging.getLogger('flask.error').warn('Could not rebuild materialized views (%s): %s', str(type(e)), str(e))
         rebuild_fn = partial(rebuild_view, self)
 
-        self.scheduler = GeventScheduler()
+        self.scheduler = GeventScheduler(timezone='Europe/Berlin')
         self.scheduler.add_job(rebuild_fn, trigger='interval', minutes=10, start_date=datetime.datetime.now()+datetime.timedelta(seconds=10))
 
         register_scheduler_for_annotation_suggestions(self.scheduler)

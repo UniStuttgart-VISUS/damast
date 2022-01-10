@@ -61,7 +61,7 @@
       ],
       "properties": {
         "zoom": {
-          "type": "integer",
+          "type": "number",
           "minimum": 0,
           "maximum": 18
         },

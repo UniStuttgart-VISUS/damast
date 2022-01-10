@@ -1,7 +1,7 @@
 import * as d3array from 'd3-array';
 import * as d3shape from 'd3-shape';
 import * as T from './datatypes';
-import {confidence_keys} from './uncertainty-hierarchy'
+import {confidence_keys} from './confidence-aspects'
 
 interface YearRange {
   start: number;

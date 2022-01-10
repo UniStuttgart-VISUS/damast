@@ -56,7 +56,7 @@ export const columns = [
   }
 ];
 
-export interface UncertaintyHierarchy {
+export interface ConfidenceAspects {
   religion_confidence : T.ConfidenceRange;
   location_confidence : T.ConfidenceRange;
   place_attribution_confidence: T.ConfidenceRange;
@@ -73,7 +73,7 @@ function contained(v: T.Confidence | T.Confidence[], r: T.ConfidenceRange): bool
   }
 }
 
-export function tupleActive(c: T.Confidences, uh: UncertaintyHierarchy): boolean {
+export function tupleActive(c: T.Confidences, uh: ConfidenceAspects): boolean {
   return contained(c.time_confidence, uh.time_confidence)
     && contained(c.religion_confidence, uh.religion_confidence)
     && contained(c.location_confidence, uh.location_confidence)
@@ -96,7 +96,7 @@ confidence_keys.forEach((v, k) => confidence_aspects.set(v, k));
 
 export function createConfidenceData(
   tuples: T.Confidences[],
-  confidence_filter: UncertaintyHierarchy,
+  confidence_filter: ConfidenceAspects,
   confidence_aspect: T.ConfidenceAspect,
   colors: {}
 ) {
