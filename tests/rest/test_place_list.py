@@ -3,9 +3,7 @@ import dhimmis
 import flask
 import json
 
-def get_headers(client, username, password):
-    rv = client.post('/login', data=dict(username=username, password=password))
-    return {'Cookie': rv.headers['Set-Cookie']}
+from conftest import get_headers
 
 
 def test_get_all_visible_places(client_ro, minimal_testuser):

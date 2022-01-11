@@ -4,10 +4,7 @@ import flask
 import json
 from functools import namedtuple
 
-def get_headers(client, username, password):
-    rv = client.post('/login', data=dict(username=username, password=password))
-    return {'Cookie': rv.headers['Set-Cookie']}
-
+from conftest import get_headers
 
 @pytest.mark.parametrize('method', ['POST', 'TRACE', 'HEAD', 'CONNECT'])
 def test_method_not_allowed(client_ro, minimal_testuser, method):
