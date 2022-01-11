@@ -193,6 +193,9 @@ def get_pdf_report(report_id):
 @app.route('/list', role=['reporting', 'dev', 'admin'])
 def list_available_reports():
     current_user = flask.current_app.auth.current_user()
+    if current_user.visitor:
+        flask.abort(401)
+
     with get_report_database() as db:
         restriction = '' if 'admin' in current_user.roles else 'WHERE user = :user'
         db.execute(F'SELECT count(*) FROM reports {restriction};', dict(user=current_user.name))

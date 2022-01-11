@@ -278,10 +278,15 @@ class FlaskApp(flask.Flask):
             else:
                 next_ = flask.url_for('root-app.root')
 
-            return flask.render_template('401.html',
-                    next=flask.url_for('login.login',
+            user = self.auth.current_user()
+            if user and user.visitor:
+                nextx = flask.url_for('root-app.root')
+            else:
+                nextx = flask.url_for('login.login',
                         _external=True,
-                        next=next_)), 401
+                        next=next_)
+
+            return flask.render_template('401.html', next=nextx)
 
 
         @self.errorhandler(403)
@@ -352,7 +357,13 @@ class FlaskApp(flask.Flask):
 
             remote_addr = r.remote_addr
 
-            logstring = F'''{remote_addr} - {"-" if self.auth.current_user() is None else self.auth.current_user().name } [{datetime.datetime.now().astimezone().isoformat()}] "{r.method} {r.path} {r.environ.get("SERVER_PROTOCOL")}" {resp.status_code} {resp.content_length} "{r.referrer if r.referrer is not None else '-'}" "{r.user_agent}" "{flask.request.blueprint or '-'}"'''
+            user = self.auth.current_user()
+            if user is None or user.visitor:
+                username = '-'
+            else:
+                username = user.name
+
+            logstring = F'''{remote_addr} - {username} [{datetime.datetime.now().astimezone().isoformat()}] "{r.method} {r.path} {r.environ.get("SERVER_PROTOCOL")}" {resp.status_code} {resp.content_length} "{r.referrer if r.referrer is not None else '-'}" "{r.user_agent}" "{flask.request.blueprint or '-'}"'''
             logging.getLogger('flask.access').info(logstring)
 
             return resp

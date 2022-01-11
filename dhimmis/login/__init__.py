@@ -25,6 +25,9 @@ def login_css():
 
 @app.route('/login', methods=['GET'], optional=True)
 def login():
+    if flask.current_app.auth.current_user().visitor:
+        flask.abort(401)
+
     return flask.render_template('login.html')
 
 @app.route('/login', methods=['POST'])
