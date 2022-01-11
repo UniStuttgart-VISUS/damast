@@ -239,7 +239,6 @@ class FlaskApp(flask.Flask):
         @self.after_request
         def _after_request_check_cookie_consent(resp):
             r = flask.request
-            print(self.auth.current_user())
 
             cookie_consent = r.cookies.get('cookieConsent')
             if cookie_consent not in ('essential', 'all'):
@@ -358,7 +357,7 @@ class FlaskApp(flask.Flask):
             remote_addr = r.remote_addr
 
             user = self.auth.current_user()
-            if user is None or user.visitor:
+            if user is None:
                 username = '-'
             else:
                 username = user.name
