@@ -23,8 +23,7 @@
 
 <h2>Evidence Count Visualization</h2>
 <p>
-  The third column visualizes the count of evidence tuples for each source.
-  ###This column uses the same scaling in all rows: the longer the bar, the more evidences stem from the respective source. This effectively creates a vertical histogram across the rows.
+  The third column visualizes the count of evidence tuples for each source. The less saturated part of the bar represents evidence tuples that are not active (i.e., do not match the current filters).
 </p>
 
 <h1>Interaction</h1>
@@ -43,7 +42,7 @@
   Keep in mind that an evidence tuple can have no tag, one tag, or multiple tags. If, for instance, it has no tag, its visibility is not affected by the checkboxes. If, on the other hand, it has multiple tags, its visibility is only affected by (un-)checking all respective checkboxes.
   Note that the selection is not applied until the <em>Apply</em> button is clicked.
 
-  ###Checking multiple (or all) tags works as a <em>logical disjunction</em>: an evidence tuple is matched if it stems from <em>any</em> of the checked sources.
+  Checking multiple (or all) tags works as a <em>logical disjunction</em>: an evidence tuple is matched if it is assigned <em>any</em> of the checked tags.
   The tag filter works together with filters from other views in <em>logical conjunction</em>;
   for instance, if only tag X and religion Y are selected in the respective views, only evidence tuples with tag X <em>and</em> religion Y are matched.
 </p>
