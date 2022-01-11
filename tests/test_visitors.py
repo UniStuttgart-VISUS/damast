@@ -38,10 +38,6 @@ _visitor_roles = [
             ['visitor', 'user', 'readdb', 'vis', 'reporting'],
         ),
         Roles(
-            ['user', 'readdb', 'vis', 'reporting'],
-            ['visitor', 'user', 'readdb', 'vis', 'reporting'],
-        ),
-        Roles(
             ['user', 'readdb', 'annotator', 'dev'],
             ['visitor', 'user', 'readdb', 'vis', 'annotator'],
         ),
@@ -73,6 +69,7 @@ _try_paths = [
     TryPath('/', ('user',), False),
     TryPath('/impressum.html', None, True),
     TryPath('/cookie-preferences', None, True),
+    TryPath('/login', None, True),
     TryPath('/vis/', ('vis','readdb'), False),
     TryPath('/place/', ('readdb','user'), False),
     TryPath('/GeoDB-Editor/places', ('readdb','geodb'), False),
@@ -87,7 +84,7 @@ _try_paths = [
     TryPath('/rest/place-type-list', ('user','readdb'), False),
     TryPath('/rest/religions', ('user','readdb'), False),
     TryPath('/rest/uri/uri-namespace-list', ('user','readdb'), False),
-        ]
+    ]
 
 @pytest.fixture(params=_try_paths)
 def try_path(request):
