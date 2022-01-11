@@ -19,7 +19,7 @@ import traceback
 from contextlib import contextmanager
 import werkzeug.exceptions
 from .token import HTTPCookieTokenAuth
-from .user import User
+from .user import User, default_visitor_roles
 from .postgres_rest_api.util import NumericRangeEncoder
 from .logging import BlueprintFilter
 from functools import lru_cache, partial
@@ -188,6 +188,8 @@ class FlaskApp(flask.Flask):
 
         self.auth = HTTPCookieTokenAuth(scheme='Bearer')
 
+        visitor_roles = default_visitor_roles()
+
         # VERIFICATION
         @self.auth.verify_token
         def verify_token(token):
@@ -205,7 +207,7 @@ class FlaskApp(flask.Flask):
                                 if expires <= 0:
                                     logging.getLogger('flask.error').info('User %s tried to log in, account expired for %d days.', userdata[0], -expires)
                                     flask.flash('User account expired, please contact administrator', 'error')
-                                    return None
+                                    return User(name=None, roles=visitor_roles, visitor=True)
 
                             # parse roles
                             r = userdata[3]
@@ -215,10 +217,10 @@ class FlaskApp(flask.Flask):
                         else:
                             logging.getLogger('flask.error').info('Wrong username or password for user %s.', payload['role'])
                             flask.flash('Wrong username or password', 'error')
-                            return None
+                            return User(name=None, roles=visitor_roles, visitor=True)
 
             except jwt.PyJWTError:
-                return None
+                return User(name=None, roles=visitor_roles, visitor=True)
 
 
         @self.auth.error_handler
@@ -237,6 +239,7 @@ class FlaskApp(flask.Flask):
         @self.after_request
         def _after_request_check_cookie_consent(resp):
             r = flask.request
+            print(self.auth.current_user())
 
             cookie_consent = r.cookies.get('cookieConsent')
             if cookie_consent not in ('essential', 'all'):
