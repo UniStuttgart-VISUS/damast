@@ -25,7 +25,8 @@ def login_css():
 
 @app.route('/login', methods=['GET'], optional=True)
 def login():
-    if flask.current_app.auth.current_user().visitor:
+    user = flask.current_app.auth.current_user()
+    if user and user.visitor:
         flask.abort(401)
 
     return flask.render_template('login.html')
@@ -90,7 +91,7 @@ def change_password():
 def change_password_post():
     auth = flask.current_app.auth
 
-    if auth.current_user().visitor:
+    if auth.current_user() is None or auth.current_user().visitor:
         flask.abort(401)
 
     oldpassword = flask.request.form.get('password', None)

@@ -19,7 +19,7 @@ import traceback
 from contextlib import contextmanager
 import werkzeug.exceptions
 from .token import HTTPCookieTokenAuth
-from .user import User, default_visitor_roles
+from .user import User, default_visitor_roles, visitor
 from .postgres_rest_api.util import NumericRangeEncoder
 from .logging import BlueprintFilter
 from functools import lru_cache, partial
@@ -207,7 +207,7 @@ class FlaskApp(flask.Flask):
                                 if expires <= 0:
                                     logging.getLogger('flask.error').info('User %s tried to log in, account expired for %d days.', userdata[0], -expires)
                                     flask.flash('User account expired, please contact administrator', 'error')
-                                    return User(name=None, roles=visitor_roles, visitor=True)
+                                    return visitor(visitor_roles)
 
                             # parse roles
                             r = userdata[3]
@@ -217,10 +217,10 @@ class FlaskApp(flask.Flask):
                         else:
                             logging.getLogger('flask.error').info('Wrong username or password for user %s.', payload['role'])
                             flask.flash('Wrong username or password', 'error')
-                            return User(name=None, roles=visitor_roles, visitor=True)
+                            return visitor(visitor_roles)
 
             except jwt.PyJWTError:
-                return User(name=None, roles=visitor_roles, visitor=True)
+                return visitor(visitor_roles)
 
 
         @self.auth.error_handler
