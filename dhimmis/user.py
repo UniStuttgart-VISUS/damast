@@ -46,4 +46,4 @@ def visitor(roles):
     if roles is None:
         return None
 
-    return User(name=None, roles=roles, visitor=True)
+    return User(name='visitor', roles=roles, visitor=True)

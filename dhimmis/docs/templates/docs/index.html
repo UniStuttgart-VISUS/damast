@@ -51,10 +51,12 @@
     <span class="name">Create report from database</span>
   </a>
   {%- endif -%}
+  {%- if not user.visitor -%}
   <a class="card" href="{{ url_for('reporting.list_available_reports') }}">
     <i class="fa fa-4x fa-th-list fa-fw"></i>
     <span class="name">List existing reports</span>
   </a>
+  {%- endif -%}
   {%- endif -%}
   {%- endif -%}
 </div>
