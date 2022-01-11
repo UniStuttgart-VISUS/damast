@@ -35,12 +35,12 @@ def place_set(c):
                 the UUID exists in the database already, the entry is either
                 overwritten, or a new entry is created.
     '''
-    if flask.current_app.auth.current_user().visitor:
-        flask.abort(401)
-
     if flask.request.method == 'GET':
         return flask.jsonify(list(map(lambda x: x._asdict(), c.all('select * from place_set;'))))
     elif flask.request.method == 'POST':
+        if flask.current_app.auth.current_user().visitor:
+            flask.abort(401)
+
         now = datetime.datetime.now().isoformat('T')
         u = flask.current_app.auth.current_user().name
 
