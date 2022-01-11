@@ -286,7 +286,7 @@ class FlaskApp(flask.Flask):
                         _external=True,
                         next=next_)
 
-            return flask.render_template('401.html', next=nextx)
+            return flask.render_template('401.html', next=nextx), 401
 
 
         @self.errorhandler(403)
