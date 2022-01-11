@@ -5,10 +5,7 @@ import json
 import urllib.parse
 from functools import namedtuple
 
-def get_headers(client, username, password):
-    rv = client.post('/login', data=dict(username=username, password=password))
-    return {'Cookie': rv.headers['Set-Cookie']}
-
+from conftest import get_headers
 
 _match_data = [
     ('^u', True, (1, 2, 3, 15)),
