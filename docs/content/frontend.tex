@@ -47,7 +47,59 @@ For more information on the database structure, please reference \cref{fig:db-st
 \label{sec:document-selection}
 
 \begin{figure}[htb]
-  %{% include 'docs/figure-select-document.svg' %}
+  \centering
+  \begin{tikzpicture}
+    \node [inner sep=0.0pt,anchor=north west] at (0,0) {\includegraphics[width=281.5pt,height=106.5pt]{../src/assets/annotator-documentation/select-document.png}};
+    \draw (-9.0pt,-15.5pt)
+      node [anchor=east] {\footnotesize Document comment}
+      [red!60!white]
+      -- (13.5pt,-15.5pt)
+      -- (22.5pt,-23.0pt);
+    \draw (-9.0pt,-23.0pt)
+      node [anchor=east] {\footnotesize Document ID}
+      [red!60!white]
+      -- (-9.0pt,-23.0pt)
+      -- (13.5pt,-23.0pt);
+    \draw (-9.0pt,-8.0pt)
+      node [anchor=east] {\footnotesize Source ID}
+      [red!60!white]
+      -- (100.0pt,-8.0pt)
+      -- (121.0pt,-31.5pt);
+    \draw (-9.0pt,-30.5pt)
+      node [anchor=east] {\footnotesize Source long name}
+      [red!60!white]
+      -- (13.5pt,-30.5pt);
+    \draw (-9.0pt,-39.0pt)
+      node [anchor=east] {\footnotesize Source type and short name}
+      [red!60!white]
+      -- (67.0pt,-39.0pt);
+    \draw (-9.0pt,-45.5pt)
+      node [anchor=east] {\footnotesize Document version}
+      [red!60!white]
+      -- (13.5pt,-45.5pt);
+    \draw (-9.0pt,-53.0pt)
+      node [anchor=east] {\footnotesize Document content type}
+      [red!60!white]
+      -- (41.0pt,-53.0pt)
+      -- (46.0pt,-48.0pt);
+    \draw (-9.0pt,-60.5pt)
+      node [anchor=east] {\footnotesize Number of annotations}
+      [red!60!white]
+      -- (112.5pt,-60.5pt)
+      -- (116.5pt,-48.5pt);
+    \draw (-9.0pt,-78.0pt)
+      node [anchor=east] {\footnotesize Document preview}
+      [red!60!white]
+      -- (13.5pt,-78.0pt);
+    \draw (75.0pt,-109.0pt)
+      node [anchor=north] {\footnotesize Click to open document}
+      [red!60!white]
+      -- (75.0pt,-90.0pt);
+    \draw (212.0pt,-109.0pt)
+      node [anchor=north] {\footnotesize Click to create new document}
+      [red!60!white]
+      -- (212.0pt,-90.0pt);
+  \end{tikzpicture}
 
   \caption{
     The initial screen of the annotator shows a \emph{document selection,} where the document to be annotated can be selected.
