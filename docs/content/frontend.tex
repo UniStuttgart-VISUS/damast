@@ -320,7 +320,50 @@ In the following, the user controls of the annotator are described, as well as h
 \label{sec:annotation-annotator}
 
 \begin{figure}[htb]
-  %{% include 'docs/figure-annotator-interface.svg' %}
+  \centering
+  \begin{tikzpicture}
+    \node [inner sep=0.0pt,anchor=north west] at (0,0) {\includegraphics[width=300.0pt,height=155.5pt]{../src/assets/annotator-documentation/annotator-interface.png}};
+    \draw (-9.0pt,-8.0pt)
+      node [anchor=east] {\footnotesize New evidence button}
+      [blue!40!white]
+      -- (144.5pt,-8.0pt)
+      -- (153.0pt,-16.5pt);
+    \draw (-9.0pt,-18.5pt)
+      node [anchor=east] {\footnotesize Document information}
+      [blue!40!white]
+      -- (6.5pt,-18.5pt);
+    \draw (-9.0pt,-30.5pt)
+      node [anchor=east] {\footnotesize Document area}
+      [blue!40!white]
+      -- (2.5pt,-30.5pt);
+    \draw (-9.0pt,-62.5pt)
+      node [anchor=east] {\footnotesize Annotation}
+      [blue!40!white]
+      -- (89.0pt,-62.5pt)
+      -- (89.0pt,-53.5pt);
+    \draw (-9.0pt,-83.5pt)
+      node [anchor=east] {\footnotesize Evidence link}
+      [blue!40!white]
+      -- (19.0pt,-83.5pt);
+    \draw (-9.0pt,-119.5pt)
+      node [anchor=east] {\footnotesize Swimlanes}
+      [blue!40!white,-Circle]
+      -- (13.5pt,-119.5pt)
+      -- ++(5.0pt,5.0pt);
+    \draw (-9.0pt,-127.0pt)
+      node [anchor=east] {\footnotesize Text area}
+      [blue!40!white,-Circle]
+      -- (63.5pt,-127.0pt)
+      -- ++(7.5pt,7.5pt);
+    \draw (-9.0pt,-134.5pt)
+      node [anchor=east] {\footnotesize Scrollbar}
+      [blue!40!white]
+      -- (169.5pt,-134.5pt);
+    \draw (225.0pt,-160.0pt)
+      node [anchor=north] {\footnotesize Editor pane}
+      [blue!40!white,circle]
+      -- (225.0pt,-80.0pt);
+  \end{tikzpicture}
 
   \caption{
     The annotator consists of of two main components:
