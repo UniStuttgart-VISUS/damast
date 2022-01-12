@@ -17,7 +17,57 @@
 \label{sec:database-schema}
 
 \begin{figure}[htb]
-  % {% include 'docs/figure-schema.svg' %}
+  \centering
+  \tikzset{
+    table/.style = {
+      minimum width=3.8cm,
+      minimum height=1cm,
+      rectangle,
+      draw=black,
+      node distance=0.2cm and 1.8cm
+    },
+    label/.style = {
+      inner sep=1mm,
+      pos=1,
+      font=\ttfamily\footnotesize
+    },
+  }
+  \begin{tikzpicture}
+    [font=\ttfamily,-{Triangle[length=2mm,width=1.5mm]}]
+
+    \node [table] (source) {source};
+    \node [table,right=of source] (document) {document};
+    \node [table,right=of document] (annotation) {annotation};
+    \node [table,node distance=1.5cm and 1.8cm,below=of source] (sourcei) {source\_instance};
+    \node [table,right=of sourcei] (reli) {religion\_instance};
+    \node [table,below=of reli] (plai) {place\_instance};
+    \node [table,below=of plai] (peri) {person\_instance};
+    \node [table,below=of peri] (tg) {time\_group};
+    \node [table,right=of reli] (rel) {religion};
+    \node [table,right=of plai] (pla) {place};
+    \node [table,right=of peri] (per) {person};
+    \node [table,right=of tg] (ti) {time\_instance};
+    \node [table,left=of peri] (ev) {evidence};
+
+    \draw (document.west) to node[label,anchor=north west]{1} (source.east);
+    \draw (annotation.west) to node[label,anchor=north west]{1} (document.east);
+    \draw (sourcei) to node[label,anchor=north west]{1} (source);
+    \draw (ev) to node[label,anchor=north west]{0..*} (sourcei);
+    \draw (ev.east) to node[anchor=south east,label]{1} (reli.west);
+    \draw (ev.east) to node[anchor=south east,label]{1} (plai.west);
+    \draw (ev.east) to node[anchor=north east,label]{0..1} (peri.west);
+    \draw (ev.east) to node[anchor=north east,label]{0..1} (tg.west);
+    \draw (reli.east) to node[anchor=north east,label]{1} (rel.west);
+    \draw (plai.east) to node[anchor=north east,label]{1} (pla.west);
+    \draw (peri.east) to node[anchor=north east,label]{1} (per.west);
+    \draw (tg.east) to node[anchor=north east,label]{0..*} (ti.west);
+
+    \coordinate (as) at ($ (annotation.south) + (-90:0.7cm) $);
+    \draw [rounded corners=3mm] (reli.east) -- ++(5mm,0) |- (as) -- (annotation.south);
+    \draw [rounded corners=3mm] (plai.east) -- ++(6mm,0) |- (as) -- (annotation.south);
+    \draw [rounded corners=3mm] (peri.east) -- ++(7mm,0) |- (as) -- (annotation.south);
+    \draw [rounded corners=3mm] (tg.east) -- ++(8mm,0) |- (as) -- (annotation.south) node [label,anchor=north west] {4 $\times$ (0..1)};
+  \end{tikzpicture}
   \caption{Database structure of tables directly involved in storing historical evidence and annotations.}
   \label{fig:annotator-schema}
 \end{figure}
