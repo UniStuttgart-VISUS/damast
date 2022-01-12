@@ -28,7 +28,7 @@ In particular, storing relationships such as an \emph{optional} relationship, or
 The database structure is, therefore, a bit more complex and fragmented than the mental data model it represents.
 Still, it is valuable to understand the data model, because the way evidence is generated from annotations and groups of annotations is based very closely on that model.
 
-\cref{fig:annotator-schema} shows a simplified \emph{entity-relationship diagram} of the tables in the database involved in evidence creation and annotations.
+\Cref{fig:annotator-schema} shows a simplified \emph{entity-relationship diagram} of the tables in the database involved in evidence creation and annotations.
 One piece of evidence \emph{must} contain a place and religion, and \emph{may} contain one person and one or more time spans.
 In the database, this is represented by instance tuples, where each instance also stores meta-information specific to that tuple, such as a comment and confidence.
 The instance tuples then point to the base entities (places, religions, persons), which only exist once.
@@ -201,7 +201,7 @@ The virtual text itself needs to be passed as an \emph{element attribute} to the
 The attribute name used is \verb!data-virtual-text!.
 The appearance of the virtual text depends on which type of HTML element you use to represent it.
 Block-level elements, like headings (\verb!<h1>!, \verb!<h2>!, etc.), will be represented thus, and inline elements, like \verb!<span>!, \verb!<strong>!, or \verb!<em>!, will be placed inline, which might be useful if the virtual text should be within a paragraph (e.g., for sentence numbering).
-\cref{fig:virtual-text} shows an example document with two instances of virtual text:
+\Cref{fig:virtual-text} shows an example document with two instances of virtual text:
 One inline \verb!<strong>! element, and one block-level \verb!<h2>! element.
 The HTML content of the document to produce this effect looks as listed in \cref{fig:virtual-text}.
 
@@ -304,7 +304,7 @@ When annotations overlap, the parts where they do are highlighted in gray instea
 
 The server will also generate suggestions for annotations.
 These are based on known names (place names, alternative names from other languages, religion and person names) from the database, as well as on existing annotations in the current document.
-\cref{fig:annotation-suggestion} shows an example:
+\Cref{fig:annotation-suggestion} shows an example:
 The person \emph{Athanasius I bar Gamala} has been annotated in the text previously (under the name \emph{\enquote{Athanasius}}).
 Based on that, the suggestion for a person annotation at this position is suggested.
 \emph{Clicking} on the annotation suggestion, which is indicated by a yellow curly underline, will open an annotation editor of the respective type, with the suggested entity (place, person, or religion) already selected.
@@ -351,7 +351,7 @@ This might be useful if there is something special about the placement of the an
 You can also see and edit the textual extent of the annotation (more details in the next paragraph).
 Further, you can edit the \emph{instance} data.
 The editors for the different types of annotations, therefore, look slightly different.
-\cref{fig:edit-place-annotation} shows an editor for a place annotation:
+\Cref{fig:edit-place-annotation} shows an editor for a place annotation:
 Here, the annotation comment field is empty.
 For the place instance, the place itself, the location confidence, and the comment in the \verb!place_instance! table can be edited.
 The place is selected via a drop-down menu, as is the confidence.
@@ -381,7 +381,7 @@ The annotation's textual extent can only be edited for existing annotations, and
 
 For the time group annotations, the editor looks a bit different because of the way time groups work:
 One time group can have zero or more time instances, and all of them would be attributed to the annotation.
-\cref{fig:edit-timegroup-annotation} shows an editor for a time group annotation.
+\Cref{fig:edit-timegroup-annotation} shows an editor for a time group annotation.
 Besides the annotation comment and textual extent, time instances are shown as separate items, where the comment, confidence, start time, and end time can be edited.
 In this case, start and end time must be numbers, and the end time must be greater than or equal to the start time.
 Each time instance can separately be removed by clicking on the \emph{\enquote{Delete instance}} button in the respective box, and new time instances can be added via the large \emph{\enquote{New time instance}} button.
