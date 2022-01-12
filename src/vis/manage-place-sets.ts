@@ -220,7 +220,7 @@ export async function loadFilter(user: User): Promise<number[]> {
       const d = content.append('button')
         .classed('button', true)
         .classed('place-set-description', true)
-        .html(`<span class="title">${s.description}</span><span class="source">${s.source}</span><p class="description">Last saved by <strong>${s.username}</strong> on <time>${s.date}</time> with <strong>${s.filter.length}</strong> places.</p>`)
+        .html(`<span class="title">${s.description}</span><span class="source">${s.source}</span><p class="description">Last saved by <strong>${s.username || 'unknown'}</strong> on <time>${s.date}</time> with <strong>${s.filter.length}</strong> places.</p>`)
         .on('click', () => resolve(s.filter));
     });
   };

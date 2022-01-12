@@ -6,10 +6,7 @@ import json
 from functools import namedtuple
 
 from database.testdata import document_table as docdata
-
-def get_headers(client, username, password):
-    rv = client.post('/login', data=dict(username=username, password=password))
-    return {'Cookie': rv.headers['Set-Cookie']}
+from conftest import get_headers
 
 _routes = [
         '/rest/document/list',

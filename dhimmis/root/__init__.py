@@ -33,12 +33,15 @@ def whoami():
     u = flask.current_app.auth.current_user()
 
     if u is None:
-        data = dict(user=None, readdb=False, writedb=False)
+        data = dict(user=None, readdb=False, writedb=False, visitor=True)
 
     else:
         data = dict(user=u.name,
             readdb=('readdb' in u.roles or 'admin' in u.roles),
-            writedb=('writedb' in u.roles or 'admin' in u.roles))
+            writedb=('writedb' in u.roles or 'admin' in u.roles),
+            geodb=('geodb' in u.roles or 'admin' in u.roles),
+            visitor=u.visitor,
+            )
 
     return flask.jsonify(data)
 

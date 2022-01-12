@@ -6,7 +6,7 @@ class BlueprintFilter(logging.Filter):
         try:
             bp = flask.request.blueprint
             user = flask.current_app.auth.current_user()
-            username = user.name if user else '-'
+            username = user.name if user and not user.visitor else '-'
         except RuntimeError:
             bp = '-'
             username = '-'

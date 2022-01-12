@@ -1,10 +1,7 @@
 import pytest
 import json
 
-def get_headers(client, username, password):
-    rv = client.post('/login', data=dict(username=username, password=password))
-    return {'Cookie': rv.headers['Set-Cookie']}
-
+from conftest import get_headers
 
 def test_get_confidence_values(client_ro, minimal_testuser):
     '''test getting a list of valid confidence values'''

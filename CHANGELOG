@@ -1,6 +1,25 @@
                                 CHANGELOG
 
 
+2022-01-12                                                           v1.0.3
+
+Added functionality to define which roles a visitor (i.e., not logged in)
+will receive via a environment variable. Updated and fixed some of the unit
+tests to work properly with the cookie policies introduced in v0.19.8.
+
+
+2022-01-10                                                           v1.0.2
+
+Jinja2 templates can now be selectively overridden in an external
+directory, for example to replace the impressum or title page. External
+static files can also be hosted. Fixes PEP495 warnings from apscheduler.
+Fixes an issue with loading map states with non-integer zoom levels. Users
+that are not allowed to see the GeoDB-Editor now have links to the place
+URI pages from the visualization location list instead. Adds a button to
+restore the default confidence selection in the visualization confidence
+view. Remove some historical clutter and naming.
+
+
 2021-12-28                                                           v1.0.1
 
 Updated default map center and zoom level to better match public dataset

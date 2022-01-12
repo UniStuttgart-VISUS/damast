@@ -157,4 +157,6 @@ export interface User {
   user: string | null;
   readdb: boolean;
   writedb: boolean;
+  geodb: boolean;
+  visitor: boolean;
 };

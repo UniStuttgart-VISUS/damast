@@ -6,11 +6,8 @@ import json
 from functools import namedtuple
 from urllib.parse import quote
 
+from conftest import get_headers
 from database.testdata import evidence_table, place_instance_table, place_table, place_type_table, time_instance_table, religion_instance_table
-
-def get_headers(client, username, password):
-    rv = client.post('/login', data=dict(username=username, password=password))
-    return {'Cookie': rv.headers['Set-Cookie']}
 
 @pytest.fixture
 def route():

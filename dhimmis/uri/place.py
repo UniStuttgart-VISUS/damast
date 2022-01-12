@@ -12,7 +12,8 @@ app = AuthenticatedBlueprintPreparator('place', __name__, template_folder='templ
 
 
 @app.route('/', role='user')
-def root():
+@rest_endpoint  # used to ensure the user has `readdb` role
+def root(cursor):
     return flask.render_template('uri/place-search.html')
 
 

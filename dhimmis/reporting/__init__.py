@@ -73,8 +73,9 @@ def init_post():
 
 
 def _start_report(filter_json):
-    current_user = flask.current_app.auth.current_user().name
-    u = start_report(current_user, flask.current_app.version, filter_json)
+    current_user = flask.current_app.auth.current_user()
+    username = current_user.name if not current_user.visitor else 'visitor'
+    u = start_report(username, flask.current_app.version, filter_json)
     response = flask.redirect(flask.url_for('reporting.get_report', report_id=u))
 
     return response
@@ -111,6 +112,7 @@ def describe_filters(cursor):
 
 def get_report_data(report_id):
     current_user = flask.current_app.auth.current_user()
+    username = current_user.name if not current_user.visitor else 'visitor'
     with get_report_database() as db:
         db.execute(F'SELECT {", ".join(ReportTuple._fields)} FROM reports WHERE uuid = ?;', (report_id,))
         row = db.fetchone()
@@ -118,7 +120,7 @@ def get_report_data(report_id):
             flask.abort(404)
         tpl = ReportTuple(*row)
 
-        if 'admin' not in current_user.roles and current_user.name != tpl.user:
+        if 'admin' not in current_user.roles and username != tpl.user:
             flask.abort(404)
 
         return tpl
@@ -193,6 +195,9 @@ def get_pdf_report(report_id):
 @app.route('/list', role=['reporting', 'dev', 'admin'])
 def list_available_reports():
     current_user = flask.current_app.auth.current_user()
+    if current_user.visitor:
+        flask.abort(401)
+
     with get_report_database() as db:
         restriction = '' if 'admin' in current_user.roles else 'WHERE user = :user'
         db.execute(F'SELECT count(*) FROM reports {restriction};', dict(user=current_user.name))

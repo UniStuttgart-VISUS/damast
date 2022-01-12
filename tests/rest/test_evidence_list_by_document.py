@@ -7,13 +7,9 @@ import flask
 import json
 from functools import namedtuple
 
+from conftest import get_headers
 from database.testdata import annotation_table, document_table, evidence_table, person_instance_table, place_instance_table, religion_instance_table, time_group_table
 _routes = list(map(lambda x: F'/rest/document/{x.id}/evidence-list', document_table))
-
-
-def get_headers(client, username, password):
-    rv = client.post('/login', data=dict(username=username, password=password))
-    return {'Cookie': rv.headers['Set-Cookie']}
 
 
 @pytest.mark.parametrize('method', ['POST', 'TRACE', 'CONNECT', 'PUT', 'DELETE', 'PATCH'])

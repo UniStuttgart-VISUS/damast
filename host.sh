@@ -29,6 +29,8 @@ run() {
         --env DHIMMIS_USER_FILE=/data/users.db \
         --env DHIMMIS_SECRET_FILE=/data/secrets.json \
         --env DHIMMIS_VERSION="$version" \
+        --env DHIMMIS_OVERRIDE_PATH="/data/override" \
+        --env DHIMMIS_VISITOR_ROLES="user,readdb,vis,reporting" \
         $imagename
 }
 

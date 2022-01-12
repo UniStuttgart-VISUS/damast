@@ -8,12 +8,8 @@ import json
 from functools import namedtuple
 
 from database.testdata import annotation_table
+from conftest import get_headers
 _routes = list(map(lambda x: F'/rest/annotation/{x.id}', annotation_table))
-
-
-def get_headers(client, username, password):
-    rv = client.post('/login', data=dict(username=username, password=password))
-    return {'Cookie': rv.headers['Set-Cookie']}
 
 
 @pytest.mark.parametrize('method', ['POST', 'TRACE', 'CONNECT'])

@@ -66,6 +66,8 @@ def login_submit():
 @app.route('/logout', methods=['POST'], login=True)
 def logout():
     auth = flask.current_app.auth
+    if auth.current_user().visitor:
+        flask.abort(401)
 
     error_log.info(F'User {auth.current_user().name} logged out.')
     flask.flash('Logged out.', 'success')
@@ -75,12 +77,18 @@ def logout():
 
 @app.route('/change-password', login=True)
 def change_password():
+    if flask.current_app.auth.current_user().visitor:
+        flask.abort(401)
+
     return flask.render_template('password-change.html')
 
 
 @app.route('/change-password', methods=['POST'], login=True)
 def change_password_post():
     auth = flask.current_app.auth
+
+    if auth.current_user() is None or auth.current_user().visitor:
+        flask.abort(401)
 
     oldpassword = flask.request.form.get('password', None)
     newpassword = flask.request.form.get('new-password', None)
