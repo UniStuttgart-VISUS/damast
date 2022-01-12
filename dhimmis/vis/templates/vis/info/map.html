@@ -1,33 +1,31 @@
 <p>
-  The map visualizes the geographical aspect of the data.
-  In can be interactively zoomed and panned.
-  <em>Clicking</em> on a map glyph will <em>brush</em> the represented places, and <em>link</em> the respective data in the rest of the views.
-  Likewise, brushing data somewhere else will link the respective places in the map.
-  Linking persists when zooming, even if clustered glyphs split up or merge.
-  Selecting a singular place in the location list will pan the map to center on that place.
+  The <em>map</em> visualizes the geographical aspect of the data, i.e. the evidences of institutionalized religious presence at different locations.
 </p>
 
+<h1>Content</h1>
 
-<h2>Map Display Modes</h2>
-
-<h3>Clustered Mode</h3>
+<h2>Map Glyphs</h2>
 
 <p>
-  By default, locations in the map are clustered (aggregated) to eliminate overlap.
-  The map glyphs consist of up to four circles, which by default represent the nodes on the first level of the hierarchy of religious denominations.
-  The individual circles are pie charts, representing the contained religious denominations or confidence values by number of evidences.
+  Each map glyph represents <em>one or more</em> cities, depending on the zoom level. (This so-called <em>Clustered</em> <em>Map mode</em> is the default and can be changed in the Settings; cf. the info text below and the info text of the <em>Settings view</em>.)
 </p>
 
 <p>
-  In <em>only active</em> mode, filtered-out data disappears from the map.
-  This can lead to glyphs having less circles, if, for example, all Christian data of a glyph is filtered out.
-  In <em>all data</em> mode, the filtered-out data is indicated by desaturated segments.
+  The map glyphs consist of up to four circles each representing a religion. In <em>Religion mode</em> (set by default), the circle functions like a pie chart, where each piece represents a different religious group in its respective color and the piece’s size shows the relative amount of evidences. In <em>Confidence mode</em>, the division of the circle or pie chart is based on the different levels of confidence and is colored accordingly.
 </p>
 
 <p>
-  If <em>in all shown map glyphs,</em> no more than four nodes of a lower part in the religion hierarchy would be present, the data is aggregated on that lower level.
+  In <em>Only active</em> mode, data filtered out disappears from the map.
+  This can lead to glyphs having less circles, if, e.g., all Christian data of a glyph is filtered out.
+  In <em>All data</em> mode, the filtered-out data is indicated by less saturated colours.
+</p>
+
+<p>
+  ###
+  If <em>in all shown map glyphs</em>, no more than four nodes of a lower part in the religion hierarchy would be present, the data is aggregated on that lower level.
   For example; if the map would only show two glyphs; one with the Latin Church, the Coptic Church, and the Georgian Orthodox Church; and the other with the Latin Church and the Rabbanites; each of these religious denominations could be represented by an individual circle.
   This will only happen if it is possible in all glyphs, as doing otherwise would skew the perceived variety of religions.
+  ###
 </p>
 
 <p>
@@ -40,14 +38,14 @@
 <h3>Unclustered Mode</h3>
 
 <p>
-  The clustering of places can be turned off in the settings pane.
-  In the unclustered mode, each location is represented by an individual glyph.
-  The glyphs then consist of smaller circles, one for each religious denomination, which are arranged in a hexagonal pattern.
-  Overlap can and will happen in this mode, but <em>z</em>-ordering of the glyphs at least ensures that glyphs with fewer religions appear in front of larger glyphs with more religions.
+  The clustering of places can be turned off in the <em>Settings pane</em>.
+  In <em>Unclustered mode</em>, each location is represented by an individual glyph.
+  The glyphs then consist of smaller circles, one for each religious group. These circles are arranged in a hexagonal pattern.
+  Overlap can and will happen in this mode, even when zooming out to a relative small scale. <em>Z</em>-ordering of the glyphs ensures that glyphs with fewer religious groups appear in front of larger glyphs with more religious groups.
+  This mode should be used with due caution when interpreting the results.
 </p>
 
-
-<h2>Map Layers</h2>
+<h2>Layers</h2>
 
 <p>
   The map provides multiple layers, which can be controlled from the layer control in the upper right corner.
@@ -66,6 +64,46 @@
   Similarly, the default marker layer and the diversity marker layer should not be shown together.
 </p>
 
+<h2>What the map is <em>not</em> Showing</h2>
+
+<p>
+  The map does <em>not</em> depict a representation of the population density in the medieval Middle East. In other words, an area with no or little map glyphs is not necesarrily less populated than other areas. Neither makes the map any claim to completeness, nor does it show the general distribution of religions in a given area.
+
+  The goal is explicitly to visualize <em>coexistence</em> of institutionalized religion.
+
+  Empty areas on the map can have multiple reasons:
+  <ul>
+    <li>The area is outside the region of interest of the project, e.g., Europe.</li>
+    <li>We have collected no data for a city.</li>
+    <li>The city in question was purely Muslim, with no other religious communities.
+      The existence of institutionalized Islam in that place or region and during that time period is more or less given but not the main focus of the project.
+    </li>
+  </ul>
+</p>
+
+<p>
+  ### Furthermore, in <em>Clustered mode</em>, the scaling of the map glyphs does <em>not</em> encode number of data points.
+  The glyphs are only scaled such that they occupy the same space regardless of number of circles.
+  The fixed radius is an artifact of the non-overlapping property. ###
+</p>
+
+<h1>Interaction</h1>
+
+<p>
+  The map can be interactively zoomed and panned (<q>moved</q>).
+</p>
+
+<h2>Selection</h2>
+
+<p>
+  Clicking on a map glyph will <em>select</em> the represented places and <em>link</em> the respective data in the rest of the views.
+
+  Likewise, selecting data somewhere else will link the respective places in the map.
+
+  Linking persists when zooming, even if clustered glyphs split up or merge.
+
+  Selecting a singular place in the location list will pan the map to center on that place.
+</p>
 
 <h2>Geographical Filtering</h2>
 
@@ -99,28 +137,4 @@
   The <i class="fa fa-trash"></i> trash can button removes all existing shapes.
   The <i class="fa fa-undo"></i> undo button reverts the bounds back to the state of the currently active filter, and then closes the editor.
   The <i class="fa fa-save"></i> save button applies the new bounds to the dataset filter, and then closes the editor.
-</p>
-
-
-<h2>What the Map Is <em>Not</em> Showing</h2>
-
-<p>
-  The map does not depict a representation of the population density in the medieval Middle East.
-  It also neither makes any claim to completeness, nor shows the distribution of religions in that area.
-  The goal is explicitly to visualize <em>coexistence</em> of institutionalized religion.
-  Empty areas on the map can have multiple reasons:
-</p>
-
-<ol>
-  <li>The area is outside the region of interest of the project, e.g. Europe.</li>
-  <li>We have no data for a city (yet).</li>
-  <li>The city in question was purely Muslim, with no other religious communities.
-    The existence of institutionalized Islam in that region and time period is more or less given, but not the main focus of the project.
-  </li>
-</ol>
-
-<p>
-  In the clustered mode, the scaling of the map glyphs does further <em>not</em> encode number of data points.
-  The glyphs are only scaled such that they occupy the same space regardless of number of circles.
-  The fixed radius is an artifact of the non-overlapping property.
 </p>
