@@ -1,6 +1,6 @@
 {% macro user_bar(user, button_class='') %}
 <nav class="user-management">
-  {% if user -%}
+  {% if user and not user.visitor -%}
   Logged in as <span class="user-name">{{ user.name }}</span>.
   <form id="change-password-form" class="inline hidden" action="{{ url_for('login.change_password', _method='GET') }}" method="GET"></form>
   <button class="button {{ button_class }}" type="submit" form="change-password-form">

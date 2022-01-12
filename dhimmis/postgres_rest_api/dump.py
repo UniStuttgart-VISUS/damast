@@ -10,6 +10,9 @@ app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 
 @app.route('/', role='user')
 def dump():
+    if flask.current_app.auth.current_user().visitor:
+        raise werkzeug.exceptions.Unauthorized()
+
     if not flask.request.accept_encodings.best_match('identity'):
         raise werkzeug.exceptions.NotAcceptable('Endpoint only provides identity encoding.')
 

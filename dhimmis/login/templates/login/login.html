@@ -6,7 +6,7 @@
 {% endblock %}
 {% block content %}
   <div class="login-form">
-{%- if user -%}
+{%- if user and not user.visitor -%}
   <p class="logged-in-as">
     Logged in as <span class="user-name">{{ user.name }}</span>.
   </p>

@@ -1,10 +1,8 @@
 import pytest
 import dhimmis
-from .database.testdata import evidence_table
 
-def get_headers(client_ro, username, password):
-    rv = client_ro.post('/login', data=dict(username=username, password=password))
-    return {'Cookie': rv.headers['Set-Cookie']}
+from database.testdata import evidence_table
+from conftest import get_headers
 
 
 _static = [

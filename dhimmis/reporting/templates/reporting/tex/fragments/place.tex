@@ -2,7 +2,7 @@
 <%- set p = _p.place -%>
 <%- set uris = _p.external_uris -%>
 <%- set alternative_names = _p.alternative_names -%>
-\section*{\hypertarget{place<<p.id>>}{\textsc{[e<< p.id >>]} << p.name | placename >>}}
+\section*{\hypertarget{place<<p.id>>}{\textsc{[p<< p.id >>]} << p.name | placename >>}}
 
 <% if p.place_type == 'Unknown' %>
   \emph{Place}

@@ -57,11 +57,11 @@ def test_password_change(client_ro, testuser, new_password):
         if new_password.valid:
             # check that using old password does not work
             rv = client_ro.post('/login', data=dict(username=user.name, password=oldpassword))
-            assert rv.status_code == 401
+            assert rv.status_code == 401, rv.data.decode('utf-8')
 
             # check that using new password works
             rv = client_ro.post('/login', data=dict(username=user.name, password=new_password.password))
-            assert rv.status_code == 302
+            assert rv.status_code == 302, rv.data.decode('utf-8')
 
             # check that new password persists
             s = sqlite3.connect(os.environ['DHIMMIS_USER_FILE'])
@@ -87,13 +87,13 @@ def test_logout_with_user(client_ro, testuser):
     user, password = testuser
     get_headers(client_ro, user.name, password)
     rv = client_ro.post('/logout')
-    assert rv.status_code == 302
+    assert rv.status_code == 302, rv.data.decode('utf-8')
 
 
 def test_logout_without_user(client_ro):
     '''No logout if not logged in'''
     rv = client_ro.post('/logout')
-    assert rv.status_code == 401
+    assert rv.status_code == 401, rv.data.decode('utf-8')
 
 
 def test_access_with_invalid_session(client_ro):
@@ -104,4 +104,4 @@ def test_access_with_invalid_session(client_ro):
     client_ro.set_cookie('', 'session', '{}; location=/; HttpOnly'.format(base64.b64encode(sessiondata).decode('utf-8')))
     rv = client_ro.get('/vis/')
 
-    assert rv.status_code == 401
+    assert rv.status_code == 401, rv.data.decode('utf-8')

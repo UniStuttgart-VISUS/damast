@@ -3,22 +3,16 @@ import dhimmis
 import flask
 import json
 
-def get_headers(client, username, password):
-    rv = client.post('/login', data=dict(username=username, password=password))
-    return {'Cookie': rv.headers['Set-Cookie']}
-
-
 @pytest.fixture
 def url():
     return '/rest/place-type-list'
 
 
 @pytest.mark.parametrize('method', ['POST', 'TRACE', 'HEAD', 'CONNECT', 'PUT', 'PATCH', 'DELETE'])
-def test_method_not_allowed(client_ro, minimal_testuser, url, method):
+def test_method_not_allowed(client_ro, ro_headers, minimal_testuser, url, method):
     user,password = minimal_testuser
 
-    headers = get_headers(client_ro, user.name, password)
-    rv = client_ro.open(path=url, headers=headers, method=method)
+    rv = client_ro.open(path=url, method=method)
 
     if 'user' in user.roles and 'readdb' in user.roles:
         if method == 'HEAD':
@@ -32,18 +26,17 @@ def test_method_not_allowed(client_ro, minimal_testuser, url, method):
             assert rv.status_code == 405
 
 
-def test_place_type_list(client_ro, minimal_testuser, url):
+def test_place_type_list(client_ro, ro_headers, minimal_testuser, url):
     '''test getting a list of place types'''
     user,password = minimal_testuser
 
     with flask.current_app.pg.get_cursor(readonly=True) as c:
-        headers = get_headers(client_ro, user.name, password)
-        rv = client_ro.get(url, headers=headers)
+        rv = client_ro.get(url)
 
         if 'user' in user.roles and 'readdb' in user.roles:
+            assert rv.status_code == 200, rv.data.decode('utf-8')
             place_type_data = json.loads(rv.data)
 
-            assert rv.status_code == 200
             assert len(place_type_data) == c.one('select count(*) from place_type;')
 
             for t in place_type_data:

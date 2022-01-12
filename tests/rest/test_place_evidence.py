@@ -4,10 +4,7 @@ import flask
 import json
 from database.testdata import place_table
 
-def get_headers(client, username, password):
-    rv = client.post('/login', data=dict(username=username, password=password))
-    return {'Cookie': rv.headers['Set-Cookie']}
-
+from conftest import get_headers
 
 _places = [ (p.id, True) for p in place_table ]
 _places += [ (i, False) for i in (0, 224, 6214, 36) ]

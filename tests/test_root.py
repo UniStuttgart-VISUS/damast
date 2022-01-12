@@ -16,6 +16,7 @@ login_paths = [
         ]
 
 def login(client_ro, username, password):
+    client_ro.set_cookie('', 'cookieConsent', 'all')
     return client_ro.post('/login', data=dict(username=username, password=password), follow_redirects=True)
 
 
@@ -38,10 +39,9 @@ def test_login_with_user_succeeds(client_ro, login_path, testuser):
     user,password = testuser
     # login
     r1 = login(client_ro, user.name, password)
-    auth_cookie = r1.headers['Set-Cookie']
 
     # test page
-    r2 = client_ro.get(login_path, headers=dict(Cookie=auth_cookie))
+    r2 = client_ro.get(login_path)
     assert r2.status_code == 200
 
 
@@ -49,10 +49,9 @@ def test_nologin_with_user_succeeds(client_ro, nologin_path, testuser):
     user,password = testuser
     # login
     r1 = login(client_ro, user.name, password)
-    auth_cookie = r1.headers['Set-Cookie']
 
     # test page
-    r2 = client_ro.get(nologin_path, headers=dict(Cookie=auth_cookie))
+    r2 = client_ro.get(nologin_path)
     assert r2.status_code == 200
 
 
