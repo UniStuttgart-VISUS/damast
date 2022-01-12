@@ -668,4 +668,14 @@ When hosting the Damast system somewhere else, a different imprint than the defa
 Probably, the data protection page needs to be modified as well.
 Here, the blueprint override functionality discussed in \cref{sec:override-blueprints} can come in handy.
 
-\subsection{Password Management}
+
+\subsection{Login and Password Management}
+
+A blueprint provides login and logout functionality, as well as a page to change the current user's password.
+These are linked in the top right of the page, in the header.
+If a visitor is not logged in, a link to the login page is shown there.
+If they are logged in, the user's name, a link to the password change page and a link to log out is shown.
+
+On the password change page, the user must enter their current and their new password, and then submit.
+The server backend will check that the old password matches, and that the new password has sufficient complexity (entropy).
+If that is the case, the password hash is updated in the user database and the session token is renewed.
