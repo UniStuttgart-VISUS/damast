@@ -636,7 +636,36 @@ This functionality is available to all users.
 However, if the requesting user does \emph{not} have the \verb!admin! role, the dump is data-only, and also omits the \verb!action_type!, \verb!user!, and \verb!user_action! provenance tables described in \cref{sec:provenance-tables}.
 
 
-\subsection{DSGVO, Impressum, Cookie Preferences}
+\subsection{GDPR, Imprint, Cookie Preferences}
 
+A separate blueprint serves pages for the GDPR\footnote{
+  \textbf{GDPR:} General Data Protection Regulation of the European Union.
+  Called DSGVO \emph{(Datenschutzgrundverordnung)} in German.
+}
+content.
+These pages are accessible even without login, and are available as links in the footer of each page\footnote{
+  In the visualization, which has a tighter layout without a footer, these links are placed in the header instead.
+}.
+A general data protection page states what data is collected from visitors, and what rights they have under GDPR.
+The imprint \emph{(Impressum)} page contains information about how to get in touch with the website administrators.
+Finally, the websites use cookies and \verb!localStorage! to store state and information on the user's computer.
+These are used for login, but also for functionalities such as storing table or visualization layout.
+In accordance to \S\,7 \P\,2 GDPR, consent to store these cookies needs to be given explicitly by users.
+For this, they are shown a consent popup when they first visit the site, with the choices of
+\begin{enumerate*}[label=(\arabic*)]
+  \item no cookies,
+  \item only necessary cookies, or
+  \item all cookies.
+\end{enumerate*}
+Users must be able to amend or withdraw consent at any time (\S\,7 \P\,3 GDPR), so the consent settings shown in the popup are also available as a separate page.
+
+Users must consent to necessary cookies (option (2)) to be able to login, as the session cookie must be stored.
+Further, the consent itself is stored as a cookie.
+Consequently, visitors who reject all cookies (option (1)) will be shown the cookie consent popup each time they open a page, as there is no way to store their choice.
+The \enquote{all cookies} option (3) is necessary to use additional features such as storing custom visualization and table layouts.
+
+When hosting the Damast system somewhere else, a different imprint than the default one is needed if the administrators and hosting organization differ.
+Probably, the data protection page needs to be modified as well.
+Here, the blueprint override functionality discussed in \cref{sec:override-blueprints} can come in handy.
 
 \subsection{Password Management}
