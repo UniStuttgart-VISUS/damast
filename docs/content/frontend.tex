@@ -400,7 +400,45 @@ Initially, the editor pane is empty, as no annotation or evidence is being edite
 \label{sec:annotation-creation}
 
 \begin{figure}[htb]
-  % {% include 'docs/figure-create-annotation.svg' %}
+  \centering
+  \begin{tikzpicture}
+    \node [inner sep=0.0pt,anchor=north west] at (1.0pt,-1.0pt) {\includegraphics[width=146.0pt,height=51.5pt]{../src/assets/annotator-documentation/create-annotation-1.png}};
+    \node [inner sep=0.0pt,anchor=north west] at (151.0pt,-1.0pt) {\includegraphics[width=146.0pt,height=51.5pt]{../src/assets/annotator-documentation/create-annotation-2.png}};
+    \node [inner sep=0.0pt,anchor=north west] at (75.0pt,-255.0pt) {\includegraphics[width=146.0pt,height=51.5pt]{../src/assets/annotator-documentation/create-annotation-4.png}};
+
+    \begin{scope}
+      \clip (0.0pt,-75.0pt) --
+        (175.0pt,-75.0pt) -- ++(-30.0pt,-70.0pt) -- ++(10.0pt,-20.0pt) -- ++(-30.0pt,-70.0pt)
+        -- (0.0pt,-235.0pt) -- (0.0pt,-75.0pt);
+      \node [inner sep=0.0pt,anchor=north west] at (0.0pt,-75.0pt) {\includegraphics[width=300.0pt,height=160.0pt]{../src/assets/annotator-documentation/create-annotation-3a.png}};
+    \end{scope}
+
+    \begin{scope}
+      \clip (300.0pt,-75.0pt) --
+        (175.0pt,-75.0pt) -- ++(-30.0pt,-70.0pt) -- ++(10.0pt,-20.0pt) -- ++(-30.0pt,-70.0pt)
+        -- (300.0pt,-235.0pt) -- (300.0pt,-75.0pt);
+      \node [inner sep=0.0pt,anchor=north west] at (0.0pt,-75.0pt) {\includegraphics[width=300.0pt,height=160.0pt]{../src/assets/annotator-documentation/create-annotation-3b.png}};
+    \end{scope}
+
+    \draw [very thick,cyan!80!white!60!black] (175.0pt,-75.0pt) -- ++(-30.0pt,-70.0pt) -- ++(10.0pt,-20.0pt) -- ++(-30.0pt,-70.0pt);
+    \foreach \x/\y/\r in {
+      150.0pt/-25.5pt/0,
+      150.0pt/-62.5pt/-90,
+      150.0pt/-155.0pt/0,
+      150.0pt/-245.0pt/-90%
+    } {
+      \begin{scope}[xshift=\x,yshift=\y,rotate=\r]
+        \draw [fill=cyan!80!white!60!black,draw=none] (6.25pt,0.0pt) -- ++(-7.5pt,7.5pt) -- ++(0.0pt,-3.75pt) -- ++(-5.0pt,0.0pt) -- ++(0.0pt,-7.5pt) -- ++(5.0pt,0.0pt) -- ++(0.0pt,-3.75pt) -- cycle;
+      \end{scope}
+    }
+
+    \draw [white,Bar->] (53.0pt,-11.0pt)
+      node [anchor=south west,font=\sffamily\tiny] {Click \& drag}
+      -- (74.0pt,-11.0pt);
+    \draw [white,Bar-{>}.{Bar}] (203.0pt,-11.0pt)
+      -- (247.0pt,-11.0pt)
+      node [anchor=south east,font=\sffamily\tiny] {Release};
+  \end{tikzpicture}
 
   \caption{
     Annotation creation starts by selecting a text passage using the mouse.
