@@ -477,7 +477,23 @@ It is completely fine to do a text selection over an existing annotation in the 
 When annotations overlap, the parts where they do are highlighted in gray instead of the normal annotation colors.
 
 \begin{figure}[htb]
-  % {% include 'docs/figure-annotation-suggestion.svg' %}
+  \centering
+  \begin{tikzpicture}
+    \node [inner sep=0.0pt,anchor=north west] at (0,0) {\includegraphics[width=300.0pt,height=114.0pt]{../src/assets/annotator-documentation/annotation-suggestion.png}};
+    \draw (25.0pt,-123.0pt)
+      node [anchor=west] {\footnotesize Annotation suggestion}
+      [red!60!white]
+      -- (20.0pt,-123.0pt)
+      -- (15.0pt,-105.0pt);
+    \draw (310.0pt,-27.0pt)
+      node [anchor=west] {\footnotesize Suggestion source}
+      [red!60!white]
+      -- (205.0pt,-27.0pt);
+    \draw (310.0pt,-45.5pt)
+      node [anchor=west] {\footnotesize Pre-selected entity}
+      [red!60!white]
+      -- (280.0pt,-45.5pt);
+  \end{tikzpicture}
   \caption{
     Suggestions for new annotations are indicated by yellow curly underlining.
     These suggestions are based on known names for entities from the database, as well as existing annotation content.
