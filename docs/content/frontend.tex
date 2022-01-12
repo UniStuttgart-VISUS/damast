@@ -713,7 +713,21 @@ These form fields can be edited in a straightforward manner:
 \end{itemize}
 
 \begin{figure}[htb]
-  % {% include 'docs/figure-edit-evidence-membership.svg' %}
+  \centering
+  \begin{tikzpicture}
+    \node [inner sep=0.0pt,anchor=north west] at (0.5pt,-0.5pt) {\includegraphics[width=299.0pt,height=111.0pt]{../src/assets/annotator-documentation/evidence-edit-membership-1.png}};
+    \node [inner sep=0.0pt,anchor=north west] at (0.5pt,-127.0pt) {\includegraphics[width=299.0pt,height=111.0pt]{../src/assets/annotator-documentation/evidence-edit-membership-2.png}};
+
+    \begin{scope}[xshift=150.0pt,yshift=-119.0pt,rotate=-90]
+      \draw [fill=cyan!80!white!60!black,draw=none] (6.25pt,0.0pt) -- ++(-7.5pt,7.5pt) -- ++(0.0pt,-3.75pt) -- ++(-5.0pt,0.0pt) -- ++(0.0pt,-7.5pt) -- ++(5.0pt,0.0pt) -- ++(0.0pt,-3.75pt) -- cycle;
+    \end{scope}
+
+    \draw (227.5pt,-120.0pt)
+      node [anchor=east] {\footnotesize Click}
+      [red!60!white,-Circle]
+      -- ++(10.0pt,0.0pt)
+      -- (252.5pt,-105.0pt);
+  \end{tikzpicture}
 
   \caption{
     To toggle membership of an annotation, and its associated \emph{instance,} to an evidence, click on the annotation while the evidence editor is opened.
