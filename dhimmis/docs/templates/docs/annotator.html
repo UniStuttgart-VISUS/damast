@@ -202,10 +202,10 @@
 
   <p>
     In theory, all HTML files should be fine to use for annotation purposes.
+    For security purposes, many tag types and tag attributes are stripped from the document before upload<a id="footnote-1-link" class="footnote-link" href="#footnote-1"><sup>1</sup></a>.
+    The resulting document in the database will consist of semantically relevant, but unstyled, HTML tags, and text.
     However, there might be special considerations to be made about how you want the text to be represented.
-    In general, I would highly suggest to only use simple, semantic HTML without special styling, images, or even <code>&lt;script&gt;</code> tags<a id="footnote-1-link" class="footnote-link" href="#footnote-1"><sup>1</sup></a>.
-    If you are unsure about any of this, feel free to involve me in the creation of new documents.
-    Some questions you should think about before creating a HTML document for annotation:
+    Some questions to think about before creating a HTML document for annotation are:
   </p>
 
   <ul>
@@ -239,10 +239,13 @@
   </p>
 
   <p class="footnote footnote--first" id="footnote-1">
-    <a href="#footnote-1-link"><sup>1</sup></a>While having <code>&lt;script&gt;</code> tags in the HTML of a document is <em>possible,</em> I would <strong>highly discourage</strong> having them.
-    Not only might they break the annotator functionality in some way, they open up a major security vulnerability to users of the annotator.
-    Before opening up all this functionality to the general public, I intend to add some input sanitation and maybe other security measures to lock this down.
-    Adding <code>&lt;style&gt;</code> tags to the HTML should work as intended and may in some cases even be necessary, but I would discourage overusing this.
+  <a href="#footnote-1-link"><sup>1</sup></a>The entirety of <code>&lt;script&gt;</code>, <code>&lt;style&gt;</code>, and <code>&lt;head&gt;</code> tags are discarded, both their content and the DOM nodes themselves.
+  Disallowed tags are removed, but their contents are kept as plain text and child nodes.
+  Allowed tags are: <code>&lt;a&gt;</code>, <code>&lt;abbr&gt;</code>, <code>&lt;address&gt;</code>, <code>&lt;article&gt;</code>, <code>&lt;aside&gt;</code>, <code>&lt;b&gt;</code>, <code>&lt;bdi&gt;</code>, <code>&lt;bdo&gt;</code>, <code>&lt;blockquote&gt;</code>, <code>&lt;br&gt;</code>, <code>&lt;caption&gt;</code>, <code>&lt;cite&gt;</code>, <code>&lt;code&gt;</code>, <code>&lt;col&gt;</code>, <code>&lt;colgroup&gt;</code>, <code>&lt;dd&gt;</code>, <code>&lt;del&gt;</code>, <code>&lt;details&gt;</code>, <code>&lt;dfn&gt;</code>, <code>&lt;div&gt;</code>, <code>&lt;dl&gt;</code>, <code>&lt;dt&gt;</code>, <code>&lt;em&gt;</code>, <code>&lt;figcaption&gt;</code>, <code>&lt;figure&gt;</code>, <code>&lt;footer&gt;</code>, <code>&lt;h1&gt;</code>, <code>&lt;h2&gt;</code>, <code>&lt;h3&gt;</code>, <code>&lt;h4&gt;</code>, <code>&lt;h5&gt;</code>, <code>&lt;h6&gt;</code>, <code>&lt;header&gt;</code>, <code>&lt;hr&gt;</code>, <code>&lt;i&gt;</code>, <code>&lt;img&gt;</code>, <code>&lt;ins&gt;</code>, <code>&lt;kbd&gt;</code>, <code>&lt;li&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;mark&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;ol&gt;</code>, <code>&lt;p&gt;</code>, <code>&lt;picture&gt;</code>, <code>&lt;pre&gt;</code>, <code>&lt;q&gt;</code>, <code>&lt;rp&gt;</code>, <code>&lt;rt&gt;</code>, <code>&lt;ruby&gt;</code>, <code>&lt;s&gt;</code>, <code>&lt;samp&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;small&gt;</code>, <code>&lt;span&gt;</code>, <code>&lt;strong&gt;</code>, <code>&lt;sub&gt;</code>, <code>&lt;summary&gt;</code>, <code>&lt;sup&gt;</code>, <code>&lt;table&gt;</code>, <code>&lt;tbody&gt;</code>, <code>&lt;td&gt;</code>, <code>&lt;tfoot&gt;</code>, <code>&lt;th&gt;</code>, <code>&lt;thead&gt;</code>, <code>&lt;time&gt;</code>, <code>&lt;title&gt;</code>, <code>&lt;tr&gt;</code>, <code>&lt;u&gt;</code>, <code>&lt;ul&gt;</code>, and <code>&lt;wbr&gt;</code>.
+  All attributes are removed from tags, except for
+  <code>href</code>, <code>title</code> and <code>hreflang</code> for <code>&lt;a&gt;</code> tags;
+  and <code>src</code>, <code>width</code>, <code>height</code>, <code>alt</code>, and <code>title</code> for <code>&lt;img&gt;</code> tags.
+  In addition, the <code>data-virtual-text</code> attribute can be placed on every tag.
   </p>
 </section>
 

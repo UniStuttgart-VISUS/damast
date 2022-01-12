@@ -272,15 +272,33 @@ Before clicking the button, no data will be sent to the server, and you can clea
 
 
 In theory, all HTML files should be fine to use for annotation purposes.
-However, there might be special considerations to be made about how you want the text to be represented.
-In general, I would highly suggest to only use simple, semantic HTML without special styling, images, or even \verb!<script>! tags\footnote{
-  While having \texttt{<script>} tags in the HTML of a document is \emph{possible,} I would \textbf{highly discourage} having them.
-  Not only might they break the annotator functionality in some way, they open up a major security vulnerability to users of the annotator.
-  Before opening up all this functionality to the general public, I intend to add some input sanitation and maybe other security measures to lock this down.
-  Adding \texttt{<style>} tags to the HTML should work as intended and may in some cases even be necessary, but I would discourage overusing this.
+For security purposes, many tag types and tag attributes are stripped from the document before upload\footnote{%
+  The entirety of \texttt{<script>}, \texttt{<style>}, and \texttt{<head>} tags are discarded, both their content and the DOM nodes themselves.
+  Disallowed tags are removed, but their contents are kept as plain text and child nodes.
+  Allowed tags are:
+  \texttt{<a>}, \texttt{<abbr>}, \texttt{<address>}, \texttt{<article>},
+  \texttt{<aside>}, \texttt{<b>}, \texttt{<bdi>}, \texttt{<bdo>}, \texttt{<blockquote>},
+  \texttt{<br>}, \texttt{<caption>}, \texttt{<cite>}, \texttt{<code>}, \texttt{<col>},
+  \texttt{<colgroup>}, \texttt{<dd>}, \texttt{<del>}, \texttt{<details>}, \texttt{<dfn>},
+  \texttt{<div>}, \texttt{<dl>}, \texttt{<dt>}, \texttt{<em>}, \texttt{<figcaption>},
+  \texttt{<figure>}, \texttt{<footer>}, \texttt{<h1>}, \texttt{<h2>}, \texttt{<h3>},
+  \texttt{<h4>}, \texttt{<h5>}, \texttt{<h6>}, \texttt{<header>}, \texttt{<hr>},
+  \texttt{<i>}, \texttt{<img>}, \texttt{<ins>}, \texttt{<kbd>}, \texttt{<li>},
+  \texttt{<main>}, \texttt{<mark>}, \texttt{<nav>}, \texttt{<ol>}, \texttt{<p>},
+  \texttt{<picture>}, \texttt{<pre>}, \texttt{<q>}, \texttt{<rp>}, \texttt{<rt>},
+  \texttt{<ruby>}, \texttt{<s>}, \texttt{<samp>}, \texttt{<section>}, \texttt{<small>},
+  \texttt{<span>}, \texttt{<strong>}, \texttt{<sub>}, \texttt{<summary>}, \texttt{<sup>},
+  \texttt{<table>}, \texttt{<tbody>}, \texttt{<td>}, \texttt{<tfoot>}, \texttt{<th>},
+  \texttt{<thead>}, \texttt{<time>}, \texttt{<title>}, \texttt{<tr>}, \texttt{<u>},
+  \texttt{<ul>}, and \texttt{<wbr>}.
+  All attributes are removed from tags, except for
+  \texttt{href}, \texttt{title} and \texttt{hreflang} for \texttt{<a>} tags;
+  and \texttt{src}, \texttt{width}, \texttt{height}, \texttt{alt}, and \texttt{title} for \texttt{<img>} tags.
+  In addition, the \texttt{data-virtual-text} attribute can be placed on every tag.
 }.
-If you are unsure about any of this, feel free to involve me in the creation of new documents.
-Some questions you should think about before creating a HTML document for annotation:
+The resulting document in the database will consist of semantically relevant, but unstyled, HTML tags, and text.
+However, there might be special considerations to be made about how you want the text to be represented.
+Some questions to think about before creating a HTML document for annotation are:
 
 \begin{itemize}
   \item
