@@ -85,7 +85,7 @@
     \foreach \name/\label/\value/\varname in {
       proxycount/{Reverse proxy count}/1/DHIMMIS\_PROXY\_COUNT,
       proxyprefix/{Reverse proxy prefix}/{/}/DHIMMIS\_PROXY\_PREFIX,
-      gunicorn/{\texttt{gunicorn} port}/8000/GUNICORN\_PORT%
+      gunicorn/{\texttt{gunicorn} port}/8000/GUNICORN\_PORT,
     } {
       \node [anchor=north west,inner sep=0] (psql-\name-label) at ($ (tmp) + (0,-0.2) $) { \scriptsize \label \phantom{Iq} };
       \path let \p1 = (psql-\name-label.north) in coordinate (tmp) at (5.8, \y1);
@@ -142,10 +142,11 @@
         userdb/User file/users.db/DHIMMIS\_USER\_FILE,
         report/Report database/reports.db/DHIMMIS\_REPORT\_FILE,
         access/Access log/access\_log/FLASK\_ACCESS\_LOG,
-        error/Error log/error\_log/FLASK\_ERROR\_LOG%
+        error/Error log/error\_log/FLASK\_ERROR\_LOG,
+        override/Override directory//DHIMMIS\_OVERRIDE\_PATH%
       } {
         \coordinate (nw) at ($ (tmp) + (0.3,0) $);
-        \coordinate (ne) at ($ (nw) + (2,0) $);
+        \coordinate (ne) at ($ (nw) + (2.2,0) $);
 
         \node [inner sep=1pt,anchor=north west,yshift=-3pt] (\name-title) at (nw) { \scriptsize \title\phantom{Iq} };
         \path let \p1 = (ne), \p2 = (\name-title.south east) in coordinate (tmp) at (\x1, \y2);
@@ -227,7 +228,7 @@
             \p2 = (damast-rect-north-west)
         in coordinate (damast-borderpos) at (\x2, \y1);
 
-  \foreach \delta in {1,...,4} {
+  \foreach \delta in {1,...,5} {
     \coordinate (damast-borderpos-\delta) at ($ (damast-borderpos) + (0,\delta * -0.3) $);
     \coordinate (damast-borderpos-\delta-label) at ($ (damast-borderpos-\delta) + (-0.5,0) $);
   }
@@ -238,8 +239,13 @@
   \node [anchor=south east,inner sep=1pt] at (damast-borderpos-2-label) { \tiny Read created report data (SQLite3) };
   \draw [very thin,write] (damast-borderpos-3) -| (hostfs-access-node.north);
   \node [anchor=south east,inner sep=1pt] at (damast-borderpos-3-label) { \tiny HTTP access log };
-  \draw [very thin,write] (damast-borderpos-4) -| (hostfs-error-node.north);
+  \draw [very thin,write] (damast-borderpos-4) -- ++(-2,0) -- ++(0,-3) -| (hostfs-error-node.north);
   \node [anchor=south east,inner sep=1pt] at (damast-borderpos-4-label) { \tiny General errors };
+
+  \coordinate (damast-borderpos-5-label) at ($ (damast-borderpos-5) + (-1.2,0) $);
+  \draw [very thin,read] (damast-borderpos-5) -- (damast-borderpos-5-label) -- ++(0,-2.6) -| (hostfs-override-node);
+  \node [anchor=south east,inner sep=1pt,rotate=90] at (damast-borderpos-5-label) {\tiny Override templates};
+  \node [anchor=north east,inner sep=1pt,rotate=90] at (damast-borderpos-5-label) {\tiny Extra static files};
 
   \draw (damast-borderpos) -- (psql-dbport-bordericon.east)
       node [midway,above,inner ysep=1pt] {\tiny \verb!psql://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE}!};
@@ -290,6 +296,5 @@
 
   \node [anchor=west,rotate=75,inner xsep=2pt,color=gray] (tmp) at ($ (damast-port-outer) + (75:0.5) $) { \tiny \verb!--net=host! };
   \draw [very thin,gray,-{Latex[left]},shorten >= 3pt] (tmp) -- (damast-port-outer);
-
 \end{tikzpicture}
 \end{document}
