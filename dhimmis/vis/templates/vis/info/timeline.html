@@ -4,37 +4,45 @@
 </p>
 
 <h2>Content</h2>
+
 <p>
-  The <em>Timeline</em> consists of two graphs, an upper and a lower one, described below.
+  The <em>Timeline</em> consists of two graphs, the main timeline, and a smaller overview.
+  The graphs are described in the following.
 </p>
-<p>
-  <!-- The following sentence needs to be checked  and rephrased after issue #39 (https://github.com/UniStuttgart-VISUS/damast/issues/39) is resolved.-->
-  When <strong>hovering</strong> over the timeline, a tooltip with a summary of evidences for that year is displayed.
-  When <strong>selecting</strong> data in other views, through <em>brushing and linking</em>, only the selected data shows in the timeline.
-</p>
+
 <p>
   Also, the view changes depending on the choice of <em>Show filtered data</em> in the <em>Settings pane</em>: in <em>All data</em> mode, data that is filtered out is indicated by less saturated colours.
   In <em>Only active</em> mode, data that is filtered out is hidden from the visualization in all views, including the timeline.
 </p>
 
-<h3>Upper graph</h3>
+<h3>Timeline</h3>
 <p>
-  The bigger <em>upper graph</em> shows either a qualitative summary or quantitative information, depending on <em>Timeline mode</em> selected in the <em>Settings pane</em>.
-  If <em>quantitative</em> is selected, the number of evidences of that type in that year is encoded into the height of the area.
+  The main <strong>timeline</strong> shows either a qualitative summary or quantitative information, depending on <em>Timeline mode</em> selected in the <em>Settings pane.</em>
+  If <em>quantitative</em> is selected, the number of evidences of that type in that year is encoded into the height of the area as a <em>stacked area chart.</em>
   If <em>qualitative</em> is selected, the timeline only shows whether there are evidences of that type each year.
-  The colours used in the graph match the ones used in the <em>Religion view</em> or <em>Confidenc view</em>, depending on the <em>Display mode</em> selected in the <em>Settings pane</em>.
+  The colours used in the graph match the ones used in the <em>Religion view</em> or <em>Confidence view,</em> depending on the <em>Display mode</em> selected in the <em>Settings pane.</em>
 </p>
 
 <p>
-  Importantly, the upper graph can be used to filter the data according to time (cf. the section on <em>filtering</em> below).
+  Importantly, the timeline can be used to filter the data according to time (cf. the section on <em>filtering</em> below).
 </p>
 
-<h3>Lower graph</h3>
+<h3>Overview</h3>
+
 <p>
-  The smaller <em>lower graph</em> serves as a <q>minimap</q> or overview for the larger <em>upper graph</em>:
-  if a section from the lower graph is selected by clicking and dragging, the upper graph shows only the selected timespan.
-  The overview represented by the lower graph does not change while <q>zooming</q> in the upper graph.
+  The smaller <strong>overview</strong> serves as a <em>minimap</em> for the larger <em>timeline:</em>
+  It always shows the entire time range contained in the database.
+  If a section from the overview is selected by clicking and dragging, the upper timeline shows only the selected timespan, in greater detail.
+  The overview represented by the lower graph does not change while <em>zooming</em> in the upper graph.
   Vice versa, if the data is filtered by clicking and dragging in the upper graph, the selected range is indicated as a thick bar below the lower graph.
+</p>
+
+<h3>Tooltips</h3>
+
+<p>
+  When <strong>hovering</strong> over the timeline and the overview, a tooltip with a summary of evidences for that year is displayed.
+  If the timeline shows a smaller time range than the overview, the year in the tooltip depends on whether the mouse cursor is on the timeline or the overview.
+  When <strong>selecting</strong> data in other views, through <em>brushing and linking,</em> only the selected data shows in the timeline.
 </p>
 
 <h2>Interaction</h2>
@@ -42,8 +50,8 @@
 <h3>Filtering</h3>
 
 <p>
-  By <em>clicking and dragging</em> the upper graph, a time range can be selected.
+  By <em>clicking and dragging</em> the timeline, a time range can be selected.
   This is indicated by a rectangle, and the area outside that rectangle is displayed in less saturated colours.
   This time range serves as a time filter for the data in the entire visualization.
-  Clicking anywhere in the upper graph resets the filter.
+  Clicking anywhere in the timeline resets the filter.
 </p>
