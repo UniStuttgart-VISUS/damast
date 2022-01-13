@@ -416,8 +416,10 @@ export default class Timeline extends View<any, any> {
     const x = clientX - left;
 
     if (x < this.x.range()[0] || x > this.x.range()[1]) {
-      this.tooltipManager.cancel();
+      this.tooltipManager.hide();
       return;
+    } else {
+      this.tooltipManager.show();
     }
 
     const year = Math.round(this.x.invert(x));
