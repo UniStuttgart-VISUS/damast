@@ -25,7 +25,10 @@ Foreign key references are indicated by
 arrows with a diamond at the starting point.
 Weak references are indicated with
 \tikz{\path [use as bounding box] (0,0) -- (7mm,2mm); \draw [{Circle[open]}-{Latex}] (0cm,1mm) -- (0.7cm,1mm);}
-open circles at the starting point, and one-to-many references\footnote{One-to-many references are realized with PostgreSQL arrays, and are weak references.}
+open circles at the starting point, and one-to-many references\footnote{
+  This type of one-to-many references are realized with PostgreSQL arrays, and are weak references.
+  Strong one-to-many references in relational databases are handled via intermediary tables, which is done, for example, with the \texttt{tag\_evidence} or \texttt{time\_group} table (although the latter, and all instance tables, serve additional purposes).
+}
 \tikz{\path [use as bounding box] (0,0) -- (7mm,2mm); \draw [{Rays[n=6,length=1.6mm,width=1.6mm]}-Latex] (0cm,1mm) -- (0.7cm,1mm);}
 are indicated with six rays at the starting point.
 The tables are grouped by function.
