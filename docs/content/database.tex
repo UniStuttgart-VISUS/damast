@@ -164,6 +164,60 @@ This table needs to contain an entry for each user that can log in to the front-
 
 
 \section{Roles}
+\label{sec:roles}
+
+Each user has a set of roles they are part of.
+Individual Flask endpoints in turn are set to allow a certain set of roles.
+A user is then allowed to use an endpoint if these two sets of roles overlap.
+
+There is a basic \verb!user! role that gives access to basic functionality behind the login, but just being part of that role is not enough if the endpoint wants a more specific role.
+Further, there is a \verb!dev! role for endpoints that are important for developing, but not for users, such as the REST API documentation.
+Finally, there is an \verb!admin! role, which should provide access to \emph{all} endpoints.
+
+For the REST API, there is the distinction between users without REST API access, those that can read, and those that can read and write.
+For this, there are two roles, \verb!readdb! and \verb!writedb!, and a user has either none, only \verb!readdb!, or \verb!readdb! and \verb!writedb!.
+\verb!writedb! provides access to changing endpoints in the REST API, which will modify database state, while \verb!readdb!  allows to query, but not modify.
+In the backend, this is controlled mainly by differentiating HTTP verbs: \verb!GET! requests\footnote{%
+  \texttt{HEAD} requests, which are handled similarly to \texttt{GET} requests by most servers, are also read-only.
+} are read-only, \verb!PATCH!, \verb!PUT! and \verb!DELETE! are writing\footnote{%
+  The default behavior is to distinguish the HTTP verbs that way.
+  However, the method decorator that provides the database cursor and distinguishes between read-only access and writing access (see \texttt{rest\_endpoint} in \texttt{dhimmis/postgres\_rest\_api/decorators.py}) can take an optional argument controlling which verbs are considered read-only.
+  This is used for the \texttt{/rest/find-alternative-names} endpoint, which requires a payload and therefore is a \texttt{POST} request, but can be used with only the \texttt{readdb} role.
+}.
+Read-only users are also passed a read-only cursor to the endpoint code.
+
+For different functionalities of the site, there are more specific roles, where users can just be part of one or a few:
+
+\begin{description}
+  \item[\texttt{annotator}]
+    This role grants the user access to the annotator.
+    The user however requires at least the \verb!readdb! role to be able to see the annotator interface, populated with data, properly, as the annotations and documents are loaded via the REST API.
+    If the user has the \verb!writedb! role as well, they can annotate and modify annotations and evidences.
+  \item[\texttt{geodb}]
+    This role grants the user access to the GeoDB-Editor.
+    Similarly to the annotator, the \verb!readdb! role is required as well to see the contents of the tables, and the \verb!writedb! role is required to make changes.
+  \item[\texttt{pgadmin}]
+    This role is historical from when the pgAdmin4 server was still reverse-proxied behind the Damast server.
+    Now (if there is one on the host system at all), the pgAdmin4 server is reverse-proxied by the web-facing reverse proxy server (e.g., NGINX, see~\cref{fig:structure}).
+    If the user has the \verb!pgadmin! role, a link to \verb!${DHIMMIS_PROXYPREFIX}/pgadmin/! is shown in the header.
+  \item[\texttt{reporting}]
+    This role grants the user access to the reporting functionality.
+    Because report generation requires database access, the \verb!readdb! role is needed as well.
+    In the report list, users with the \verb!reporting! role can only see the reports they generated themselves\footnote{%
+      The exception here being visitors with the \texttt{reporting} role.
+      Those cannot see the report list, but only have access to a report they know the UUID of.
+    }.
+    Administrators (\verb!admin! role) can see all reports.
+  \item[\texttt{vis}]
+    This role grants the user access to the visualization.
+    To populate the visualization with the data from the database, the \verb!readdb! role is required as well.
+  \item[\texttt{visitor}]
+    This role is given to visitors alongside those in \verb!${DHIMMIS_VISITOR_ROLES}!, if visitor handling is enabled.
+    There is not yet any use for that role, but it could be used in future to grant visitors access to an endpoint even if they do not have any of the other roles required for it.
+\end{description}
+
+
+
 \section{Backups}
 \section{Other Databases}
 \subsection{User Database}
