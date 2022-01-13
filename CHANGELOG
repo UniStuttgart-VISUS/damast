@@ -3,7 +3,8 @@
 
 2022-01-xx                                                           v1.0.4
 
-.
+Fixes a bug where the timeline tooltip would be incorrect over the overview
+when zoomed in to a shorter time range.
 
 
 2022-01-12                                                           v1.0.3
