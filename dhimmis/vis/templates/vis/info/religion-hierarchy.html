@@ -71,8 +71,8 @@
 
 <p>
   In <em>Simple</em> mode, all data on any checked religion is filtered.
-  Initially, all religions are selected.
-  To filter out a religion, it can be unchecked it in the checkbox column.
+  Initially, all religions are checked.
+  To filter out a religion, it can be unchecked in the checkbox column.
   The new filter then needs to be applied clicking the <em>Apply</em> button.
 </p>
 
@@ -81,7 +81,7 @@
 
 <p>
   In <em>Advanced</em> mode, it is possible to filter not individual religious groups but different <em>sets</em> of religious groups.
-  For instance, analysis may require to show places where the Syriac Orthodox Church (SYR), the Armenian Church (ARM), and the Church of the East (COE) coexist, but not those where only one of the three is present.
+  For instance, analysis may require to show places where two or more of the following three religious groups exist together: the Syriac Orthodox Church (SYR), the Armenian Church (ARM), and the Church of the East (COE) coexist, but not those where only one of the three is present.
   In this case, evidences are active if, for any set, all religious groups of that set are present at a place.
 </p>
 
@@ -95,6 +95,7 @@
 
 <p>
   The following procedure creates a filter corresponding to the analysis described above:
+</p>
   <ul>
     <li>Switch to <em>advanced</em> mode.</li>
     <li>Create two additional columns by pressing the &plus; plus button.</li>
@@ -103,4 +104,8 @@
     <li>In the third column, activate ARM and COE.</li>
     <li>Press <em>apply.</em></li>
   </ul>
+<p>
+  Note: If only places should match the filter where <em>all</em> of these three religious groups are present, only one column in <em>Advanced</em> mode is necessary with all three groups checked.
+  This must be understood as <q>evidences with COE <strong>and</strong> ARM <strong>and</strong> SYR.</q>
+  In turn, this differs from checking the three religious groups in <em>Simple</em> mode, which equals <q>evidences with COE <strong>or</strong> ARM <strong>or</strong> SYR.</q>
 </p>
