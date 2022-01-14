@@ -14,10 +14,10 @@
 </p>
 
 <p>
-  The map glyphs consist of up to four circles each representing one of the <q>main</q> religions.
+  The map glyphs consist of up to four circles each representing one of the general religious affiliations.
   For example, Judaism is represented by a circle with a Star of David inside.
-  All religions other than Islam, Judaism, and Christianity are pragmatically grouped under <q>Other</q>.
-  In <em>Religion mode</em> (set by default), a circle functions like a pie chart where each piece represents a different religious group in its respective color and the piece’s size shows the amount of evidences of that religious group relative to the overall evidences of its <q>main</q> religion.
+  All religions other than Islam, Judaism, and Christianity are pragmatically summarized under <q>Other</q>.
+  In <em>Religion mode</em> (set by default), a circle functions like a pie chart where each piece represents a different religious group in its respective color and the piece’s size shows the amount of evidences of that religious group relative to the overall evidences of its general religious affiliation.
   In <em>Confidence mode</em>, the division of the circle or pie chart is based on the evidences attributed with different levels of confidence and is colored accordingly.
 </p>
 
@@ -124,7 +124,10 @@
   <!-- Is this information relevant for the users? -->
   For this, the Leaflet plugin for <a href="https://geoman.io/leaflet-geoman">Geoman</a> is used.
   The respective tools to control the filters are available by clicking on the button with the <i class="fa fa-filter"></i> funnel in the upper left corner of the map, below the zoom buttons.
-  The button then expands to a set of controls, arranged in three blocks: the first block for adding elements, the second for editing them, and the third to apply, remove or revert the filters. These are described in detail below. Tooltips are also shown when hovering over the individual buttons.
+  The button then expands to a set of controls, arranged in three blocks:
+  the first block for adding elements, the second for editing them, and the third to apply, remove or revert the filters.
+  These are described in detail below.
+  Tooltips are also shown when hovering over the individual buttons.
 </p>
 
 <p>
@@ -149,6 +152,7 @@
     <li>cut (subtract) a polygon from an existing shape, and</li>
     <li>remove entire shapes.</li>
   </ul>
+  Note that polygons can only be moved or removed individually before they have been applied as filters.
 </p>
 
 <p>
