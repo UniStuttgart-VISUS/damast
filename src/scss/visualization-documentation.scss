@@ -13,6 +13,10 @@ h1, h2, h3 {
   margin: revert;
 }
 
+h1, h2 {
+  text-align: center;
+}
+
 h1 {
   font-size: 2rem;
 }
@@ -23,6 +27,14 @@ h2 {
 
 h3 {
   font-size: 1.3rem;
+}
+
+h4 {
+  font-size: 1.2rem;
+}
+
+h5 {
+  font-size: 1.1rem;
 }
 
 p,
@@ -80,10 +92,6 @@ section {
     content: '';
     display: table;
   }
-}
-
-nav#toc  ul {
-  //list-style: none;
 }
 
 figure {
