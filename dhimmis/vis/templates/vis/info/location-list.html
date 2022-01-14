@@ -48,17 +48,23 @@ Keep in mind that this can only happen when the <em>All data</em> display mode i
 <h3>Interaction</h3>
 
 <h4>Searching for Toponyms</h4>
+
 <p>
 It is possible to search for location names in the search field at the top.
 Typing a search query in that field will highlight the search results in <span style="color:#d61;font-weight:700">bold orange</span> and sort them to the top of the list.
 The search also matches alternative names.
 Matches to alternative names that do not match the main name are sorted after main name matches and highlighted in <span style="color:#dc1;font-weight:700">bold yellow</span>.
 </p>
+
 <p>
 The search field supports JavaScript-style regular expressions.
 For example, to search for locations with an Arabic definite article, the query
+</p>
+
 <pre><code>  \ba([tdrzsṣḍṭẓln]|[tds]h)-
 </code></pre>
+
+<p>
 can be used.
 <b>Explanation</b>:
 <code>\b</code> searches for the beginning of a word.
