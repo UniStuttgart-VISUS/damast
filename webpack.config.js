@@ -295,6 +295,7 @@ module.exports = function(env, argv) {
           'api/api.css': './src/scss/documentation.scss',
           'index/index.css': './src/scss/documentation-root.scss',
           'annotator/style.css': './src/scss/annotator-documentation.scss',
+          'vis/style.css': './src/scss/visualization-documentation.scss',
         },
         'dhimmis/docs/static/',
         [

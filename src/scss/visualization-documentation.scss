@@ -1,0 +1,196 @@
+@use 'colors' as *;
+@use 'vis-variables' as *;
+@use 'mixins';
+
+@forward 'target-highlight';
+
+.content {
+  @include mixins.baseFlexBlock();
+}
+
+h1, h2, h3 {
+  padding: revert;
+  margin: revert;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.6rem;
+}
+
+h3 {
+  font-size: 1.3rem;
+}
+
+p,
+dl,
+ul,
+ol {
+  width: clamp(40ch, 100%, 80ch);
+}
+
+dl dt {
+  font-variant: small-caps;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-top: 0.5ex;
+}
+
+sup {
+  font-size: 8px;
+}
+
+hr {
+  position: relative;
+  display: block;
+  width: clamp(200px, 50%, 600px);
+  margin-block: 1em;
+  margin-inline: auto;
+  border-bottom: 1px solid $clr-gray;
+
+  &::after {
+    position: absolute;
+    content: '';
+    width: 0.5em;
+    height: 0.5em;
+    background: $clr-gray;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) translateY(1px) rotate(45deg);
+    outline: 0.25em solid $clr-bg;
+  }
+}
+
+main section,
+main nav {
+  width: clamp(400px, 80%, 1200px);
+  margin-inline: auto;
+
+  section {
+    width: 100%;
+  }
+}
+
+section {
+  &::after {
+    clear: both;
+    content: '';
+    display: table;
+  }
+}
+
+nav#toc  ul {
+  //list-style: none;
+}
+
+figure {
+  margin: auto;
+  width: fit-content;
+
+  @media (min-width: 960px) {
+    margin: revert;
+    width: revert;
+    float: right;
+  }
+  border: 1px solid $clr-gray;
+  padding: 0.5em 1em;
+
+  display: grid;
+  grid-template-columns: min-content;
+
+  svg {
+    width: 600px;
+  }
+
+  figcaption {
+    margin-top: 0.5em;
+    font-size: 12px;
+    max-width: 600px;
+
+    [role="number"] {
+      font-weight: 700;
+    }
+  }
+
+  &:first-of-type {
+    margin-top: 0;
+  }
+}
+
+figure svg,
+figure img {
+  max-width: 600px;
+  aspect-ratio: auto;
+}
+
+figure svg {
+  fill: none;
+  stroke: $clr-fg;
+
+  text {
+    font-family: monospace;
+    font-size: 12px;
+  }
+
+  rect {
+    stroke-width: 2;
+    shape-rendering: crispEdges;
+  }
+
+  text,
+  marker {
+    fill: $clr-fg;
+    stroke: none;
+  }
+
+  g[transform] {
+    text {
+      text-anchor: middle;
+    }
+  }
+
+  text {
+    &.annotation {
+      font-size: 8px;
+      text-anchor: end;
+
+      &.annotation--left {
+        text-anchor: start;
+      }
+    }
+  }
+
+  .filled-arrow {
+    stroke-width: 0;
+    fill: $clr-accent;
+  }
+}
+
+p.footnote {
+  font-size: 10px;
+  width: 100%;
+
+  a:first-child {
+    margin-right: 1ex;
+  }
+
+  &--first::before {
+    content: '';
+    width: 200px;
+    margin-left: 5px;
+    margin-block: 1rem;
+    border-bottom: 1px solid $clr-gray;
+    display: block;
+  }
+}
+
+.red-x {
+  color: $clr-fg;
+  border-radius: 0.5ex;
+  background: $clr-dark-red;
+  font-size: 10px;
+  padding: 0.3ex 0.6ex;
+}

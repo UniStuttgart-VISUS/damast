@@ -28,6 +28,12 @@
     <span class="name">Annotator user guide</span>
   </a>
   {%- endif -%}
+  {%- if 'vis' in user.roles or 'admin' in user.roles -%}
+  <a class="card" href="{{ url_for('docs.vis.root') }}">
+    <i class="fa fa-4x fa-book fa-fw"></i>
+    <span class="name">Visualization documentation</span>
+  </a>
+  {%- endif -%}
   {%- if structure_pdf_filename and ('pgadmin' in user.roles or 'dev' in user.roles or 'admin' in user.roles) -%}
   <a class="card" href="{{ url_for('docs.schema.root') }}" download="{{ structure_pdf_filename }}">
     <i class="fa fa-4x fa-file-pdf-o fa-fw"></i>

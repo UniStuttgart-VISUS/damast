@@ -27,3 +27,6 @@ app.register_blueprint(annotator)
 
 from .changelog import app as changelog
 app.register_blueprint(changelog)
+
+from .vis import app as vis
+app.register_blueprint(vis)
