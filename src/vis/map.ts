@@ -442,7 +442,18 @@ export default class MapPane extends View<any, Set<number> | null> {
     } else {
       this.map.setView(state.center, state.zoom);
       const layer = this.baseLayers.get(state.base_layer);
-      layer.addTo(this.map);
+      if (layer) layer.addTo(this.map);
+      else {
+        const def = this.map_styles.find(d => d.default_);
+        if (def) {
+          console.warn(`Could not find map style "${state.base_layer}", loading default layer "${def.key}" instead.`);
+          this.baseLayers.get(def.key).addTo(this.map);
+        } else {
+          const def = this.map_styles[0];
+          console.warn(`Could not find map style "${state.base_layer}", loading first layer "${def.key}" instead.`);
+          this.baseLayers.get(def.key).addTo(this.map);
+        }
+      }
 
       if (state.overlay_layers.includes('markerLayer')) {
         if (!this.map.hasLayer(this.layer)) this.layer.addTo(this.map);
