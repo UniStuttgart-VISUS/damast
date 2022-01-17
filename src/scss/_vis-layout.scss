@@ -91,7 +91,7 @@ body {
 
 .hierarchy__header {
   display: grid;
-  grid-template-columns: max-content auto;
+  grid-template-columns: repeat(2, max-content) auto;
 
   & > button:last-of-type {
     margin-left: auto;
