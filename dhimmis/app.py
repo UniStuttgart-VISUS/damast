@@ -417,31 +417,22 @@ class FlaskApp(flask.Flask):
     def _build_csp(self):
         csps = []
         csps.append("default-src 'self'")
-        imgsrc = "img-src 'self' data: https://www.geschichte.uni-frankfurt.de https://www.vis.uni-stuttgart.de https://www.volkswagenstiftung.de https://api.mapbox.com https://dh.gu.se"
         csps.append("font-src 'self' data:")
         csps.append("style-src 'self' 'unsafe-inline'")
+        csps.append("img-src 'self' data: *")
+        csps.append("frame-src 'none'")
+        csps.append("frame-ancestors 'none'")
+        csps.append("object-src 'none'")
 
-        framesrc = "'none'"
-        frameanc = "'none'"
         scriptsrc = "'self'"
-
         if self.config['TESTING']:
             # webpack does eval in test mode
             scriptsrc += " 'unsafe-eval'"
 
-        if flask.request.blueprint == 'pgadmin':
-            framesrc = "'self'"
-            frameanc = "'self'"
-            scriptsrc = "'self' 'unsafe-inline' 'unsafe-eval'"
-            imgsrc += " https://secure.gravatar.com"
-
-        csps.append(imgsrc)
-        csps.append(F'frame-src {framesrc}')
-        csps.append(F'frame-ancestors {frameanc}')
         csps.append(F'script-src {scriptsrc}')
-        csps.append("object-src 'none'")
 
         return '; '.join(csps)
+
 
     def serve_static_file(self, directory, filename, download_name=None):
         '''
