@@ -215,7 +215,17 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
       .merge(subtreeControls)
         .style('--col-number', d => d[1])
         .style('--node-index', d => religionIndices.get(d[0].data.id) + 1)
-        .html('<i class="fa fa-fw fa-lg fa-adjust"></i>');
+        .html('<i class="fa fa-fw fa-lg fa-adjust"></i>')
+        .attr('title', 'Toggle subtree')
+        .on('click', (e, d) => {
+          const relids = d[0].descendants().map(d => d.data.id);
+          const nodes = parent.selectAll<HTMLInputElement, [d3.HierarchyNode<T.OwnHierarchyNode>, number]>('input.cell-check')
+            .filter(d_ => d[1] === d_[1] && relids.includes(d_[0].data.id));
+
+          // if more than half checked, uncheck
+          const moreChecked = (nodes.filter(function() { return this.checked }).nodes().length) >= nodes.nodes().length/2;
+          nodes.each(function() { this.checked = !moreChecked; });  // do in node to override manual check changes
+        });
     subtreeControls.exit().remove();
 
     // add buttons
@@ -229,6 +239,7 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
         .classed('add-button', true)
       .merge(addButtons)
         .style('--col-number', d => d)
+        .attr('title', 'Add column after this')
         .html('<i class="fa fa-fw fa-lg fa-plus"></i>');
     addButtons.exit().remove();
 
@@ -243,6 +254,7 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
         .classed('remove-button', true)
       .merge(removeButtons)
         .style('--col-number', d => d)
+        .attr('title', 'Remove this column')
         .html('<i class="fa fa-fw fa-lg fa-trash"></i>');
     removeButtons.exit().remove();
 
@@ -257,7 +269,13 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
         .classed('none-button', true)
       .merge(noneButtons)
         .style('--col-number', d => d)
-        .html('<i class="fa fa-fw fa-lg fa-circle-o"></i>');
+        .attr('title', 'Uncheck all boxes in this column')
+        .html('<i class="fa fa-fw fa-lg fa-circle-o"></i>')
+        .on('click', (e, d) => {
+          parent.selectAll<HTMLInputElement, [d3.HierarchyNode<T.OwnHierarchyNode>, number]>('input.cell-check')
+            .filter(d_ => d === d_[1])
+            .each(function() { this.checked = false; });  // deselect all
+        });
     noneButtons.exit().remove();
 
     // invert buttons
@@ -271,7 +289,13 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
         .classed('invert-button', true)
       .merge(invertButtons)
         .style('--col-number', d => d)
-        .html('<i class="fa fa-fw fa-lg fa-rotate-90 fa-exchange"></i>');
+        .attr('title', 'Invert all boxes in this column')
+        .html('<i class="fa fa-fw fa-lg fa-rotate-90 fa-exchange"></i>')
+        .on('click', (e, d) => {
+          parent.selectAll<HTMLInputElement, [d3.HierarchyNode<T.OwnHierarchyNode>, number]>('input.cell-check')
+            .filter(d_ => d === d_[1])
+            .each(function() { this.checked = !this.checked; });  // invert all
+        });
     invertButtons.exit().remove();
 
     // all buttons
@@ -285,7 +309,13 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
         .classed('all-button', true)
       .merge(allButtons)
         .style('--col-number', d => d)
-        .html('<i class="fa fa-fw fa-lg fa-dot-circle-o"></i>');
+        .attr('title', 'Check all boxes in this column')
+        .html('<i class="fa fa-fw fa-lg fa-dot-circle-o"></i>')
+        .on('click', (e, d) => {
+          parent.selectAll<HTMLInputElement, [d3.HierarchyNode<T.OwnHierarchyNode>, number]>('input.cell-check')
+            .filter(d_ => d === d_[1])
+            .each(function() { this.checked = true; });  // select all
+        });
     allButtons.exit().remove();
   }
 
