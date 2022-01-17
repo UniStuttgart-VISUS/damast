@@ -50,6 +50,8 @@ else:
 
     if not os.path.isfile(_styles_path):
         _logger.warning('Map style file configured, but does not exist. This might be an oversight. Default map tile selection will be used.')
+    else:
+        _logger.info('Map styles will be loaded from: %s', _styles_path)
 
 
 def _get_styles():
