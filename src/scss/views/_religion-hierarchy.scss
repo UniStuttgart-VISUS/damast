@@ -56,7 +56,12 @@
       grid-row: var(--node-index) / span 1;
       grid-column: calc(2 * var(--hierarchy-depth) + 2 * var(--col-number) + 1 + 1) / span 1;
 
-      margin-block: 0;
+      margin: 0;
+    }
+
+    & > .subtree-toggle {
+      grid-row: var(--node-index) / span 1;
+      grid-column: calc(2 * var(--hierarchy-depth) + 2 * var(--col-number) + 1) / span 1;
     }
   }
 }

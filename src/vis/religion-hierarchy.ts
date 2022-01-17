@@ -83,6 +83,8 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
     const h = d3.hierarchy(d);
     const religions = [];
     h.eachBefore(d => d.data.id !== 0 ? religions.push(d) : {});
+    const religionIndices = new Map<number, number>();
+    religions.forEach((d, i) => religionIndices.set(d.data.id, i))
 
     const depth = h.height;
     const numCols = this.filter === true || this.filter.type === 'simple'
@@ -122,7 +124,48 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
             .attr('height', 1)
             .attr('fill', d => d.type === 1 ? null : d.color);
         rects.exit().remove();
-      });
+      })
+      .on('click', function(_, d) {
+        ref.on_brush(ref, d, d3.select(this));
+      })
+      .on('mouseenter', (e, d) => {
+        ref.tooltipManager.create(t => {
+          t.move({ x: e.clientX, y: e.clientY });
+          t.root.append('h1')
+            .text(d.data.name);
+
+          const c: { type: number, count: number, value: any }[] = ref.counts[d.data.id];
+          const total = c.reduce((a: number, d) => a + d.count, 0);
+          const active = c.filter(d => d.type === 0).reduce((a: number, d) => a + d.count, 0);
+          if (ref.display_mode === T.DisplayMode.Religion) {
+            t.root.append('p')
+              .text(`${active} / ${total} evidences`);
+
+          } else {
+            // add table
+            const tb = t.root.append('table');
+            const row = tb.append('tr');
+            row.append('td').html(`<strong>Total:</strong>`);
+            row.append('td').html(`<strong>${active} / ${total} evidences</strong>`);
+
+            T.confidence_values.forEach(d => {
+              const vals = c.filter(e => e.value === d);
+              if (vals.length === 0) return;
+
+              const total = vals.reduce((a: number, d) => a + d.count, 0);
+              const active = vals.filter(d => d.type === 0).reduce((a: number, d) => a + d.count, 0);
+
+              const row = tb.append('tr');
+              row.append('td').html(d === null ? `<em>no value:</em>` : `${d}:`);
+              row.append('td').text(`${active} / ${total} evidences`);
+            });
+          }
+        });
+      })
+      .on('mouseleave', (e, d) => {
+        ref.tooltipManager.cancel();
+      })
+      .on('mousemove', e => ref.tooltipManager.move(e.clientX, e.clientY));
     svgs.exit().remove();
 
     // indented tree labels
@@ -147,7 +190,7 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
         .classed('cell-check', true)
       .merge(checks)
         .style('--col-number', d => d[1])
-        .style('--node-index', (_, i) => i + 1)
+        .style('--node-index', d => religionIndices.get(d[0].data.id) + 1)
         .attr('checked', ([d, col]) => ref.filter === true
             ? true
             : ref.filter.type === 'simple'
@@ -155,7 +198,22 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
               : ref.filter.filter[col].includes(d.data.id));
     labels.exit().remove();
 
-    console.log(counts);
+    // subtree checkboxes
+    const subtree: [d3.HierarchyNode<T.OwnHierarchyNode>, number][] = d3.cross(
+      religions.filter(d => d.children?.length),
+      d3.range(numCols));
+    const subtreeControls = parent.selectAll<HTMLButtonElement, [d3.HierarchyNode<T.OwnHierarchyNode>, number]>('button.subtree-toggle')
+      .data(subtree);
+    subtreeControls.enter()
+        .append('button')
+        .classed('button', true)
+        .classed('button--small', true)
+        .classed('subtree-toggle', true)
+      .merge(subtreeControls)
+        .style('--col-number', d => d[1])
+        .style('--node-index', d => religionIndices.get(d[0].data.id) + 1)
+        .html('<i class="fa fa-fw fa-adjust"></i>');
+    subtreeControls.exit().remove;
   }
 
   data(d: T.OwnHierarchyNode, filter: ReligionFilter.ReligionFilter): void {
