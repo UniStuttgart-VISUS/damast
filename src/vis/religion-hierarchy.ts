@@ -72,11 +72,12 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
     this.data(data.hierarchy.data, data.filter);
     this.update(data.areas);
 
-    this.updateContent(data.hierarchy.data, data.areas);
+    this.updateContent(data.hierarchy.data, data.filter, data.areas);
   }
 
   private updateContent(
     d: T.OwnHierarchyNode,
+    filter: ReligionFilter.ReligionFilter,
     counts: any
   ): void {
     const ref = this;
@@ -87,9 +88,9 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
     religions.forEach((d, i) => religionIndices.set(d.data.id, i))
 
     const depth = h.height;
-    const numCols = this.filter === true || this.filter.type === 'simple'
+    const numCols = filter === true || filter.type === 'simple'
       ? 1
-      : this.filter.filter.length;
+      : filter.filter.length;
 
     const parent = this.div.select('div.hierarchy');
     parent.style('--hierarchy-depth', depth)
@@ -191,11 +192,13 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
       .merge(checks)
         .style('--col-number', d => d[1])
         .style('--node-index', d => religionIndices.get(d[0].data.id) + 1)
-        .attr('checked', ([d, col]) => ref.filter === true
+        .attr('checked', ([d, col]) => (filter === true
             ? true
-            : ref.filter.type === 'simple'
-              ? col === 0 ? ref.filter.filter.includes(d.data.id) : false
-              : ref.filter.filter[col].includes(d.data.id));
+            : filter.type === 'simple'
+              ? col === 0 ? filter.filter.includes(d.data.id) : false
+              : filter.filter[col].includes(d.data.id)
+          ) ? '' : null
+        );
     checks.exit().remove();
 
     // subtree checkboxes

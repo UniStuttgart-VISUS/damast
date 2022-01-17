@@ -5,7 +5,6 @@
 
 .religion-container {
   grid-template-rows: max-content auto auto;
-  overflow-y: auto;
 
   .hierarchy {
     --hierarchy-depth: 1;
@@ -14,9 +13,10 @@
 
     min-height: 200px;
     margin-top: 1ex;
+    overflow-y: auto;
 
     display: grid;
-    gap: 0.2ex 0.5ex;
+    gap: 0.2ex;
 
     grid-template-rows: repeat(calc(var(--num-rows) + 3), 1fr);
     grid-template-columns:
@@ -65,6 +65,8 @@
       grid-column: calc(2 * var(--hierarchy-depth) + 2 * var(--col-number) + 1) / span 1;
 
       padding: .3ex;
+      margin-inline-start: 0.5ex;
+      justify-self: end;
     }
 
     & > .header-button {
@@ -76,6 +78,9 @@
     .add-button,
     .remove-button {
       grid-column: calc(2 * var(--hierarchy-depth) + 2 * var(--col-number) + 1) / span 1;
+
+      margin-inline-start: 0.5ex;
+      justify-self: end;
     }
 
     & > .add-button {
