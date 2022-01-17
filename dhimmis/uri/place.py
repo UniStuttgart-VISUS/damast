@@ -7,8 +7,10 @@ from psycopg2.extras import NumericRange
 from ..authenticated_blueprint_preparator import AuthenticatedBlueprintPreparator
 from ..postgres_rest_api.decorators import rest_endpoint
 from ..postgres_rest_api.util import parse_geoloc
+from ..map_styles import app as map_styles
 
 app = AuthenticatedBlueprintPreparator('place', __name__, template_folder='templates')
+app.register_blueprint(map_styles)
 
 
 @app.route('/', role='user')
@@ -336,7 +338,7 @@ def get_place(cursor, place_id):
 
 
 def render_html(**kwargs):
-    return flask.render_template('uri/place.html', **kwargs)  # TODO
+    return flask.render_template('uri/place.html', **kwargs)
 
 
 def render_json(**kwargs):
