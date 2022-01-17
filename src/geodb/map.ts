@@ -2,7 +2,7 @@ import * as L from 'leaflet';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
 
-import {map_styles} from '../common/map-styles';
+import { mapStyles, MapStyle } from '../common/map-styles';
 
 export default class MapPane {
   private readonly map: L.Map;
@@ -13,6 +13,8 @@ export default class MapPane {
 
   private selected_marker_layer: L.FeatureGroup;
   private other_marker_layer: L.FeatureGroup;
+  private map_styles: MapStyle[];
+  private loadState: Promise<void>;
 
   constructor(
     private readonly dispatch: d3.Dispatch<any>,
@@ -42,16 +44,20 @@ export default class MapPane {
       }
     });
 
-    const layers = {};
-    map_styles.forEach(layer => {
-      if (layer.is_mapbox) mapbox_layers.add(layer.name);
-      layers[layer.name] = L.tileLayer(layer.url, layer.options || {});
-      if (layer.default_) {
-        layers[layer.name].addTo(this.map);
-        if (layer.is_mapbox) mapbox_attribution.addTo(this.map);
-      }
+    this.loadState = mapStyles().then(ms => {
+      this.map_styles = ms;
+
+      const layers = {};
+      this.map_styles.forEach(layer => {
+        if (layer.is_mapbox) mapbox_layers.add(layer.name);
+        layers[layer.name] = L.tileLayer(layer.url, layer.options || {});
+        if (layer.default_) {
+          layers[layer.name].addTo(this.map);
+          if (layer.is_mapbox) mapbox_attribution.addTo(this.map);
+        }
+      });
+      L.control.layers(layers).addTo(this.map);
     });
-    L.control.layers(layers).addTo(this.map);
 
     this.selected_marker_layer = L.featureGroup().addTo(this.map);
     this.other_marker_layer = L.featureGroup().addTo(this.map);
