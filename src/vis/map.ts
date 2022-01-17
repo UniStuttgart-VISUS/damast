@@ -18,7 +18,7 @@ import {ColorScales} from './colorscale';
 import * as modal from './modal';
 import View from './view';
 import { zoom_level as default_zoomlevel, center as initial_map_center, radius } from './default-map-zoomlevel';
-import {map_styles} from '../common/map-styles';
+import { MapStyle, mapStyles } from '../common/map-styles';
 import { MessageData } from './data-worker';
 import TooltipManager from './tooltip';
 import DiversityLayer from './diversity-layer';
@@ -39,9 +39,11 @@ export default class MapPane extends View<any, Set<number> | null> {
   private evidenceCountHeatLayer: L.HeatLayer;
   private evidenceCountHeatOptions: L.HeatMapOptions;
 
+  private map_styles: MapStyle[] = [];
   private baseLayers: Map<string, L.Layer> = new Map<string, L.Layer>();
 
   private readonly tooltipManager = new TooltipManager(500);
+  private setupState: Promise<void>;
 
   constructor(worker: Worker, container: GoldenLayout.Container) {
     super(worker, container, 'map');
@@ -61,6 +63,8 @@ export default class MapPane extends View<any, Set<number> | null> {
   }
 
   async setData(data: any) {
+    await this.setupState;
+
     this.g.selectAll('*').remove();
     this.glyphs = data.glyphs.map(glyph => new MapGlyph(
       this.g,
@@ -156,7 +160,7 @@ export default class MapPane extends View<any, Set<number> | null> {
   }
 
   private setMapStyle(layer_key: string): void {
-    map_styles.forEach(({key}) => {
+    this.map_styles.forEach(({key}) => {
       this.svg.classed(`map__svg--${key}`, layer_key === key);
     });
   }
@@ -168,15 +172,6 @@ export default class MapPane extends View<any, Set<number> | null> {
       zoomSnap: 0.25,
     };
     this.map = L.map(div_, mapOptions).setView(initial_map_center, default_zoomlevel);
-
-    const fun = this.updateLocations.bind(this);
-    this.map.on('zoomend', fun);
-    this.map.on('viewreset', fun);
-    this.map.on('resize', this.onmove.bind(this));
-    this.map.on('resize', this.onresize.bind(this));
-    this.map.on('move', this.onmove.bind(this));
-    this.map.on('click', this.onclick.bind(this));
-    this.map.on('moveend', () => this.transmitMapStateToData());
 
     /* LAYERS */
     this.layerControl = L.control.layers();
@@ -219,6 +214,14 @@ export default class MapPane extends View<any, Set<number> | null> {
       return div;
     };
 
+    const fun = this.updateLocations.bind(this);
+    this.map.on('zoomend', fun);
+    this.map.on('viewreset', fun);
+    this.map.on('resize', this.onmove.bind(this));
+    this.map.on('resize', this.onresize.bind(this));
+    this.map.on('move', this.onmove.bind(this));
+    this.map.on('click', this.onclick.bind(this));
+    this.map.on('moveend', () => this.transmitMapStateToData());
     this.map.on('baselayerchange', (x: {layer}) => {
       this.setMapStyle(x.layer.options.id)
 
@@ -254,19 +257,23 @@ export default class MapPane extends View<any, Set<number> | null> {
     this.evidenceCountHeatLayer = L.heatLayer([], this.evidenceCountHeatOptions);
     this.layerControl.addOverlay(this.evidenceCountHeatLayer, '<b>Distribution:</b> Heatmap of count of evidence');
 
-    map_styles.forEach((style) => {
-      if (style.is_mapbox) mapbox_layers.add(style.name);
+    // load map styles
+    this.setupState = mapStyles().then(ms => {
+      this.map_styles = ms;
 
-      const layer = L.tileLayer(style.url, (style.options || {}) as L.TileLayerOptions);
-      this.layerControl.addBaseLayer(layer, style.name);
-      if (style.default_) {
-        layer.addTo(this.map);
-        if (style.is_mapbox) mapbox_attribution.addTo(this.map);
-      }
+      this.map_styles.forEach((style) => {
+        if (style.is_mapbox) mapbox_layers.add(style.name);
 
-      this.baseLayers.set(style.key, layer);
+        const layer = L.tileLayer(style.url, (style.options || {}) as L.TileLayerOptions);
+        this.layerControl.addBaseLayer(layer, style.name);
+        if (style.default_) {
+          layer.addTo(this.map);
+          if (style.is_mapbox) mapbox_attribution.addTo(this.map);
+        }
+
+        this.baseLayers.set(style.key, layer);
+      });
     });
-
 
     // Geoman
     const o = this.map.pm.getGlobalOptions();
