@@ -66,6 +66,9 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
     this.linkHierarchy(data);
   }
 
+  // grid columns:
+  // max-content repeat(#depth, 1fr) repeat(2 * #columns, max-content);
+
   setData(data: {hierarchy: d3.HierarchyNode<T.OwnHierarchyNode>, areas: any, filter: ReligionFilter.ReligionFilter, display_mode: T.DisplayMode}) {
     this.display_mode = data.display_mode;
     this.filter = data.filter;
