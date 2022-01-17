@@ -7,14 +7,15 @@
   grid-template-rows: max-content auto auto;
 
   .hierarchy {
-    --hierarchy-depth: 2;
-    --num-columns: 3;
-    --num-rows: 26;
+    --hierarchy-depth: 1;
+    --num-columns: 1;
+    --num-rows: 1;
 
     min-height: 200px;
+    margin-top: 1em;
 
     display: grid;
-    gap: 0.3ex;
+    gap: 0.2ex 0.5ex;
 
     grid-template-rows: repeat(var(--num-rows), 1fr);
     grid-template-columns:
@@ -26,12 +27,36 @@
       repeat(calc(2 * var(--num-columns)), max-content)
       ;
 
+    & > * {
+      align-self: center;
+    }
+
     & > .religion-label {
       justify-self: end;
+      grid-column-end: span 1;
+      grid-row-end: span 1;
+
+      font-weight: 700;
+      font-size: x-small;
+
+      padding-inline: 1em 1ex;
     }
 
     & > svg {
       justify-self: stretch;
+
+      --node-height: 1;
+      --node-index: 1;
+
+      grid-column: calc(2 + var(--node-height)) / span 1;
+      grid-row: var(--node-index) / span 1;
+    }
+
+    & > input[type="checkbox"] {
+      grid-row: var(--node-index) / span 1;
+      grid-column: calc(2 * var(--hierarchy-depth) + 2 * var(--col-number) + 1 + 1) / span 1;
+
+      margin-block: 0;
     }
   }
 }

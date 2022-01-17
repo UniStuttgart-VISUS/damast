@@ -66,14 +66,96 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
     this.linkHierarchy(data);
   }
 
-  // grid columns:
-  // max-content repeat(#depth, 1fr) repeat(2 * #columns, max-content);
-
   setData(data: {hierarchy: d3.HierarchyNode<T.OwnHierarchyNode>, areas: any, filter: ReligionFilter.ReligionFilter, display_mode: T.DisplayMode}) {
     this.display_mode = data.display_mode;
     this.filter = data.filter;
     this.data(data.hierarchy.data, data.filter);
     this.update(data.areas);
+
+    this.updateContent(data.hierarchy.data, data.areas);
+  }
+
+  private updateContent(
+    d: T.OwnHierarchyNode,
+    counts: any
+  ): void {
+    const ref = this;
+    const h = d3.hierarchy(d);
+    const religions = [];
+    h.eachBefore(d => d.data.id !== 0 ? religions.push(d) : {});
+
+    const depth = h.height;
+    const numCols = this.filter === true || this.filter.type === 'simple'
+      ? 1
+      : this.filter.filter.length;
+
+    const parent = this.div.select('div.hierarchy');
+    parent.style('--hierarchy-depth', depth)
+      .style('--num-rows', religions.length)
+      .style('--num-columns', numCols);
+
+    // SVG elements (indented tree)
+    const svgs = parent.selectAll<SVGSVGElement, d3.HierarchyNode<T.OwnHierarchyNode>>('svg')
+      .data(religions);
+    svgs.enter()
+      .append('svg')
+      .merge(svgs)
+      .style('--node-height', d => d.depth - 1)
+      .style('--node-index', (_, i) => i + 1)
+      .attr('preserveAspectRatio', 'none')
+      .attr('viewBox', '0 0 1 1')
+      .attr('height', '1.2em')
+      .each(function(d) {
+        const rects = d3.select(this)
+          .selectAll<SVGRectElement, any>('rect.hierarchy-node__area')
+          .data(counts[d.data.id] as any[]);
+        rects.enter()
+            .append('rect')
+            .classed('hierarchy-node__area', true)
+          .merge(rects)
+            .classed('hierarchy-node__area--active', d => d.type === 0)
+            .classed('hierarchy-node__area--no-data', d => d.type === 1)
+            .classed('hierarchy-node__area--inactive', d => d.type === 2)
+            .attr('x', d => d.offset)
+            .attr('y', 0)
+            .attr('width', d => d.amount)
+            .attr('height', 1)
+            .attr('fill', d => d.type === 1 ? null : d.color);
+        rects.exit().remove();
+      });
+    svgs.exit().remove();
+
+    // indented tree labels
+    const labels = parent.selectAll<HTMLSpanElement, d3.HierarchyNode<T.OwnHierarchyNode>>('span.religion-label')
+      .data(religions);
+    labels.enter()
+        .append('span')
+        .classed('religion-label', true)
+      .merge(labels)
+        .style('grid-column-start', d => d.depth)
+        .style('grid-row-start', (_, i) => i + 1)
+        .text(d => d.data.abbreviation);
+    labels.exit().remove();
+
+    // normal checkboxes
+    const checkdata: [d3.HierarchyNode<T.OwnHierarchyNode>, number][] = d3.cross(religions, d3.range(numCols));
+    const checks = parent.selectAll<HTMLInputElement, [d3.HierarchyNode<T.OwnHierarchyNode>, number]>('input.cell-check')
+      .data(checkdata);
+    checks.enter()
+        .append('input')
+        .attr('type', 'checkbox')
+        .classed('cell-check', true)
+      .merge(checks)
+        .style('--col-number', d => d[1])
+        .style('--node-index', (_, i) => i + 1)
+        .attr('checked', ([d, col]) => ref.filter === true
+            ? true
+            : ref.filter.type === 'simple'
+              ? col === 0 ? ref.filter.filter.includes(d.data.id) : false
+              : ref.filter.filter[col].includes(d.data.id));
+    labels.exit().remove();
+
+    console.log(counts);
   }
 
   data(d: T.OwnHierarchyNode, filter: ReligionFilter.ReligionFilter): void {
