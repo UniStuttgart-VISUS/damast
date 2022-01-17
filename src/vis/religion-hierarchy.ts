@@ -175,8 +175,8 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
         .append('span')
         .classed('religion-label', true)
       .merge(labels)
-        .style('grid-column-start', d => d.depth)
-        .style('grid-row-start', (_, i) => i + 1)
+        .style('--node-height', d => d.depth - 1)
+        .style('--node-index', (_, i) => i + 1)
         .text(d => d.data.abbreviation);
     labels.exit().remove();
 
@@ -196,7 +196,7 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
             : ref.filter.type === 'simple'
               ? col === 0 ? ref.filter.filter.includes(d.data.id) : false
               : ref.filter.filter[col].includes(d.data.id));
-    labels.exit().remove();
+    checks.exit().remove();
 
     // subtree checkboxes
     const subtree: [d3.HierarchyNode<T.OwnHierarchyNode>, number][] = d3.cross(
@@ -212,8 +212,78 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
       .merge(subtreeControls)
         .style('--col-number', d => d[1])
         .style('--node-index', d => religionIndices.get(d[0].data.id) + 1)
-        .html('<i class="fa fa-fw fa-adjust"></i>');
-    subtreeControls.exit().remove;
+        .html('<i class="fa fa-fw fa-lg fa-adjust"></i>');
+    subtreeControls.exit().remove();
+
+    // add buttons
+    const addButtons = parent.selectAll<HTMLButtonElement, number>('button.add-button')
+      .data(d3.range(numCols));
+    addButtons.enter()
+        .append('button')
+        .classed('button', true)
+        .classed('button--small', true)
+        .classed('header-button', true)
+        .classed('add-button', true)
+      .merge(addButtons)
+        .style('--col-number', d => d)
+        .html('<i class="fa fa-fw fa-lg fa-plus"></i>');
+    addButtons.exit().remove();
+
+    // remove buttons
+    const removeButtons = parent.selectAll<HTMLButtonElement, number>('button.remove-button')
+      .data(d3.range(numCols));
+    removeButtons.enter()
+        .append('button')
+        .classed('button', true)
+        .classed('button--small', true)
+        .classed('header-button', true)
+        .classed('remove-button', true)
+      .merge(removeButtons)
+        .style('--col-number', d => d)
+        .html('<i class="fa fa-fw fa-lg fa-trash"></i>');
+    removeButtons.exit().remove();
+
+    // clear buttons
+    const noneButtons = parent.selectAll<HTMLButtonElement, number>('button.none-button')
+      .data(d3.range(numCols));
+    noneButtons.enter()
+        .append('button')
+        .classed('button', true)
+        .classed('button--small', true)
+        .classed('header-button', true)
+        .classed('none-button', true)
+      .merge(noneButtons)
+        .style('--col-number', d => d)
+        .html('<i class="fa fa-fw fa-lg fa-circle-o"></i>');
+    noneButtons.exit().remove();
+
+    // invert buttons
+    const invertButtons = parent.selectAll<HTMLButtonElement, number>('button.invert-button')
+      .data(d3.range(numCols));
+    invertButtons.enter()
+        .append('button')
+        .classed('button', true)
+        .classed('button--small', true)
+        .classed('header-button', true)
+        .classed('invert-button', true)
+      .merge(invertButtons)
+        .style('--col-number', d => d)
+        .html('<i class="fa fa-fw fa-lg fa-rotate-90 fa-exchange"></i>');
+    invertButtons.exit().remove();
+
+    // all buttons
+    const allButtons = parent.selectAll<HTMLButtonElement, number>('button.all-button')
+      .data(d3.range(numCols));
+    allButtons.enter()
+        .append('button')
+        .classed('button', true)
+        .classed('button--small', true)
+        .classed('header-button', true)
+        .classed('all-button', true)
+      .merge(allButtons)
+        .style('--col-number', d => d)
+        .html('<i class="fa fa-fw fa-lg fa-dot-circle-o"></i>');
+    allButtons.exit().remove();
   }
 
   data(d: T.OwnHierarchyNode, filter: ReligionFilter.ReligionFilter): void {
