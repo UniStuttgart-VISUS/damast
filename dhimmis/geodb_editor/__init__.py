@@ -6,11 +6,13 @@ import base64
 import json
 from ..authenticated_blueprint_preparator import AuthenticatedBlueprintPreparator
 from ..postgres_rest_api.decorators import rest_endpoint
+from ..map_styles import app as map_styles
 
 auth = flask.current_app.config['auth']
 
 app = AuthenticatedBlueprintPreparator('geodb_editor', __name__, template_folder='templates')
 app.static_url_path = None
+app.register_blueprint(map_styles)
 
 @app.route('/places', role='geodb')
 def root():

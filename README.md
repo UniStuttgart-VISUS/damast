@@ -122,6 +122,7 @@ The following configuration environment variables exist, although most have a se
 | `DHIMMIS_PROXYPREFIX` | `/` | Reverse proxy prefix. |
 | `DHIMMIS_OVERRIDE_PATH` | | A directory path under which a `template/` and `static/` directory can be placed. Templates within the `template/` directory will be prioritized over the internal ones. This can be used to provide a different template for a certain page, such as the impressum. |
 | `DHIMMIS_VISITOR_ROLES` | | If not empty, contains a comma-separated list of roles a visitor (not logged-in) to the site will receive, which in turn governs which pages will be available without user account. If the variable does not exist, visitors will only see public pages. |
+| `DHIMMIS_MAP_STYLES` | | If not empty, a relative filename (under `/data`) on the Docker filesystem to a JSON with map styles. These will be used in the Leaflet map. If not provided, the [default styles](./dhimmis/map_styles.py) will be used. See also: [JSON schema](./src/assets/schemas/map-styles.json). |
 | `FLASK_ACCESS_LOG` | `/data/access_log` | Path to `access_log` (for logging). |
 | `FLASK_ERROR_LOG` | `/data/error_log` | Path to `error_log` (for logging). |
 | `DHIMMIS_PORT` | `8000` | Port at which `gunicorn` serves the content. **Note:** This is set via the Dockerfile, and also only used in the Dockerfile. |
