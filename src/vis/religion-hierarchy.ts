@@ -21,7 +21,6 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
   private filter: ReligionFilter.ReligionFilter = true;
   private display_mode: T.DisplayMode = T.DisplayMode.Religion;
 
-  //private dataset: Dataset;
   private counts: any = null;
 
   private checkbox_block: CheckboxBlock;
@@ -54,6 +53,9 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
       this.filter_mode.node().checked = false;
       this.apply_button.on('click', this.on_apply.bind(this));
       this.filter_mode.on('change', this.on_check.bind(this));
+
+      d3.select('#religion-filter-revert')
+        .on('click', () => this.updateContent(this.hierarchy_.data, this.filter, this.counts));
     });
 
     container.on('resize', () => {
@@ -88,7 +90,7 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
     religions.forEach((d, i) => religionIndices.set(d.data.id, i))
 
     const depth = h.height;
-    const numCols = filter === true || filter.type === 'simple'
+    const numCols = (filter === true || filter.type === 'simple')
       ? 1
       : filter.filter.length;
 
@@ -192,13 +194,13 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
       .merge(checks)
         .style('--col-number', d => d[1])
         .style('--node-index', d => religionIndices.get(d[0].data.id) + 1)
-        .attr('checked', ([d, col]) => (filter === true
+        .each(function([d, col]) {
+          this.checked = filter === true
             ? true
             : filter.type === 'simple'
               ? col === 0 ? filter.filter.includes(d.data.id) : false
-              : filter.filter[col].includes(d.data.id)
-          ) ? '' : null
-        );
+              : filter.filter[col].includes(d.data.id);
+        });
     checks.exit().remove();
 
     // subtree checkboxes
