@@ -8,14 +8,13 @@ app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None, sta
 
 _styles = [
   {
-    'key': "light",
-    'url': 'https://api.mapbox.com/styles/v1/mfranke/ckg0r0rkg2gjr19of0s0ox6oq/tiles/256/{z}/{x}/{y}?access_token={accessToken}',
-    'name': 'MapBox Custom Light',
+    'key': "mapbox",
+    'url': 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    'name': 'OpenStreetMap',
     'default_': True,
-    'is_mapbox': True,
+    'is_mapbox': False,
     'options': {
-      'accessToken': 'pk.eyJ1IjoibWZyYW5rZSIsImEiOiJjam0yNGFmd3EwYXFhM3B0YWpkd3ZsZGd0In0.NokTlNyaWNFG82lHN3eObg',
-      'attribution': '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> <strong><a href="https://www.mapbox.com/map-feedback/" target="_blank">Improve this map</a></strong>',
+      'attribution': '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>',
     },
   },
   {
@@ -27,7 +26,7 @@ _styles = [
       'attribution': 'Creative Commons Attribution 4.0 International license (CC BY 4.0)',
     },
   },
-  ]
+]
 
 @app.route('/map-styles', role='readdb')
 def get_map_styles():
