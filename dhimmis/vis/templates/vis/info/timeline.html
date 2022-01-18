@@ -1,6 +1,17 @@
 {#- vim: set ft=htmldjango : -#}
 {% from 'docs/vis-documentation-macros.html' import full_documentation_link with context %}
 
+{% if show_figures %}
+<figure id="fig-timeline-1">
+  <img src="{{ url_for('docs.vis.static', filename='timeline-1.png') }}">
+  <figcaption>
+    The timeline in qualitative mode, showing three religious groups.
+    A time range between 830 and 1090 is set as the filter.
+  </figcaption>
+</figure>
+{% endif %}
+
+
 <p>
   The <strong><em>Timeline</em></strong> shows the distribution of the different religious groups along the overall time period focused in DhiMu, i.e., 700–1500.
   In <em>Confidence mode</em>, the level of confidence is shown instead of religious groups (cf. the info texts of the <em>Confidence view</em> and of the <em>Settings pane</em>, respectively).
@@ -19,6 +30,16 @@
 </p>
 
 <h4>Timeline</h4>
+
+{% if show_figures %}
+<figure id="fig-timeline-2">
+  <img src="{{ url_for('docs.vis.static', filename='timeline-2.png') }}">
+  <figcaption>
+    The timeline in qualitative mode.
+  </figcaption>
+</figure>
+{% endif %}
+
 <p>
   The main <strong>timeline</strong> shows either a qualitative summary or quantitative information, depending on <em>Timeline mode</em> selected in the <em>Settings pane.</em>
   If <em>quantitative</em> is selected, the number of evidences of that type in that year is encoded into the height of the area as a <em>stacked area chart.</em>
