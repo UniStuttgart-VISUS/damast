@@ -15,8 +15,6 @@ import GoldenLayout from 'golden-layout';
 
 export default class ReligionHierarchy extends View<any, number[] | null> {
   private div: d3.Selection<HTMLDivElement, any, any, any>;
-  private svg: d3.Selection<SVGSVGElement, any, any, any>;
-  private g: d3.Selection<SVGGElement, any, any, any>;
   private hierarchy_: d3.HierarchyNode<T.OwnHierarchyNode>;
   private filter: ReligionFilter.ReligionFilter = true;
   private display_mode: T.DisplayMode = T.DisplayMode.Religion;
@@ -37,16 +35,13 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
     div.innerHTML = require('html-loader!./html/religion.template.html').default;
     this.div = d3.select(div);
 
-    this.svg = this.div.select('svg#hierarchy');
-    this.g = this.svg.append('g');
-
     container.on('open', () => {
       this.apply_button = d3.select('#hierarchy-apply');
       this.filter_mode = d3.select('#hierarchy-filter-mode');
 
       this.filter_mode.node().checked = false;
-      this.apply_button.on('click', this.on_apply.bind(this));
-      this.filter_mode.on('change', this.checkStateIsChanged.bind(this));
+      this.apply_button.on('click', this.onApply.bind(this));
+      this.filter_mode.on('change', () => this.updateContent(this.hierarchy_.data, this.getState(), this.counts));
 
       d3.select('#religion-filter-revert')
         .on('click', () => this.updateContent(this.hierarchy_.data, this.filter, this.counts));
@@ -243,7 +238,7 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
           }
 
           const filter = this.getState() as (ReligionFilter.SimpleReligionFilter | ReligionFilter.ComplexReligionFilter);
-          filter.filter.splice(column, 0, []);
+          filter.filter.splice(column + 1, 0, []);
           this.updateContent(this.hierarchy_.data, filter, this.counts);
         });
     addButtons.exit().remove();
@@ -379,31 +374,13 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
       .map(d => d.data.id);
     const filter = this.getState();
     const filterUnchanged = ReligionFilter.equal(this.filter, filter, allRelIds);
-    console.log(filter, filterUnchanged);
+
+    this.apply_button.attr('disabled', filterUnchanged ? '' : null);
   }
 
-  private on_apply(): void {
-//    const state = this.checkbox_block.data;
-//    this.checkboxes_last_saved_state = state;
-//    const filter_mode_changed = this.filter_mode_last_saved_state !== this.filter_mode.node().checked;
-//    this.filter_mode_last_saved_state = this.filter_mode.node().checked;
-//    this.enable_apply_button(false);
-//
-//    const simple = this.filter_mode.node().checked === false;
-//    let filter;
-//    if (simple) {
-//      filter = {
-//        simple: true,
-//        religion_ids: this.checkbox_block.data[0]
-//      };
-//    } else {
-//      filter = {
-//        simple: false,
-//        religion_ids: this.checkbox_block.data
-//      };
-//    }
-//
-//    this.sendToDataThread('set-filter', filter);
+  private onApply(): void {
+    const state: ReligionFilter.ReligionFilter = this.getState();
+    this.sendToDataThread('set-filter', state);
   }
 
   private linkHierarchy(religion_ids: number[] | null): void {
