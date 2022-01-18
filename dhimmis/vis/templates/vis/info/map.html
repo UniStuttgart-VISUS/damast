@@ -1,3 +1,16 @@
+{#- vim: set ft=htmldjango : -#}
+{% from 'docs/vis-documentation-macros.html' import full_documentation_link with context %}
+
+{% if show_figures %}
+<figure id="fig-map-1">
+  <img src="{{ url_for('docs.vis.static', filename='map-1.png') }}">
+  <figcaption>
+    The map pane in <em>clustered</em> <em>map mode.</em>
+  </figcaption>
+</figure>
+{% endif %}
+
+
 <p>
   The <strong><em>Map</em></strong> visualizes the geographical aspect of the data, i.e., the evidences of institutionalized religious presence at different locations.
 </p>
@@ -34,6 +47,16 @@
 </p>
 
 <h4>Unclustered Mode</h4>
+
+{% if show_figures %}
+<figure id="fig-map-2">
+  <img src="{{ url_for('docs.vis.static', filename='map-2.png') }}">
+  <figcaption>
+    The map pane in <em>unclustered</em> <em>map mode.</em>
+  </figcaption>
+</figure>
+{% endif %}
+
 
 <p>
   The aggregation or clustering of places can be turned off in the <em>Settings pane</em>.
@@ -123,6 +146,16 @@
 </p>
 
 <h4>Geographical Filtering</h4>
+
+{% if show_figures %}
+<figure id="fig-map-3">
+  <img src="{{ url_for('docs.vis.static', filename='map-3.png') }}">
+  <figcaption>
+    The map pane with the Geoman editor open, and a polygon being edited.
+  </figcaption>
+</figure>
+{% endif %}
+
 <p>
   Evidences can be filtered by geographical location.
   This is done by drawing the respective bounding shapes into the map.

@@ -1,0 +1,7 @@
+{%- macro full_documentation_link(id, text) -%}
+<a href="{{ url_for('docs.vis.root') }}#{{ id }}"
+   {% if request.blueprint.startswith('vis') -%}
+   target="_blank"
+   {%- endif %}
+   >{{ text }}</a>
+{%- endmacro -%}
