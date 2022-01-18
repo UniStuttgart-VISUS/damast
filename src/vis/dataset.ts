@@ -225,6 +225,7 @@ export class Dataset {
       return {
         id: tag.id,
         name: tag.tagname,
+        comment: tag.comment,
         evicence_ids,
       };
     });

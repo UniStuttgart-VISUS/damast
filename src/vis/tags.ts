@@ -205,6 +205,7 @@ export default class TagsPane extends View<any, any> {
           t.move({ x: e.clientX, y: e.clientY });
           t.root.append('h1')
             .text(d.name);
+          if (d.comment) t.root.append('p').text(d.comment);
           t.root.append('p')
             .text(`${d.active_count} / ${d.active_count + d.inactive_count} evidences`);
         });
