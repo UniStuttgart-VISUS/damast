@@ -1,0 +1,137 @@
+@use '../colors' as *;
+@use '../vis-variables' as *;
+@use '../vis-filters' as filters;
+
+
+.religion-container {
+  grid-template-rows: max-content auto;
+
+  .hierarchy {
+    --hierarchy-depth: 1;
+    --num-columns: 1;
+    --num-rows: 1;
+
+    min-height: 200px;
+    margin-top: 1ex;
+    overflow-y: auto;
+
+    display: grid;
+    gap: 0.2ex;
+
+    grid-template-rows: repeat(calc(var(--num-rows) + 3), 1fr);
+    grid-template-columns:
+      // first column: only label
+      max-content
+      // indented tree levels
+      repeat(var(--hierarchy-depth), 1fr)
+      // two columns per checkbox column, one for subtree toggling
+      repeat(calc(2 * var(--num-columns)), max-content)
+      ;
+
+    & > * {
+      align-self: center;
+    }
+
+    & > .religion-label {
+      justify-self: end;
+      grid-row: calc(var(--node-index) + 3) / span 1;
+      grid-column: calc(1 + var(--node-height)) / span 1;
+
+      font-weight: 700;
+      font-size: x-small;
+
+      padding-inline: 1em 1ex;
+    }
+
+    & > svg.hierarchy-node {
+      justify-self: stretch;
+
+      --node-height: 1;
+      --node-index: 1;
+
+      grid-column: calc(2 + var(--node-height)) / span 1;
+      grid-row: calc(var(--node-index) + 3) / span 1;
+    }
+
+    & > input[type="checkbox"] {
+      grid-row: calc(var(--node-index) + 3) / span 1;
+      grid-column: calc(2 * var(--hierarchy-depth) + 2 * var(--col-number) + 2) / span 1;
+
+      margin: 0;
+    }
+
+    & > .subtree-toggle {
+      grid-row: calc(var(--node-index) + 3) / span 1;
+      grid-column: calc(2 * var(--hierarchy-depth) + 2 * var(--col-number) + 1) / span 1;
+
+      padding: .3ex;
+      margin-inline-start: 0.5ex;
+      justify-self: end;
+    }
+
+    & > .header-button {
+      grid-column: calc(2 * var(--hierarchy-depth) + 2 * var(--col-number) + 2) / span 1;
+
+      padding: .3ex;
+    }
+
+    .add-button,
+    .remove-button {
+      grid-column: calc(2 * var(--hierarchy-depth) + 2 * var(--col-number) + 1) / span 1;
+
+      margin-inline-start: 0.5ex;
+      justify-self: end;
+    }
+
+    & > .add-button {
+      grid-row: 1 / span 1;
+    }
+
+    & > .remove-button {
+      grid-row: 2 / span 1;
+    }
+
+    & > .none-button {
+      grid-row: 1 / span 1;
+    }
+
+    & > .invert-button {
+      grid-row: 2 / span 1;
+    }
+
+    & > .all-button {
+      grid-row: 3 / span 1;
+    }
+  }
+}
+
+
+.hierarchy-node {
+  &__background {
+    opacity: 0;
+  }
+
+  &__area {
+    &--active {
+
+    }
+
+    &--no-data {
+      fill: $clr-gray;
+    }
+
+    &--inactive {
+      @include filters.muted();
+    }
+  }
+
+  &:hover #{&}__area--inactive {
+    filter: unset;
+  }
+
+  .indented-tree--brushed > &:not(#{&}--brushed),
+  .hierarchy--linked > &:not(#{&}--linked) {
+    @include filters.darker();
+  }
+}
+

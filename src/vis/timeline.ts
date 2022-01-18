@@ -411,16 +411,24 @@ export default class Timeline extends View<any, any> {
   private cachedContent: string = '';
   private updateTooltipContent(evt: MouseEvent, tooltipRoot: d3.Selection<HTMLElement, any, any, any>) {
     // get SVG x position
-    const { left } = this.svg.node().getBoundingClientRect();
-    const { clientX } = evt;
+    const { left, top } = this.svg.node().getBoundingClientRect();
+    const { clientX, clientY } = evt;
     const x = clientX - left;
+    const y = clientY - top;
 
     if (x < this.x.range()[0] || x > this.x.range()[1]) {
-      this.tooltipManager.cancel();
+      this.tooltipManager.hide();
       return;
+    } else {
+      this.tooltipManager.show();
     }
 
-    const year = Math.round(this.x.invert(x));
+    const isInOverview = y >= this.y_overview.range()[1] - 2;
+    const year = Math.round(
+      isInOverview
+        ? this.x_overview.invert(x)
+        : this.x.invert(x)
+    );
 
     if (year === this.cachedYear) {
       tooltipRoot.html(this.cachedContent);
