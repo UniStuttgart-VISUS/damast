@@ -201,7 +201,8 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
             : filter.type === 'simple'
               ? col === 0 ? filter.filter.includes(d.data.id) : false
               : filter.filter[col].includes(d.data.id);
-        });
+        })
+        .on('input', () => this.checkStateIsChanged());
     checks.exit().remove();
 
     // subtree checkboxes
@@ -228,6 +229,7 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
           // if more than half checked, uncheck
           const moreChecked = (nodes.filter(function() { return this.checked }).nodes().length) >= nodes.nodes().length/2;
           nodes.each(function() { this.checked = !moreChecked; });  // do in node to override manual check changes
+          this.checkStateIsChanged();
         });
     subtreeControls.exit().remove();
 
@@ -243,7 +245,10 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
       .merge(addButtons)
         .style('--col-number', d => d)
         .attr('title', 'Add column after this')
-        .html('<i class="fa fa-fw fa-lg fa-plus"></i>');
+        .html('<i class="fa fa-fw fa-lg fa-plus"></i>')
+        .on('click', column => {
+
+        });
     addButtons.exit().remove();
 
     // remove buttons
@@ -258,7 +263,10 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
       .merge(removeButtons)
         .style('--col-number', d => d)
         .attr('title', 'Remove this column')
-        .html('<i class="fa fa-fw fa-lg fa-trash"></i>');
+        .html('<i class="fa fa-fw fa-lg fa-trash"></i>')
+        .on('click', column => {
+
+        });
     removeButtons.exit().remove();
 
     // clear buttons
@@ -278,6 +286,7 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
           parent.selectAll<HTMLInputElement, [d3.HierarchyNode<T.OwnHierarchyNode>, number]>('input.cell-check')
             .filter(d_ => d === d_[1])
             .each(function() { this.checked = false; });  // deselect all
+          this.checkStateIsChanged();
         });
     noneButtons.exit().remove();
 
@@ -298,6 +307,7 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
           parent.selectAll<HTMLInputElement, [d3.HierarchyNode<T.OwnHierarchyNode>, number]>('input.cell-check')
             .filter(d_ => d === d_[1])
             .each(function() { this.checked = !this.checked; });  // invert all
+          this.checkStateIsChanged();
         });
     invertButtons.exit().remove();
 
@@ -318,8 +328,12 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
           parent.selectAll<HTMLInputElement, [d3.HierarchyNode<T.OwnHierarchyNode>, number]>('input.cell-check')
             .filter(d_ => d === d_[1])
             .each(function() { this.checked = true; });  // select all
+          this.checkStateIsChanged();
         });
     allButtons.exit().remove();
+
+    // at end, check
+    this.checkStateIsChanged();
   }
 
   data(d: T.OwnHierarchyNode, filter: ReligionFilter.ReligionFilter): void {
@@ -378,6 +392,46 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
 
       this.checkbox_block.rerender();
     }
+  }
+
+  private getState(): ReligionFilter.ReligionFilter {
+    const parent = this.div.select('div.hierarchy');
+
+    // is simple
+    const simple = !this.filter_mode.node().checked;
+
+    if (simple) {
+      const relIds = parent.selectAll<HTMLInputElement, [d3.HierarchyNode<T.OwnHierarchyNode>, number]>('.cell-check')
+        .filter(function() { return this.checked; })
+        .data()
+        .map(d => d[0].data.id);
+
+      return {
+        type: 'simple',
+        filter: relIds
+      };
+    }
+
+    const numCols = parseInt(parent.style('--num-columns'));
+    const relIds = d3.range(numCols)
+      .map(d => parent.selectAll<HTMLInputElement, [d3.HierarchyNode<T.OwnHierarchyNode>, number]>('.cell-check')
+        .filter(function(e) { return e[1] === d && this.checked; })
+        .data()
+        .map(d => d[0].data.id));
+
+    return {
+      type: 'complex',
+      filter: relIds
+    };
+  }
+
+  private checkStateIsChanged(): void {
+    const allRelIds = this.hierarchy_.descendants()
+      .filter(d => d.data.id !== 0)
+      .map(d => d.data.id);
+    const filter = this.getState();
+    const filterUnchanged = ReligionFilter.equal(this.filter, filter, allRelIds);
+    console.log(filter, filterUnchanged);
   }
 
   private enable_apply_button(enable: boolean): void {
