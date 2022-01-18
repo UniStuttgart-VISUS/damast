@@ -29,10 +29,11 @@
 <h4>Selection</h4>
 
 <p>
-  Clicking on a line will <em>select</em> and the religous group.
+  Clicking on a bar will <em>select</em> and the religous group.
   This group will be highlighted, other groups will be displayed in less saturated colors.
   The selection is <em>linked</em> to related data in all views.
   For instance, locations in the map with evidences from the selected source will be highlighted, other locations will be represented by less saturated colors.
+  Clicking on the same bar again will cancel the selection.
 </p>
 
 
@@ -77,7 +78,7 @@
 </p>
 
 
-<h5>Advanced Mode</h5>
+<h5 id="religion-view-advanced-mode">Advanced Mode</h5>
 
 <p>
   In <em>Advanced</em> mode, it is possible to filter not individual religious groups but different <em>sets</em> of religious groups.
@@ -88,24 +89,75 @@
 <p>
   Different from <em>Simple</em> mode, there are multiple columns of checkboxes.
   Each column represents a set of religious groups as described above.
-  To <em>control</em> the filters in <em>Advanced</em> mode, columns can be added by using the <strong>&plus;</strong> plus button above each column.
-  Every column (except the last remaining one) can be deleted by pressing the <strong>&times;</strong> cross button above the column.
-  The column's checkbox selection can be <em>inverted</em> using the <strong>!</strong> exclamation sign button.
+  To <em>control</em> the filters in <em>Advanced</em> mode, columns can be added by using the <i class="fa fa-fw fa-plus"></i> plus button above each column.
+  Every column (except the last remaining one) can be deleted by pressing the <i class="fa fa-fw fa-trash"></i> delete button above the column.
 </p>
 
 <p>
   The following procedure creates a filter corresponding to the analysis described above:
 </p>
-  <ul>
-    <li>Switch to <em>advanced</em> mode.</li>
-    <li>Create two additional columns by pressing the &plus; plus button.</li>
-    <li>In the first column, check SYR and ARM.</li>
-    <li>In the second column, check SYR and COE.</li>
-    <li>In the third column, check ARM and COE.</li>
-    <li>Press <em>apply.</em></li>
-  </ul>
+<ul>
+  <li>Switch to <em>advanced</em> mode.</li>
+  <li>Create two additional columns by pressing the <i class="fa fa-fw fa-plus"></i> plus button.</li>
+  <li>In the first column, check SYR and ARM.</li>
+  <li>In the second column, check SYR and COE.</li>
+  <li>In the third column, check ARM and COE.</li>
+  <li>Press <em>apply.</em></li>
+</ul>
 <p>
   Note: If only places should match the filter where <em>all</em> of these three religious groups are present, only one column in <em>Advanced</em> mode is necessary with all three groups checked.
   This must be understood as <q>evidences with COE <strong>and</strong> ARM <strong>and</strong> SYR.</q>
   In turn, this differs from checking the three religious groups in <em>Simple</em> mode, which equals <q>evidences with COE <strong>or</strong> ARM <strong>or</strong> SYR.</q>
 </p>
+
+<h4>Filter Controls</h4>
+
+<p>
+  A few additional utilities are available for managing the checkbox columns.
+  The controls for adding (<i class="fa fa-fw fa-plus"></i> plus button) and removing (<i class="fa fa-fw fa-trash"></i> delete button) are already described in the <a href="#religion-view-advanced-mode">advanced mode</a> description.
+  Importantly, columns can only be added in advanced mode, and the last remaining column cannot be removed.
+  The additional controls in the view are:
+</p>
+
+<dl>
+  <dt>
+    <i class="fa fa-fw fa-history"></i> Revert filters:
+  </dt>
+  <dd>
+    This is a button in the top left of the view.
+    Clicking it reverts the filters back to the state that is currently shown in the visualization;
+    that is, all changes that are not <em>applied</em> yet are discarded.
+  </dd>
+  <dt>
+    <i class="fa fa-fw fa-circle-o"></i> Uncheck all boxes in this column:
+  </dt>
+  <dd>
+    This is a button in the header of each checkbox column.
+    Clicking it will uncheck all boxes in the column.
+  </dd>
+  <dt>
+    <i class="fa fa-fw fa-rotate-90 fa-exchange"></i> Invert all boxes in this column:
+  </dt>
+  <dd>
+    This is a button in the header of each checkbox column.
+    Clicking it will invert all boxes in the column;
+    that is, boxes that were checked are unchecked, and vice versa.
+  </dd>
+  <dt>
+    <i class="fa fa-fw fa-dot-circle-o"></i> Check all boxes in this column:
+  </dt>
+  <dd>
+    This is a button in the header of each checkbox column.
+    Clicking it will check all boxes in the column.
+  </dd>
+  <dt>
+    <i class="fa fa-fw fa-adjust"></i> Toggle subtree:
+  </dt>
+  <dd>
+    This is a button that is present to the <em>left</em> of some of the checkboxes in each column.
+    Namely, it is present for religions that have children in the hierarchy.
+    Clicking the button will check or uncheck that religion and all its children for the column.
+    Whether clicking checks or unchecks depends on whether the majority of checkboxes in the subtree are checked.
+    Clicking twice will, hence, produce the opposite effect.
+  </dd>
+</dl>
