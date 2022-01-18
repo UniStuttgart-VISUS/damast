@@ -1,30 +1,45 @@
 <p>
-  This view shows the different level of confidences attributed to the different elements of an evidence (i.e., place, religious group, time span and the respective confidences).
+  This view shows the different <strong>level of confidences</strong> attributed to the different elements of an evidence (i.e., place, religious group, time span, etc.).
 </p>
 
 <h3>Contents</h3>
 <p>
-  The view consists of a table in which each row represents one level of certainty and each column an aspect of confidence.
+  The view consists of a table, in which each row represents one <strong>level of certainty</strong> and each column an <strong>aspect of confidence</strong>.
+  For each cell in the table, a checkbox for filtering (cf. further below) is displayed as well as the number of evidences with the respective confidence and aspect.
   The rows are sorted by descending level of confidence.
 </p>
 
 <h4>Levels of Confidence</h4>
 <p>
-  Generally, the confidence of any given information was categorized according to these 5 degrees: <em>certain</em> (blue), <em>probable</em>, <em>contested</em>, <em>uncertain</em>, and <em>false</em> (red).
-
-  In addition, a confidence can have no value at all (green). The attribution with "no value" is used while data is still being collected and usually does not appear in a published instance of this visualiziation. A notable exception are places, especially regions, with no exact geo-coordinates. In that case, no attribution of confidence except "no value" is suitable.
-
-  The number of evidences with the respective confidence level is given as a number in the respective column.
+  Generally, the confidence of any given information was categorized according to these 5 degrees:
+</p>
+<ul>
+  <li><em>certain</em> (blue),</li>
+  <li><em>probable</em>,</li>
+  <li><em>contested</em>,</li>
+  <li><em>uncertain</em>, and</li>
+  <li><em>false</em> (red).</li>
+</ul>
+<p>
+  In addition, a confidence can have <em>no value</em> at all (green).
+</p>
+<p>
+  <em>Note</em>: The attribution with <em>no value</em> is used while data is still being collected and usually does not appear in a published instance of this visualiziation.
+  A notable exception are places, especially regions, with no exact geo-coordinates.
+  In that case, no attribution of confidence except <em>no value</em> is suitable.
 </p>
 
 <h4>Aspects of Confidence</h4>
+<p>
+  Confidence is attributed to different aspects of the data:
+</p>
+
 <dl>
   <dt><em>Time span confidence</em></dt>
   <dd>
       signifies the confidence in the veracity of the time interval stored in an evidence.
       Evidences without a time attribute are assigned the lowest level of confidence.
   </dd>
-  <p></p>
   <dt><em>Location confidence</em></dt>
   <dd>
     signifies the confidence in the geographical location of a city.
@@ -33,7 +48,6 @@
   <dd>
     signifies the confidence in assigning a location from the database to a toponym from a historical source.
   </dd>
-  <p></p>
   <dt><em>Source confidence</em></dt>
   <dd>
     signifies the confidence in the veracity and objectivity of the historical source itself regarding a piece of evidence.
@@ -51,12 +65,14 @@
 
 <h3>Interaction</h3>
 
+<h4>Filtering</h4>
+
 <p>
   For each aspect of confidence and each confidence level, a checkbox is shown in the respective cell.
   Unchecking a checkbox will filter out evidences with that confidence level for that aspect of confidence.
   This allows for a very fine-grained control over what data to visualize.
   Note that the selection is not applied until the <em>Apply</em> button is clicked.
-  This button is disabled if the selected filters are up to date with the visualized data.
+  This button is disabled if the selected filters are matching the data currently visualized.
 </p>
 
 <p>
@@ -65,7 +81,7 @@
 </p>
 
 <p>
-  Three additional buttons in the top left corner make filtering more convenient:
+  Four additional buttons in the top left corner make filtering more convenient:
   <dl>
     <dt><i class="fa fa-fw fa-lg fa-circle-o"></i> Uncheck all</dt>
     <dd>Uncheck all checkboxes.</dd>
@@ -85,7 +101,7 @@
 </p>
 
 <p>
-  In addition, entire <em>rows</em> or <em>columns</em> of checkboxes can be set to either checked or unchecked by clicking on the <em>row header</em> (the confidence levels) or the <em>column header</em> (the aspects of confidence).
+  In addition, entire <em>rows</em> or <em>columns</em> of checkboxes can be set to either checked or unchecked by clicking the <em>row header</em> (the confidence levels) or the <em>column header</em> (the aspects of confidence).
   Here, the new value for the new row (or column) is the inverse of what the majority of values (3 or more) was before;
   for example, if 4 checkboxes were checked, and 2 unchecked, for the <em>uncertain</em> row, clicking on the row header would <em>uncheck</em> all checkboxes in the row.
 </p>
@@ -93,7 +109,7 @@
 <h4>Visualized Aspect of Confidence</h4>
 
 <p>
-  By clicking on the <i class="fa fa-eye fa-lg"></i> eye in the bottom row of each column, the aspect of confidence that is visualized in <em>Confidence Mode</em> (cf. <em>Display mode</em> in the <em>Settings pane</em>) can be selected.
+  By clicking on the <i class="fa fa-eye fa-lg"></i> eye in the bottom row of each column, the aspect of confidence that is visualized in <em>Confidence Mode</em> (cf. <em>Display mode</em> in the pane <em>Settings</em>) can be selected.
   The currently selected aspect is indicated by a colored <i class="fa fa-eye fa-lg"></i> eye.
   By default, <em>Religion confidence</em> is used.
 </p>
