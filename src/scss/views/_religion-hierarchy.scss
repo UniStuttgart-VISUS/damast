@@ -4,7 +4,7 @@
 
 
 .religion-container {
-  grid-template-rows: max-content auto auto;
+  grid-template-rows: max-content auto;
 
   .hierarchy {
     --hierarchy-depth: 1;
@@ -132,54 +132,6 @@
   .indented-tree--brushed > &:not(#{&}--brushed),
   .hierarchy--linked > &:not(#{&}--linked) {
     @include filters.darker();
-  }
-
-  text {
-    font-weight: 600;
-    fill: white;
-    mix-blend-mode: exclusion;
-  }
-
-  &#{&}-unselected text {
-    text-decoration: line-through;
-    fill: #ddd;
-  }
-}
-
-.checkbox {
-  stroke: $clr-accent;
-  stroke-width: 2;
-  fill-opacity: 0;
-
-  &__cross {
-    stroke: $clr-accent;
-    stroke-width: 2;
-    fill: none;
-  }
-
-  &--disabled,
-  &--disabled #{&}__cross {
-    stroke: $clr-lightgray;
-  }
-
-  &-column {
-    --clr-yellow: #{$clr-yellow};
-
-    &__add-button {
-      --clr-error: #{$clr-green};
-    }
-
-    &__remove-button {
-      --clr-error: #{$clr-red};
-    }
-
-    .checkbox-block > g:only-of-type &__remove-button {
-      --clr-error: #{$clr-gray};
-    }
-
-    .hierarchy--simple-mode &__add-button {
-      display: none;
-    }
   }
 }
 
