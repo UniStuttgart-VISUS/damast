@@ -138,6 +138,7 @@ export interface Source {
 export interface Tag {
   id: number;
   name: string;
+  comment: string | null;
   evicence_ids: Set<number>;
 }
 

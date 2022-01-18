@@ -204,12 +204,7 @@ class FetchWorker extends DataWorker<any> {
     if (data.type === 'set-filter') {
       this.data.suspendEvents();
 
-      const {simple, religion_ids} = data.data;
-
-      this.data.setReligionFilter(simple
-        ? { type: 'simple', filter: religion_ids }
-        : { type: 'complex', filter: religion_ids }
-      );
+      this.data.setReligionFilter(data.data);
 
       this.data.resumeEvents();
     } else if (data.type === 'set-brush') {

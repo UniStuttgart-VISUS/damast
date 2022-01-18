@@ -26,3 +26,13 @@ export function tupleIsActive(filter: ReligionFilter, tuple: ReligionContainingT
     return filter.filter.some(d => d.some(e => e === tuple.religion_id));
   }
 }
+
+export function equal(a: ReligionFilter, b: ReligionFilter, religionIds: number[]): boolean {
+  // simple filter with all religions included equals 'true'
+
+  if (a === true && (b === true || (b.type === 'simple' && religionIds.every(d => b.filter.includes(d))))) return true;
+  if (a !== true && a.type === 'simple' && b === true && religionIds.every(d => a.filter.includes(d))) return true;
+
+  // else, only accept full equality
+  return JSON.stringify(a) === JSON.stringify(b);
+}

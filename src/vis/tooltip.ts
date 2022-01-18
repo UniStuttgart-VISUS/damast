@@ -28,6 +28,7 @@ export default class TooltipManager {
       this.tooltip = new Tooltip();
       this.tooltip.move({ x: this.x, y: this.y });
 
+      this.tooltip.show();
       this.tooltipCallback(this.tooltip);
     }, this.delay);
   }
@@ -47,6 +48,14 @@ export default class TooltipManager {
     this.x = x;
     this.y = y;
     this.tooltip?.move({ x, y });
+  }
+
+  show() {
+    this.tooltip?.show();
+  }
+
+  hide() {
+    this.tooltip?.hide();
   }
 };
 
