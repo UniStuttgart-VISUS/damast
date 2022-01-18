@@ -105,6 +105,7 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
     svgs.enter()
       .append('svg')
       .merge(svgs)
+      .classed('hierarchy-node', true)
       .style('--node-height', d => d.depth - 1)
       .style('--node-index', (_, i) => i + 1)
       .attr('preserveAspectRatio', 'none')
@@ -491,12 +492,23 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
       this.g.select('.indented-tree').classed('indented-tree--brushed', false);
       this.g.selectAll('.hierarchy-node')
         .classed('hierarchy-node--brushed', false);
+
+      // new
+      const parent = this.div.select('div.hierarchy');
+      parent.classed('hierarchy--linked', false);
+      parent.selectAll('svg.hierarchy-node').classed('hierarchy-node--linked', false);
     } else {
       this.g.select('.indented-tree').classed('indented-tree--brushed', true);
 
       (this.g
         .selectAll('.hierarchy-node') as d3.Selection<SVGGElement, {node: {data: {id: number}}}, any, any>)
         .classed('hierarchy-node--brushed', d => religion_ids.includes(d.node.data.id));
+
+      // new
+      const parent = this.div.select('div.hierarchy');
+      parent.classed('hierarchy--linked', true);
+      parent.selectAll<SVGSVGElement, d3.HierarchyNode<T.OwnHierarchyNode>>('svg.hierarchy-node')
+        .classed('hierarchy-node--linked', d => religion_ids.includes(d.data.id));
     }
   }
 
@@ -658,15 +670,15 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
 
   private on_brush(
     ref: ReligionHierarchy,
-    datum: {node: d3.HierarchyNode<T.OwnHierarchyNode>},
+    datum: d3.HierarchyNode<T.OwnHierarchyNode>,
     sel: d3.Selection<SVGGElement, {node: d3.HierarchyNode<T.OwnHierarchyNode>}, any, any>
   ): void {
-    const is_brushed = sel.classed('hierarchy-node--brushed');
+    const is_brushed = sel.classed('hierarchy-node--linked');
 
     if (is_brushed) {
       this.sendToDataThread('clear-brush', null);
     } else {
-      this.sendToDataThread('set-brush', [datum.node.data.id]);
+      this.sendToDataThread('set-brush', [datum.data.id]);
     }
   }
 };

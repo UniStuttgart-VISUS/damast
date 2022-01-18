@@ -43,7 +43,7 @@
       padding-inline: 1em 1ex;
     }
 
-    & > svg {
+    & > svg.hierarchy-node {
       justify-self: stretch;
 
       --node-height: 1;
@@ -129,7 +129,8 @@
     filter: unset;
   }
 
-  .indented-tree--brushed > &:not(#{&}--brushed) {
+  .indented-tree--brushed > &:not(#{&}--brushed),
+  .hierarchy--linked > &:not(#{&}--linked) {
     @include filters.darker();
   }
 
