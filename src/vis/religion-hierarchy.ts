@@ -246,8 +246,16 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
         .style('--col-number', d => d)
         .attr('title', 'Add column after this')
         .html('<i class="fa fa-fw fa-lg fa-plus"></i>')
-        .on('click', column => {
+        .attr('disabled', this.isSimple() ? '' : null)
+        .on('click', (e, column) => {
+          if (this.isSimple()) {
+            console.error('Should not be able to add column, in simple filter mode.');
+            return;
+          }
 
+          const filter = this.getState() as (ReligionFilter.SimpleReligionFilter | ReligionFilter.ComplexReligionFilter);
+          filter.filter.splice(column, 0, []);
+          this.updateContent(this.hierarchy_.data, filter, this.counts);
         });
     addButtons.exit().remove();
 
@@ -264,8 +272,16 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
         .style('--col-number', d => d)
         .attr('title', 'Remove this column')
         .html('<i class="fa fa-fw fa-lg fa-trash"></i>')
-        .on('click', column => {
+        .attr('disabled', numCols < 2 ? '' : null)
+        .on('click', (e, column) => {
+          if (numCols < 2) {
+            console.error('Should not be able to remove column, last column.');
+            return;
+          }
 
+          const filter = this.getState() as (ReligionFilter.SimpleReligionFilter | ReligionFilter.ComplexReligionFilter);
+          filter.filter.splice(column, 1);
+          this.updateContent(this.hierarchy_.data, filter, this.counts);
         });
     removeButtons.exit().remove();
 
@@ -394,13 +410,14 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
     }
   }
 
+  private isSimple(): boolean {
+    return !this.filter_mode.node().checked;
+  }
+
   private getState(): ReligionFilter.ReligionFilter {
     const parent = this.div.select('div.hierarchy');
 
-    // is simple
-    const simple = !this.filter_mode.node().checked;
-
-    if (simple) {
+    if (this.isSimple()) {
       const relIds = parent.selectAll<HTMLInputElement, [d3.HierarchyNode<T.OwnHierarchyNode>, number]>('.cell-check')
         .filter(function() { return this.checked; })
         .data()
