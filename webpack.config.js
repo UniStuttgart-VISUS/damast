@@ -300,6 +300,7 @@ module.exports = function(env, argv) {
         'dhimmis/docs/static/',
         [
           { from: 'src/assets/annotator-documentation/', to: 'annotator', },
+          { from: 'src/assets/visualization-documentation/', to: 'vis', },
         ]
       ],
 

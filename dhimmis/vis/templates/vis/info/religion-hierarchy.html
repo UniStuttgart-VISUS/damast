@@ -1,6 +1,17 @@
 {#- vim: set ft=htmldjango : -#}
 {% from 'docs/vis-documentation-macros.html' import full_documentation_link with context %}
 
+{% if show_figures %}
+<figure id="fig-religion-hierarchy-1">
+  <img src="{{ url_for('docs.vis.static', filename='religion-hierarchy-1.png') }}">
+  <figcaption>
+    The religion hierarchy in its default state.
+    At the top are the controls to revert the filter, the switch between simple and advanced filter mode, and the apply button.
+    The religions are visualized as an indented tree, and are filtered by enabling the respective checkbox.
+  </figcaption>
+</figure>
+{% endif %}
+
 <p>
   This view shows <strong>all religious groups</strong> contained in the database and allows for selecting and filtering the data according to religion.
 </p>
@@ -83,6 +94,16 @@
 <section id="religion-view-advanced-mode">
 <h5>Advanced Mode</h5>
 
+{% if show_figures %}
+<figure id="fig-religion-hierarchy-2">
+  <img src="{{ url_for('docs.vis.static', filename='religion-hierarchy-2.png') }}">
+  <figcaption>
+    The religion hierarchy in advanced mode.
+    The filter limits evidences to those from places where two or more of the Syriac Orthodox Church (SYR), the Armenian Church (ARM), and the Church of the East (COE) are present.
+  </figcaption>
+</figure>
+{% endif %}
+
 <p>
   In <em>Advanced</em> mode, it is possible to filter not individual religions but different <em>combinations</em> of religions.
   For instance, analysis may require to show places where two or more of the following three religious groups exist together: the Syriac Orthodox Church (SYR), the Armenian Church (ARM), and the Church of the East (COE) &ndash; but not those places where only one of the three is present.
@@ -97,7 +118,8 @@
 </p>
 
 <p>
-  The following procedure creates a filter corresponding to the analysis described above:
+  The following procedure creates a filter corresponding to the analysis described above
+  (see also {{ full_documentation_link('fig-religion-hierarchy-2', 'this figure') }}):
 </p>
 <ul>
   <li>Switch to <em>advanced</em> mode.</li>
