@@ -1,6 +1,18 @@
 {#- vim: set ft=htmldjango : -#}
 {% from 'docs/vis-documentation-macros.html' import full_documentation_link with context %}
 
+{% if show_figures %}
+<figure id="fig-confidence">
+  <img src="{{ url_for('docs.vis.static', filename='confidence.png') }}">
+  <figcaption>
+    The confidence view.
+    Aspects of confidence are listed as columns, and confidence levels ordered into rows.
+    Checkboxes control which confidence levels should be shown for each aspect, and the number of evidences for each confidence level and aspect are given in numbers.
+  </figcaption>
+</figure>
+{% endif %}
+
+
 <p>
   This view shows the different <strong>level of confidences</strong> attributed to the different elements of an evidence (i.e., place, religious group, time span, etc.).
 </p>

@@ -1,6 +1,16 @@
 {#- vim: set ft=htmldjango : -#}
 {% from 'docs/vis-documentation-macros.html' import full_documentation_link with context %}
 
+{% if show_figures %}
+<figure id="fig-tags">
+  <img src="{{ url_for('docs.vis.static', filename='tags.png') }}">
+  <figcaption>
+    The tags view.
+    Three tags were selected.
+  </figcaption>
+</figure>
+{% endif %}
+
 <p>
   This view shows <strong>tags</strong> which are associated with evidences (i.e., a set of data concerning a place, religious group, time span, and the respective confidences).
   Tags were implemented to include additional information and to make further distinctions possible.

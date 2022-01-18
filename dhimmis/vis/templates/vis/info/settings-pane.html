@@ -1,6 +1,15 @@
 {#- vim: set ft=htmldjango : -#}
 {% from 'docs/vis-documentation-macros.html' import full_documentation_link with context %}
 
+{% if show_figures %}
+<figure id="fig-settings">
+  <img src="{{ url_for('docs.vis.static', filename='settings.png') }}">
+  <figcaption>
+    The settings pane.
+  </figcaption>
+</figure>
+{% endif %}
+
 <p>
   This view shows different <strong>settings and features.</strong>
 </p>
