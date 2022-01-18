@@ -3,6 +3,7 @@
 @use 'vis-filters' as filters;
 
 @forward 'vis-place-set-manager';
+@forward 'views/religion-hierarchy';
 
 :root {
   --clr-accent: #{$clr-accent};
@@ -13,49 +14,6 @@
   stroke-width: 2;
   stroke: #c1c93a;
 }
-
-
-// RELIGION HIERARCHY
-.hierarchy-node {
-
-  &__background {
-    opacity: 0;
-  }
-
-  &__area {
-    &--active {
-
-    }
-
-    &--no-data {
-      fill: $clr-gray;
-    }
-
-    &--inactive {
-      @include filters.muted();
-    }
-  }
-
-  &:hover #{&}__area--inactive {
-    filter: unset;
-  }
-
-  .indented-tree--brushed > &:not(#{&}--brushed) {
-    @include filters.darker();
-  }
-
-  text {
-    font-weight: 600;
-    fill: white;
-    mix-blend-mode: exclusion;
-  }
-
-  &#{&}-unselected text {
-    text-decoration: line-through;
-    fill: #ddd;
-  }
-}
-
 
 // MAP
 div#map.map {
@@ -366,45 +324,6 @@ div#map.no-marker-interaction .leaflet-marker-pane svg * {
           --clr-primary: #{$clr-green};
         }
       }
-    }
-  }
-}
-
-
-/* HIERARCHY CHECKBOXES */
-.checkbox {
-  stroke: $clr-accent;
-  stroke-width: 2;
-  fill-opacity: 0;
-
-  &__cross {
-    stroke: $clr-accent;
-    stroke-width: 2;
-    fill: none;
-  }
-
-  &--disabled,
-  &--disabled #{&}__cross {
-    stroke: $clr-lightgray;
-  }
-
-  &-column {
-    --clr-yellow: #{$clr-yellow};
-
-    &__add-button {
-      --clr-error: #{$clr-green};
-    }
-
-    &__remove-button {
-      --clr-error: #{$clr-red};
-    }
-
-    .checkbox-block > g:only-of-type &__remove-button {
-      --clr-error: #{$clr-gray};
-    }
-
-    .hierarchy--simple-mode &__add-button {
-      display: none;
     }
   }
 }

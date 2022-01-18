@@ -1,3 +1,5 @@
+import { json } from 'd3-fetch';
+
 export interface MapStyle {
   key: string;
   url: string;
@@ -33,3 +35,6 @@ export const map_styles: MapStyle[] = [
   },
 ];
 
+export async function mapStyles(): Promise<MapStyle[]> {
+  return json('./map-styles');
+}

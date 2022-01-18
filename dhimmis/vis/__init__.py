@@ -2,10 +2,12 @@ import flask
 import subprocess
 from functools import lru_cache
 from ..authenticated_blueprint_preparator import AuthenticatedBlueprintPreparator
+from ..map_styles import app as map_styles
 
 static = __path__[0] + '/static'
 template = './templates'
 app = AuthenticatedBlueprintPreparator('vis', __name__, template_folder=template)
+app.register_blueprint(map_styles)
 
 auth = flask.current_app.config['auth']
 
