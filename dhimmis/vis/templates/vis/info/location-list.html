@@ -1,3 +1,18 @@
+{#- vim: set ft=htmldjango : -#}
+{% from 'docs/vis-documentation-macros.html' import full_documentation_link with context %}
+
+{% if show_figures %}
+<figure id="fig-location-list-1">
+  <img src="{{ url_for('docs.vis.static', filename='location-list-1.png') }}">
+  <figcaption>
+    The location list.
+    The <em>location confidence</em> is indicated by a colored marker behind the place name.
+    Places that match the search term at the top are highlighted in orange if their primary name matches, or in yellow if an alternative name matches.
+    Names are shown in italics, darker, and desaturated if their location confidence level is not currently checked.
+  </figcaption>
+</figure>
+{% endif %}
+
 <p>
 In this view, all locations in the data are listed by their main toponym. Places can be searched, selected and filtered.
 </p>
@@ -22,7 +37,7 @@ In this view, all locations in the data are listed by their main toponym. Places
   Here, <em>Alternative names</em> are considered, too (cf. further below).
   The place names are sorted alphabetically by locale, disregarding a prefix of apostrophes and arabic definite articles (i.e., <em><q>Amid</q></em> comes before <em><q>'Amman</q></em>, and <em><q>Jubayl</q></em> comes before <em><q>a-Juma</q></em>.
   In <em>Only active</em> mode (cf. the <em>Settings pane</em>), only the brushed locations are listed.
-  When <em>hovering</em> over the line with the mouse, a <em>tooltip</em> with additional information is shown:
+  When <em>hovering</em> over the line with the mouse, a <em>tooltip</em> (see {{ full_documentation_link('fig-location-list-2', 'this figure') }}) with additional information is shown:
 </p>
 <ul>
   <li>place type,</li>
@@ -31,8 +46,9 @@ In this view, all locations in the data are listed by their main toponym. Places
   <li>alternative names,</li>
   <li>external URIs referencing the same place.</li>
 </ul>
+
 <p>
-  Also, while hovering, a <i class="fa fa-fw fa-external-link"></i> link symbol appears at the very end of the line.
+  Also, while hovering, a <i class="fa fa-fw fa-external-link"></i> link symbol appears at the very end of the line (see {{ full_documentation_link('fig-location-list-2', 'this figure') }}).
   Clicking the symbol opens the respective overview page of that place (cf. ###).
   (If the user has rights to edit the database, clicking the symbol leads to the respective entry of the location in the database instead.)
 </p>
@@ -44,6 +60,16 @@ In this view, all locations in the data are listed by their main toponym. Places
   The confidence circle is also not filled in that case.
   Keep in mind that this can only happen when the <em>All data</em> display mode is active, otherwise locations with non-matching location confidence will be hidden.
 </p>
+
+{% if show_figures %}
+<figure id="fig-location-list-2">
+  <img src="{{ url_for('docs.vis.static', filename='location-list-2.png') }}">
+  <figcaption>
+    A tooltip in the location list, for the place Antioch.
+  </figcaption>
+</figure>
+{% endif %}
+
 
 <p>
   The list <em>Placed</em> locations contains all locations for which a geographical position is known.
