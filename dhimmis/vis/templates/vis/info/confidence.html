@@ -1,5 +1,5 @@
 <p>
-  This view shows the different level of confidences attributed to the different elements of an evidence tuple (i.e. a set of data concerning a place, religion, time span and the respective confidences).
+  This view shows the different level of confidences attributed to the different elements of an evidence (i.e., place, religious group, time span and the respective confidences).
 </p>
 
 <h3>Contents</h3>
@@ -14,15 +14,15 @@
 
   In addition, a confidence can have no value at all (green). The attribution with "no value" is used while data is still being collected and usually does not appear in a published instance of this visualiziation. A notable exception are places, especially regions, with no exact geo-coordinates. In that case, no attribution of confidence except "no value" is suitable.
 
-  The number of evidence tuples with the respective confidence level is given as a number in the respective column.
+  The number of evidences with the respective confidence level is given as a number in the respective column.
 </p>
 
 <h4>Aspects of Confidence</h4>
 <dl>
   <dt><em>Time span confidence</em></dt>
   <dd>
-      signifies the confidence in the veracity of the time interval stored in an evidence tuple.
-      Evidence tuples without a time attribute are assigned the lowest level of confidence.
+      signifies the confidence in the veracity of the time interval stored in an evidence.
+      Evidences without a time attribute are assigned the lowest level of confidence.
   </dd>
   <p></p>
   <dt><em>Location confidence</em></dt>
@@ -45,7 +45,7 @@
   <p></p>
   <dt><em>Religion confidence</em></dt>
   <dd>
-    signifies the confidence in the veracity of the presence of a particular religious group to an evidence tuple.
+    signifies the confidence in the veracity of the presence of a particular religious group to an evidence.
   </dd>
 </dl>
 
@@ -53,7 +53,7 @@
 
 <p>
   For each aspect of confidence and each confidence level, a checkbox is shown in the respective cell.
-  Unchecking a checkbox will filter out evidence tuples with that confidence level for that aspect of confidence.
+  Unchecking a checkbox will filter out evidences with that confidence level for that aspect of confidence.
   This allows for a very fine-grained control over what data to visualize.
   Note that the selection is not applied until the <em>Apply</em> button is clicked.
   This button is disabled if the selected filters are up to date with the visualized data.
@@ -61,7 +61,7 @@
 
 <p>
   The filters work in <em>logical conjunction</em> across different aspects of confidence;
-  that is, having filters in place for multiple aspects of confidence will only show evidence tuples that match <em>all</em> filters.
+  that is, having filters in place for multiple aspects of confidence will only show evidences that match <em>all</em> filters.
 </p>
 
 <p>
