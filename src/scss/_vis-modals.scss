@@ -1,5 +1,7 @@
 @use 'colors' as *;
 
+@forward 'target-highlight';
+
 .modal {
   position: relative;
   z-index: 2000;
