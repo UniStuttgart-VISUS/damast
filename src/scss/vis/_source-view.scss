@@ -1,0 +1,91 @@
+@use '../common/colors' as *;
+@use 'variables' as *;
+@use 'filters' as filters;
+
+div.source__body {
+  $height: 30px;
+
+  display: grid;
+  grid-template-columns: min-content 120px 150px minmax(80px, auto);
+  gap: 0.5ex;
+  grid-auto-rows: 1fr;
+  width: 100%;
+
+  overflow-y: auto;
+
+  .source {
+    $svgpad: 4px;
+
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    height: $height;
+
+    /* chrome subgrid */
+    display: contents;
+
+    margin: 0.1em;
+    box-sizing: border-box;
+
+    &__checkbox {
+      grid-column: 1 / span 1;
+      display: block;
+      align-self: center;
+    }
+
+    &__shortname {
+      grid-column: 2 / span 1;
+
+      display: block;
+      align-self: center;
+
+      font-size: 0.6rem;
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    &--linked .source__shortname {
+      font-weight: 600;
+      color: $clr-accent;
+    }
+
+    &__evidence {
+      grid-column-start: 3;
+    }
+
+    &__count {
+      grid-column-start: 4;
+    }
+
+    &__evidence,
+    &__count {
+      grid-column-end: span 1;
+      height: $height;
+
+      svg {
+        shape-rendering: crispEdges;
+
+        margin: 4px;
+        width: calc(100% - #{2 * $svgpad});
+        height: calc(100% - #{2 * $svgpad});
+
+        --clr-fg: #{$clr-accent};
+
+        rect.inactive {
+          @include filters.muted-darker();
+        }
+      }
+    }
+  }
+
+  &--linked .source:not(.source--linked) {
+    .source__shortname {
+      filter: brightness(80%);
+    }
+
+    svg * {
+      @include filters.darker();
+    }
+  }
+}

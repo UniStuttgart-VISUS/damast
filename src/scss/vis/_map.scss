@@ -1,0 +1,107 @@
+@use '../common/colors' as *;
+@use 'variables' as *;
+@use 'filters' as filters;
+
+div#map.map {
+  cursor: crosshair;
+}
+
+.map__svg {
+  &--dark {
+    --clr-location-marker: #{$clr-accent};
+  }
+
+  &--light {
+    --clr-location-marker: #{$clr-accent-dark};
+  }
+
+  &--outdoors,
+  &--satellite {
+    --clr-location-marker: #{$clr-accent-dark-red};
+  }
+}
+
+div#map {
+  .leaflet-marker-pane {
+    pointer-events: none;
+
+    svg * {
+      pointer-events: auto;
+    }
+  }
+}
+
+div#map.no-marker-interaction .leaflet-marker-pane svg * {
+  pointer-events: none;
+}
+
+// MAP CLUSTER ICONS
+.brush__outside {
+  fill: rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+.cluster {
+  &__icon {
+    shape-rendering: geometricPrecision;
+  }
+
+  &__circle {
+    & .unselected {
+      @include filters.muted-darker();
+    }
+  }
+
+  &__border {
+    stroke: rgba(0,0,0, 0.6);
+    stroke-width: 1;
+    fill: transparent;
+  }
+
+  &--unbrushed #{&}__circle {
+    opacity: 0.4;
+  }
+
+  &__mouseover-hidden {
+    fill: transparent;
+  }
+
+  & #{&}__location-indicator {
+    display: none;
+  }
+
+  &:hover #{&}__location-indicator {
+    display: initial;
+  }
+
+  &:hover > #{&}__religion-indicator-items {
+    opacity: 0.4;
+  }
+
+  .map-overlay--brushed > &:not(#{&}--brushed) > #{&}__religion-indicator-items {
+    /*opacity: 0.4;*/
+    @include filters.darker();
+  }
+
+  .map__svg--dark &__circle {
+    @include filters.drop-shadow-white();
+  }
+
+  .map__svg--light     &__circle,
+  .map__svg--outdoors  &__circle,
+  .map__svg--satellite &__circle {
+    @include filters.drop-shadow-black();
+  }
+
+  &__location-indicator {
+    fill: var(--clr-location-marker);
+  }
+
+  .map-linked & {
+    opacity: 0.5;
+
+    &.map-linked--cluster {
+      opacity: 1;
+    }
+  }
+}
