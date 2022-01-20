@@ -1,0 +1,66 @@
+@use '../common/colors' as *;
+@use 'variables' as *;
+@use 'filters' as filters;
+
+@forward 'checkboxes';
+
+div#confidence {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  overflow-y: auto;
+
+  font-size: 0.6em;
+  align-items: center;
+
+  grid-template-rows: repeat(8, 1fr);
+  grid-template-columns: min-content repeat(6, max-content 1fr);
+
+  .row-title,
+  .column-title,
+  .column-footer {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  & .row-title {
+    padding-right: 2ex;
+    padding-left: 1.2em;
+    position: relative;
+
+    &--dummy {
+      font-style: italic;
+    }
+
+    &::before {
+      position: absolute;
+      top: 0.2em;
+      left: 0em;
+
+      content: '';
+      width: 0.8em;
+      height: 0.8em;
+      border-radius: 0.4em;
+      background-color: var(--confidence-color);
+      display: inline-block;
+    }
+  }
+  & .column-title {
+    padding-bottom: 1ex;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  & .column-footer {
+    text-align: center;
+    color: transparent;
+
+    &.column-footer--selected {
+      color: $clr-accent;
+    }
+    &:not(.column-footer--selected):hover {
+      color: $clr-lightgray;
+    }
+  }
+}
+

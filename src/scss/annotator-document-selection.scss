@@ -1,7 +1,7 @@
-@use 'colors' as *;
-@use 'vis-variables' as *;
-@use 'mixins';
-@use 'annotator-virtual-text' as virtual;
+@use 'common/colors' as *;
+@use 'vis/variables' as *;
+@use 'common/mixins';
+@use 'annotator/virtual-text' as virtual;
 
 .content {
   @include mixins.baseFlexBlock();

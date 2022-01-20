@@ -1,6 +1,6 @@
-@use '../colors' as *;
-@use '../vis-variables' as *;
-@use '../vis-filters' as filters;
+@use '../common/colors' as *;
+@use 'variables' as *;
+@use 'filters' as filters;
 
 
 .religion-container {

@@ -1,9 +1,9 @@
-@use 'colors' as *;
-@use 'vis-variables' as *;
-@use 'mixins';
+@use 'common/colors' as *;
+@use 'vis/variables' as *;
+@use 'common/mixins';
 
-@forward 'target-highlight';
-@forward 'reporting-timeline';
+@forward 'common/target-highlight';
+@forward 'reporting/timeline';
 
 :root {
   @media print {

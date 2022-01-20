@@ -1,0 +1,86 @@
+@use '../common/colors' as *;
+@use 'variables' as *;
+@use '../common/mixins';
+
+:root {
+  font-family: sans-serif;
+}
+
+.environment-label {
+  @include mixins.fixedLabel();
+}
+
+body {
+  background: $clr-bg-root;
+  color: $clr-fg;
+  margin: 0em;
+  padding: 0em;
+}
+
+.section {
+  box-sizing: border-box;
+  background: $clr-bg;
+  margin: $margin;
+  padding: $padding;
+  display: flex;
+  box-shadow: $box-shadow;
+}
+
+.container {
+  height: #{calc(100vh - #{3 * $margin} - #{$header-height})};
+  box-sizing: border-box;
+  margin-inline: $margin;
+
+  .map-container,
+  .timeline-container,
+  .untimed-container {
+    display: grid;
+  }
+
+  .location-list-container {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .confidence-container,
+  .religion-container,
+  .source-container,
+  .tags-container {
+    display: grid;
+    grid-template-rows: max-content auto;
+    grid-template-columns: 1fr;
+  }
+
+  .religion-container > .svg-container {
+    overflow-y: auto;
+  }
+}
+
+.navbar {
+  width: calc(100% - #{$margin * 2});
+  height: $header-height;
+  display: flex;
+  flex-align: center;
+
+  &__links {
+    margin-left: 2rem;
+  }
+
+  &__link {
+    text-decoration: none;
+    color: $clr-link;
+    padding-left: 1rem;
+  }
+
+  &__controls {
+    margin-left: 5rem;
+    margin-right: 2rem;
+    display: flex;
+    flex-direction: columns;
+  }
+}
+
+.messages {
+  margin-left: auto;
+}

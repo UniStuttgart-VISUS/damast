@@ -1,0 +1,24 @@
+@use '../common/colors' as *;
+@use 'variables' as *;
+@use 'filters' as filters;
+
+.x-axis > path.domain {
+  stroke: $clr-fg;
+  stroke-opacity: 0.3;
+}
+
+.stacked-histogram {
+  shape-rendering: crispEdges;
+
+  &__path {
+    &--muted,
+    &--brush-muted {
+      @include filters.muted-darker();
+    }
+
+    &--hidden {
+      display: none;
+    }
+  }
+}
+
