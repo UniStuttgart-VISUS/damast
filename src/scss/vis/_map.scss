@@ -2,7 +2,7 @@
 @use 'variables' as *;
 @use 'filters' as filters;
 
-div#map.map {
+div#map {
   cursor: crosshair;
 
   // new stacking context
