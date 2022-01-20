@@ -242,7 +242,8 @@ The first is the user database, the second stores reports and their metadata.
     showstringspaces=false,
     keywordstyle=\color{blue}\bfseries,
     ndkeywordstyle=\color{green!40!black}\bfseries,
-    stringstyle=\color{brown!80!black}
+    stringstyle=\color{brown!80!black},
+    ndkeywords={TEXT,DATE,DATETIME,BLOB,INTEGER},
   }
   \begin{lstlisting}
 CREATE TABLE users (
@@ -256,7 +257,9 @@ CREATE TABLE users (
 \end{lstfloat}
 
 The SQLite3 user database (see~\cref{lst:userdb}) contains only one table, \verb!users!.
-Each user is listed there, with their user name as the unique \verb!id! field.
+The file is stored in the runtime configuration directory (see~\cref{sec:runtime-configuration}), and its location can be configured using the \verb!DHIMMIS_USER_FILE! environment variable (\verb!/data/users.db! by default).
+
+Each user is listed here as a separate record, with their user name as the unique \verb!id! field.
 Passwords are stored as \verb!htpasswd(1)! hashes.
 The backend supports SHA256 (\verb!$5$!), SHA512 (\verb!$6$!) and Blowfish \verb!bcrypt! (\verb!$2b$! and \verb!$2y$!) hashes, but \verb!bcrypt! is preferred.
 The user's roles are stored in the \verb!roles! field as comma-separated text (for example, \verb!'user,readdb,vis'!).
@@ -269,5 +272,58 @@ If it is filled, the user cannot login from the specified day on, \emph{inclusiv
 
 
 \subsection{Report Database}
+
+\begin{lstfloat}
+  \centering
+  \caption{The database schema of the SQLite3 report database.}
+  \label{lst:reportdb}
+
+  \lstset{%
+    basicstyle={\scriptsize\ttfamily},
+    language=SQL,
+    showspaces=false,
+    showstringspaces=false,
+    keywordstyle=\color{blue}\bfseries,
+    ndkeywordstyle=\color{green!40!black}\bfseries,
+    stringstyle=\color{brown!80!black},
+    ndkeywords={TEXT,DATE,DATETIME,BLOB,INTEGER},
+  }
+  \begin{lstlisting}
+CREATE TABLE reports (
+  uuid TEXT NOT NULL PRIMARY KEY,
+  user TEXT NOT NULL,
+  started DATETIME NOT NULL,
+  completed DATETIME DEFAULT NULL,
+  report_state TEXT NOT NULL DEFAULT 'started',
+  server_version TEXT NOT NULL,
+  filter BLOB DEFAULT NULL,
+  content BLOB DEFAULT NULL,
+  pdf_map BLOB DEFAULT NULL,
+  pdf_report BLOB DEFAULT NULL,
+  evidence_count INTEGER NOT NULL DEFAULT 0
+);
+  \end{lstlisting}
+\end{lstfloat}
+
+This SQLite3 database (see~\cref{lst:reportdb}) contains the reports and their metadata (see~\cref{sec:reporting}).
+The file is stored in the runtime configuration directory (see~\cref{sec:runtime-configuration}), and its location can be configured using the \verb!DHIMMIS_REPORT_FILE! environment variable (\verb!/data/reports.db! by default).
+
+The UUID of the report is used as a primary key.
+Regarding metadata, the user provisioning the report, the start time, the (possibly empty) end time, the and server version are stored.
+For the completed report, the number of evidences contained are also stored in the \verb!evidence_count! field.
+
+The state of the report is stored in the \verb!report_state! field.
+When the report has been provisioned and generation is still under way, this is \verb!'started'!.
+If an error occurs during report generation, the value is \verb!'failed'!, otherwise it is \verb!'completed'!.
+
+The report contents themselves are stored in four fields.
+These fields are of the datatype \verb!BLOB!, meaning SQLite3 stores them as a bytestring.
+Each of the fields' contents is GZIP-compressed.
+The \verb!filter! field contains the filter and additional metadata that were used for the report generation.
+The format of this is a subset of the visualization state (see~\cref{sec:vis-reproducible}) used for report generation (see~\cref{sec:reporting-filter}).
+The content of the HTML report (see~\cref{sec:report-html}) is stored in the \verb!content! field!.
+The content of the PDF report, which is produced using \LaTeX{} during report generation (see~\cref{sec:report-latex}), is stored in the \verb!pdf_report! field.
+A PDF version of the map shown both in the HTML and PDF reports is stored separately in the \verb!pdf_map! field so it can be included in other documents more easily.
+
 
 \section{Backups}
