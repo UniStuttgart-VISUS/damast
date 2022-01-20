@@ -4,6 +4,10 @@
 
 div#map.map {
   cursor: crosshair;
+
+  // new stacking context
+  position: relative;
+  z-index: 0;
 }
 
 .map__svg {

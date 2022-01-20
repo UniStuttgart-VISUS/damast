@@ -1,0 +1,58 @@
+@use '../common/colors' as *;
+@use 'variables' as *;
+@use 'filters' as filters;
+
+.confidence__header {
+  display: grid;
+  grid-template-columns: repeat(4, max-content) auto;
+
+  & > button:last-of-type {
+    margin-left: auto;
+  }
+}
+
+.source__header {
+  display: grid;
+  grid-template-columns: repeat(3, max-content) auto;
+
+  & > button:last-of-type {
+    margin-left: auto;
+  }
+}
+
+.hierarchy__header {
+  display: grid;
+  grid-template-columns: repeat(2, max-content) auto;
+
+  & > button:last-of-type {
+    margin-left: auto;
+  }
+}
+
+.tags__header {
+  display: grid;
+  grid-template-columns: repeat(2, max-content) auto;
+
+  & > button:last-of-type {
+    margin-left: auto;
+  }
+}
+
+.timeline__controls,
+.hierarchy__controls {
+  position: relative;
+  padding: 2px 5px;
+  border-radius: 2px;
+  background: $clr-bg;
+  margin: 0px 0.5rem;
+}
+
+.timeline__controls--narrow {
+  margin: 0px;
+  margin-bottom: 5px;
+  padding: 0px 5px;
+}
+
+.confidence__controls {
+  margin-right: 2px;
+}

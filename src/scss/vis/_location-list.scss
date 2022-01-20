@@ -10,12 +10,26 @@
     cursor: default;
   }
 
+  &__title {
+    font-size: 0.8rem;
+    margin: 0.1rem;
+    margin-bottom: 0.3rem;
+    padding: 0;
+  }
+
   &-container details {
     padding-left: 0.5rem;
   }
 
   &-container summary h2 {
     display: inline-block;
+  }
+
+  &__scrollarea {
+    display: block;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-behavior: smooth;
   }
 
   &__location-name {
