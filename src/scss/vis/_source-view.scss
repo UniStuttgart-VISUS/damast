@@ -16,13 +16,13 @@ div.source__body {
   .source {
     $svgpad: 4px;
 
+    /* chrome fallback for subgrid */
+    display: contents;
+
     display: grid;
     grid-column: 1 / -1;
     grid-template-columns: subgrid;
     height: $height;
-
-    /* chrome subgrid */
-    display: contents;
 
     margin: 0.1em;
     box-sizing: border-box;
