@@ -3,7 +3,7 @@
 @use 'vis-filters' as filters;
 
 @forward 'vis-place-set-manager';
-@forward 'views/religion-hierarchy';
+@forward 'vis/religion-hierarchy';
 
 :root {
   --clr-accent: #{$clr-accent};
