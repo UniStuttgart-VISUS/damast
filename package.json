@@ -43,7 +43,7 @@
     "ramda": "^0.27.1",
     "tabulator-tables": "^4.8.2",
     "tslib": "^2.3.0",
-    "wasm-clustering": "git+ssh://git@github.tik.uni-stuttgart.de:frankemx/wasm-clustering.git#v0.1.3"
+    "wasm-clustering": "git+ssh://git@github.com:mfranke93/wasm-clustering.git#v0.1.3"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.14.5",
