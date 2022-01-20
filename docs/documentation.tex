@@ -9,6 +9,7 @@
 \usepackage[inline]{enumitem}
 \usepackage[backend=biber,natbib]{biblatex}
 \usepackage{listings}
+\usepackage{float}
 
 \usepackage[textsize=footnotesize,textwidth=0.5in]{todonotes}
 
@@ -46,6 +47,10 @@
   tag=[s]
 }
 
+\newfloat{lstfloat}{tbp}{lop}
+\floatname{lstfloat}{Listing}
+\def\lstfloatautorefname{Listing}
+\crefalias{lstfloat}{listing}
 
 \begin{document}
 
