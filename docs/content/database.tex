@@ -272,6 +272,7 @@ If it is filled, the user cannot login from the specified day on, \emph{inclusiv
 
 
 \subsection{Report Database}
+\label{sec:report-database}
 
 \begin{lstfloat}
   \centering
@@ -321,9 +322,21 @@ These fields are of the datatype \verb!BLOB!, meaning SQLite3 stores them as a b
 Each of the fields' contents is GZIP-compressed.
 The \verb!filter! field contains the filter and additional metadata that were used for the report generation.
 The format of this is a subset of the visualization state (see~\cref{sec:vis-reproducible}) used for report generation (see~\cref{sec:reporting-filter}).
-The content of the HTML report (see~\cref{sec:report-html}) is stored in the \verb!content! field!.
+The content of the HTML report (see~\cref{sec:report-html}) is stored in the \verb!content! field.
 The content of the PDF report, which is produced using \LaTeX{} during report generation (see~\cref{sec:report-latex}), is stored in the \verb!pdf_report! field.
 A PDF version of the map shown both in the HTML and PDF reports is stored separately in the \verb!pdf_map! field so it can be included in other documents more easily.
 
 
 \section{Backups}
+
+Backups need to be arranged for from outside of the host system.
+The extent of backups depends on how the Damast system is used:
+If only the visualization and reporting functionalities are used, and no data entry is performed, it is not necessary to back up the PostgreSQL database, except for its initial state.
+If data entry is done, regular backups are advised.
+For the PostgreSQL database, \verb!pg_dump(1)! can be used for regular, full dumps of the database, or \verb!pg_rewind(1)! for duplication to a secondary database instance.
+
+If user management is used (as opposed to mainly having visitors without login), backups of the user SQLite3 database (\cref{sec:user-database}) are also advisable, otherwise password changes are lost on data loss.
+Similarly, the report SQLite3 database (\cref{sec:report-database}) should be backed up if persistent reports are wanted.
+For the SQLite3 database, any type of backup can be used that can handle either file system backups or text dumps from databases.
+The other contents of the runtime configuration directory (\cref{sec:runtime-configuration}) need not be regularly backed up.
+However, it is advisable to keep an initial backup of the configuration.
