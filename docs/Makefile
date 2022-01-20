@@ -1,6 +1,6 @@
 
 LATEXMK = latexmk -pdf -interaction=nonstopmode -file-line-error -shell-escape
-DEPS = structure/structure.pdf postgres/layout.pdf
+DEPS = structure/structure.pdf postgres/layout.pdf report-lifecycle/lifecycle.pdf
 
 all: documentation.pdf
 
