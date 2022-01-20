@@ -1,6 +1,11 @@
                                 CHANGELOG
 
 
+2022-01-xx                                                           v1.0.5
+
+Minor CSS source file restructuring.
+
+
 2022-01-18                                                           v1.0.4
 
 The set of map tiles provided as base layers in the maps (visualization,
