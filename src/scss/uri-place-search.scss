@@ -1,8 +1,8 @@
-@use 'colors' as *;
-@use 'vis-variables' as *;
-@use 'mixins';
+@use 'common/colors' as *;
+@use 'vis/variables' as *;
+@use 'common/mixins';
 
-@forward 'target-highlight';
+@forward 'common/target-highlight';
 
 body {
   height: calc(100vh - 1rem);

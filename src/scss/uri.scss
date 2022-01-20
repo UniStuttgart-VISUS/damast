@@ -1,9 +1,9 @@
-@use 'colors' as *;
-@use 'vis-variables' as *;
-@use 'mixins';
+@use 'common/colors' as *;
+@use 'vis/variables' as *;
+@use 'common/mixins';
 
-@forward 'target-highlight';
-@forward 'leaflet-mapbox-attribution';
+@forward 'common/target-highlight';
+@forward 'common/leaflet-mapbox-attribution';
 
 .content {
   @include mixins.baseFlexBlock();

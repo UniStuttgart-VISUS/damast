@@ -1,9 +1,9 @@
-@use 'colors' as *;
-@use 'vis-variables' as *;
-@use 'vis-filters' as filters;
+@use '../common/colors' as *;
+@use 'variables' as *;
+@use 'filters' as filters;
 
-@forward 'vis-place-set-manager';
-@forward 'vis/religion-hierarchy';
+@forward 'place-set-manager';
+@forward 'religion-hierarchy';
 
 :root {
   --clr-accent: #{$clr-accent};

@@ -1,5 +1,5 @@
-@use 'colors' as *;
-@use 'mixins';
+@use '../common/colors' as *;
+@use '../common/mixins';
 
 .column-visibility-option {
   display: grid;

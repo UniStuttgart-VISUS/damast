@@ -1,6 +1,6 @@
-@use 'colors' as *;
-@use 'vis-variables' as *;
-@use 'mixins';
+@use '../common/colors' as *;
+@use 'variables' as *;
+@use '../common/mixins';
 
 :root {
   font-family: sans-serif;

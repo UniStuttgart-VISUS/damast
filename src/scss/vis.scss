@@ -1,23 +1,23 @@
-@use 'colors' as *;
-@use 'mixins';
+@use 'common/colors' as *;
+@use 'common/mixins';
 
-@forward 'links';
-@forward 'flashes';
-@forward 'cookies';
-@forward 'header';
-@forward 'misc';
-@forward 'buttons';
-@forward 'modals';
-@forward 'forms';
-@forward 'uri-helpers';
+@forward 'common/links';
+@forward 'common/flashes';
+@forward 'common/cookies';
+@forward 'common/header';
+@forward 'common/misc';
+@forward 'common/buttons';
+@forward 'common/modals';
+@forward 'common/forms';
+@forward 'common/uri-helpers';
 
-@forward 'vis-header';
-@forward 'vis-layout';
-@forward 'vis-modals';
-@forward 'vis-visualization';
-@forward 'vis-utility';
-@forward 'vis-settings-pane';
+@forward 'vis/header';
+@forward 'vis/layout';
+@forward 'vis/modals';
+@forward 'vis/visualization';
+@forward 'vis/utility';
+@forward 'vis/settings-pane';
 
-@forward 'leaflet-mapbox-attribution';
-@forward 'vis-goldenlayout-theme';
-@forward 'vis-geometry-editor-controls';
+@forward 'common/leaflet-mapbox-attribution';
+@forward 'vis/goldenlayout-theme';
+@forward 'vis/geometry-editor-controls';
