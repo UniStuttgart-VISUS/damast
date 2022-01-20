@@ -25,7 +25,7 @@ export default class ConfidencePane extends View<any, any> {
 
     div.classList.add('confidence-container');
     div.innerHTML = require('html-loader!./html/confidence.template.html').default;
-    this._div = d3.select(div).select('#uncertainty');
+    this._div = d3.select(div).select('#confidence');
 
     const hdr = d3.select(div).select('.confidence__header');
     hdr.select<HTMLButtonElement>('#confidence-filter-none')
@@ -205,8 +205,8 @@ export default class ConfidencePane extends View<any, any> {
   protected openModal(): void {
     const info = modal.create_modal(
       400, 300,
-      'Confidence Hierarchy',
-      'confidence-hierarchy.html'
+      'Confidence View',
+      'confidence.html'
     );
   }
 };

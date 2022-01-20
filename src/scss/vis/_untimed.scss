@@ -1,0 +1,15 @@
+@use '../common/colors' as *;
+@use 'variables' as *;
+@use 'filters' as filters;
+
+.container__timeline-untimed__svg {
+  --clr-fg: #{$clr-fg};
+}
+
+.untimed__rect--muted {
+  @include filters.muted-darker();
+}
+
+.untimed__rect--unbrushed {
+  @include filters.darker();
+}

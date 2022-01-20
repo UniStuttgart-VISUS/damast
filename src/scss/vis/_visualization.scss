@@ -1,0 +1,23 @@
+@use '../common/colors' as *;
+@use 'variables' as *;
+@use 'filters' as filters;
+
+@forward 'place-set-manager';
+@forward 'religion-hierarchy';
+@forward 'map';
+@forward 'timeline';
+@forward 'untimed';
+@forward 'location-list';
+@forward 'confidence-view';
+@forward 'source-view';
+@forward 'tag-view';
+
+:root {
+  --clr-accent: #{$clr-accent};
+}
+
+.brush > .selection {
+  fill-opacity: 0;
+  stroke-width: 2;
+  stroke: #c1c93a;
+}

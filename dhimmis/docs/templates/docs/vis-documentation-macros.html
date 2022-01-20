@@ -1,0 +1,11 @@
+{%- macro full_documentation_link(id, text, same=false) -%}
+{%- if same -%}
+<a href="#{{ id }}">{{ text }}</a>
+{%- else -%}
+<a href="{{ url_for('docs.vis.root') }}#{{ id }}"
+   {% if request.blueprint.startswith('vis') and not same -%}
+   target="_blank"
+   {%- endif %}
+   >{{ text }}</a>
+{%- endif -%}
+{%- endmacro -%}

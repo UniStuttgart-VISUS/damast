@@ -1,11 +1,11 @@
-@use 'colors' as *;
-@use 'vis-variables' as *;
-@use 'mixins';
-@use 'annotator-virtual-text' as virtual;
+@use 'common/colors' as *;
+@use 'vis/variables' as *;
+@use 'common/mixins';
+@use 'annotator/virtual-text' as virtual;
 
-@forward 'annotator-editor';
-@forward 'annotator-popups';
-@forward 'modals';
+@forward 'annotator/editor';
+@forward 'annotator/popups';
+@forward 'common/modals';
 
 
 $swimline-width: 200px;

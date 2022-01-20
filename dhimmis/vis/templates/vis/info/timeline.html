@@ -1,31 +1,83 @@
-<p>
-The timeline shows the distribution of the different religious denominations&mdash;or evidence of different levels of confidence&mdash;over the studied time period.
-Depending on the <em>timeline mode</em> set in the settings pane, the timeline is displayed either in a qualitative way, or in a quantitative way.
-In the qualitative mode, a Gantt chart is shown, indicating the presence or absence of each religion for each year, regardless of the number of evidences.
-In the qualitative mode, the data is visualized as a stacked area graph, where the width of each area represents the number of evidences for that religion in that year.
-</p>
+{#- vim: set ft=htmldjango : -#}
+{% from 'docs/vis-documentation-macros.html' import full_documentation_link with context %}
 
-<h2>Interacting with the Timeline</h2>
+{% if show_figures %}
+<figure id="fig-timeline-1">
+  <img src="{{ url_for('docs.vis.static', filename='timeline-1.png') }}">
+  <figcaption>
+    The timeline in qualitative mode, showing three religious groups.
+    A time range between 830 and 1090 is set as the filter.
+  </figcaption>
+</figure>
+{% endif %}
 
-<p>
-By clicking and dragging, a time range can be selected.
-This is indicated by a rectangle, and the area outside that rectangle is darkened.
-This time range serves as a time filter for the data in the entire visualization.
-Clicking anywhere in the graph resets the filter.
-</p>
 
 <p>
-In <em>all data</em> mode, filtered-out parts of the data are indicated by desaturated areas.
-The time filter does itself not influence the timeline for efficiency reasons.
-In <em>only active</em> mode, filtered-out data is hidden from the visualization, and <em>linking</em> only shows the timeline of the currently hovered component.
+  The <strong><em>Timeline</em></strong> shows the distribution of the different religious groups along the overall time period focused in DhiMu, i.e., 700–1500.
+  In <em>Confidence mode</em>, the level of confidence is shown instead of religious groups (cf. the info texts of the <em>{{ full_documentation_link('confidence', 'Confidence view') }}</em> and of the <em>{{ full_documentation_link('settings-pane', 'Settings pane') }}</em>, respectively).
 </p>
 
-<h2>Overview</h2>
+<h3>Content</h3>
 
 <p>
-The lower graph shows an overview of the currently visualized data.
-This overview does not change during <em>brushing</em> or zooming, and serves as a minimap for the large, upper graph.
-By dragging over a section of the overview, the visible area in the upper graph can be selected.
-This is then indicated by a selection rectangle.
-If the upper graph is <em>range-filtered,</em> the range is indicated as a thick bar below the minimap.
+  The <em>Timeline</em> consists of two graphs: the main timeline, and a smaller overview.
+  The graphs are described in the following.
 </p>
+
+<p>
+  Also, the view changes depending on the choice of <em>Show filtered data</em> in the <em>Settings pane</em>: in <em>All data</em> mode, data that is filtered out is indicated by less saturated colours.
+  In <em>Only active</em> mode, data that is filtered out is hidden from the visualization in all views, including the timeline.
+</p>
+
+<h4>Timeline</h4>
+
+{% if show_figures %}
+<figure id="fig-timeline-2">
+  <img src="{{ url_for('docs.vis.static', filename='timeline-2.png') }}">
+  <figcaption>
+    The timeline in qualitative mode.
+  </figcaption>
+</figure>
+{% endif %}
+
+<p>
+  The main <strong>timeline</strong> shows either a qualitative summary or quantitative information, depending on <em>Timeline mode</em> selected in the <em>Settings pane.</em>
+  If <em>quantitative</em> is selected, the number of evidences of that type in that year is encoded into the height of the area as a <em>stacked area chart.</em>
+  If <em>qualitative</em> is selected, the timeline only shows whether there are evidences of that type each year.
+  The colours used in the graph match the ones used in the <em>Religion view</em> or <em>Confidence view,</em> depending on the <em>Display mode</em> selected in the <em>Settings pane.</em>
+</p>
+
+<p>
+  Importantly, the timeline can be used to filter the data according to time (cf. {{ full_documentation_link('timeline-filtering', 'below', true) }}).
+</p>
+
+<h4>Overview</h4>
+
+<p>
+  The smaller <strong>overview</strong> serves as a <em>minimap</em> for the larger <em>timeline:</em>
+  It always shows the entire time range contained in the database.
+  If a section from the overview is selected by clicking and dragging, the upper timeline shows only the selected timespan, in greater detail.
+  The overview represented by the lower graph does not change while <em>zooming</em> in the upper graph.
+  Vice versa, if the data is filtered by clicking and dragging in the upper graph, the selected range is indicated as a thick bar below the lower graph.
+</p>
+
+<h4>Tooltips</h4>
+
+<p>
+  When <strong>hovering</strong> over the timeline and the overview, a tooltip with a summary of evidences for that year is displayed.
+  If the timeline shows a smaller time range than the overview, the year in the tooltip depends on whether the mouse cursor is on the timeline or the overview.
+  When <strong>selecting</strong> data in other views, through <em>brushing and linking,</em> only the selected data shows in the timeline.
+</p>
+
+<h3>Interaction</h3>
+
+<article id="timeline-filtering">
+<h4>Filtering</h4>
+
+<p>
+  By <em>clicking and dragging</em> the timeline, a time range can be selected.
+  This is indicated by a rectangle, and the area outside that rectangle is displayed in less saturated colours.
+  This time range serves as a time filter for the data in the entire visualization.
+  Clicking anywhere in the timeline resets the filter.
+</p>
+</article>

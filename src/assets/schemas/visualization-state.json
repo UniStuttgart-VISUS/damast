@@ -74,7 +74,10 @@
             "lng": { "type": "number" }
           }
         },
-        "base_layer": { "enum": ["light", "dare"] },
+        "base_layer": {
+          "type": "string",
+          "minLength": 1
+        },
         "overlay_layers": {
           "type": "array",
           "uniqueItems": true,

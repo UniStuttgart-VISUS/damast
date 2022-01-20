@@ -1,5 +1,5 @@
-@use 'colors' as *;
-@use 'mixins';
+@use 'common/colors' as *;
+@use 'common/mixins';
 
 a.card {
   color: unset;

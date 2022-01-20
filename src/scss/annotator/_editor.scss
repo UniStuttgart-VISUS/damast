@@ -1,9 +1,9 @@
-@use 'colors' as *;
-@use 'vis-variables' as *;
-@use 'mixins';
-@use 'encode-color' as encode;
+@use '../common/colors' as *;
+@use '../vis/variables' as *;
+@use '../common/mixins';
+@use '../common/encode-color' as encode;
 
-@forward 'annotator-forms';
+@forward 'forms';
 
 .editor {
   border: 1px solid;

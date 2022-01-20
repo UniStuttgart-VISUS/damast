@@ -1,5 +1,5 @@
 @use 'colors' as *;
-@use 'vis-variables' as *;
+@use '../vis/variables' as *;
 @use 'mixins';
 @use 'encode-color' as encode;
 

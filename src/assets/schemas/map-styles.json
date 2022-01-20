@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://www2.visus.uni-stuttgart.de/damast/vis/schemas/map-styles.json",
+  "$comment": "Definition of map style configuration file, for Leaflet base layer map tiles",
+
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "key",
+      "url",
+      "name",
+      "is_mapbox"
+    ],
+    "properties": {
+      "key": {
+        "type": "string",
+        "minLength": 1,
+        "$comment": "(unique) style key"
+      },
+      "url": {
+        "type": "string",
+        "minLength": 1,
+        "$comment": "URL template for tiles, see https://leafletjs.com/reference.html#tilelayer"
+      },
+      "name": {
+        "type": "string",
+        "minLength": 1,
+        "$comment": "name to be shown in drop-down menu"
+      },
+      "default_": {
+        "type": "boolean",
+        "$comment": "specifies that these tiles are shown by default. optional"
+      },
+      "is_mapbox": {
+        "type": "boolean",
+        "$comment": "specifies that these tiles are from MapBox, and that the custom copyright icon should be shown"
+      },
+      "options": {
+        "type": "object",
+        "additionalProperties": false,
+        "$comment": "additional configuration options. optional",
+        "properties": {
+          "attribution": {
+            "type": "string",
+            "$comment": "attribution text to be shown in the lower right of the map. can contain HTML <a> links"
+          },
+          "accessToken": {
+            "type": "string",
+            "$comment": "access token for tileset, can be used in `../url` as '{access_token}' (with underscore)"
+          }
+        }
+      }
+    }
+  }
+}
+

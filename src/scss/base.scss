@@ -1,14 +1,14 @@
-@use 'colors' as *;
-@use 'mixins';
+@use 'common/colors' as *;
+@use 'common/mixins';
 
-@forward 'headings';
-@forward 'links';
-@forward 'flashes';
-@forward 'cookies';
-@forward 'header';
-@forward 'misc';
-@forward 'buttons';
-@forward 'accessibility';
+@forward 'common/headings';
+@forward 'common/links';
+@forward 'common/flashes';
+@forward 'common/cookies';
+@forward 'common/header';
+@forward 'common/misc';
+@forward 'common/buttons';
+@forward 'common/accessibility';
 
 // main body
 

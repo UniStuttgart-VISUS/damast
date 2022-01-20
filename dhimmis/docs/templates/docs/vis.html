@@ -1,0 +1,127 @@
+{% from 'docs/vis-documentation-macros.html' import full_documentation_link with context %}
+
+{% extends "base.html" %}
+
+{% block title %}Visualization Documentation{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('docs.vis.static', filename='style.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<h1>Visualization Documentation</h1>
+
+<section>
+  <p>
+    This page provides documentation on the several parts of the
+    <a href="{{ url_for('vis.root') }}">visualization</a>, what they show, and how they can be interacted with.
+    The first part of the documentation explains common terminology and principles from information visualization and interaction design that are used in the visualization, and that are helpful for understanding the descriptions.
+    Then, the individual <em>views</em> and their functionalities are explained.
+    These individual texts can also be accessed from within the visualization by clicking on the
+    <i class="fa fa-fw fa-question-circle-o"></i>
+    question mark icon in the upper right of each view.
+  </p>
+</section>
+
+<nav role="navigation" id="toc">
+  <h2>Table of Contents</h2>
+
+  <ul>
+    <li><a href="#terminology">Terminology and Principles</a></li>
+    <li><a href="#settings-pane">Settings Pane</a></li>
+    <li><a href="#map">Map</a></li>
+    <li><a href="#location-list">Location List</a></li>
+    <li><a href="#religion-hierarchy">Religion Hierarchy</a></li>
+    <li><a href="#timeline">Timeline</a></li>
+    <li><a href="#untimed-data">Untimed Data</a></li>
+    <li><a href="#confidence">Confidence View</a></li>
+    <li><a href="#source">Source View</a></li>
+    <li><a href="#tags">Tag View</a></li>
+  </ul>
+</nav>
+
+<hr />
+
+<section id="terminology">
+  <h2>Terminology and Principles</h2>
+
+  <p>
+    TODO: add text
+  </p>
+</section>
+
+<hr />
+
+<section id="settings-pane">
+  <h2>Settings Pane</h2>
+
+  {% include 'vis/info/settings-pane.html' %}
+</section>
+
+<hr />
+
+<section id="map">
+  <h2>Map</h2>
+
+  {% include 'vis/info/map.html' %}
+</section>
+
+<hr />
+
+<section id="location-list">
+  <h2>Location List</h2>
+
+  {% include 'vis/info/location-list.html' %}
+</section>
+
+<hr />
+
+<section id="religion-hierarchy">
+  <h2>Religion Hierarchy</h2>
+
+  {% include 'vis/info/religion-hierarchy.html' %}
+</section>
+
+<hr />
+
+<section id="timeline">
+  <h2>Timeline</h2>
+
+  {% include 'vis/info/timeline.html' %}
+</section>
+
+<hr />
+
+<section id="untimed-data">
+  <h2>Untimed Data</h2>
+
+  {% include 'vis/info/untimed-data.html' %}
+</section>
+
+<hr />
+
+<section id="confidence">
+  <h2>Confidence View</h2>
+
+  {% include 'vis/info/confidence.html' %}
+</section>
+
+<hr />
+
+<section id="source">
+  <h2>Source View</h2>
+
+  {% include 'vis/info/source.html' %}
+</section>
+
+<hr />
+
+<section id="tags">
+  <h2>Tag View</h2>
+
+  {% include 'vis/info/tags.html' %}
+</section>
+
+{% endblock %}
