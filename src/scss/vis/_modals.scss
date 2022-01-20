@@ -1,6 +1,6 @@
 @use '../common/colors' as *;
 
-@forward 'target-highlight';
+@forward '../common/target-highlight';
 
 .modal {
   position: relative;
