@@ -21,7 +21,7 @@
 <p>
   The list of religious groups is hierarchical and represented by an indented tree visualization:
   each religious group occupies a line, which is indented according to its rank in the hierarchy.
-  Each line consists of an <em>abbreviation</em> for the religious group, a <em>node</em> (displayed as a bar) with the colour associated with the group, and a checkbox used for filtering.
+  Each line consists of an <em>abbreviation</em> for the religious group, a <em>node</em>, displayed as a bar, with the colour associated with the group, and a checkbox used for filtering.
   Hovering with the mouse over the line displays a tooltip with the full name of the religious group and the number of evidences for the group based on the currently applied filters.
 </p>
 
@@ -33,24 +33,33 @@
 <p>
   The religious groups each have a distinct color.
   For Christianity (red), Islam (green), and Judaism (blue), religious groups belonging to these general religious affiliations do have hues of the same colour.
-  (However, the difference between colors is limited because of the amount of denominations.)
-  In <em>Confidence mode</em> (cf. the pane <em>Settings</em>), the bars of the groups are colored based on the average confidence of the represented data.
+  (However, the difference between colours is limited because of the amount of religious groups.)
+  In <em>Confidence mode</em> (cf. the pane <em>{{ full_documentation_link('settings-display-mode', 'Settings') }}</em>), the bars of the groups are colored based on the average confidence of the represented data.
 </p>
 
 <h4>Details regarding colouring and saturation</h4>
 
 <p>
-  Depending on the options <em>Show filtered data</em> as well as <em>Display mode</em> in the pane <em>Settings</em>, the colours of the nodes change.
-  Regarding the setting of <em>Show filtered data</em>, in <em>Only active</em> mode, the colour of a node is saturated if <em>any</em> data with this religious group is not filtered out.
-  If the religious group has been filtered out, its node is displayed in a less saturated colour.
-  In <em>All data</em> mode, the node is split up into two areas, showing the ratio of data that has been filtered out.
-  The amount of data that has been filtered out is represented by an area with less saturated colours.
+  Depending on the options <em>Show filtered data</em> (<em>All data</em> or <em>Only active</em>) as well as <em>Display mode</em> (<em>Religion</em> or <em>Confidence</em> mode) in the pane <em>Settings</em>, the coloring of the bars change:
 </p>
+<dl>  
+    <dt><em>Only active</em>, <em>Religion mode</em></dt>
+    <dd>A bar has only one colour. If <em>any</em> data related to a religious group is active, the bar has saturated colours;
+    if all data related to a religious group is filtered out, the bar is shown in a less saturated colour.</dd>
+    <dt><em>All data</em>, <em>Religion mode</em></dt>
+    <dd>A bar can be divided into two parts:
+    a saturated and a less saturated part.
+    The less saturated part represents the relative amount of data currently filtered out.</dd>
+    <dt><em>Only active</em>, <em>Confidence mode</em></dt>
+    <dd>A bar can be divided into several sections.
+    Each section represents the relative amount of data with a certain level of confidence.</dd>
+    <dt><em>All data</em>, <em>Confidence mode</em></dt>
+    <dd>A bar can be divided into two general parts:
+    a saturated and a less saturated part representing the data currently active or filtered out, respectively.
+    Each part can have several sections, which each represent the relative amount of data with a certain level of confidence.</dd>
+</dl>
 
 <p>
-  In <em>Confidence mode</em>, each node is split up into more areas:
-  one for each <em>active</em> confidence value, and one for each <em>inactive</em> confidence value.
-  Again, inactive values have less saturated colours.
   The <em>aspect of confidence</em> used for the visualization can be selected in the view <em>Confidence</em>;
   there, the currently used aspect is indicated with an <i class="fa fa-eye"></i> eye symbol below the column.
 </p>
@@ -91,7 +100,7 @@
 </p>
 
 
-<section id="religion-view-advanced-mode">
+<article id="religion-view-advanced-mode">
 <h5>Advanced Mode</h5>
 
 {% if show_figures %}
@@ -134,13 +143,13 @@
   This must be understood as <q>evidences with COE <strong>and</strong> ARM <strong>and</strong> SYR.</q>
   In turn, this differs from checking the three religious groups in <em>Simple</em> mode, which equals <q>evidences with COE <strong>or</strong> ARM <strong>or</strong> SYR.</q>
 </p>
-</section>
+</article>
 
 <h4>Filter Controls</h4>
 
 <p>
   A few additional utilities are available for managing the checkbox columns.
-  The controls for adding (<i class="fa fa-fw fa-plus"></i> plus button) and removing (<i class="fa fa-fw fa-trash"></i> delete button) are already described in the {{ full_documentation_link('religion-view-advanced-mode', 'advanced mode description') }}.
+  The controls for adding (<i class="fa fa-fw fa-plus"></i> plus button) and removing (<i class="fa fa-fw fa-trash"></i> delete button) are already described in the {{ full_documentation_link('religion-view-advanced-mode', 'advanced mode description', true) }}.
   Importantly, columns can only be added in advanced mode, and the last remaining column cannot be removed.
   The additional controls in the view are:
 </p>
