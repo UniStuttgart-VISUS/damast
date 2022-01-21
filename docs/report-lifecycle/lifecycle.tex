@@ -55,7 +55,9 @@
   \pic at (7cm,-4cm) {state=evicted/{{Metadata in DB},{Filter in DB},{Reports empty}}};
   \node [minimum width=2cm,minimum height=1cm,draw,cloud,anchor=east] at ($ (started.west) - (4cm,0) $) (filter) { filter };
 
-  \draw [arrow] (filter.east) -- (started.west) node [pos=.05,anchor=south west,inner sep=2pt] {\footnotesize Report provisioned};
+  \draw [arrow] (filter.east) -- (started.west)
+    node [pos=.05,anchor=south west,inner sep=2pt] {\footnotesize Report provisioned}
+    node [pos=.05,anchor=north west,inner sep=2pt] {\footnotesize UUID generated};
   \draw [arrow] (started.east) -- (completed.west)
     node [pos=.95,anchor=north east,inner sep=2pt] {\footnotesize Report finishes successfully};
 
@@ -64,7 +66,7 @@
   \draw [arrow] (evicted.west) -| ($ (started.west) - (1cm,0) $) coordinate (before-started) -- (started.west);
   \path let \p1 = (evicted.west),
             \p2 = (before-started)
-    in node [anchor=north] at ($ (\x1, \y1)!0.5!(\x2,\y1) $) {\footnotesize Report accessed};
+    in node [anchor=north,inner sep=2pt] at ($ (\x1, \y1)!0.5!(\x2,\y1) $) {\footnotesize Report accessed};
 
   \draw [arrow] (started.east) -- ++(1cm,0) |- (failed.west)
     node [pos=.95,anchor=south east,inner sep=2pt] {\footnotesize Report generation fails};
@@ -72,12 +74,12 @@
   \draw [arrow] (failed.east) -| ++(1cm,1.5cm) coordinate (tmp) -| (before-started) -- (started.west);
   \path let \p1 = (tmp),
             \p2 = (before-started)
-    in node [anchor=south] at ($ (\x1, \y1)!0.5!(\x2,\y1) $) {\footnotesize Restart report};
+    in node [anchor=south,inner sep=2pt] at ($ (\x1, \y1)!0.5!(\x2,\y1) $) {\footnotesize Restart report};
 
   \draw [arrow] (completed.east) -| ++(1cm,-1.5cm) coordinate (tmp) -| (before-started) -- (started.west);
   \path let \p1 = (tmp),
             \p2 = (before-started)
-    in node [anchor=south] at ($ (\x1, \y1)!0.5!(\x2,\y1) $) {\footnotesize New report with same filter};
+    in node [anchor=south,inner sep=2pt] at ($ (\x1, \y1)!0.5!(\x2,\y1) $) {\footnotesize New report with same filter and new UUID};
 
 
   \path let \p1 = (evicted-node-first),
