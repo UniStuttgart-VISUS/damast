@@ -827,18 +827,68 @@ After deletion, the evidence editor is closed.
 \section{Reporting}
 \label{sec:reporting}
 
+Damast provides the option to generate a \emph{report} from a specific subset of historical evidence.
+This subset is derived from
+\begin{enumerate*}[label=(\arabic*)]
+  \item the data contained in the database, and
+  \item a set of \emph{filters} concerning different attributes of that data.
+\end{enumerate*}
+The format and options of these filters are formalized as JSONSchema, and they are a part of the visualization state (see~\cref{sec:vis-reproducible}).
+An appropriate file of filters can be obtained (downloaded) from the settings pane of the visualization, or from an existing report.
+Report generation can also be triggered directly from the visualization, in which case the state is passed to the report generation software behind the scenes.
+In both cases, the filters used are those that are currently active in the visualization as well, meaning that the report will contain the evidences currently shown in the visualization.
+
+The report consists of multiple sections.
+First, metadata about the report, such as who provisioned it and when, as well as a textual description of the filters applied within the report, and the cardinality of data entities matching these filters.
+Then, the evidences are listed, and their contents are represented as serialized texts.
+The entities contained in these evidences (places, religions, and persons) are then listed individually with the relevant information (such as alternative names for the places), and an overall timeline is shown.
+Finally, all sources these evidences were extracted from are listed.
+
+All information in the individual sections is cross-referenced.
+So, there is a reference from an evidence mentioning a place to the entry for that place in the report;
+and vice versa, the places, religions, and persons reference all evidences they are mentioned in.
+Further, sources are referenced from the evidences, and the evidences are again referenced as a list from the source section.
+
+In the section of places, the report also shows a map where they are all marked together with the religions mentioned in those places.
+This map is generated using \verb!matplotlib!~\cite{Hunter_2007} and is saved both as an SVG file for the HTML version of the report, and as a standalone PDF document for the PDF version.
+The PDF map is also stored separately for download.
+The map uses Natural Earth~\footnote{\url{https://www.naturalearthdata.com}} vector map data, which is licensed under CC0 (public domain).
+
+\subsection{Generating a Report}
+\label{sec:report-generation}
+
 \subsection{HTML Report}
 \label{sec:report-html}
 
 \subsection{\LaTeX{} Report}
 \label{sec:report-latex}
 
-\subsection{Generating a Report from a Filter State}
-\label{sec:reporting-filter}
+\subsection{List of Reports}
+\label{sec:report-list}
+
+\subsection{Report Lifecycle}
+\label{sec:report-lifecycle}
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[]{report-lifecycle/lifecycle.pdf}
+
+  \caption{
+    The lifecycle of report records in the database.
+    After a report gets provisioned, it is in \texttt{started} state while the report generation code runs.
+    If that fails, it enters \texttt{failed} state, otherwise it is \texttt{completed}.
+    After a while of not being accessed, the finished report is \texttt{evicted} and only the filter and metadata remain.
+    On the next access, the report contents are regenerated from the database.
+  }
+  \label{fig:report-lifecycle}
+\end{figure}
+
 
 
 \section{Other Pages}
 
+A few other, miscellaneous pages exist on the \verb!docs! blueprint.
+These also include an index page under \verb!${DHIMMIS_PROXY_PREFIX}/docs/! that shows links to all of these pages that the user is allowed to visit.
 
 \subsection{Documents}
 
