@@ -3,7 +3,9 @@
 
 2022-01-xx                                                           v1.0.5
 
-Minor CSS source file restructuring.
+Minor CSS source file restructuring. Fix internal GitHub dependencies to
+point to public repositories. Fix vulnerable npm dependency
+(CVE-2021-23566).
 
 
 2022-01-18                                                           v1.0.4
