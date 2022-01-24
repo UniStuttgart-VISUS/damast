@@ -1,3 +1,18 @@
+{#- vim: set ft=htmldjango : -#}
+{% from 'docs/vis-documentation-macros.html' import full_documentation_link with context %}
+
+{% if show_figures %}
+<figure id="fig-location-list-1">
+  <img src="{{ url_for('docs.vis.static', filename='location-list-1.png') }}">
+  <figcaption>
+    The location list.
+    The <em>location confidence</em> is indicated by a colored marker behind the place name.
+    Places that match the search term at the top are highlighted in orange if their primary name matches, or in yellow if an alternative name matches.
+    Names are shown in italics, darker, and desaturated if their location confidence level is not currently checked.
+  </figcaption>
+</figure>
+{% endif %}
+
 <p>
 In this view, all locations in the data are listed by their main toponym.
 Places can be searched, selected and filtered.
@@ -21,10 +36,10 @@ Places can be searched, selected and filtered.
   Each line in the lists represents one location.
   Locations are listed with their <em>main toponym</em>.
   Accordingly, looking through the lists with a specific place name in mind, if this place name is not the <em>main toponym</em>, the location is not found and should be searched in the <em>Search field</em>.
-  Here, <em>Alternative names</em> are considered, too (cf. further below).
-  The place names are sorted alphabetically by locale, disregarding a prefix of apostrophes and arabic definite articles (i.e., <em><q>Amid</q></em> comes before <em><q>'Amman</q></em>, and <em><q>Jubayl</q></em> comes before <em><q>al-Juma</q></em>.
-  In <em>Only active</em> mode (cf. the <em>Settings</em>), only the brushed locations are listed.
-  When <em>hovering</em> over the line with the mouse, a <em>tooltip</em> with additional information is shown:
+  Here, <em>Alternative names</em> are considered, too (cf. {{ full_documentation_link('location-list-search-toponyms', 'further below', same=true) }}).
+  The place names are sorted alphabetically by locale, disregarding a prefix of apostrophes and arabic definite articles (i.e., <em><q>Amid</q></em> comes before <em><q>'Amman</q></em>, and <em><q>Jubayl</q></em> comes before <em><q>a-Juma</q></em>.
+  In <em>Only active</em> mode (cf. the <em>{{ full_documentation_link('settings-all-data-only-active', 'Settings pane') }}</em>), only the brushed locations are listed.
+  When <em>hovering</em> over the line with the mouse, a <em>tooltip</em> (see {{ full_documentation_link('fig-location-list-2', 'this figure') }}) with additional information is shown:
 </p>
 <ul>
   <li>place type,</li>
@@ -33,8 +48,9 @@ Places can be searched, selected and filtered.
   <li>alternative names,</li>
   <li>external URIs referencing the same place.</li>
 </ul>
+
 <p>
-  Also, while hovering, a <i class="fa fa-fw fa-external-link"></i> link symbol appears at the very end of the line.
+  Also, while hovering, a <i class="fa fa-fw fa-external-link"></i> link symbol appears at the very end of the line (see {{ full_documentation_link('fig-location-list-2', 'this figure') }}).
   Clicking the symbol opens the respective overview page of that place (cf. ###). <!-- Where will these place pages be described? -->
   (If the user has rights to edit the database, clicking the symbol leads to the respective entry of the location in the database instead.)
 </p>
@@ -47,23 +63,42 @@ Places can be searched, selected and filtered.
   Keep in mind that this can only happen when <em>All data</em> mode is active, otherwise locations with non-matching location confidence will be hidden.
 </p>
 
+{% if show_figures %}
+<figure id="fig-location-list-2">
+  <img src="{{ url_for('docs.vis.static', filename='location-list-2.png') }}">
+  <figcaption>
+    A tooltip in the location list, for the place Antioch.
+  </figcaption>
+</figure>
+{% endif %}
+
+
 <p>
   The list <em>Placed</em> contains all locations for which a geographical position is known.
 </p>
 
-<p>
+<p id="location-list-unplaced">
   The list <em>Unplaced</em> contains all locations for which a geographical position is not (yet) known.
   In this case, <em>location confidence</em> is attributed with <em>no value</em> and colored accordingly.
 </p>
 <p>
   <em>Note:</em> Missing data is normal during research and while entering data is still in progress.
   However, missing data can severly affect confidence in the visualization if not properly communicated.
-  We have therefore chosen to make missing geographical locations and time information explicit in separate views of this interface (apart from the section <em>Unplaced</em> in the <em>Location List</em>, cf. the view <em>Untimed Data</em>).
+  We have therefore chosen to make missing geographical locations and time information explicit in separate views of this interface (apart from the section <em>Unplaced</em> in the <em>Location List</em>, cf. the view <em>{{ full_documentation_link('untimed-data', 'Untimed Data') }}</em>).
   This also allows for searches directed at data in need of improvement.
 </p>
 
 <h3>Interaction</h3>
 
+<h4>Selection</h4>
+
+<p>
+  Individual locations can be selected by clicking on the respective line of the list.
+  This will highlight the location and bring it to the top of the list.
+  Data related to the selected location will be <em>linked</em> in all other views, while non-selected data will be displayed in less-saturated colors.
+</p>
+
+<article id="location-list-search-toponyms">
 <h4>Searching for Toponyms</h4>
 <p>
   It is possible to search for location names in the search field at the top.
@@ -88,6 +123,7 @@ After, an <code>a</code> is required, and then any of <code>tdrzsṣḍṭẓln<
 After any of those, a dash <code>-</code> is required.
 This will, for example, match <em>Marw <span style="color:#d61">ar-</span>Rudh</em>.
 </p>
+</article>
 
 <h4>Selection</h4>
 

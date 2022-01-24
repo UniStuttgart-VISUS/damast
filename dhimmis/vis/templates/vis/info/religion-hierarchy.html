@@ -1,3 +1,17 @@
+{#- vim: set ft=htmldjango : -#}
+{% from 'docs/vis-documentation-macros.html' import full_documentation_link with context %}
+
+{% if show_figures %}
+<figure id="fig-religion-hierarchy-1">
+  <img src="{{ url_for('docs.vis.static', filename='religion-hierarchy-1.png') }}">
+  <figcaption>
+    The religion hierarchy in its default state.
+    At the top are the controls to revert the filter, the switch between simple and advanced filter mode, and the apply button.
+    The religions are visualized as an indented tree, and are filtered by enabling the respective checkbox.
+  </figcaption>
+</figure>
+{% endif %}
+
 <p>
   This view shows <strong>all religious groups</strong> contained in the database and allows for selecting and filtering the data according to religion.
 </p>
@@ -20,7 +34,7 @@
   The religious groups each have a distinct color.
   For Christianity (red), Islam (green), and Judaism (blue), religious groups belonging to these general religious affiliations do have hues of the same colour.
   (However, the difference between colours is limited because of the amount of religious groups.)
-  In <em>Confidence mode</em> (cf. the pane <em>Settings</em>), the bars of the groups are colored based on the average confidence of the represented data.
+  In <em>Confidence mode</em> (cf. the pane <em>{{ full_documentation_link('settings-display-mode', 'Settings') }}</em>), the bars of the groups are colored based on the average confidence of the represented data.
 </p>
 
 <h4>Details regarding colouring and saturation</h4>
@@ -86,7 +100,18 @@
 </p>
 
 
-<h5 id="religion-view-advanced-mode">Advanced Mode</h5>
+<article id="religion-view-advanced-mode">
+<h5>Advanced Mode</h5>
+
+{% if show_figures %}
+<figure id="fig-religion-hierarchy-2">
+  <img src="{{ url_for('docs.vis.static', filename='religion-hierarchy-2.png') }}">
+  <figcaption>
+    The religion hierarchy in advanced mode.
+    The filter limits evidences to those from places where two or more of the Syriac Orthodox Church (SYR), the Armenian Church (ARM), and the Church of the East (COE) are present.
+  </figcaption>
+</figure>
+{% endif %}
 
 <p>
   In <em>Advanced</em> mode, it is possible to filter not individual religions but different <em>combinations</em> of religions.
@@ -102,7 +127,8 @@
 </p>
 
 <p>
-  The following procedure creates a filter corresponding to the analysis described above:
+  The following procedure creates a filter corresponding to the analysis described above
+  (see also {{ full_documentation_link('fig-religion-hierarchy-2', 'this figure') }}):
 </p>
 <ul>
   <li>Switch to <em>advanced</em> mode.</li>
@@ -117,12 +143,13 @@
   This must be understood as <q>evidences with COE <strong>and</strong> ARM <strong>and</strong> SYR.</q>
   In turn, this differs from checking the three religious groups in <em>Simple</em> mode, which equals <q>evidences with COE <strong>or</strong> ARM <strong>or</strong> SYR.</q>
 </p>
+</article>
 
 <h4>Filter Controls</h4>
 
 <p>
   A few additional utilities are available for managing the checkbox columns.
-  The controls for adding (<i class="fa fa-fw fa-plus"></i> plus button) and removing (<i class="fa fa-fw fa-trash"></i> delete button) are already described in the <a href="#religion-view-advanced-mode">advanced mode</a> description.
+  The controls for adding (<i class="fa fa-fw fa-plus"></i> plus button) and removing (<i class="fa fa-fw fa-trash"></i> delete button) are already described in the {{ full_documentation_link('religion-view-advanced-mode', 'advanced mode description', true) }}.
   Importantly, columns can only be added in advanced mode, and the last remaining column cannot be removed.
   The additional controls in the view are:
 </p>

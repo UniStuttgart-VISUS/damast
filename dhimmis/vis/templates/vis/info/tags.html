@@ -1,10 +1,23 @@
+{#- vim: set ft=htmldjango : -#}
+{% from 'docs/vis-documentation-macros.html' import full_documentation_link with context %}
+
+{% if show_figures %}
+<figure id="fig-tags">
+  <img src="{{ url_for('docs.vis.static', filename='tags.png') }}">
+  <figcaption>
+    The tags view.
+    Three tags were selected.
+  </figcaption>
+</figure>
+{% endif %}
+
 <p>
   This view shows <strong>tags</strong> which are associated with evidences (i.e., a set of data concerning a place, religious group, time span, and the respective confidences).
   Tags were implemented to include additional information and to make further distinctions possible.
   For instance, the tag <em>bishoprics</em> is attributed to evidences referring to bishoprics as distinguished from <em>metropolitan sees</em>.
   This way, the visualized data can be filtered according to additional criteria.
   Note that, by default, all tags are <em>deselected</em>.
-  This means that no filters based on tags are active (cf. the section "Interaction" below.)
+  This means that no filters based on tags are active (cf. {{ full_documentation_link('tags-interaction', 'below', true) }}).
 </p>
 
 <h3>Contents</h3>
@@ -32,6 +45,7 @@
   The less saturated part of the bar represents evidences that are not active (i.e., do not match the current filters).
 </p>
 
+<section id="tags-interaction">
 <h3>Interaction</h3>
 
 <h4>Selection</h4>
@@ -68,3 +82,4 @@
     </dd>
   </dl>
 </p>
+</section>

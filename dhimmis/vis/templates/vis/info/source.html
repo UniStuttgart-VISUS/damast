@@ -1,3 +1,15 @@
+{#- vim: set ft=htmldjango : -#}
+{% from 'docs/vis-documentation-macros.html' import full_documentation_link with context %}
+
+{% if show_figures %}
+<figure id="fig-source">
+  <img src="{{ url_for('docs.vis.static', filename='source.png') }}">
+  <figcaption>
+    The source view.
+  </figcaption>
+</figure>
+{% endif %}
+
 <p>
   This view shows the <strong>sources</strong> from which the evidences (i.e., a set of data concerning a place, religious group, time span, and the respective confidences) were gathered.
 </p>
@@ -26,8 +38,8 @@
 
 <h4>Religion/Confidence Segmentation Visualization</h4>
 <p>
-  The third column visualizes the segmentation of the evidences on the religions or on the levels of confidence, depending on the <em>mode</em> (cf. "Display mode" in the <em>Settings pane</em>.
-  In <em>Confidence Mode</em>, instead of religion, the currently selected aspect of confidence is used.)
+  The third column visualizes the segmentation of the evidences on the religions or on the levels of confidence, depending on the <em>mode</em> (cf. {{ full_documentation_link('settings-display-mode', 'Display mode') }} in the <em>Settings pane</em>;
+  in <em>Confidence Mode</em>, instead of religion, the currently selected aspect of confidence is used).
   The visualization used is a normalized stacked barchart.
   Because the total width of the bars is the same regardless of the amount of evidences, the width of each segment signifies the number of evidences with that religion or confidence level <em>in relation to</em> the total evidence count for that source.
 </p>

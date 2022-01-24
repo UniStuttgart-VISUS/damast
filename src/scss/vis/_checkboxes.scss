@@ -1,0 +1,48 @@
+@use '../common/colors' as *;
+@use 'variables' as *;
+@use 'filters' as filters;
+
+input.cell-check {
+  -webkit-appearance: none;
+
+  display: inline-block;
+  position: relative;
+  box-sizing: border-box;
+  text-align: center;
+
+  border: 2px solid $clr-accent;
+  padding: 7px;
+
+  color: $clr-accent;
+  background-color: $clr-bg;
+
+  &:focus {
+    outline: 0;
+  }
+
+  &:active,
+  &:checked:active {
+    color: $clr-bg;
+    background-color: $clr-accent;
+  }
+
+  &:checked::before,
+  &:checked::after {
+    content: '';
+    width: 0px;
+    height: 0px;
+    padding: 1px 11px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: currentColor;
+  }
+  &:checked::before {
+    transform: translate(-11px, -1px) rotate(45deg);
+  }
+  &:checked::after, {
+    transform: translate(-11px, -1px) rotate(-45deg);
+  }
+}
+
+

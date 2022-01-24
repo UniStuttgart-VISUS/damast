@@ -1,3 +1,16 @@
+{#- vim: set ft=htmldjango : -#}
+{% from 'docs/vis-documentation-macros.html' import full_documentation_link with context %}
+
+{% if show_figures %}
+<figure id="fig-map-1">
+  <img src="{{ url_for('docs.vis.static', filename='map-1.png') }}">
+  <figcaption>
+    The map pane in <em>clustered</em> <em>map mode.</em>
+  </figcaption>
+</figure>
+{% endif %}
+
+
 <p>
   The <strong><em>Map</em></strong> visualizes the geographical aspect of the data, i.e., the evidences of institutionalized religious presence at different locations.
 </p>
@@ -8,9 +21,11 @@
 
 <p>
   The locations are <em>aggregated</em> to eliminate overlap, and so, by default, each map glyph represents <em>one or more</em> cities, depending on the zoom level.
-  (This so-called <em>Clustered</em> <em>Map mode</em> is the default and can be changed in the settings; cf. the info text below and the info text of the <em>Settings pane</em>.)
+  This so-called <em>Clustered</em> <em>Map mode</em> is the default and can be changed in the settings (cf. the {{ full_documentation_link('map-unclustered-mode', 'info text below', true) }} and the info text of the <em>{{ full_documentation_link('settings-map-mode', 'Settings pane') }}</em>).
   When <em>hovering</em> over a glyph, it loses opacity and the aggregated locations are indicated on the map as small turquoise dots (maybe partially covered by the glyph).
-  What is more, while hovering a tooltip is shown which provides information on the number of evidences, of religions, and of places related to the glyph. If the glyph does not aggregate more than ### places, for each place the toponym, the geo-coordinates, and more information on the evidences belonging to that place are provided.
+  What is more, while hovering a tooltip is shown, which provides information on the number of evidences, of religions, and of places related to the glyph.
+  If the glyph does not aggregate more than five places, for each place the toponym, the geo-coordinates, and more information on the evidences belonging to that place are provided.
+  Even more details are provided if the glyph only represents one place.
 </p>
 
 <p>
@@ -28,12 +43,24 @@
 </p>
 
 <p>
-  If <em>in all shown map glyphs</em>, no more than four nodes of a lower part in the religion hierarchy would be present, the data is aggregated on that lower level.
+  If <em>in all shown map glyphs,</em> no more than four nodes of a lower part in the religion hierarchy would be present, the data is aggregated on that lower level.
   For example, if the map would only show two glyphs; one with the Latin Church, the Coptic Church, and the Georgian Orthodox Church; and the other with the Latin Church and the Rabbanites; each of these religious denominations could be represented by an individual circle.
   This will only happen if it is possible in all glyphs, as doing otherwise would skew the perceived variety of religions.
 </p>
 
+
+<article id="map-unclustered-mode">
 <h4>Unclustered Mode</h4>
+
+{% if show_figures %}
+<figure id="fig-map-2">
+  <img src="{{ url_for('docs.vis.static', filename='map-2.png') }}">
+  <figcaption>
+    The map pane in <em>unclustered</em> <em>map mode.</em>
+  </figcaption>
+</figure>
+{% endif %}
+
 
 <p>
   The aggregation or clustering of places can be turned off in the <em>Settings pane</em>.
@@ -44,6 +71,7 @@
   <em>Z</em>-ordering of the glyphs ensures that glyphs with fewer religious groups appear in front of larger glyphs with more religious groups.
   This mode should be used with due caution when interpreting the results.
 </p>
+</article>
 
 <h4>Layers</h4>
 
@@ -123,6 +151,16 @@
 </p>
 
 <h4>Geographical Filtering</h4>
+
+{% if show_figures %}
+<figure id="fig-map-3">
+  <img src="{{ url_for('docs.vis.static', filename='map-3.png') }}">
+  <figcaption>
+    The map pane with the Geoman editor open, and a polygon being edited.
+  </figcaption>
+</figure>
+{% endif %}
+
 <p>
   Evidences can be filtered by geographical location.
   This is done by drawing the respective bounding shapes into the map.

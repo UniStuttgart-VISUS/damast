@@ -1,7 +1,20 @@
+{#- vim: set ft=htmldjango : -#}
+{% from 'docs/vis-documentation-macros.html' import full_documentation_link with context %}
+
+{% if show_figures %}
+<figure id="fig-settings">
+  <img src="{{ url_for('docs.vis.static', filename='settings.png') }}">
+  <figcaption>
+    The settings pane.
+  </figcaption>
+</figure>
+{% endif %}
+
 <p>
   This view shows different <strong>settings and features.</strong>
 </p>
 
+<section id="settings-vis-settings">
 <h3>Visualization Settings</h3>
 
 <p>
@@ -10,13 +23,16 @@
 </p>
 
 
+<article id="settings-all-data-only-active">
 <h4>Show filtered data</h4>
 
 <p>
   This switch controls if data is visualized although it does not match the currently applied filters.
   If <em>All data</em> is selected, non-matched data is represented by less saturated colors.
 </p>
+</article>
 
+<article id="settings-display-mode">
 <h4>Display mode</h4>
 
 <p>
@@ -26,6 +42,7 @@
   The <em>aspect of confidence</em> used for the visualization can be selected in the view <em>Confidence</em>;
   there, the currently used aspect is indicated with an <i class="fa fa-eye"></i> eye symbol below the column.
 </p>
+</article>
 
 <h4>Timeline mode</h4>
 
@@ -37,6 +54,7 @@
   The timeline then looks like a <em>Gantt chart</em>.
 </p>
 
+<article id="settings-map-mode">
 <h4>Map mode</h4>
 
 <p>
@@ -50,6 +68,8 @@
   If glyphs are unclustered, one small symbol per place and religion is shown.
   <em>Note</em>: This mode may lead to overlap of symbols when zooming out even to a relative small scale and should thus be used with due caution when interpreting the results.
 </p>
+</article>
+</section>
 
 
 <h3>Generate Report</h3>
@@ -58,8 +78,7 @@
   With this feature, a detailed <strong>text report</strong> can be generated, which presents all data according to the applied filters.
   The report will also contain information on the filter criteria that led to the selection of data.
   After clicking <em>Generate report</em>, a new tab in the browser will open. A report can also be created by uploading a <em>visualization state</em> that was safed and downloaded beforehand (see below).
-  <!-- In what follows, is linking to the start page possible? -->
-  More about reports can be found on the start page.
+  More about reports can be found on the <a href="{{ url_for('root-app.root') }}" target="_blank">start page</a>.
 </p>
 <p>
   <em>Note:</em> It is discouraged to create a report with very broad filter criteria, as it will become very long and thus difficult to handle.
@@ -96,7 +115,7 @@
 <ul>
   <li>the <em>filters</em> that are currently applied,</li>
   <li>the center point, zoom level, and visible layers of the <em>Map</em>, and</li>
-  <li>the <em>Visualization settings</em> (cf. above).</li>
+  <li>the <em>Visualization settings</em> (cf. {{ full_documentation_link('settings-vis-settings', 'above', true) }}).</li>
 </ul>
 
 <p>

@@ -1,3 +1,18 @@
+{#- vim: set ft=htmldjango : -#}
+{% from 'docs/vis-documentation-macros.html' import full_documentation_link with context %}
+
+{% if show_figures %}
+<figure id="fig-confidence">
+  <img src="{{ url_for('docs.vis.static', filename='confidence.png') }}">
+  <figcaption>
+    The confidence view.
+    Aspects of confidence are listed as columns, and confidence levels ordered into rows.
+    Checkboxes control which confidence levels should be shown for each aspect, and the number of evidences for each confidence level and aspect are given in numbers.
+  </figcaption>
+</figure>
+{% endif %}
+
+
 <p>
   This view shows the different <strong>level of confidences</strong> attributed to the different elements of an evidence (i.e., place, religious group, time span, etc.).
 </p>
@@ -5,7 +20,7 @@
 <h3>Contents</h3>
 <p>
   The view consists of a table, in which each row represents one <strong>level of certainty</strong> and each column an <strong>aspect of confidence</strong>.
-  For each cell in the table, a checkbox for filtering (cf. further below) is displayed as well as the number of evidences with the respective confidence and aspect.
+  For each cell in the table, a checkbox for filtering (cf. {{ full_documentation_link('confidence-filtering', 'further below', true) }}) is displayed as well as the number of evidences with the respective confidence and aspect.
   The rows are sorted by descending level of confidence.
 </p>
 
@@ -65,6 +80,7 @@
 
 <h3>Interaction</h3>
 
+<article id="confidence-filtering">
 <h4>Filtering</h4>
 
 <p>
@@ -105,11 +121,12 @@
   Here, the new value for the new row (or column) is the inverse of what the majority of values (3 or more) was before;
   for example, if 4 checkboxes were checked, and 2 unchecked, for the <em>uncertain</em> row, clicking on the row header would <em>uncheck</em> all checkboxes in the row.
 </p>
+</article>
 
 <h4>Visualized Aspect of Confidence</h4>
 
 <p>
-  By clicking on the <i class="fa fa-eye fa-lg"></i> eye in the bottom row of each column, the aspect of confidence that is visualized in <em>Confidence Mode</em> (cf. <em>Display mode</em> in the pane <em>Settings</em>) can be selected.
+  By clicking on the <i class="fa fa-eye fa-lg"></i> eye in the bottom row of each column, the aspect of confidence that is visualized in <em>Confidence Mode</em> (cf. <em>{{ full_documentation_link('settings-display-mode', 'Display mode') }}</em> in the pane <em>Settings</em>) can be selected.
   The currently selected aspect is indicated by a colored <i class="fa fa-eye fa-lg"></i> eye.
   By default, <em>Religion confidence</em> is used.
 </p>

@@ -7,7 +7,7 @@ app = AuthenticatedBlueprintPreparator(name, __name__, template_folder='template
 
 @app.route('/vis', role=['vis'])
 def root():
-    return flask.render_template('docs/vis.html')
+    return flask.render_template('docs/vis.html', show_figures=True)
 
 
 @app.route('/vis/static/<path:filename>', role=['vis'])

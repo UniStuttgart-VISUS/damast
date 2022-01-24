@@ -1,8 +1,8 @@
-@use 'colors' as *;
-@use 'vis-variables' as *;
-@use 'mixins';
+@use 'common/colors' as *;
+@use 'vis/variables' as *;
+@use 'common/mixins';
 
-@forward 'forms';
+@forward 'common/forms';
 
 .content {
   @include mixins.baseFlexBlock();
