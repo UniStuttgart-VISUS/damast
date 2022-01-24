@@ -1,11 +1,13 @@
 <p>
-In this view, all locations in the data are listed by their main toponym. Places can be searched, selected and filtered.
+In this view, all locations in the data are listed by their main toponym.
+Places can be searched, selected and filtered.
 </p>
 
 <h3>Contents</h3>
 
 <p>
-  The view consists of several sections: a <em>Search field</em>, a <em>Place Filter</em>, and two lists showing <em>placed</em> and <em>unplaced</em> evidences, respectively.
+  The view consists of several sections:
+  a <em>Search field</em>, a <em>Place Filter</em>, and two lists showing <em>placed</em> and <em>unplaced</em> evidences, respectively.
   The position of the two lists can be swapped by clicking on the <b>⭥</b> swap button.
   Detailed descriptions how to use the <em>Search field</em> and the <em>Place Filter</em> are found below under <em>Interaction</em>.
 </p>
@@ -20,8 +22,8 @@ In this view, all locations in the data are listed by their main toponym. Places
   Locations are listed with their <em>main toponym</em>.
   Accordingly, looking through the lists with a specific place name in mind, if this place name is not the <em>main toponym</em>, the location is not found and should be searched in the <em>Search field</em>.
   Here, <em>Alternative names</em> are considered, too (cf. further below).
-  The place names are sorted alphabetically by locale, disregarding a prefix of apostrophes and arabic definite articles (i.e., <em><q>Amid</q></em> comes before <em><q>'Amman</q></em>, and <em><q>Jubayl</q></em> comes before <em><q>a-Juma</q></em>.
-  In <em>Only active</em> mode (cf. the <em>Settings pane</em>), only the brushed locations are listed.
+  The place names are sorted alphabetically by locale, disregarding a prefix of apostrophes and arabic definite articles (i.e., <em><q>Amid</q></em> comes before <em><q>'Amman</q></em>, and <em><q>Jubayl</q></em> comes before <em><q>al-Juma</q></em>.
+  In <em>Only active</em> mode (cf. the <em>Settings</em>), only the brushed locations are listed.
   When <em>hovering</em> over the line with the mouse, a <em>tooltip</em> with additional information is shown:
 </p>
 <ul>
@@ -33,26 +35,28 @@ In this view, all locations in the data are listed by their main toponym. Places
 </ul>
 <p>
   Also, while hovering, a <i class="fa fa-fw fa-external-link"></i> link symbol appears at the very end of the line.
-  Clicking the symbol opens the respective overview page of that place (cf. ###).
+  Clicking the symbol opens the respective overview page of that place (cf. ###). <!-- Where will these place pages be described? -->
   (If the user has rights to edit the database, clicking the symbol leads to the respective entry of the location in the database instead.)
 </p>
 
 <p>
   Behind the place name, the <em>location confidence</em> of each place is shown as a small, colored circle.
   The color scale is the same as in the <em>Confidence view</em>.
-  Additionally, when the <em>Location Confidence Filter</em> does not match the location's location confidence, the name is displayed <span style="font-style:italic;color:#d61;font-weight:700;filter:brightness(90%)saturate(60%)">in italics, darker, and desaturated</span>.
+  Additionally, when the <em>Location Confidence Filter</em> does not match the location's location confidence, the name is displayed <span style="font-style:italic;color:#d61;font-weight:700;filter:brightness(90%)saturate(60%)">in italics, darker, and less saturated</span>.
   The confidence circle is also not filled in that case.
-  Keep in mind that this can only happen when the <em>All data</em> display mode is active, otherwise locations with non-matching location confidence will be hidden.
+  Keep in mind that this can only happen when <em>All data</em> mode is active, otherwise locations with non-matching location confidence will be hidden.
 </p>
 
 <p>
-  The list <em>Placed</em> locations contains all locations for which a geographical position is known.
+  The list <em>Placed</em> contains all locations for which a geographical position is known.
 </p>
 
 <p>
   The list <em>Unplaced</em> contains all locations for which a geographical position is not (yet) known.
-  Note that in this case, <em>location confidence</em> is attributed with <em>no value</em> and colored accordingly.
-  <em>Note:</em> Missing data is normal while entering data is still in progress.
+  In this case, <em>location confidence</em> is attributed with <em>no value</em> and colored accordingly.
+</p>
+<p>
+  <em>Note:</em> Missing data is normal during research and while entering data is still in progress.
   However, missing data can severly affect confidence in the visualization if not properly communicated.
   We have therefore chosen to make missing geographical locations and time information explicit in separate views of this interface (apart from the section <em>Unplaced</em> in the <em>Location List</em>, cf. the view <em>Untimed Data</em>).
   This also allows for searches directed at data in need of improvement.
@@ -61,6 +65,29 @@ In this view, all locations in the data are listed by their main toponym. Places
 <h3>Interaction</h3>
 
 <h4>Searching for Toponyms</h4>
+<p>
+  It is possible to search for location names in the search field at the top.
+  Typing a search query in that field will highlight the search results in <span style="color:#d61;font-weight:700">bold orange</span> and sort them to the top of the list.
+  The search also matches alternative names.
+  Matches to alternative names that do not match the main name are sorted after main name matches and highlighted in <span style="color:#dc1;font-weight:700">bold yellow</span>.
+</p>
+
+<p>
+  The search field supports JavaScript-style regular expressions.
+  For example, to search for locations with an Arabic definite article, the query
+</p>
+
+<pre><code>  \ba([tdrzsṣḍṭẓln]|[tds]h)-
+</code></pre>
+
+<p>
+can be used.
+<strong>Explanation</strong>:
+<code>\b</code> searches for the beginning of a word.
+After, an <code>a</code> is required, and then any of <code>tdrzsṣḍṭẓln</code>, or <code>dh</code>, <code>th</code>, or <code>sh</code>.
+After any of those, a dash <code>-</code> is required.
+This will, for example, match <em>Marw <span style="color:#d61">ar-</span>Rudh</em>.
+</p>
 
 <h4>Selection</h4>
 
@@ -70,37 +97,12 @@ In this view, all locations in the data are listed by their main toponym. Places
   Data related to the selected location will be <em>linked</em> in all other views, while non-selected data will be displayed in less-saturated colors.
 </p>
 
-<h4>Searching for Toponyms</h4>
-<p>
-It is possible to search for location names in the search field at the top.
-Typing a search query in that field will highlight the search results in <span style="color:#d61;font-weight:700">bold orange</span> and sort them to the top of the list.
-The search also matches alternative names.
-Matches to alternative names that do not match the main name are sorted after main name matches and highlighted in <span style="color:#dc1;font-weight:700">bold yellow</span>.
-</p>
-
-<p>
-The search field supports JavaScript-style regular expressions.
-For example, to search for locations with an Arabic definite article, the query
-</p>
-
-<pre><code>  \ba([tdrzsṣḍṭẓln]|[tds]h)-
-</code></pre>
-
-<p>
-can be used.
-<b>Explanation</b>:
-<code>\b</code> searches for the beginning of a word.
-After, an <code>a</code> is required, and then any of <code>tdrzsṣḍṭẓln</code>, or <code>dh</code>, <code>th</code>, or <code>sh</code>.
-After any of those, a dash <code>-</code> is required.
-This will, for example, match <em>Marw <span style="color:#d61">ar-</span>Rudh</em>.
-</p>
-
-<h4>Filter by Place</h4>
+<h4>Filtering</h4>
 
 <p>
 The expandable <em>Place Filter</em> section at the top allows to filter evidence by attributed place.
-When expanded, it shows a list of all places in the database.
-A <i class="fa fa-check"></i> check mark beside the place name indicates that it is selected (i.e., part of the place set).
+When expanded, a list of all places in the database is shown.
+A <i class="fa fa-check"></i> check mark to the left of the place name indicates that it is selected (i.e., part of the place set).
 The check mark (or <i class="fa fa-times"></i> cross for removed places that are still part of the active filter) is colored dependent on the state between the visible place set and the active place filter:
 no mark if the place is in neither;
 a <span style="color:#8fbcbb"><i class="fa fa-check"></i></span> turquoise check mark if it is in both;
@@ -118,7 +120,7 @@ Independently, the place sets are also stored when saving the entire visualizati
 </p>
 
 <p>
-A few buttons at the top help in selecting places on a larger scale:
+Buttons in the top left corner help in selecting places on a larger scale:
 </p>
 
 <ul>
@@ -186,7 +188,7 @@ A few buttons at the top help in selecting places on a larger scale:
 </ul>
 
 <p>
-The last three operations can be used to quickly create a complex place sets from a number of criteria.
+The last three operations can be used to quickly create a complex place set from a number of criteria.
 However, since they use the contents of the location list, they only make sense when the <em>Only active</em> visualization mode is active.
 For an exemplary analysis, say you want to explore evidence of <em>Christianity</em> in cities between 800 and 900, but only for cities where we have evidence for <em>Muslims,</em> but <strong>not</strong> for <em>Jews:</em>
 </p>
