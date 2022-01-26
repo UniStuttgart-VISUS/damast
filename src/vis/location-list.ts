@@ -384,7 +384,7 @@ export default class LocationList extends View<any, any> {
               .append('tr')
               .each(function(d: any) {
                 const row = d3.select(this);
-                row.append('td').text(d.name);
+                row.append('td').html(d.transcription ? `${d.name} <em>(${d.transcription})</em>` : d.name);
                 row.append('td').text(d.language).classed('alternative-name__language', true);
               });
           }
