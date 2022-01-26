@@ -92,7 +92,7 @@ async function search(searchText: string, caseSensitive = false): Promise<Search
       let uris = 0;
       p.external_uris.forEach(s => uris += (regex.exec(s)?.length || 0));
       let name_vars = 0;
-      p.name_vars.forEach(s => uris += (regex.exec(s)?.length || 0));
+      p.name_vars.forEach(s => name_vars += (regex.exec(s)?.length || 0));
 
       const priority: [number, number, number, number] = [ name, name_vars, comment, uris ];
       if (priority.some(d => d > 0)) results.push({ place: p, priority });
