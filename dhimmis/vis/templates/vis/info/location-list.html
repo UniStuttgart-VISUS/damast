@@ -14,7 +14,7 @@
 {% endif %}
 
 <p>
-In this view, <strong>all locations</strong> in the data are listed, using their main toponym as place name.
+In this view, <strong>all locations</strong> in the data are listed, using their <em>main toponym</em> as place name.
 Places can be searched, selected and filtered.
 </p>
 
@@ -26,21 +26,19 @@ Places can be searched, selected and filtered.
   <ul>
     <li>a <em>Search</em> field,</li>
     <li>a <em>Place Filter</em>, and</li>
-    <li>two lists, <em>Placed</em> and <em>Unplaced</em>, representing locations with and without geo-coordinates, respectively.</li>
+    <li>the actual <em>Location List</em>, consisting of two lists, <em>Placed</em> and <em>Unplaced</em>, representing locations with and without geo-coordinates, respectively.</li>
   </ul>
 <p>
-  The position of the two lists can be swapped by clicking on the <b>⭥</b> swap button.
   Detailed descriptions how to use the <em>Search</em> field and the <em>Place Filter</em> are found below under <em>Interaction</em>.
-</p>
-
-<p>
-  The list <em>Placed</em> contains all locations for which a geographical position is known.
+  In what follows, the two lists are described.
 </p>
 
 <p id="location-list-unplaced">
-  The list <em>Unplaced</em> contains all locations for which a geographical position is not (yet) known.
-  In this case, <em>location confidence</em> is attributed with <em>no value</em> and colored accordingly.
+  The list <em>Placed</em> contains all locations for which a geographical position is known.
+  The list <em>Unplaced</em> contains all locations for which a geographical position is not (yet) known;
+  in this case, <em>location confidence</em> is attributed with <em>no value</em> and colored accordingly.
 </p>
+
 <p>
   <em>Note:</em> Missing data is normal during research and while entering data is still in progress.
   However, missing data can severly affect confidence in the visualization if not properly communicated.
@@ -49,10 +47,11 @@ Places can be searched, selected and filtered.
 </p>
 
 <p>
+  The position of the two lists can be swapped by clicking on the <b>⭥</b> swap button.
   The following is true for both lists:
   Each line in the lists represents one location.
   Locations are listed using their <em>main toponym</em> as place name.
-  Accordingly, looking through the lists with a specific place name in mind, if this place name is not the <em>main toponym</em>, the location is not found and should be searched in the <em>Search field</em>.
+  Accordingly, looking through the lists with a specific place name in mind, if this place name is not the <em>main toponym,</em> the location is not found and should be searched in the <em>Search field</em>.
   There, <em>Alternative names</em> are considered as well (cf. {{ full_documentation_link('location-list-search-toponyms', 'further below', same=true) }}).
 </p>
 <p>
@@ -63,7 +62,7 @@ Places can be searched, selected and filtered.
   In <em>Only active</em> mode (cf. the <em>{{ full_documentation_link('settings-all-data-only-active', 'Settings pane') }}</em>), only places with evidences matching the current filters are listed.
 </p>
 <p>
-  When <em>hovering</em> over the line with the mouse, a <em>tooltip</em> (see {{ full_documentation_link('fig-location-list-2', 'this figure') }}) with additional information is shown:
+  When <em>hovering</em> over the line with the mouse, a <em>tooltip</em> (see {{ full_documentation_link('fig-location-list-2', 'this figure') }}) with additional information is shown, that is:
 </p>
 <ul>
   <li>place type,</li>
@@ -84,7 +83,7 @@ Places can be searched, selected and filtered.
   The color scale is the same as in the view <em>Confidence</em>.
 </p>
 <p>
-  In <em>All data</em> mode (cf. ###), when the filter set for <em>Location confidence</em> does not match the place's location confidence, the name is displayed <span style="font-style:italic;color:#d61;font-weight:700;filter:brightness(90%)saturate(60%)">in italics, darker, and in less saturated colors</span>.
+  In <em>All data</em> mode (cf. the <em>{{ full_documentation_link('settings-all-data-only-active', 'Settings pane') }}</em>), when the filter set for <em>Location confidence</em> does not match the place’s location confidence, the name is displayed <span style="font-style:italic;color:#d61;font-weight:700;filter:brightness(90%)saturate(60%)">in italics, darker, and in less saturated colors</span>.
   Also, the confidence circle is not filled in that case.
 </p>
 
@@ -112,13 +111,16 @@ Places can be searched, selected and filtered.
 <h4>Searching for Toponyms</h4>
 <p>
   It is possible to <strong>search for a specific place using different toponyms</strong> in the search field at the top.
-  Typing a search query in that field will highlight the search results in <span style="color:#d61;font-weight:700">bold orange</span> and sort them to the top of the list.
-  The search matches not only the <em>main toponym</em> but also <em>alternative names</em>;
-  for example, <q>Edessa</q> will find the respective place under its <em>main toponym</em> <q>al-Ruha</q>
-  Matches to alternative names that do not match the main name are sorted after main name matches and highlighted in <span style="color:#dc1;font-weight:700">bold yellow</span>.
+  Non-Latin scripts can be used for searching, too.
 </p>
 <p>
-  Apart from toponyms, external URIs can be entered in the <em>Search field</em>.
+  Typing a search query in that field will highlight the search results in <span style="color:#d61;font-weight:700">bold orange</span> and sort them to the top of the list.
+  The search matches not only the <em>main toponym</em> but also <em>alternative names</em>;
+  for example, <q>Edessa</q> will find the respective place under its <em>main toponym</em> <q>al-Ruha.</q>
+  Matches to <em>alternative names</em> that do not match the <em>main toponym</em> are sorted after <em>main toponym</em> matches and highlighted in <span style="color:#dc1;font-weight:700">bold yellow</span>.
+</p>
+<p>
+  Apart from toponyms, <strong>external URIs</strong> can be entered in the <em>Search field</em>.
   For example, <code>syriaca:10</code> or <code>syriaca.org/place/10</code> finds Antioch.
 </p>
 <p>
@@ -138,8 +140,8 @@ Places can be searched, selected and filtered.
   If, however, something has been entered into the <em>Search field</em>, only places matching the search are listed.
 </p>
 <p>
-  This list is used to include or exclude places from the so-called <em>place set</em>, that is, the set of places currently active;
-  for instance, if Baghdad is excluded from the <em>place set</em>, all evidences attributed to Baghdad are filtered out.
+  This list is used to include or exclude places from the so-called <em>place set</em>, that is, the set of places currently active.
+  For instance, if Baghdad is excluded from the <em>place set</em>, all evidences attributed to Baghdad are filtered out.
   Keep in mind that, when <em>All data</em> mode is active, evidences attributed to places excluded from the <em>place set</em> are visible but displayed in less saturated colors.
 </p>
 <p>
@@ -151,55 +153,68 @@ Places can be searched, selected and filtered.
   A symbol to the left of the place name indicates the current state of the place:
 </p>
 <ul>
-  <li>a <span style="color:#8fbcbb"><i class="fa fa-check"></i></span> turquoise check mark, if the place is in the currently active place set;</li>
-  <li>no mark, if the place is not in the currently active place set;</li>
-  <li>a <span style="color:#666"><i class="fa fa-times"></i></span> grey cross if it will be excluded from a new place set which has not been applied yet; and</li>
-  <li>a <span style="color:#7c5"><i class="fa fa-check"></i></span> green check mark if it will be added to a new place set which has not been applied yet.</li>
+  <li>a <span style="color:#8fbcbb"><i class="fa fa-check"></i></span> turquoise check mark, if the place is in the currently active <em>place set</em>;</li>
+  <li>no mark, if the place is not in the currently active <em>place set</em>;</li>
+  <li>a <span style="color:#666"><i class="fa fa-times"></i></span> grey cross if it will be excluded from a new <em>place set</em> which has not been applied yet; and</li>
+  <li>a <span style="color:#7c5"><i class="fa fa-check"></i></span> green check mark if it will be added to a <em>new place</em> set which has not been applied yet.</li>
 </ul>
 <p>
   <strong>Place sets can be saved</strong> using the <em>Save</em> button under the list.
-  This will store them under a unique name in the database.
-  By clicking the <em>Load</em> button, a saved place set can be loaded back into the filter.
-  Independently, the place sets are also stored when using the feature <em>Persist State</em> in the pane <em>Settings</em>.
+  For users with access to the database, this will store a place set under a unique name in the database.
+  For users without access to the database, the place set will only be saved to <code>localStorage</code>.
+  This feature is only available if the option <em>All cookies</em> is accepted in the <em>Cookie preferences</em> (accessible through the menu bar on top).
+  (<em>Note</em>: Depending on your browser settings, cookies may be deleted after closing the browser, which leads to the loss of the saved <em>place sets</em>.)
 </p>
-<!-- proceed with rephrasing from here -->
-<p>
-  Buttons in the top left corner help in selecting places on a larger scale:
+<p> 
+  By clicking the <em>Load</em> button, a saved <em>place set</em> can be loaded back into the filter.
+  Independently from this, the <em>place sets</em> are also stored when using the feature <em>Persist State</em> in the pane <em>Settings</em>.
 </p>
 
-<ul>
-  <li>
-    The <i class="fa fa-history"></i> revert button will <em>revert</em> the changes to the place set;
-    that <is></is>, the place set will match the current filters.
-    Because of the functionalities detailed below, the place set will not update from the database when other filters change, only with the initial load and visualization state loads.
+<h5>Buttons facilitating creating <em>place sets</em></h5>
+
+<p>
+  Buttons in the top left corner help in editing the <em>place set</em> on a larger scale:
+</p>
+
+<dl>
+  <dt>The <i class="fa fa-history"></i> revert button</dt>
+  <dd>
+    will <em>revert</em> the changes to the <em>place set</em>;
+    that is, the <em>place set</em> will match the current filters.
+    Because of the functionalities detailed below, the <em>place set</em> will not update from the database when other filters change, only with the initial load and visualization state loads.
     Instead, resetting is left to the user, which allows to build up a place set incrementally.
-  </li>
-  <li>
-    The <i class="fa fa-circle-o"></i> empty circle button will <em>deselect</em> all places;
-    that is, no place is selected.
-  </li>
-  <li>
-    The <i class="fa fa-rotate-90 fa-exchange"></i> exchange button will <em>invert</em> the selection;
-    i.e., all places that were selected are not any more, and vice versa.
-  </li>
-  <li>
-    The <i class="fa fa-dot-circle-o"></i> dotted circle button will <em>select</em> all places;
-    i.e., all places are selected.
-  </li>
-  <li>
+  </dd>
+  <dt>The <i class="fa fa-circle-o"></i> empty circle button</dt>
+  <dd>
+    will <em>unmark</em> all places;
+    that is, no place would be included in the intended <em>place set</em> after application.
+  </dd>
+  <dt>The <i class="fa fa-rotate-90 fa-exchange"></i> exchange button</dt>
+  <dd>
+    will <em>invert</em> the current marks;
+    that is, all places that were marked are unmarked, and vice versa.
+  </dd>
+  <dt>The <i class="fa fa-dot-circle-o"></i> button with dot inside</dt>
+  <dd>
+    will <em>mark</em> all places;
+    that is, all places would be included in the intended <em>place set</em> after application.
+  </dd>
+  <dt>
     The
     <svg width="22" height="12" viewBox="0 2 22 12">
       <circle cx="14" cy="8" r="6" fill="currentColor" />
       <circle cx="8" cy="8" r="6" fill="currentColor" />
     </svg>
-    set union button will <em>extend</em> the place set (PS) by all places currently shown in the location list (LL).
-    The location list starts <em>below</em> the save and load buttons, and is affected by other filters.
-    The result of clicking this button is that all places that were in the place set before are still there, and <em>additionally</em> all places from the location list are selected.
-    The result is the <em>set union</em> of the previous place set and the location list:
+    set union button
+  </dt>
+  <dd>
+    will <em>extend</em> the <em>place set</em> (PS) by all places currently shown in the <em>Location List</em> (LL) (cf. the description above).
+    That is, all places that were in the <em>place set</em> before are still there, and <em>additionally</em> all places from the <em>Location List</em> are marked.
+    The result is the <em>set union</em> of the previous <em>place set</em> and the current <em>Location List:</em>
 
     <p> PS<sub>new</sub> = PS<sub>old</sub> &#x222A; LL </p>
-  </li>
-  <li>
+  </dd>
+  <dt>
     The
     <svg width="22" height="12" viewBox="0 2 22 12">
       <clipPath id="circle2-clip">
@@ -209,12 +224,15 @@ Places can be searched, selected and filtered.
       <circle cx="8" cy="8" r="5.5" fill="currentColor" stroke="currentColor" stroke-width="1" fill-opacity="0.2" />
       <circle cx="8" cy="8" r="6" fill="currentColor" clip-path="url(#circle2-clip)" />
     </svg>
-    set intersection button will <em>restrict</em> the place set to contain only a subset of its current contents, namely those places that are <em>also</em> in the location list.
-    The result is the <em>set intersection</em> of the previous place set and the location list:
+    set intersection button
+  </dt>
+  <dd>
+    will <em>restrict</em> the <em>place set</em> to contain only a subset of its current contents, namely those places that are <em>also</em> in the <em>Location List.</em>
+    The result is the <em>set intersection</em> of the <em>place set</em> set and the current <em>Location List:</em>
 
     <p> PS<sub>new</sub> = PS<sub>old</sub> &#x2229; LL </p>
-  </li>
-  <li>
+  </dd>
+  <dt>
     The
     <svg width="22" height="12" viewBox="0 2 22 12">
       <mask id="circle2-mask">
@@ -224,33 +242,39 @@ Places can be searched, selected and filtered.
       <circle cx="14" cy="8" r="5.5" fill="currentColor" stroke="currentColor" stroke-width="1" fill-opacity="0.2" />
       <circle cx="8" cy="8" r="6" fill="currentColor" mask="url(#circle2-mask)" />
     </svg>
-    set subtraction button will <em>remove</em> all places currently in the location list from the place set.
-    The result is the <em>set difference</em> of the previous place set and the location list:
+    set subtraction button
+  </dt>
+  <dd>will <em>remove</em> all places currently in the <em>Location List</em> from the <em>place set.</em>
+    The result is the <em>set difference</em> of the previous <em>place set</em> and the current <em>Location List</em>:
 
     <p> PS<sub>new</sub> = PS<sub>old</sub> &#x2216; LL </p>
-  </li>
-</ul>
+  </dd>
+</dl>
 
 <p>
-  The last three operations can be used to quickly create a complex place set from a number of criteria.
-  However, since they use the contents of the location list, they only make sense when the <em>Only active</em> visualization mode is active.
-  For an exemplary analysis, say you want to explore evidence of <em>Christianity</em> in cities between 800 and 900, but only for cities where we have evidence for <em>Muslims,</em> but <strong>not</strong> for <em>Jews:</em>
+  These last three operations can be used to quickly create a complex <em>place set </em>from a number of criteria.
+  <em>Note:</em> Since they use the contents of the <em>Location List</em>, they only make sense when the <em>Only active</em> visualization mode is active.
+</p>
+<p>
+  To illustrate the possibilities provided by these operations, consider the following case:
+  We want to explore all evidences of <em>Christianity</em> in cities between 800 and 900, where there are evidences for <em>Muslims</em> but <strong>not</strong> for <em>Jews:</em>
 </p>
 
 <ol>
   <li><em>Clear</em> all filters (everything is visible).</li>
-  <li><em>Select</em> the time range (800&ndash;900) in the time line.</li>
-  <li><em>Select</em> only the Islamic religious denominations in the religion hierarchy view, then click <em>Apply.</em></li>
+  <li><em>Filter</em> by time range (800&ndash;900) in the time line.</li>
+  <li><em>Filter</em> by religion using the <em>Religion</em> view, choosing <em>Islamic</em> groups only; then click <em>Apply.</em></li>
   <li>
-    <em>Restrict</em> the place set to only the places shown by clicking the <em>set intersection</em> button.
-    The place set now contains all places where we have evidences of Islam between 800 and 900.
-    <br /><strong>Important:</strong> Do <em>not yet</em> apply the place set. That would affect the other views.
+    <em>Restrict</em> the <em>place set</em> to only those places currently displayed by clicking the <em>set intersection</em> button.
+    The <em>place set</em> now contains all places where there are evidences of Islam between 800 and 900.
+    <br /><strong>Important:</strong> Do <em>not yet</em> apply the <em>place set</em>.
+    That would affect the other views.
   </li>
-  <li><em>Select</em> only the Jewish religious denominations in the religion hierarchy view, then click <em>Apply.</em></li>
+  <li><em>Filter</em> by religion using the <em>Religion</em> view, choosing <em>Jewish</em> groups only, then click <em>Apply.</em></li>
   <li>
-    <em>Remove</em> the shown places from the place set by clicking the <em>set subtraction</em> button.
-    The place set now only shows places where we have evidence of Islam between 800 and 900, but <em>not</em> of Judaism.
+    <em>Remove</em> the shown places from the <em>place set</em> by clicking the <em>set subtraction</em> button.
+    The <em>place set</em> now only shows places where there are evidences of Islam between 800 and 900, but <em>not</em> of Judaism.
   </li>
   <li><em>Apply</em> the place filter by clicking on the <em>Apply</em> button.</li>
-  <li><em>Select</em> only the Christian religious denominations in the religion hierarchy view, then click <em>Apply.</em></li>
+  <li><em>Filter</em> by religion using the <em>Religion</em> view, choosing <em>Christian</em> groups only, then click <em>Apply.</em></li>
 </ol>
