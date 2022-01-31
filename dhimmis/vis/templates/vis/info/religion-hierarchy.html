@@ -21,6 +21,8 @@
 <p>
   The list of religious groups is hierarchical and represented by an indented tree visualization:
   each religious group occupies a line, which is indented according to its rank in the hierarchy.
+</p>
+<p>
   Each line consists of an <em>abbreviation</em> for the religious group, a <em>node</em>, displayed as a bar, with the colour associated with the group, and a checkbox used for filtering.
   Hovering with the mouse over the line displays a tooltip with the full name of the religious group and the number of evidences for the group based on the currently applied filters.
 </p>
@@ -32,7 +34,7 @@
 
 <p>
   The religious groups each have a distinct color.
-  For Christianity (red), Islam (green), and Judaism (blue), religious groups belonging to these general religious affiliations do have hues of the same colour.
+  For Christianity (red), Islam (green), and Judaism (blue), religious groups belonging to these general religious affiliations have hues of the same colour.
   (However, the difference between colours is limited because of the amount of religious groups.)
   In <em>Confidence mode</em> (cf. the pane <em>{{ full_documentation_link('settings-display-mode', 'Settings') }}</em>), the bars of the groups are colored based on the average confidence of the represented data.
 </p>
@@ -40,11 +42,11 @@
 <h4>Details regarding colouring and saturation</h4>
 
 <p>
-  Depending on the options <em>Show filtered data</em> (<em>All data</em> or <em>Only active</em>) as well as <em>Display mode</em> (<em>Religion</em> or <em>Confidence</em> mode) in the pane <em>Settings</em>, the coloring of the bars change:
+  Depending on the options <em>Show filtered data</em> (<em>All data</em> or <em>Only active</em>) as well as <em>Display mode</em> (<em>Religion</em> or <em>Confidence</em> mode) in the <em>Settings</em>, the coloring of the bars changes:
 </p>
 <dl>  
     <dt><em>Only active</em>, <em>Religion mode</em></dt>
-    <dd>A bar has only one colour. If <em>any</em> data related to a religious group is active, the bar has saturated colours;
+    <dd>A bar has only one colour. If <em>any</em> data related to a religious group is active, the bar has saturated colors;
     if all data related to a religious group is filtered out, the bar is shown in a less saturated colour.</dd>
     <dt><em>All data</em>, <em>Religion mode</em></dt>
     <dd>A bar can be divided into two parts:
@@ -70,7 +72,7 @@
 
 <p>
   Clicking on a line will <em>select</em> the religous group.
-  This group will be highlighted, other groups will be displayed in less saturated colors.
+  This group will be highlighted, and other groups will be displayed in less saturated colors.
   The selection is <em>linked</em> to related data in all views.
   For instance, map glyphs in the <em>Map</em> representing evidences with the selected religion will be highlighted, other locations will be represented by less saturated colors.
 </p>
@@ -86,7 +88,7 @@
   There are two basic modes for filtering by religion (more details further below):
   In <em>Simple</em> mode, evidences matching <em>any</em> of the checked religions is shown.
   In <em>Advanced</em> mode, only evidences from places are shown, where checked <em>combinations</em> of religions were present.
-  Note that the selection is not applied until the <em>Apply</em> button is clicked, which is enabled once there are changes to the filter.
+  Note that, in both modes, the selection is not applied until the <em>Apply</em> button is clicked, which is enabled once there are changes to the filter.
 </p>
 
 
@@ -96,7 +98,6 @@
   In <em>Simple</em> mode, data is filtered simply according to the checked or unchecked religions.
   Initially, all religions are checked.
   To filter out a religion, it can be unchecked in the checkbox column.
-  The new filter then needs to be applied clicking the <em>Apply</em> button.
 </p>
 
 
@@ -136,7 +137,7 @@
   <li>In the first column, check SYR and ARM.</li>
   <li>In the second column, check SYR and COE.</li>
   <li>In the third column, check ARM and COE.</li>
-  <li>Press <em>apply.</em></li>
+  <li>Click the <em>Apply</em> button.</li>
 </ul>
 <p>
   <em>Note</em>: If only places should match the filter where <em>all</em> of these three religious groups are present, only one column in <em>Advanced</em> mode is necessary with all three groups checked.
@@ -159,7 +160,7 @@
     <i class="fa fa-fw fa-history"></i> Revert filters:
   </dt>
   <dd>
-    This is a button in the top left of the view.
+    This button is found in the top left corner of the view.
     Clicking it reverts the filters back to the state that is currently shown in the visualization;
     that is, all changes that are not <em>applied</em> yet are discarded.
   </dd>
@@ -167,14 +168,14 @@
     <i class="fa fa-fw fa-circle-o"></i> Uncheck all boxes in this column:
   </dt>
   <dd>
-    This is a button in the header of each checkbox column.
+    This button is found at the top of each checkbox column.
     Clicking it will uncheck all boxes in the column.
   </dd>
   <dt>
     <i class="fa fa-fw fa-rotate-90 fa-exchange"></i> Invert all boxes in this column:
   </dt>
   <dd>
-    This is a button in the header of each checkbox column.
+    This button is found at the top of each checkbox column.
     Clicking it will invert all boxes in the column;
     that is, boxes that were checked are unchecked, and vice versa.
   </dd>
@@ -182,17 +183,16 @@
     <i class="fa fa-fw fa-dot-circle-o"></i> Check all boxes in this column:
   </dt>
   <dd>
-    This is a button in the header of each checkbox column.
+    This button is found at the top of each checkbox column.
     Clicking it will check all boxes in the column.
   </dd>
   <dt>
     <i class="fa fa-fw fa-adjust"></i> Toggle subtree:
   </dt>
   <dd>
-    This is a button that is present to the <em>left</em> of some of the checkboxes in each column.
-    Namely, it is present for religions that have children in the hierarchy.
-    Clicking the button will check or uncheck that religion and all its children for the column.
+    This button is present to the <em>left</em> of some of the checkboxes in each column;
+    namely regarding religions that have <q>children</q> in the hierarchy.
+    Clicking the button will check or uncheck this religion and all its children in the respective column.
     Whether clicking checks or unchecks depends on whether the majority of checkboxes in the subtree are checked.
-    Clicking twice will, hence, produce the opposite effect.
   </dd>
 </dl>
