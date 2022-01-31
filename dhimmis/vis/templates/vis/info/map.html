@@ -32,7 +32,7 @@
 </p>
 
 <p>
-  The map glyphs consist of up to four circles, each representing one of the general religious affiliations.
+  The map glyphs consist of up to four circles, each representing a general religious affiliations.
   For example, Judaism is represented by a circle with a Star of David inside.
   All religions other than Islam, Judaism, and Christianity are pragmatically summarized under <q>Other.</q>
   In <em>Religion mode</em> (set by default), a circle functions like a pie chart: each piece represents a different religious group in its respective color and the piece’s size shows the amount of evidences of that religious group relative to the overall evidences of its general religious affiliation.
@@ -40,15 +40,22 @@
 </p>
 
 <p>
+  If, regarding <em>all</em> map glyphs currently displayed, no more than four religous groups are to be represented, there can be more than one circle representing a general religious affiliation.
+  For instance, if only COE (Church of the East), SYR (Syriac Orthodox Church), and SUN (Sunni Islam) are filtered using the view <em>Religion</em>, any map glyph cannot have more than three circles.
+  Accordingly, both COE and SYR will be represented by an individual circle with the respective color.
+  Note that this aggregation may result from other filters or interactions with the map, as the map glyphs are dynamically altered based on many different criteria.
+  What is more, if at least one glyph that is currently displayed would have more than four circles and would thus aggregate multiple religious groups into one circle, this aggregation will apply to all other glyphs as well, even if they have less than four circles in sum.
+  Otherwise, the perceived variety of religions would be skewed.
+  For example, in many locations in modern Turkey, only the two Christian groups SYR (Syriac Orthodox Church) and MELK (Melkite Church) were present, which results in map glyphs having two circles with a cross.
+  However, a city in that general area with a high level of religious diversity (such as Aleppo) would need to aggregate all Christian groups in order not to have more than four circles.
+  Accordingly, a location with only two Christian groups would be represented by a map glyph with two circles for Christianity while a location with many Christian groups (and others) would be displayed with only one such circle.
+  This could be easily misinterpreted.
+</p>
+
+<p>
   In <em>Only active</em> mode, data that has been filtered out disappears from the map.
   Note that this can lead to glyphs having less circles, if, e.g., all Christian data of a glyph has been filtered out.
   In <em>All data</em> mode, data that has been filtered out is indicated by less saturated colours.
-</p>
-
-<p><!-- needs to be rephrased based on #77 -->
-  If <em>in all map glyphs shown,</em> no more than four nodes of a lower part in the religion hierarchy would be present, the data is aggregated on that lower level.
-  For example, if the map would only show two glyphs; one with the Latin Church, the Coptic Church, and the Georgian Orthodox Church; and the other with the Latin Church and the Rabbanites; each of these religious denominations could be represented by an individual circle.
-  This will only happen if it is possible in all glyphs, as doing otherwise would skew the perceived variety of religions.
 </p>
 
 
@@ -96,13 +103,14 @@
     <dt><em>Diversity Markers</em></dt>
     <dd>displays all locations, without clustering, each colored according to its religious diversity (i.e., the number of distinct religions present in each place). The color scale <a href="https://github.com/d3/d3-scale-chromatic#interpolateViridis">Viridis</a> is used, where low values are mapped to violet, and high values to yellow.</dd>
     <dt><em>Diversity Distribution</em></dt>
-    <dd>shows an additional heatmap which approximates the religious diversity and is colored according to the same scale as the <em>Diversity Markers</em>.</dd>
+    <dd>shows an estimation of the religious diversity and is colored according to the same scale as the <em>Diversity Markers</em>.</dd>
     <dt><em>Distribution</em></dt>
-    <dd>shows an additional heatmap which approximates the density of evidences.</dd>
+    <dd>shows an estimation of the density of evidences.</dd>
   </dl>
-<p><!-- This should be adapted to the terms used in the dl above. -->
-  <em>Note:</em> The density and marker layers for diversity are alternative representations for the same thing and should not be shown together, as they interfere.
-  Similarly, the default marker layer and the diversity marker layer should not be shown together.
+<p>
+  <em>Note:</em> The two layers for diversity (one displaying markers, the other displaying a heatmap) are <em>alternative</em> representations of the <em>same</em> data.
+  Thus, they should not be both displayed at the same time.
+  Similarly, the two layers using markers (the default one displaying map glyphs and the one displaying markers of diversity) should not be shown together.
 </p>
 
 <h4>What the Map is <em>not</em> Showing</h4>
@@ -129,10 +137,8 @@
 </p>
 
 <p>
-  <!-- This paragraph needs to be checked and rephrased accordingly.-->
-  Furthermore, in <em>Clustered mode</em>, the scaling of the map glyphs does <em>not</em> encode number of data points.
-  The glyphs are only scaled such that they occupy the same space regardless of number of circles.
-  The fixed radius is an artifact of the non-overlapping property.
+  Furthermore, in <em>Clustered</em> mode, the overall size of the map glyphs (i.e., the number of circles) does <em>not</em> directly correlate with the number of religions or evidences;
+  for instance, a map glyph with three circles does not necessarily represent more evidences than one with only two circles.
 </p>
 
 <h3>Interaction</h3>
