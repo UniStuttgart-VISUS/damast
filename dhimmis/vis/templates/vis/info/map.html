@@ -20,10 +20,27 @@
 <h4>Map Glyphs</h4>
 
 <p>
-  The locations are <em>aggregated</em> to eliminate overlap, and so, by default, each map glyph represents <em>one or more</em> cities, depending on the zoom level.
-  This <em>Map mode</em> is called <em>Clustered.</em> It is the default and can be changed in the settings (cf. the {{ full_documentation_link('map-unclustered-mode', 'info text below', true) }} and the info text of the <em>{{ full_documentation_link('settings-map-mode', 'Settings pane') }}</em>).
+  Evidences are represented by so-called map glyphs.
+  By default, these <strong>map glyphs are aggregated</strong> (i.e., <q>summarized</q>).
+</p>
+<p>
+  This aggregation depends on the data currently active and on the current zoom level of the map.
+  That is, once the zoom level or filters are changed, the map is populated with glyphs according to the aggregation rules;
+  simply <em>panning</em> the map will not affect the map glyphs.
+  More details are given below.
+</p>
+<p>
+  This <em>Map mode</em> is called <em>Clustered.</em>
+  It can be changed in the settings (cf. the {{ full_documentation_link('map-unclustered-mode', 'info text below', true) }} and the info text of the <em>{{ full_documentation_link('settings-map-mode', 'Settings pane') }}</em>).
 </p>
 
+<h5>Aggregation of Locations</h5>
+
+<p>
+  Locations are <em>aggregated</em> to eliminate overlap, and so, by default, each map glyph represents <strong>one or more</strong> cities, depending on the zoom level.
+  (Note that for this aggregation, all places are treated equally;
+  for example, the distribution of religions of place A and place B is combined without taking into account any further aspects of A or B.)
+</p>
 <p>
   When <em>hovering</em> over a glyph, it loses opacity and the aggregated locations are indicated on the map as small turquoise dots (maybe partially covered by the glyph).
   What is more, while hovering, a tooltip is shown, which provides information on the number of evidences, of religions, and of places related to the glyph.
@@ -31,22 +48,32 @@
   Even more details are provided if the glyph only represents one place.
 </p>
 
+<h5>Aggregation of Religions</h5>
 <p>
-  The map glyphs consist of up to four circles, each representing a general religious affiliations.
-  For example, Judaism is represented by a circle with a Star of David inside.
+  Each map glyphs consists of up to four circles, each representing a general religious affiliations.
+  For example, Judaism is represented by a circle with a Star of David.
   All religions other than Islam, Judaism, and Christianity are pragmatically summarized under <q>Other.</q>
-  In <em>Religion mode</em> (set by default), a circle functions like a pie chart: each piece represents a different religious group in its respective color and the piece’s size shows the amount of evidences of that religious group relative to the overall evidences of its general religious affiliation.
+</p>
+<p>
+  Generally, multiple religious groups belonging to the same general religious affiliation are aggregated to one circle.
+  This circle then functions like a pie chart:
+  in <em>Religion mode</em> (set by default), each piece of the pie chart represents a different religious group in its respective color and the piece’s size shows the amount of evidences of that religious group relative to the overall evidences of its general religious affiliation.
   In <em>Confidence mode</em>, the division of the circle or pie chart is based on the evidences attributed with different levels of confidence and is colored accordingly.
 </p>
-
 <p>
-  If, regarding <em>all</em> map glyphs currently displayed, no more than four religous groups are to be represented, there can be more than one circle representing a general religious affiliation.
-  For instance, if only COE (Church of the East), SYR (Syriac Orthodox Church), and SUN (Sunni Islam) are filtered using the view <em>Religion</em>, any map glyph cannot have more than three circles.
-  Accordingly, both COE and SYR will be represented by an individual circle with the respective color.
-  Note that this aggregation may result from other filters or interactions with the map, as the map glyphs are dynamically altered based on many different criteria.
-  What is more, if at least one glyph that is currently displayed would have more than four circles and would thus aggregate multiple religious groups into one circle, this aggregation will apply to all other glyphs as well, even if they have less than four circles in sum.
+  However, if, regarding <em>all</em> map glyphs currently displayed, no more than four religous groups are to be represented, there can be more than one circle representing a general religious affiliation.
+  For instance, if only COE (Church of the East), SYR (Syriac Orthodox Church), and SUN (Sunni Islam) are filtered using the view <em>Religion</em>, any given map glyph cannot have more than three circles.
+  Accordingly, both COE and SYR will be represented by an individual circle with a cross and the respective color.
+  Note that this aggregation may result from other filters or interactions with the map, not just filtering using the view <em>Religion</em>, as the map glyphs are dynamically altered based on many different criteria.
+</p>
+<p>
+  Also, remember that the placement and aggregation of map glyphs depends on the data currently active as well as the zoom level&mdash;not, however, on the current center of the map.
+  In other words, <q>all map glyphs <em>currently displayed</em><q> in the paragraph above includes map glyphs outside the current scope of the map that will appear when panning the map.
+</p>
+ <p> 
+  What is more, if at least one glyph that is currently displayed would have more than four circles and would thus aggregate multiple religious groups into one circle, this aggregation will apply to all other glyphs as well, even if, in sum, they have less than four circles.
   Otherwise, the perceived variety of religions would be skewed.
-  For example, in many locations in modern Turkey, only the two Christian groups SYR (Syriac Orthodox Church) and MELK (Melkite Church) were present, which results in map glyphs having two circles with a cross.
+  For example, in many locations in modern Turkey, only the two Christian groups SYR (Syriac Orthodox Church) and MELK (Melkite Church) were present, which could result in map glyphs having two circles with a cross.
   However, a city in that general area with a high level of religious diversity (such as Aleppo) would need to aggregate all Christian groups in order not to have more than four circles.
   Accordingly, a location with only two Christian groups would be represented by a map glyph with two circles for Christianity while a location with many Christian groups (and others) would be displayed with only one such circle.
   This could be easily misinterpreted.
