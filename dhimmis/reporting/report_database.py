@@ -9,6 +9,7 @@ import gzip
 import subprocess
 import logging
 import flask
+import traceback
 
 _database_schema = '''
 CREATE TABLE reports (
@@ -87,3 +88,60 @@ def start_report(username, server_version, filter_json):
         logging.getLogger('flask.error').info(F'Starting report generation of {u} (PID {p.pid}).')
 
         return u
+
+
+def update_report_access(report_id):
+    now = datetime.now().replace(microsecond=0).astimezone().isoformat()
+    with get_report_database() as db:
+        db.execute('SELECT access_count FROM reports WHERE uuid = :uuid;', dict(uuid=report_id))
+        (access, ) = db.fetchone()
+        db.execute('UPDATE reports SET last_access = :now, access_count = :count WHERE uuid = :uuid;',
+                dict(uuid=report_id, now=now, count=access+1))
+
+
+def evict_report(report_id):
+    try:
+        with get_report_database() as db:
+            db.execute('SELECT report_state, started, last_access, access_count, content, pdf_map, pdf_report FROM reports WHERE uuid = :uuid;', dict(uuid=report_id))
+            report_state, started, last_access, access_count, content, pdf_map, pdf_report = db.fetchone()
+            now = datetime.now().replace(microsecond=0).astimezone()
+
+            upd = dict(report_state='evicted', content=None, pdf_map=None, pdf_report=None, last_access=now.isoformat(), uuid=uuid)
+
+            size = ''
+            age = (now - started).days
+            age_accessed = (now - last_access).days
+
+            if report_state == 'started':
+                size = '0B'
+                logging.getLogger('flask.error').warning('Report %s is getting evicted but still in started state.', report_id)
+            elif report_state == 'evicted':
+                size = '0B'
+            elif report_state in ('completed', 'failed'):
+                size = 0
+                if content is not None:
+                    size += bytes(content).length
+                if pdf_map is not None:
+                    size += bytes(pdf_map).length
+                if pdf_report is not None:
+                    size += bytes(pdf_report).length
+
+                if size > 1000000:
+                    sizes = F'{size // 1000000}MB'
+                elif size > 1000:
+                    sizes = F'{size // 1000}kB'
+                else:
+                    sizes = F'{size}B'
+                size = sizes
+            else:
+                logging.getLogger('flask.error').warning('Report %s is has unknown state: %s.', report_id, report_state)
+                size = '?'
+
+            db.execute('UPDATE reports SET report_state = :report_state, content = :content, pdf_map = :pdf_map, last_access = :last_access WHERE uuid = :uuid;', upd)
+            logging.getLogger('flask.error').info('Evicted %s report with UUID %s (created %d days ago, last accessed %d days ago). Freed %s.', report_state, report_id, age, age_accessed, size)
+
+    except:
+        tb = traceback.format_exc()
+        logging.getLogger('flask.error').error('Something went wrong while evicting report %s: %s', report_id, tb)
+
+

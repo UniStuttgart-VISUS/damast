@@ -22,7 +22,7 @@ from ..postgres_rest_api.decorators import rest_endpoint
 from .verbalize_filters import verbalize, get_filter_description
 
 from .filters import blueprint as filter_blueprint
-from .report_database import ReportTuple, get_report_database, start_report
+from .report_database import ReportTuple, get_report_database, start_report, update_report_access
 from .datatypes import Evidence, Place
 
 
@@ -152,7 +152,7 @@ def get_report(report_id):
         content = gzip.decompress(report.content).decode('utf-8')
         has_pdf = (report.pdf_report is not None)
 
-        _update_report_access(report_id)
+        update_report_access(report_id)
 
         return flask.render_template('reporting/report.html', content=content, report_id=report_id, has_pdf=has_pdf), errorcode
 
@@ -173,7 +173,7 @@ def get_map(report_id):
     response.headers['Content-Encoding'] = 'gzip'
     response.direct_passthrough = False
 
-    _update_report_access(report_id)
+    update_report_access(report_id)
 
     return response
 
@@ -194,7 +194,7 @@ def get_pdf_report(report_id):
     response.headers['Content-Encoding'] = 'gzip'
     response.direct_passthrough = False
 
-    _update_report_access(report_id)
+    update_report_access(report_id)
 
     return response
 
@@ -286,15 +286,6 @@ def list_available_reports():
                 prev_page_offset = prev_page_offset,
                 last_page_offset = last_page_offset,
                 )
-
-
-def _update_report_access(report_id):
-    now = datetime.now().replace(microsecond=0).astimezone().isoformat()
-    with get_report_database() as db:
-        db.execute('SELECT access_count FROM reports WHERE uuid = :uuid;', dict(uuid=report_id))
-        (access, ) = db.fetchone()
-        db.execute('UPDATE reports SET last_access = :now, access_count = :count WHERE uuid = :uuid;',
-                dict(uuid=report_id, now=now, count=access+1))
 
 
 def _get_report_filter_json(report_id):
