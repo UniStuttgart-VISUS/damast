@@ -366,7 +366,7 @@ export default class LocationList extends View<any, any> {
       const ref = this;
       // do request
       d3.json(`../rest/place/${datum.id}/details`)
-        .then(function(data: {comment: string | null, alternative_names: Array<number>, external_uris: string[]}) {
+        .then(function(data: {comment: string | null, alternative_names: Array<{language: string, transcription: string|null, name: string}>, external_uris: string[]}) {
           // comment
           if (data.comment) {
             dl.append('dt').text('Comment');
@@ -375,6 +375,20 @@ export default class LocationList extends View<any, any> {
 
           // alternative names
           if (data.alternative_names.length !== 0) {
+            // sort first by language name, then by name
+            data.alternative_names.sort((n1, n2) => {
+              const langdiff = n1.language.localeCompare(n2.language);
+              if (langdiff !== 0) return langdiff;
+
+              const a_ = n1.name.replace(locationNamePrefix, '');
+              const b_ = n2.name.replace(locationNamePrefix, '');
+
+              //const n = (n1.transcription === null) ? a_ : n1.transcription.replace(locationNamePrefix, '');
+              //const m = (n2.transcription === null) ? b_ : n2.transcription.replace(locationNamePrefix, '');
+
+              return a_.localeCompare(b_);
+            });
+
             dl.append('dt').text('Alternative Names');
             const table = dl.append('dd').append('table');
             table
