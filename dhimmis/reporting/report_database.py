@@ -18,7 +18,7 @@ CREATE TABLE reports (
       completed DATETIME DEFAULT NULL,
       report_state TEXT NOT NULL DEFAULT 'started',
       last_access DATETIME NOT NULL,
-      access_count INTEGER NOT NULL DEFAULT 1,
+      access_count INTEGER NOT NULL DEFAULT 0,
       server_version TEXT NOT NULL,
       filter BLOB DEFAULT NULL,
       content BLOB DEFAULT NULL,
@@ -73,7 +73,7 @@ def start_report(username, server_version, filter_json):
                 "started": now,
                 "report_state": "started",
                 "last_access": now,
-                "access_count": 1,
+                "access_count": 0,
                 })
 
         # run subprocess
