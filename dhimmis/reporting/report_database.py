@@ -17,6 +17,8 @@ CREATE TABLE reports (
       started DATETIME NOT NULL,
       completed DATETIME DEFAULT NULL,
       report_state TEXT NOT NULL DEFAULT 'started',
+      last_access DATETIME NOT NULL,
+      access_count INTEGER NOT NULL DEFAULT 1,
       server_version TEXT NOT NULL,
       filter BLOB DEFAULT NULL,
       content BLOB DEFAULT NULL,
@@ -51,7 +53,7 @@ def get_report_database():
         con.close()
 
 
-ReportTuple = namedtuple('ReportTuple', ['uuid', 'user', 'server_version', 'report_state', 'started', 'completed', 'content', 'pdf_map', 'pdf_report', 'filter', 'evidence_count'])
+ReportTuple = namedtuple('ReportTuple', ['uuid', 'user', 'server_version', 'report_state', 'started', 'completed', 'content', 'pdf_map', 'pdf_report', 'filter', 'evidence_count', 'last_access', 'access_count'])
 
 
 def start_report(username, server_version, filter_json):
@@ -61,8 +63,8 @@ def start_report(username, server_version, filter_json):
     filter_content = gzip.compress(json.dumps(filter_json).encode('utf-8'))
 
     with get_report_database() as db:
-        db.execute('''INSERT INTO reports (uuid, user, started, server_version, filter, report_state)
-            VALUES (:uuid, :user, :started, :server_version, :filter, :report_state);''',
+        db.execute('''INSERT INTO reports (uuid, user, started, server_version, filter, report_state, last_access, access_count)
+            VALUES (:uuid, :user, :started, :server_version, :filter, :report_state, :last_access, :access_count);''',
             {
                 "uuid": u,
                 "user": username,
@@ -70,6 +72,8 @@ def start_report(username, server_version, filter_json):
                 "filter": filter_content,
                 "started": now,
                 "report_state": "started",
+                "last_access": now,
+                "access_count": 1,
                 })
 
         # run subprocess
