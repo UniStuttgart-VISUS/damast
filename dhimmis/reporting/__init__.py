@@ -270,7 +270,7 @@ def list_available_reports():
         for r in reports_:
             report = r._asdict()
             started = r.started.astimezone().strftime('%Y-%m-%d')
-            acc = r.started.astimezone().strftime('%Y-%m-%d')
+            acc = r.last_access.astimezone().strftime('%Y-%m-%d')
 
             filt = json.loads(gzip.decompress(r.filter))
             original_evidence_count = filt['metadata']['evidenceCount']
@@ -323,5 +323,3 @@ def rerun_report(report_id):
 def evict_report(report_id):
     do_evict_report(report_id)
     return flask.redirect(flask.url_for('reporting.list_available_reports'))
-
-
