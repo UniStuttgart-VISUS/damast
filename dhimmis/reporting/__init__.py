@@ -22,7 +22,7 @@ from ..postgres_rest_api.decorators import rest_endpoint
 from .verbalize_filters import verbalize, get_filter_description
 
 from .filters import blueprint as filter_blueprint
-from .report_database import ReportTuple, get_report_database, start_report, update_report_access, recreate_report_after_evict
+from .report_database import ReportTuple, get_report_database, start_report, update_report_access, recreate_report_after_evict, evict_report as do_evict_report
 from .datatypes import Evidence, Place
 
 
@@ -310,8 +310,7 @@ def rerun_report(report_id):
 
 @app.route('/<string:report_id>/evict', role=['admin'], methods=['GET'])
 def evict_report(report_id):
-    from .report_database import evict_report as ev
-    ev(report_id)
+    do_evict_report(report_id)
     return flask.redirect(flask.url_for('reporting.list_available_reports'))
 
 
