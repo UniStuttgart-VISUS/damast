@@ -57,6 +57,31 @@ def get_report_database():
 ReportTuple = namedtuple('ReportTuple', ['uuid', 'user', 'server_version', 'report_state', 'started', 'completed', 'content', 'pdf_map', 'pdf_report', 'filter', 'evidence_count', 'last_access', 'access_count'])
 
 
+def _run_report_generation(report_id, rerun=False):
+    # run subprocess
+    sub_args = [
+        'python', '-m', 'dhimmis.reporting.create_report',
+        report_id,
+        flask.url_for('reporting.get_report', report_id=report_id, _external=True),  # absolute URL to report
+        flask.url_for('reporting.get_map', report_id=report_id),  # relative URL to map
+            ]
+    p = subprocess.Popen(sub_args)
+
+    if rerun:
+        logging.getLogger('flask.error').info(F'Restarting report generation of {report_id} after eviction (PID {p.pid}).')
+    else:
+        logging.getLogger('flask.error').info(F'Starting report generation of {u} (PID {p.pid}).')
+
+    return report_id
+
+
+def recreate_report_after_evict(report_id):
+    with get_report_database() as db:
+        db.execute('UPDATE reports SET report_state = :st WHERE uuid = :uuid;', dict(st='started', uuid=report_id))
+
+    _run_report_generation(report_id, rerun=True)
+
+
 def start_report(username, server_version, filter_json):
     u = str(uuid.uuid1())
     now = datetime.now().replace(microsecond=0).astimezone().isoformat()
@@ -77,17 +102,9 @@ def start_report(username, server_version, filter_json):
                 "access_count": 0,
                 })
 
-        # run subprocess
-        sub_args = [
-            'python', '-m', 'dhimmis.reporting.create_report',
-            u,       # uuid
-            flask.url_for('reporting.get_report', report_id=u, _external=True),  # absolute URL to report
-            flask.url_for('reporting.get_map', report_id=u),  # relative URL to map
-                ]
-        p = subprocess.Popen(sub_args)
-        logging.getLogger('flask.error').info(F'Starting report generation of {u} (PID {p.pid}).')
-
+        _run_report_generation(u)
         return u
+
 
 
 def update_report_access(report_id):
@@ -106,7 +123,7 @@ def evict_report(report_id):
             report_state, started, last_access, access_count, content, pdf_map, pdf_report = db.fetchone()
             now = datetime.now().replace(microsecond=0).astimezone()
 
-            upd = dict(report_state='evicted', content=None, pdf_map=None, pdf_report=None, last_access=now.isoformat(), uuid=uuid)
+            upd = dict(report_state='evicted', content=None, pdf_map=None, pdf_report=None, last_access=now.isoformat(), uuid=report_id)
 
             size = ''
             age = (now - started).days
@@ -120,11 +137,11 @@ def evict_report(report_id):
             elif report_state in ('completed', 'failed'):
                 size = 0
                 if content is not None:
-                    size += bytes(content).length
+                    size += len(bytes(content))
                 if pdf_map is not None:
-                    size += bytes(pdf_map).length
+                    size += len(bytes(pdf_map))
                 if pdf_report is not None:
-                    size += bytes(pdf_report).length
+                    size += len(bytes(pdf_report))
 
                 if size > 1000000:
                     sizes = F'{size // 1000000}MB'
@@ -137,7 +154,7 @@ def evict_report(report_id):
                 logging.getLogger('flask.error').warning('Report %s is has unknown state: %s.', report_id, report_state)
                 size = '?'
 
-            db.execute('UPDATE reports SET report_state = :report_state, content = :content, pdf_map = :pdf_map, last_access = :last_access WHERE uuid = :uuid;', upd)
+            db.execute('UPDATE reports SET report_state = :report_state, content = :content, pdf_report = :pdf_report, pdf_map = :pdf_map, last_access = :last_access WHERE uuid = :uuid;', upd)
             logging.getLogger('flask.error').info('Evicted %s report with UUID %s (created %d days ago, last accessed %d days ago). Freed %s.', report_state, report_id, age, age_accessed, size)
 
     except:

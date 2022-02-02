@@ -22,7 +22,7 @@ from ..postgres_rest_api.decorators import rest_endpoint
 from .verbalize_filters import verbalize, get_filter_description
 
 from .filters import blueprint as filter_blueprint
-from .report_database import ReportTuple, get_report_database, start_report, update_report_access
+from .report_database import ReportTuple, get_report_database, start_report, update_report_access, recreate_report_after_evict
 from .datatypes import Evidence, Place
 
 
@@ -130,6 +130,9 @@ def get_report_data(report_id):
 def get_report(report_id):
     report = get_report_data(report_id)
     if report.content is None:
+        if report.report_state == 'evicted':
+            recreate_report_after_evict(report_id)
+
         # wait
         time_passed = (datetime.now().astimezone() - report.started).total_seconds()
         if time_passed < 15:
@@ -160,11 +163,11 @@ def get_report(report_id):
 @app.route('/<string:report_id>/map', role=['reporting', 'dev', 'admin'], methods=['GET'])
 def get_map(report_id):
     report = get_report_data(report_id)
-    if report.pdf_map is None:
-        flask.abort(404)
-
     if report.report_state == 'failed':
         flask.abort(410, 'The report could not be completed.')
+
+    if report.pdf_map is None:
+        flask.abort(404)
 
     pdf = BytesIO(report.pdf_map)
     fname = F'map_{report_id}.pdf'
@@ -181,11 +184,11 @@ def get_map(report_id):
 @app.route('/<string:report_id>/pdf', role=['reporting', 'dev', 'admin'], methods=['GET'])
 def get_pdf_report(report_id):
     report = get_report_data(report_id)
-    if report.pdf_report is None:
-        flask.abort(404)
-
     if report.report_state == 'failed':
         flask.abort(410, 'The report could not be completed.')
+
+    if report.pdf_report is None:
+        flask.abort(404)
 
     pdf = BytesIO(report.pdf_report)
     fname = F'{report_id}.pdf'
@@ -312,3 +315,12 @@ def get_report_filter(report_id):
 def rerun_report(report_id):
     filt = _get_report_filter_json(report_id)
     return _start_report(filt)
+
+
+@app.route('/<string:report_id>/evict', role=['admin'], methods=['GET'])
+def evict_report(report_id):
+    from .report_database import evict_report as ev
+    ev(report_id)
+    return 'OK'
+
+
