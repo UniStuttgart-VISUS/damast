@@ -5,7 +5,7 @@
 {% block head %}
   {{ super() }}
   <link rel="stylesheet" href="{{ url_for('reporting.file', path='report.css') }}">
-  <meta http-equiv="refresh" content="{{ delay }}">
+  <meta http-equiv="refresh" content="{{ delay }}; url={{ url }}?t={{ next_delay }}">
 {% endblock %}
 
 {% block content %}
