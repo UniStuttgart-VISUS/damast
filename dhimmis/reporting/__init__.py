@@ -137,8 +137,7 @@ def _wait_for_report(endpoint, report_id):
 
     return flask.render_template('reporting/wait.html', delay=delay, next_delay=next_delay, url=url)
 
-
-@app.route('/<string:report_id>', role=['reporting', 'dev', 'admin'], methods=['GET'])
+@app.route('/<string:report_id>.html', role=['reporting', 'dev', 'admin'], methods=['GET'])
 def get_report(report_id):
     report = get_report_data(report_id)
 
@@ -164,7 +163,7 @@ def get_report(report_id):
 
 
 
-@app.route('/<string:report_id>/map', role=['reporting', 'dev', 'admin'], methods=['GET'])
+@app.route('/map_<string:report_id>.pdf', role=['reporting', 'dev', 'admin'], methods=['GET'])
 def get_map(report_id):
     report = get_report_data(report_id)
 
@@ -180,9 +179,8 @@ def get_map(report_id):
             flask.abort(410, 'The report could not be completed.')
 
         pdf = BytesIO(report.pdf_map)
-        fname = F'map_{report_id}.pdf'
 
-        response = flask.send_file(pdf, mimetype='application/pdf', as_attachment=True, attachment_filename=fname)
+        response = flask.send_file(pdf, mimetype='application/pdf')
         response.headers['Content-Encoding'] = 'gzip'
         response.direct_passthrough = False
 
@@ -195,7 +193,7 @@ def get_map(report_id):
 
 
 
-@app.route('/<string:report_id>/pdf', role=['reporting', 'dev', 'admin'], methods=['GET'])
+@app.route('/<string:report_id>.pdf', role=['reporting', 'dev', 'admin'], methods=['GET'])
 def get_pdf_report(report_id):
     report = get_report_data(report_id)
 
@@ -211,9 +209,8 @@ def get_pdf_report(report_id):
             flask.abort(410, 'The report could not be completed.')
 
         pdf = BytesIO(report.pdf_report)
-        fname = F'{report_id}.pdf'
 
-        response = flask.send_file(pdf, mimetype='application/pdf', as_attachment=True, attachment_filename=fname)
+        response = flask.send_file(pdf, mimetype='application/pdf')
         response.headers['Content-Encoding'] = 'gzip'
         response.direct_passthrough = False
 
@@ -223,6 +220,20 @@ def get_pdf_report(report_id):
 
     else:
         flask.abort(500, F'Unknown report state reached: {report.report_state}')
+
+
+## routes for old URLs, so that they still work for older bookmarks
+@app.route('/<string:report_id>', role=['reporting', 'dev', 'admin'], methods=['GET'])
+def _get_report_old(report_id):
+    return flask.redirect(flask.url_for('reporting.get_report', report_id=report_id), 301)
+
+@app.route('/<string:report_id>/pdf', role=['reporting', 'dev', 'admin'], methods=['GET'])
+def _get_pdf_old(report_id):
+    return flask.redirect(flask.url_for('reporting.get_pdf_report', report_id=report_id), 301)
+
+@app.route('/<string:report_id>/map', role=['reporting', 'dev', 'admin'], methods=['GET'])
+def _get_map_old(report_id):
+    return flask.redirect(flask.url_for('reporting.get_map', report_id=report_id), 301)
 
 
 @app.route('/list', role=['reporting', 'dev', 'admin'])
