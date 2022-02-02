@@ -235,46 +235,14 @@ def list_available_reports():
         reports = []
         for r in reports_:
             report = r._asdict()
-
-            if r.completed is None:
-                started = r.started.astimezone().strftime('%Y-%m-%d %H:%M')
-                completed = None
-                duration = None
-                duration_fmt = None
-            else:
-                started = None
-                completed = r.completed.astimezone().strftime('%Y-%m-%d %H:%M')
-                delta = r.completed - r.started
-
-                secs = delta.total_seconds()
-                dur = []
-                dur2 = []
-                t = secs % 60
-                dur.append(F'{t:.0f}&thinsp;s')
-                dur2.append(F'{t:.0f}S')
-                secs //= 60
-                if secs > 0:
-                    t = secs % 60
-                    dur.append(F'{t:.0f}&thinsp;min')
-                    dur2.append(F'{t:.0f}M')
-
-                    secs //= 60
-                    if secs > 0:
-                        t = secs
-                        dur.append(F'{t:.0f}&thinsp;h')
-                        dur2.append(F'{t:.0f}H')
-
-                duration_fmt = ' '.join(dur[::-1])
-                duration = 'P' + ''.join(dur2[::-1])
-
+            started = r.started.astimezone().strftime('%Y-%m-%d')
+            acc = r.started.astimezone().strftime('%Y-%m-%d')
 
             filt = json.loads(gzip.decompress(r.filter))
             original_evidence_count = filt['metadata']['evidenceCount']
 
             report.update(dict(started_fmt=started,
-                completed_fmt=completed,
-                duration=duration,
-                duration_fmt=duration_fmt,
+                last_access=acc,
                 original_evidence_count=original_evidence_count,
                 ))
             reports.append(report)
@@ -321,6 +289,6 @@ def rerun_report(report_id):
 def evict_report(report_id):
     from .report_database import evict_report as ev
     ev(report_id)
-    return 'OK'
+    return flask.redirect(flask.url_for('reporting.list_available_reports'))
 
 

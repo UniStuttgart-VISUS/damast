@@ -70,7 +70,7 @@ def _run_report_generation(report_id, rerun=False):
     if rerun:
         logging.getLogger('flask.error').info(F'Restarting report generation of {report_id} after eviction (PID {p.pid}).')
     else:
-        logging.getLogger('flask.error').info(F'Starting report generation of {u} (PID {p.pid}).')
+        logging.getLogger('flask.error').info(F'Starting report generation of {report_id} (PID {p.pid}).')
 
     return report_id
 
