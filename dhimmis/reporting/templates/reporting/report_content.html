@@ -8,21 +8,6 @@
 {%- from 'reporting/fragments/timeline.html' import create_timeline with context -%}
 {%- from 'reporting/fragments/metadata.html' import creation_metadata, filter_description with context -%}
 
-<section id="cite">
-  <h2>How to Cite</h2>
-
-  <p>We suggest to cite this report in the following way:</p>
-  <blockquote>
-    Damast Report <code>{{ report_id }}</code>, created by <span class="highlight-darkred">[your name here]</span>;
-    based on data by Ralph Barczok and Bernd A. Vest and the visualization of
-    <em>Damast &mdash; A Research System to Analyze Multi-Religious Constellations in the Islamicate World,</em>
-    edited by Dorothea Weltecke, Steffen Koch, Ralph Barczok, Max Franke, Florian Jäckel, and Bernd A. Vest.
-    <time date="2022-04">April 2022</time>.
-    Accessed <time datetime="{{ metadata.current_time_machine }}">{{ metadata.current_time_short }}</time>.
-    <a href="{{ report_url }}">{{ report_url }}</a>, data deposited at DaRUS: <a href="https://doi.org/10.18419/darus-2318">https://doi.org/10.18419/darus-2318</a>.
-  </blockquote>
-</section>
-
 <nav role="toc">
   <h2>Table of Contents</h2>
   <ul>
@@ -35,6 +20,7 @@
     {%- endif -%}
     <li><a href="#timeline">Timeline</a></li>
     <li><a href="#sources">Sources</a></li>
+    <li><a href="#cite">How to Cite</a></li>
   </ul>
 </nav>
 
@@ -128,4 +114,20 @@
   </ul>
 </section>
 {% endif %}
+
+
+<section id="cite">
+  <h2>How to Cite</h2>
+
+  <p>We suggest to cite this report in the following way:</p>
+  <blockquote>
+    Damast report <code>{{ report_id }}</code>, created by <span class="highlight-darkred">[your name here]</span>;
+    based on data by Ralph Barczok and Bernd A. Vest; and the visualization of
+    <em>Damast &mdash; A Research System to Analyze Multi-Religious Constellations in the Islamicate World,</em>
+    edited by Dorothea Weltecke, Steffen Koch, Ralph Barczok, Max Franke, Florian Jäckel, and Bernd A. Vest.
+    <time date="2022-04">April 2022</time>.
+    Accessed <time datetime="{{ metadata.current_time_machine }}">{{ metadata.current_time_short }}</time>.
+    <a href="{{ report_url }}">{{ report_url }}</a>, data deposited at DaRUS: <a href="https://doi.org/10.18419/darus-2318">https://doi.org/10.18419/darus-2318</a>.
+  </blockquote>
+</section>
 

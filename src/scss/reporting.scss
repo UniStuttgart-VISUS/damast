@@ -16,6 +16,8 @@
 .content {
   @include mixins.baseFlexBlock();
 
+  padding-block: 2rem;
+
   @media print {
     background: revert;
     margin: 1rem;
