@@ -3,6 +3,7 @@
 @use 'common/mixins';
 
 @forward 'common/target-highlight';
+@forward 'common/place-uri-report-layout';
 @forward 'reporting/timeline';
 
 :root {
@@ -30,41 +31,6 @@
   }
 
   position: relative;
-}
-
-h1, h2, h3, h4, h5 {
-  padding: revert;
-  margin: revert;
-
-  @media print {
-    color: revert;
-  }
-}
-
-h1 {
-  font-size: 3rem;
-}
-
-h2 {
-  font-size: 2rem;
-}
-
-h3 {
-  font-size: 1.6rem;
-}
-
-h4 {
-  font-size: 1.3rem;
-}
-
-nav[role="toc"],
-section {
-  width: clamp(40ch, 100%, 80ch);
-  padding-inline: 1rem;
-}
-
-main > :is(nav, section) {
-  margin: auto;
 }
 
 ul.footnotes {
@@ -199,25 +165,6 @@ section.item {
       font-weight: 400;
     }
   }
-
-  p,
-  ul,
-  ol,
-  blockquote {
-    padding-inline-start: 8rem;
-
-    @media print {
-      padding-inline-start: 4cm;
-    }
-  }
-
-  ul, ol {
-    margin-inline-start: 1.5rem;
-
-    @media print {
-      margin-inline-start: 1cm;
-    }
-  }
 }
 
 @media print {
@@ -313,12 +260,6 @@ nav.report-options {
   color: $clr-red;
 }
 
-blockquote {
-  margin-inline-start: 0.2em;
-  border-inline-start: 0.2em solid $clr-gray;
-  padding-inline: 1em;
-}
-
 @page {
   margin-top: 2cm;
   margin-bottom: 2cm;
@@ -358,6 +299,10 @@ blockquote {
 
   svg {
     filter: invert(100%);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: revert;
   }
 }
 
