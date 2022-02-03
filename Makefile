@@ -2,7 +2,7 @@ export NODE_OPTIONS=--max-old-space-size=8192
 
 all: dev
 
-.PHONY: all dev prod clean css@dev css@prod geodb@dev geodb@prod databaseschemafile CHANGELOG
+.PHONY: all dev prod clean css@dev css@prod geodb@dev geodb@prod databaseschemafile CHANGELOG LICENSE
 
 dev: databaseschemafile CHANGELOG
 	npx webpack --stats errors-only --mode development
@@ -17,6 +17,10 @@ databaseschemafile:
 
 CHANGELOG:
 	cp $@ dhimmis/docs/templates/docs/changelog.txt
+
+LICENSE:
+	cp $@ dhimmis/docs/templates/docs/license.txt
+	cp $@ dhimmis/reporting/templates/reporting/license.txt
 
 clean:
 	@git clean -fX dhimmis/

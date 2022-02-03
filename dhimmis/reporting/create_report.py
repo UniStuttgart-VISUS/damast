@@ -39,6 +39,7 @@ from .report_database import get_report_database
 from ..postgres_database import postgres_database
 from .tex import render_tex_report
 from .html import render_html_report
+from .place_sort import sort_placenames, sort_alternative_placenames
 
 
 def create_report(pg, filter_json, current_user, started, report_uuid, report_url, map_url, directory):
@@ -274,7 +275,7 @@ def create_report(pg, filter_json, current_user, started, report_uuid, report_ur
                 WHERE N.place_id = %s
                 ORDER BY L.id ASC;''', (place.id,))
                 cursor.execute(query)
-                alternative_names = list(cursor.fetchall())
+                alternative_names = sort_alternative_placenames(cursor.fetchall())
 
                 query = cursor.mogrify('''SELECT
                     format(UN.short_name, EPU.uri_fragment) AS short,
@@ -290,6 +291,8 @@ def create_report(pg, filter_json, current_user, started, report_uuid, report_ur
                 external_uris = list(cursor.fetchall())
 
                 places.append(Place(place, external_uris, alternative_names))
+
+            places = sort_placenames(places, keyfn=lambda place: place.place.name)
 
             # religion data
             cursor.execute('''SELECT

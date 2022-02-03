@@ -134,10 +134,10 @@
   </ul>
 </section>
 
+{% if persons | length %}
 <section class="persons">
   <h2>Persons</h2>
 
-  {% if persons | length %}
   <ul>
     {% for p in persons %}
     <li>
@@ -168,10 +168,8 @@
     </li>
     {% endfor %}
   </ul>
-  {% else %}
-  <p>No person data.</p>
-  {% endif %}
 </section>
+{% endif %}
 
 <section class="sources">
   <h2>Sources</h2>
