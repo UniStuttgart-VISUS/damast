@@ -30,6 +30,21 @@
       (True, 'root-app.impressum', 'Impressum', 'question-circle'),
       (True, 'root-app.datenschutz', 'Datenschutz', 'shield')
     ]) }}
+      <nav class="extra">
+        <ul class="link-list">
+          <li>&copy; 2019&ndash;2022 Max Franke and contributors.</li>
+          <li>
+            <a href="https://github.com/UniStuttgart-VISUS/damast">
+              <i class="fa fa-fw fa-github"></i>
+              GitHub</a>.
+          </li>
+          <li>
+            <a href="{{ url_for('docs.license.root') }}">
+              <i class="fa fa-fw fa-gavel"></i>
+              License</a>.
+          </li>
+        </ul>
+      </nav>
       <span id="messages" class="messages"></span>
       {%- from 'user_bar.html' import user_bar -%}
       {{ user_bar(user, button_class='button--small') }}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}License{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('docs.license.static', filename='license.css') }}">
+{% endblock %}
+
+{% block content %}
+  <pre>
+    {%- include "docs/license.txt" -%}
+  </pre>
+{% endblock %}
+
