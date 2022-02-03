@@ -292,6 +292,8 @@ def create_report(pg, filter_json, current_user, started, report_uuid, report_ur
 
                 places.append(Place(place, external_uris, alternative_names))
 
+            places = sort_placenames(places, keyfn=lambda place: place.place.name)
+
             # religion data
             cursor.execute('''SELECT
                 R.id,
