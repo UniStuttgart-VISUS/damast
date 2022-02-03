@@ -8,6 +8,7 @@ from ..authenticated_blueprint_preparator import AuthenticatedBlueprintPreparato
 from ..postgres_rest_api.decorators import rest_endpoint
 from ..postgres_rest_api.util import parse_geoloc
 from ..map_styles import app as map_styles
+from ..reporting.place_sort import sort_alternative_placenames
 
 app = AuthenticatedBlueprintPreparator('place', __name__, template_folder='templates')
 app.register_blueprint(map_styles)
@@ -60,7 +61,7 @@ def get_place(cursor, place_id):
     WHERE N.place_id = %s
     ORDER BY L.id ASC;''', (place_id,))
     cursor.execute(query)
-    alternative_names = list(cursor.fetchall())
+    alternative_names = sort_alternative_placenames(cursor.fetchall())
 
     # EXTERNAL_URI
     query = cursor.mogrify('''SELECT
