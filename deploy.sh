@@ -156,6 +156,8 @@ then
 
   printf "\n\033[0;36mStarting clean minimized build\033[0m\n\n"
   make prod
+else
+  make CHANGELOG LICENSE
 fi
 
 printf "\n\033[0;36mSyncing assets for docker image\033[0m\n\n"
