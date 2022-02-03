@@ -1,4 +1,4 @@
-{%- from 'reporting/fragments/macros.html' import download_filter_link, rerun_report_link, visualization_with_filter_link with context -%}
+{%- from 'reporting/fragments/macros.html' import download_filter_link, rerun_report_link, visualization_with_filter_link, evict_report_link with context -%}
 {% extends "base.html" %}
 
 {% block title %}Report List{% endblock %}
@@ -17,8 +17,13 @@
       <tr>
         <th>User</th>
         <th>UUID</th>
+        <th>Provisioned</th>
         <th>S.Ver.</th>
         <th>Status</th>
+        {%- if 'admin' in user.roles -%}
+        <th>Last acc.</th>
+        <th># Acc.</th>
+        {%- endif -%}
         <th># Ev.</th>
         <th>HTML</th>
         <th>PDF</th>
@@ -26,6 +31,9 @@
         <th>{#- Open visualization with filter (no title) -#}</th>
         <th>{#- Download filter JSON (no title) -#}</th>
         <th>{#- Re-run report now (no title) -#}</th>
+        {%- if 'admin' in user.roles -%}
+        <th>{#- Evict -#}</th>
+        {%- endif -%}
       </tr>
     </thead>
     <tbody>
@@ -33,44 +41,57 @@
       <tr>
         <td>{{ r.user }}</td>
         <td><code>{{ r.uuid }}</code></td>
+        <td><time datetime="{{ r.started }}">{{ r.started_fmt }}</time></td>
         <td><code>{{ r.server_version }}</code></td>
         <td>
-          {%- if r.completed is none -%}
-          Started at <time datetime="{{ r.started }}">{{ r.started_fmt }}</time>.
-          {%- else -%}
-          Completed at <time datetime="{{ r.completed }}">{{ r.completed_fmt }}</time>
-          (<em><time datetime="{{ r.duration }}">{{ r.duration_fmt | safe }}</time></em>).
-          {%- endif -%}
           {%- if r.report_state == 'failed' -%}
-          <span class="error-message"> (failed)</span>
+            <span class="error-message">failed</span>
+          {%- else -%}
+            {{ r.report_state }}
           {%- endif -%}
         </td>
+        {%- if 'admin' in user.roles -%}
+        <td><time datetime="{{ r.last_access }}">{{ r.last_access }}</time></td>
+        <td>{{ r.access_count }}</td>
+        {%- endif -%}
         <td>{{ r.evidence_count }} ({{ r.original_evidence_count }})</td>
         <td>
-          {%- if r.content is not none -%}
+          {%- if r.content is not none or r.report_state == 'evicted' -%}
             <a href="{{ url_for('reporting.get_report', report_id=r.uuid) }}">
               <i class="fa fa-book fa--pad-right"></i>
+              {%- if r.report_state == 'evicted' -%}
+              evicted
+              {%- else -%}
               {{ r.content | bytesize | safe }}
+              {%- endif -%}
             </a>
           {%- else -%}
             <span class="no-value">&mdash;</span>
           {%- endif -%}
         </td>
         <td>
-          {%- if r.pdf_report is not none -%}
+          {%- if r.pdf_report is not none or r.report_state == 'evicted' -%}
             <a href="{{ url_for('reporting.get_pdf_report', report_id=r.uuid) }}" target="_blank">
               <i class="fa fa-file-pdf-o fa--pad-right"></i>
+              {%- if r.report_state == 'evicted' -%}
+              evicted
+              {%- else -%}
               {{ r.pdf_report | bytesize | safe }}
+              {%- endif -%}
             </a>
           {%- else -%}
             <span class="no-value">&mdash;</span>
           {%- endif -%}
         </td>
         <td>
-          {%- if r.pdf_map is not none -%}
+          {%- if r.pdf_map is not none or r.report_state == 'evicted' -%}
             <a href="{{ url_for('reporting.get_map', report_id=r.uuid) }}" target="_blank">
               <i class="fa fa-file-pdf-o fa--pad-right"></i>
+              {%- if r.report_state == 'evicted' -%}
+              evicted
+              {%- else -%}
               {{ r.pdf_map | bytesize | safe }}
+              {%- endif -%}
             </a>
           {%- else -%}
             <span class="no-value">&mdash;</span>
@@ -79,6 +100,9 @@
         <td title="Open visualization with these filters">{{ visualization_with_filter_link(r.uuid, true) }}</td>
         <td title="Download filter JSON">{{ download_filter_link(r.uuid, true) }}</td>
         <td title="Re-run report now">{{ rerun_report_link(r.uuid, true) }}</td>
+        {%- if 'admin' in user.roles -%}
+        <td title="Evict report">{{ evict_report_link(r.uuid) }}</td>
+        {%- endif -%}
       </tr>
       {% endfor %}
     </tbody>
