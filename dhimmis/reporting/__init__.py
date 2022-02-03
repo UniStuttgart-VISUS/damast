@@ -22,7 +22,7 @@ from ..postgres_rest_api.decorators import rest_endpoint
 from .verbalize_filters import verbalize, get_filter_description
 
 from .filters import blueprint as filter_blueprint
-from .report_database import ReportTuple, get_report_database, start_report
+from .report_database import ReportTuple, get_report_database, start_report, update_report_access, recreate_report_after_evict, evict_report as do_evict_report
 from .datatypes import Evidence, Place
 
 
@@ -126,70 +126,114 @@ def get_report_data(report_id):
         return tpl
 
 
-@app.route('/<string:report_id>', role=['reporting', 'dev', 'admin'], methods=['GET'])
+def _wait_for_report(endpoint, report_id):
+    try:
+        delay = int(flask.request.args.get('t'))
+    except:
+        delay = 5
+
+    next_delay = min(60, int(1.5*delay))
+    url = flask.url_for(endpoint, report_id=report_id)
+
+    return flask.render_template('reporting/wait.html', delay=delay, next_delay=next_delay, url=url)
+
+@app.route('/<string:report_id>.html', role=['reporting', 'dev', 'admin'], methods=['GET'])
 def get_report(report_id):
     report = get_report_data(report_id)
-    if report.content is None:
-        # wait
-        time_passed = (datetime.now().astimezone() - report.started).total_seconds()
-        if time_passed < 15:
-            delay = 3
-        elif time_passed < 120:
-            delay = 20
-        else:
-            delay = 60
 
-        return flask.render_template('reporting/wait.html', delay=delay)
-
-    else:
+    if report.report_state == 'started':
+        return _wait_for_report('reporting.get_report', report_id)
+    elif report.report_state == 'evicted':
+        recreate_report_after_evict(report_id)
+        return _wait_for_report('reporting.get_report', report_id)
+    elif report.report_state in ('failed', 'completed'):
         if report.report_state == 'completed':
             errorcode = 200
-        elif report.report_state == 'failed':
-            errorcode = 410
         else:
-            errorcode = 500
+            errorcode = 410
 
         content = gzip.decompress(report.content).decode('utf-8')
         has_pdf = (report.pdf_report is not None)
+
+        update_report_access(report_id)
+
         return flask.render_template('reporting/report.html', content=content, report_id=report_id, has_pdf=has_pdf), errorcode
+    else:
+        flask.abort(500, F'Unknown report state reached: {report.report_state}')
 
 
-@app.route('/<string:report_id>/map', role=['reporting', 'dev', 'admin'], methods=['GET'])
+
+@app.route('/map_<string:report_id>.pdf', role=['reporting', 'dev', 'admin'], methods=['GET'])
 def get_map(report_id):
     report = get_report_data(report_id)
-    if report.pdf_map is None:
-        flask.abort(404)
 
-    if report.report_state == 'failed':
-        flask.abort(410, 'The report could not be completed.')
+    if report.report_state == 'started':
+        return _wait_for_report('reporting.get_map', report_id)
+    elif report.report_state == 'evicted':
+        recreate_report_after_evict(report_id)
+        return _wait_for_report('reporting.get_map', report_id)
+    elif report.report_state in ('failed', 'completed'):
+        if report.pdf_map is None:
+            flask.abort(404)
+        elif report.report_state == 'failed':
+            flask.abort(410, 'The report could not be completed.')
 
-    pdf = BytesIO(report.pdf_map)
-    fname = F'map_{report_id}.pdf'
+        pdf = BytesIO(report.pdf_map)
 
-    response = flask.send_file(pdf, mimetype='application/pdf', as_attachment=True, attachment_filename=fname)
-    response.headers['Content-Encoding'] = 'gzip'
-    response.direct_passthrough = False
+        response = flask.send_file(pdf, mimetype='application/pdf')
+        response.headers['Content-Encoding'] = 'gzip'
+        response.direct_passthrough = False
 
-    return response
+        update_report_access(report_id)
+
+        return response
+
+    else:
+        flask.abort(500, F'Unknown report state reached: {report.report_state}')
 
 
-@app.route('/<string:report_id>/pdf', role=['reporting', 'dev', 'admin'], methods=['GET'])
+
+@app.route('/<string:report_id>.pdf', role=['reporting', 'dev', 'admin'], methods=['GET'])
 def get_pdf_report(report_id):
     report = get_report_data(report_id)
-    if report.pdf_report is None:
-        flask.abort(404)
 
-    if report.report_state == 'failed':
-        flask.abort(410, 'The report could not be completed.')
+    if report.report_state == 'started':
+        return _wait_for_report('reporting.get_pdf_report', report_id)
+    elif report.report_state == 'evicted':
+        recreate_report_after_evict(report_id)
+        return _wait_for_report('reporting.get_pdf_report', report_id)
+    elif report.report_state in ('failed', 'completed'):
+        if report.pdf_report is None:
+            flask.abort(404)
+        elif report.report_state == 'failed':
+            flask.abort(410, 'The report could not be completed.')
 
-    pdf = BytesIO(report.pdf_report)
-    fname = F'{report_id}.pdf'
+        pdf = BytesIO(report.pdf_report)
 
-    response = flask.send_file(pdf, mimetype='application/pdf', as_attachment=True, attachment_filename=fname)
-    response.headers['Content-Encoding'] = 'gzip'
-    response.direct_passthrough = False
+        response = flask.send_file(pdf, mimetype='application/pdf')
+        response.headers['Content-Encoding'] = 'gzip'
+        response.direct_passthrough = False
 
-    return response
+        update_report_access(report_id)
+
+        return response
+
+    else:
+        flask.abort(500, F'Unknown report state reached: {report.report_state}')
+
+
+## routes for old URLs, so that they still work for older bookmarks
+@app.route('/<string:report_id>', role=['reporting', 'dev', 'admin'], methods=['GET'])
+def _get_report_old(report_id):
+    return flask.redirect(flask.url_for('reporting.get_report', report_id=report_id), 301)
+
+@app.route('/<string:report_id>/pdf', role=['reporting', 'dev', 'admin'], methods=['GET'])
+def _get_pdf_old(report_id):
+    return flask.redirect(flask.url_for('reporting.get_pdf_report', report_id=report_id), 301)
+
+@app.route('/<string:report_id>/map', role=['reporting', 'dev', 'admin'], methods=['GET'])
+def _get_map_old(report_id):
+    return flask.redirect(flask.url_for('reporting.get_map', report_id=report_id), 301)
 
 
 @app.route('/list', role=['reporting', 'dev', 'admin'])
@@ -225,46 +269,14 @@ def list_available_reports():
         reports = []
         for r in reports_:
             report = r._asdict()
-
-            if r.completed is None:
-                started = r.started.astimezone().strftime('%Y-%m-%d %H:%M')
-                completed = None
-                duration = None
-                duration_fmt = None
-            else:
-                started = None
-                completed = r.completed.astimezone().strftime('%Y-%m-%d %H:%M')
-                delta = r.completed - r.started
-
-                secs = delta.total_seconds()
-                dur = []
-                dur2 = []
-                t = secs % 60
-                dur.append(F'{t:.0f}&thinsp;s')
-                dur2.append(F'{t:.0f}S')
-                secs //= 60
-                if secs > 0:
-                    t = secs % 60
-                    dur.append(F'{t:.0f}&thinsp;min')
-                    dur2.append(F'{t:.0f}M')
-
-                    secs //= 60
-                    if secs > 0:
-                        t = secs
-                        dur.append(F'{t:.0f}&thinsp;h')
-                        dur2.append(F'{t:.0f}H')
-
-                duration_fmt = ' '.join(dur[::-1])
-                duration = 'P' + ''.join(dur2[::-1])
-
+            started = r.started.astimezone().strftime('%Y-%m-%d')
+            acc = r.last_access.astimezone().strftime('%Y-%m-%d')
 
             filt = json.loads(gzip.decompress(r.filter))
             original_evidence_count = filt['metadata']['evidenceCount']
 
             report.update(dict(started_fmt=started,
-                completed_fmt=completed,
-                duration=duration,
-                duration_fmt=duration_fmt,
+                last_access=acc,
                 original_evidence_count=original_evidence_count,
                 ))
             reports.append(report)
@@ -279,6 +291,7 @@ def list_available_reports():
                 prev_page_offset = prev_page_offset,
                 last_page_offset = last_page_offset,
                 )
+
 
 def _get_report_filter_json(report_id):
     report = get_report_data(report_id)
@@ -304,3 +317,9 @@ def get_report_filter(report_id):
 def rerun_report(report_id):
     filt = _get_report_filter_json(report_id)
     return _start_report(filt)
+
+
+@app.route('/<string:report_id>/evict', role=['admin'], methods=['GET'])
+def evict_report(report_id):
+    do_evict_report(report_id)
+    return flask.redirect(flask.url_for('reporting.list_available_reports'))

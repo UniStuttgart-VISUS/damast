@@ -1,7 +1,7 @@
 import sqlite3
 import os
 from contextlib import contextmanager
-from datetime import datetime
+from datetime import datetime, date
 from functools import namedtuple
 import uuid
 import json
@@ -9,6 +9,7 @@ import gzip
 import subprocess
 import logging
 import flask
+import traceback
 
 _database_schema = '''
 CREATE TABLE reports (
@@ -17,6 +18,8 @@ CREATE TABLE reports (
       started DATETIME NOT NULL,
       completed DATETIME DEFAULT NULL,
       report_state TEXT NOT NULL DEFAULT 'started',
+      last_access DATETIME NOT NULL,
+      access_count INTEGER NOT NULL DEFAULT 0,
       server_version TEXT NOT NULL,
       filter BLOB DEFAULT NULL,
       content BLOB DEFAULT NULL,
@@ -51,7 +54,32 @@ def get_report_database():
         con.close()
 
 
-ReportTuple = namedtuple('ReportTuple', ['uuid', 'user', 'server_version', 'report_state', 'started', 'completed', 'content', 'pdf_map', 'pdf_report', 'filter', 'evidence_count'])
+ReportTuple = namedtuple('ReportTuple', ['uuid', 'user', 'server_version', 'report_state', 'started', 'completed', 'content', 'pdf_map', 'pdf_report', 'filter', 'evidence_count', 'last_access', 'access_count'])
+
+
+def _run_report_generation(report_id, rerun=False):
+    # run subprocess
+    sub_args = [
+        'python', '-m', 'dhimmis.reporting.create_report',
+        report_id,
+        flask.url_for('reporting.get_report', report_id=report_id, _external=True),  # absolute URL to report
+        flask.url_for('reporting.get_map', report_id=report_id),  # relative URL to map
+            ]
+    p = subprocess.Popen(sub_args)
+
+    if rerun:
+        logging.getLogger('flask.error').info(F'Restarting report generation of {report_id} after eviction (PID {p.pid}).')
+    else:
+        logging.getLogger('flask.error').info(F'Starting report generation of {report_id} (PID {p.pid}).')
+
+    return report_id
+
+
+def recreate_report_after_evict(report_id):
+    with get_report_database() as db:
+        db.execute('UPDATE reports SET report_state = :st WHERE uuid = :uuid;', dict(st='started', uuid=report_id))
+
+    _run_report_generation(report_id, rerun=True)
 
 
 def start_report(username, server_version, filter_json):
@@ -61,8 +89,8 @@ def start_report(username, server_version, filter_json):
     filter_content = gzip.compress(json.dumps(filter_json).encode('utf-8'))
 
     with get_report_database() as db:
-        db.execute('''INSERT INTO reports (uuid, user, started, server_version, filter, report_state)
-            VALUES (:uuid, :user, :started, :server_version, :filter, :report_state);''',
+        db.execute('''INSERT INTO reports (uuid, user, started, server_version, filter, report_state, last_access, access_count)
+            VALUES (:uuid, :user, :started, :server_version, :filter, :report_state, :last_access, :access_count);''',
             {
                 "uuid": u,
                 "user": username,
@@ -70,16 +98,67 @@ def start_report(username, server_version, filter_json):
                 "filter": filter_content,
                 "started": now,
                 "report_state": "started",
+                "last_access": now,
+                "access_count": 0,
                 })
 
-        # run subprocess
-        sub_args = [
-            'python', '-m', 'dhimmis.reporting.create_report',
-            u,       # uuid
-            flask.url_for('reporting.get_report', report_id=u, _external=True),  # absolute URL to report
-            flask.url_for('reporting.get_map', report_id=u),  # relative URL to map
-                ]
-        p = subprocess.Popen(sub_args)
-        logging.getLogger('flask.error').info(F'Starting report generation of {u} (PID {p.pid}).')
-
+        _run_report_generation(u)
         return u
+
+
+
+def update_report_access(report_id):
+    now = datetime.now().replace(microsecond=0).astimezone().isoformat()
+    with get_report_database() as db:
+        db.execute('SELECT access_count FROM reports WHERE uuid = :uuid;', dict(uuid=report_id))
+        (access, ) = db.fetchone()
+        db.execute('UPDATE reports SET last_access = :now, access_count = :count WHERE uuid = :uuid;',
+                dict(uuid=report_id, now=now, count=access+1))
+
+
+def evict_report(report_id):
+    try:
+        with get_report_database() as db:
+            db.execute('SELECT report_state, started, last_access, access_count, content, pdf_map, pdf_report FROM reports WHERE uuid = :uuid;', dict(uuid=report_id))
+            report_state, started, last_access, access_count, content, pdf_map, pdf_report = db.fetchone()
+            now = datetime.now().replace(microsecond=0).astimezone()
+
+            upd = dict(report_state='evicted', content=None, pdf_map=None, pdf_report=None, last_access=now.isoformat(), uuid=report_id)
+
+            size = ''
+            age = (now - started).days
+            age_accessed = (now - last_access).days
+
+            if report_state == 'started':
+                size = '0B'
+                logging.getLogger('flask.error').warning('Report %s is getting evicted but still in started state.', report_id)
+            elif report_state == 'evicted':
+                size = '0B'
+            elif report_state in ('completed', 'failed'):
+                size = 0
+                if content is not None:
+                    size += len(bytes(content))
+                if pdf_map is not None:
+                    size += len(bytes(pdf_map))
+                if pdf_report is not None:
+                    size += len(bytes(pdf_report))
+
+                if size > 1000000:
+                    sizes = F'{size // 1000000}MB'
+                elif size > 1000:
+                    sizes = F'{size // 1000}kB'
+                else:
+                    sizes = F'{size}B'
+                size = sizes
+            else:
+                logging.getLogger('flask.error').warning('Report %s is has unknown state: %s.', report_id, report_state)
+                size = '?'
+
+            db.execute('UPDATE reports SET report_state = :report_state, content = :content, pdf_report = :pdf_report, pdf_map = :pdf_map, last_access = :last_access WHERE uuid = :uuid;', upd)
+            logging.getLogger('flask.error').info('Evicted %s report with UUID %s (created %d days ago, last accessed %d days ago). Freed %s.', report_state, report_id, age, age_accessed, size)
+
+    except:
+        tb = traceback.format_exc()
+        logging.getLogger('flask.error').error('Something went wrong while evicting report %s: %s', report_id, tb)
+
+

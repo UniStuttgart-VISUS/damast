@@ -41,7 +41,7 @@ from .tex import render_tex_report
 from .html import render_html_report
 
 
-def create_report(pg, filter_json, current_user, report_uuid, report_url, map_url, directory):
+def create_report(pg, filter_json, current_user, started, report_uuid, report_url, map_url, directory):
     try:
         with pg.get_cursor(readonly=True) as cursor:
             filters = filter_json['filters']
@@ -392,7 +392,7 @@ def create_report(pg, filter_json, current_user, report_uuid, report_url, map_ur
 
             # metadata
             _fmt = '%A, %B %-d, %Y, at %H:%M %Z'
-            current_time_ = datetime.now().astimezone()
+            current_time_ = started.astimezone()
             current_time = current_time_.strftime(_fmt)
             current_time_machine = current_time_.isoformat()
             export_user = filter_json['metadata']['createdBy']
@@ -525,12 +525,12 @@ if __name__ == '__main__':
 
     try:
         with get_report_database() as db:
-            db.execute('SELECT user, filter FROM reports WHERE uuid = :u;', dict(u=report_uuid))
-            username, filter_gzip = db.fetchone()
+            db.execute('SELECT user, filter, started FROM reports WHERE uuid = :u;', dict(u=report_uuid))
+            username, filter_gzip, started = db.fetchone()
             filters = json.loads(gzip.decompress(filter_gzip))
 
             pg = postgres_database()
-            create_report(pg, filters, username, report_uuid, report_url, map_url, directory)
+            create_report(pg, filters, username, started, report_uuid, report_url, map_url, directory)
 
     except Exception as err:
         now = datetime.now().replace(microsecond=0).astimezone().isoformat()

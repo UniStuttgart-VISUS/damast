@@ -45,6 +45,12 @@
 </a>
 {%- endmacro -%}
 
+{%- macro evict_report_link(uuid) -%}
+<a href="{{ url_for('reporting.evict_report', report_id=uuid) }}" target="_self">
+  <i class="fa fa-chain-broken"></i>
+</a>
+{%- endmacro -%}
+
 {%- macro visualization_with_filter_link(uuid, short=false) -%}
 <a href="{{ url_for('vis.root') }}#{{ uuid }}" target="_blank">
   <i class="fa fa-area-chart"></i>
