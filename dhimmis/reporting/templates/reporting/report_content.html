@@ -15,7 +15,9 @@
     <li><a href="#evidences">Evidences</a></li>
     <li><a href="#places">Places</a></li>
     <li><a href="#religions">Religions</a></li>
+    {%- if persons|length -%}
     <li><a href="#persons">Persons</a></li>
+    {%- endif -%}
     <li><a href="#timeline">Timeline</a></li>
     <li><a href="#sources">Sources</a></li>
   </ul>
@@ -33,7 +35,9 @@
     <strong>{{ evidences | length }}</strong> distinct evidences,
     <strong>{{ places | length }}</strong> distinct places,
     <strong>{{ religions | length }}</strong> distinct religions,
+    {%- if persons|length -%}
     <strong>{{ persons | length }}</strong> distinct persons,
+    {%- endif -%}
     based on <strong>{{ sources | length }}</strong> distinct sources.
   </p>
 </section>
@@ -71,6 +75,7 @@
   {% endfor %}
 </section>
 
+{%- if persons|length -%}
 <section id="persons">
   <h1>Persons</h1>
 
@@ -78,6 +83,7 @@
     {{ create_person(person) }}
   {% endfor %}
 </section>
+{%- endif -%}
 
 <section id="timeline">
   <h1>Timeline</h1>

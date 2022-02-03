@@ -72,7 +72,9 @@ This report contains:
 \textbf{<< evidences | length >>} distinct evidences,
 \textbf{<< places | length >>} distinct places,
 \textbf{<< religions | length >>} distinct religions,
+<% if persons|length %>
 \textbf{<< persons | length >>} distinct persons,
+<% endif %>
 based on \textbf{<< sources | length >>} distinct sources.
 
 
@@ -108,6 +110,7 @@ based on \textbf{<< sources | length >>} distinct sources.
 <% endfor %>
 
 
+<% if persons|length %>
 \clearpage
 \chapter{Persons}
 \label{sec:persons}
@@ -115,6 +118,7 @@ based on \textbf{<< sources | length >>} distinct sources.
 <% for person in persons %>
   << create_person(person) >>
 <% endfor %>
+<% endif %>
 
 
 \clearpage
