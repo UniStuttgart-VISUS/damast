@@ -8,8 +8,23 @@
 {%- from 'reporting/fragments/timeline.html' import create_timeline with context -%}
 {%- from 'reporting/fragments/metadata.html' import creation_metadata, filter_description with context -%}
 
+<section id="cite">
+  <h2>How to Cite</h2>
+
+  <p>We suggest to cite this report in the following way:</p>
+  <blockquote>
+    Damast Report <code>{{ report_id }}</code>, created by <span class="highlight-darkred">[your name here]</span>;
+    based on data by Ralph Barczok and Bernd A. Vest and the visualization of
+    <em>Damast &mdash; A Research System to Analyze Multi-religious Constellations in the Islamicate World,</em>
+    edited by Dorothea Weltecke, Steffen Koch, Ralph Barczok, Max Franke, Florian Jäckel, and Bernd A. Vest.
+    <time date="2022-04">April 2022</time>.
+    Accessed <time datetime="{{ metadata.current_time_machine }}">{{ metadata.current_time_short }}</time>.
+    <a href="{{ report_url }}">{{ report_url }}</a>, data deposited at DaRUS: <a href="https://doi.org/10.18419/darus-2318">https://doi.org/10.18419/darus-2318</a>.
+  </blockquote>
+</section>
+
 <nav role="toc">
-  <h1>Table of Contents</h1>
+  <h2>Table of Contents</h2>
   <ul>
     <li><a href="#filters">Query Description</a></li>
     <li><a href="#evidences">Evidences</a></li>
@@ -24,7 +39,7 @@
 </nav>
 
 <section id="filters">
-  <h1>Query Description</h1>
+  <h2>Query Description</h2>
 
   {{ creation_metadata(metadata) }}
 
@@ -43,7 +58,7 @@
 </section>
 
 <section id="evidences">
-  <h1>Evidences</h1>
+  <h2>Evidences</h2>
 
   {% for evidence in evidences %}
     {{ create_evidence(evidence) }}
@@ -51,7 +66,7 @@
 </section>
 
 <section id="places">
-  <h1>Places</h1>
+  <h2>Places</h2>
 
   <figure class="place-map">
     {{ place_map | safe }}
@@ -68,7 +83,7 @@
 </section>
 
 <section id="religions">
-  <h1>Religions</h1>
+  <h2>Religions</h2>
 
   {% for religion in religions %}
     {{ create_religion(religion) }}
@@ -77,7 +92,7 @@
 
 {%- if persons|length -%}
 <section id="persons">
-  <h1>Persons</h1>
+  <h2>Persons</h2>
 
   {% for person in persons %}
     {{ create_person(person) }}
@@ -86,14 +101,14 @@
 {%- endif -%}
 
 <section id="timeline">
-  <h1>Timeline</h1>
+  <h2>Timeline</h2>
 
   {{ create_timeline(time_data) }}
 </section>
 
 {% if sources %}
 <section id="sources">
-  <h1>Sources</h1>
+  <h2>Sources</h2>
 
   <ul class="source-list">
     {% for i, source in sources %}
