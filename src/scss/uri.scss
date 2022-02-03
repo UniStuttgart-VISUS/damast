@@ -7,6 +7,7 @@
 
 .content {
   @include mixins.baseFlexBlock();
+  padding-block: 2rem;
 
   &::after {
     clear: both;

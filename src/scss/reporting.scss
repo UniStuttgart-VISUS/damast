@@ -16,6 +16,8 @@
 .content {
   @include mixins.baseFlexBlock();
 
+  padding-block: 2rem;
+
   @media print {
     background: revert;
     margin: 1rem;
@@ -30,7 +32,7 @@
   position: relative;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4, h5 {
   padding: revert;
   margin: revert;
 
@@ -40,14 +42,18 @@ h1, h2, h3 {
 }
 
 h1 {
-  font-size: 2rem;
+  font-size: 3rem;
 }
 
 h2 {
-  font-size: 1.6rem;
+  font-size: 2rem;
 }
 
 h3 {
+  font-size: 1.6rem;
+}
+
+h4 {
   font-size: 1.3rem;
 }
 
@@ -163,7 +169,7 @@ section.item {
   scroll-snap-type: y proximity;
   scroll-margin-block: 2em;
 
-  h2 {
+  h3 {
     text-align: start;
 
     scroll-snap-align: start;
@@ -300,6 +306,17 @@ nav.report-options {
 
   display: flex;
   gap: 1em;
+}
+
+.highlight-darkred {
+  font-weight: 600;
+  color: $clr-red;
+}
+
+blockquote {
+  margin-inline-start: 0.2em;
+  border-inline-start: 0.2em solid $clr-gray;
+  padding-inline: 1em;
 }
 
 @page {

@@ -398,6 +398,7 @@ def create_report(pg, filter_json, current_user, started, report_uuid, report_ur
             current_time_ = started.astimezone()
             current_time = current_time_.strftime(_fmt)
             current_time_machine = current_time_.isoformat()
+            current_time_short = current_time_.strftime('%B %-d, %Y')
             export_user = filter_json['metadata']['createdBy']
             export_time_ = dateutil.parser.parse(filter_json['metadata']['createdAt']).astimezone()
             export_time = export_time_.strftime(_fmt)
@@ -410,6 +411,7 @@ def create_report(pg, filter_json, current_user, started, report_uuid, report_ur
 
             metadata = dict(current_user=current_user,
                     current_time=current_time,
+                    current_time_short=current_time_short,
                     current_time_machine=current_time_machine,
                     export_user=export_user,
                     export_time=export_time,

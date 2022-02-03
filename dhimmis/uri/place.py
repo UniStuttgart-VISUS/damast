@@ -2,6 +2,7 @@ import flask
 import os
 import subprocess
 import werkzeug.exceptions
+from datetime import date
 from functools import lru_cache
 from psycopg2.extras import NumericRange
 from ..authenticated_blueprint_preparator import AuthenticatedBlueprintPreparator
@@ -320,7 +321,13 @@ def get_place(cursor, place_id):
             else:
                 source_pages[p.source_id] = None
 
+    now_ = date.today()
+    now = now_.strftime('%Y-%m-%d')
+    now_fmt = now_.strftime('%B %-d, %Y')
+
     data = {
+            "now": now,
+            "now_fmt": now_fmt,
             "url_root": flask.request.url_root,
             "place": place,
             "place_type": place_type,

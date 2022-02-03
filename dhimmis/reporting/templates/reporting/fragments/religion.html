@@ -2,7 +2,7 @@
 
 {% macro create_religion(r) %}
 <section id="religion{{ r.id }}" class="item">
-  <h2 data-reference-label="r{{ r.id }}">{{ r.name }}</h2>
+  <h3 data-reference-label="r{{ r.id }}">{{ r.name }}</h3>
   <p>{{ create_evidence_linklist(r.evidence_ids, before='', after='') }}</p>
 </section>
 {% endmacro %}
