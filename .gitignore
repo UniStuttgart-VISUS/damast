@@ -14,5 +14,7 @@
 /dhimmis/reporting/static/
 /dhimmis/uri/static/
 /dhimmis/docs/templates/docs/changelog.txt
+/dhimmis/docs/templates/docs/license.txt
+/dhimmis/reporting/templates/reporting/license.txt
 /pyenv/
 /pytest.log
