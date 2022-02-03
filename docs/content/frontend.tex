@@ -914,9 +914,7 @@ There is also the option to configure the Damast system to handle this automatic
   \item[\texttt{DHIMMIS\_REPORT\_EVICTION\_MAXSIZE}:]
     If this variable exists and is not empty, it specifies a file size number in \emph{megabytes}.
     The server then regularly checks whether the sum of report content sizes exceeds that size.
-    If so, it will evict the least-accessed reports until that sum is less than 80\,\% of that size\footnote{
-      This hysteresis ensures that the eviction does not need to happen every time the server checks for size.
-    }.
+    If so, it will evict the least-accessed reports until that sum is less than that size.
     A good number to specify here could be 5,000 (5\,GB).
 \end{description}
 
