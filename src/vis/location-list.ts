@@ -377,16 +377,18 @@ export default class LocationList extends View<any, any> {
           if (data.alternative_names.length !== 0) {
             // sort first by language name, then by name
             data.alternative_names.sort((n1, n2) => {
+              // if different language: order depends on language name
               const langdiff = n1.language.localeCompare(n2.language);
               if (langdiff !== 0) return langdiff;
 
               const a_ = n1.name.replace(locationNamePrefix, '');
               const b_ = n2.name.replace(locationNamePrefix, '');
 
-              //const n = (n1.transcription === null) ? a_ : n1.transcription.replace(locationNamePrefix, '');
-              //const m = (n2.transcription === null) ? b_ : n2.transcription.replace(locationNamePrefix, '');
+              const n = (n1.transcription === null) ? a_ : n1.transcription.replace(locationNamePrefix, '');
+              const m = (n2.transcription === null) ? b_ : n2.transcription.replace(locationNamePrefix, '');
 
-              return a_.localeCompare(b_);
+              // order by transcription or name (if transcription empty) -> names in e.g. Arabic get ordered by transcription
+              return n.localeCompare(m);
             });
 
             dl.append('dt').text('Alternative Names');
