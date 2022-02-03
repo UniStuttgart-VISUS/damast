@@ -5,11 +5,12 @@
 
 The server can now be configured to evict old reports. Evicted reports can
 still be retrieved from the filters, but the report contents need to be
-regenerated on demand. Minor CSS source file restructuring. Fix internal
-GitHub dependencies to point to public repositories. Fix a bug with
-incorrect match sources on place search. Fix a bug with the time filter not
-being shown correctly in the overview timeline. Fix a vulnerable npm
-dependency (CVE-2021-23566).
+regenerated on demand. Alternative names for places are now sorted first
+by language, then by transcription and name. Minor CSS source file
+restructuring. Fix internal GitHub dependencies to point to public
+repositories. Fix a bug with incorrect match sources on place search. Fix a
+bug with the time filter not being shown correctly in the overview
+timeline. Fix a vulnerable npm dependency (CVE-2021-23566).
 
 
 2022-01-18                                                           v1.0.4
