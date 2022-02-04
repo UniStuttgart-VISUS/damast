@@ -9,6 +9,8 @@ def register_scheduler(sched):
     if 'DHIMMIS_REPORT_EVICTION_DEFERRAL' in os.environ or 'DHIMMIS_REPORT_EVICTION_MAXSIZE' in os.environ:
         logging.getLogger('flask.error').info('Registering report eviction job to run each day at 3AM.')
         sched.add_job(check_for_evictable, trigger='cron', hour='3', minute='0')
+    else:
+        logging.getLogger('flask.error').info('Reports will not be evicted regularly.')
 
 
 def check_for_evictable():
@@ -23,12 +25,12 @@ def check_for_evictable():
     '''
     try:
         deferral = int(os.environ.get('DHIMMIS_REPORT_EVICTION_DEFERRAL'))
-    except TypeError:
+    except (TypeError, ValueError):
         deferral = None
 
     try:
         maxsize = int(os.environ.get('DHIMMIS_REPORT_EVICTION_MAXSIZE'))
-    except TypeError:
+    except (TypeError, ValueError):
         maxsize = None
 
     if deferral is None and maxsize is None:
