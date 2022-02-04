@@ -25,12 +25,12 @@ def check_for_evictable():
     '''
     try:
         deferral = int(os.environ.get('DHIMMIS_REPORT_EVICTION_DEFERRAL'))
-    except TypeError:
+    except (TypeError, ValueError):
         deferral = None
 
     try:
         maxsize = int(os.environ.get('DHIMMIS_REPORT_EVICTION_MAXSIZE'))
-    except TypeError:
+    except (TypeError, ValueError):
         maxsize = None
 
     if deferral is None and maxsize is None:
