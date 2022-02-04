@@ -24,18 +24,22 @@ from ..document_fragment import tokenize_html_document, tokenize_text_document, 
 
 logger = logging.getLogger('flask.error')
 
-def register_scheduler(sched):
-    def run():
-        p = subprocess.Popen(['python', '-m', 'dhimmis.annotator.suggestions'])
-        logger.info(F'Starting annotation suggestion refresh (PID {p.pid}).')
 
+def start_refresh_job():
+    p = subprocess.Popen(['python', '-m', 'dhimmis.annotator.suggestions'])
+    logger.info(F'Starting annotation suggestion refresh (PID {p.pid}).')
+
+
+def register_scheduler(sched):
     try:
         interval = int(os.environ.get('DHIMMIS_ANNOTATION_SUGGESTION_REBUILD'))
         if interval < 1:
             logger.warning('DHIMMIS_ANNOTATION_SUGGESTION_REBUILD has an invalid value (%d), disabling.', interval)
             interval = None
 
-    except (TypeError, ValueError):
+    except TypeError:
+        interval = None
+    except ValueError:
         logger.error('DHIMMIS_ANNOTATION_SUGGESTION_REBUILD has an invalid value ("%s"), disabling.', os.environ.get('DHIMMIS_ANNOTATION_SUGGESTION_REBUILD'))
         interval = None
 
@@ -43,7 +47,7 @@ def register_scheduler(sched):
 
         period = 'each day' if interval == 1 else F'every {interval} days'
         logger.info('Registering annotation suggestion refresh job to run %s at 1AM.', period)
-        sched.add_job(run, trigger='cron', day=F'*/{interval}', hour='1', minute='0')
+        sched.add_job(start_refresh_job, trigger='cron', day=F'*/{interval}', hour='1', minute='0')
 
     else:
         logger.info('Will not run annotation suggestion refresh job regularly.')
