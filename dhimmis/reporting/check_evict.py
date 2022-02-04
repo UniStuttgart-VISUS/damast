@@ -94,6 +94,8 @@ def check_for_evictable():
             for uuid in [*to_evict_deferral, *to_evict_maxsize]:
                 evict_report(uuid)
 
+            db.execute('VACUUM;')
+
 
     except:
         tb = traceback.format_exc()
