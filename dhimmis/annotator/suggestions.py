@@ -29,8 +29,24 @@ def register_scheduler(sched):
         p = subprocess.Popen(['python', '-m', 'dhimmis.annotator.suggestions'])
         logger.info(F'Starting annotation suggestion refresh (PID {p.pid}).')
 
-    logger.info('Registering annotation suggestion refresh job to run each day at 1AM.')
-    sched.add_job(run, trigger='cron', hour='1', minute='0')
+    try:
+        interval = int(os.environ.get('DHIMMIS_ANNOTATION_SUGGESTION_REBUILD'))
+        if interval < 1:
+            logger.warning('DHIMMIS_ANNOTATION_SUGGESTION_REBUILD has an invalid value (%d), disabling.', interval)
+            interval = None
+
+    except (TypeError, ValueError):
+        logger.error('DHIMMIS_ANNOTATION_SUGGESTION_REBUILD has an invalid value ("%s"), disabling.', os.environ.get('DHIMMIS_ANNOTATION_SUGGESTION_REBUILD'))
+        interval = None
+
+    if interval is not None:
+
+        period = 'each day' if interval == 1 else F'every {interval} days'
+        logger.info('Registering annotation suggestion refresh job to run %s at 1AM.', period)
+        sched.add_job(run, trigger='cron', day=F'*/{interval}', hour='1', minute='0')
+
+    else:
+        logger.info('Will not run annotation suggestion refresh job regularly.')
 
 
 
