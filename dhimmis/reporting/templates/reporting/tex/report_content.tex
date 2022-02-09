@@ -43,9 +43,9 @@
 
 \title{Report \texttt{\href{<<report_url|texsafe>>}{<<report_id|texsafe>>}}}
 \subtitle{Damast \texttt{<<server_version|texsafe>>}}
-\date{\today{} at \thistime}
+\date{<<metadata.current_time>>}
 \author{Provisioned by \texttt{<<metadata.current_user>>}}
-\publishers{VIS, University of Stuttgart, Germany}
+\publishers{Generated with Damast \\ \small{\url{https://github.com/UniStuttgart-VISUS/damast}}}
 
 \maketitle
 
@@ -72,7 +72,9 @@ This report contains:
 \textbf{<< evidences | length >>} distinct evidences,
 \textbf{<< places | length >>} distinct places,
 \textbf{<< religions | length >>} distinct religions,
+<% if persons|length %>
 \textbf{<< persons | length >>} distinct persons,
+<% endif %>
 based on \textbf{<< sources | length >>} distinct sources.
 
 
@@ -108,6 +110,7 @@ based on \textbf{<< sources | length >>} distinct sources.
 <% endfor %>
 
 
+<% if persons|length %>
 \clearpage
 \chapter{Persons}
 \label{sec:persons}
@@ -115,6 +118,7 @@ based on \textbf{<< sources | length >>} distinct sources.
 <% for person in persons %>
   << create_person(person) >>
 <% endfor %>
+<% endif %>
 
 
 \clearpage
@@ -140,5 +144,40 @@ based on \textbf{<< sources | length >>} distinct sources.
 \end{description}
 <% endif %>
 
+\clearpage
+\chapter*{How to Cite}
+\ihead*{\textsc{How to Cite}}
+\label{sec:how-to-cite}
+\addcontentsline{toc}{chapter}{\nameref{sec:how-to-cite}}
+
+We suggest to cite this report in the following way:
+
+\begingroup
+\small
+\begin{quote}
+  Damast report \texttt{<< report_id >>},
+  based on data by Ralph Barczok and Bernd A. Vest, and the visualization of
+  \emph{Damast --- A Research System to Analyze Multi-Religious Constellations in the Islamicate World,}
+  edited by Dorothea Weltecke, Steffen Koch, Ralph Barczok, Max Franke, Florian Jäckel, and Bernd A. Vest.
+  April 2022.
+  Created << metadata.current_time_short >>.
+  \url{<< report_url >>}, data deposited at DaRUS:
+  \url{https://doi.org/10.18419/darus-2318}.
+\end{quote}
+\endgroup
+
+
+\clearpage
+\chapter*{License}
+\label{sec:license}
+\ihead*{\textsc{License}}
+\addcontentsline{toc}{chapter}{\nameref{sec:license}}
+
+\begingroup
+\small
+\begin{verbatim}
+<% include "reporting/license.txt" %>
+\end{verbatim}
+\endgroup
 
 \end{document}

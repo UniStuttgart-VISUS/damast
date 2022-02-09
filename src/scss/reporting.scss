@@ -3,6 +3,7 @@
 @use 'common/mixins';
 
 @forward 'common/target-highlight';
+@forward 'common/place-uri-report-layout';
 @forward 'reporting/timeline';
 
 :root {
@@ -16,6 +17,8 @@
 .content {
   @include mixins.baseFlexBlock();
 
+  padding-block: 2rem;
+
   @media print {
     background: revert;
     margin: 1rem;
@@ -28,37 +31,6 @@
   }
 
   position: relative;
-}
-
-h1, h2, h3 {
-  padding: revert;
-  margin: revert;
-
-  @media print {
-    color: revert;
-  }
-}
-
-h1 {
-  font-size: 2rem;
-}
-
-h2 {
-  font-size: 1.6rem;
-}
-
-h3 {
-  font-size: 1.3rem;
-}
-
-nav[role="toc"],
-section {
-  width: clamp(40ch, 100%, 80ch);
-  padding-inline: 1rem;
-}
-
-main > :is(nav, section) {
-  margin: auto;
 }
 
 ul.footnotes {
@@ -163,7 +135,7 @@ section.item {
   scroll-snap-type: y proximity;
   scroll-margin-block: 2em;
 
-  h2 {
+  h3 {
     text-align: start;
 
     scroll-snap-align: start;
@@ -191,25 +163,6 @@ section.item {
     em,
     .regular {
       font-weight: 400;
-    }
-  }
-
-  p,
-  ul,
-  ol,
-  blockquote {
-    padding-inline-start: 8rem;
-
-    @media print {
-      padding-inline-start: 4cm;
-    }
-  }
-
-  ul, ol {
-    margin-inline-start: 1.5rem;
-
-    @media print {
-      margin-inline-start: 1cm;
     }
   }
 }
@@ -341,6 +294,10 @@ nav.report-options {
 
   svg {
     filter: invert(100%);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: revert;
   }
 }
 

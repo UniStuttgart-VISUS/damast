@@ -1,0 +1,54 @@
+@use '../common/colors' as *;
+@use '../vis/variables' as *;
+@use '../common/mixins';
+
+// content
+.content {
+  @include mixins.baseFlexBlock();
+  padding-block: 2rem;
+
+  &::after {
+    clear: both;
+  }
+
+  & > :where(h1, h2, h3, h4, section, p, ul, ol, blockquote, nav[role="toc"]) {
+    width: clamp(30rem, calc(100% - 2rem), 65rem);
+    padding-inline: 1rem;
+    margin-inline: auto;
+  }
+}
+
+main > :is(nav, section) {
+  margin: auto;
+}
+
+// headings
+h1, h2, h3, h4, h5 {
+  padding: revert;
+  margin: revert;
+}
+
+blockquote {
+  margin-inline-start: 0.2em;
+  border-inline-start: 0.2em solid $clr-gray;
+  padding-inline: 1em;
+}
+
+// item-specific
+section.item {
+  p, ul, ol, blockquote {
+    padding-inline-start: 8rem;
+
+    @media print {
+      padding-inline-start: 4cm;
+    }
+  }
+
+  ul, ol {
+    margin-inline-start: 1.5rem;
+
+    @media print {
+      margin-inline-start: 1cm;
+    }
+  }
+}

@@ -2,6 +2,7 @@ import flask
 import urllib.parse
 import werkzeug.exceptions
 import logging
+import subprocess
 from ..authenticated_blueprint_preparator import AuthenticatedBlueprintPreparator
 from ..postgres_rest_api.decorators import rest_endpoint
 from ..document_fragment import extract_fragment, document_length
@@ -156,3 +157,11 @@ def add_document(cursor):
     else:
         raise werkzeug.exceptions.MethodNotAllowed()
 
+
+@app.route('/trigger-annotation-suggestion-refresh', role=['admin'])
+def trigger_rebuild():
+    from .suggestions import start_refresh_job
+    logging.getLogger('flask.error').info(F'Manually triggering annotation suggestion refresh.')
+    start_refresh_job()
+
+    return '', 204

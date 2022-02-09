@@ -134,10 +134,10 @@
   </ul>
 </section>
 
+{% if persons | length %}
 <section class="persons">
   <h2>Persons</h2>
 
-  {% if persons | length %}
   <ul>
     {% for p in persons %}
     <li>
@@ -168,10 +168,8 @@
     </li>
     {% endfor %}
   </ul>
-  {% else %}
-  <p>No person data.</p>
-  {% endif %}
 </section>
+{% endif %}
 
 <section class="sources">
   <h2>Sources</h2>
@@ -187,6 +185,20 @@
     </li>
     {% endfor %}
   </ol>
+</section>
+
+<section class="cite">
+  <h2>How to Cite</h2>
+
+  <p>
+    Barczok, Ralph, and Bernd A. Vest.
+    <q>{{ place.name }}.</q>
+    In: <em>Damast &mdash; A Research System to Analyze Multi-Religious Constellations in the Islamicate World,</em>
+    edited by Dorothea Weltecke, Steffen Koch, Ralph Barczok, Max Franke, Florian Jäckel, and Bernd A. Vest.
+    <time date="2022-04">April 2022</time>.
+    Accessed <time datetime="{{ now }}">{{ now_fmt }}</time>.
+    <a href="{{ uri }}">{{ uri }}</a>, data deposited at DaRUS, <a href="https://doi.org/10.18419/darus-2318">https://doi.org/10.18419/darus-2318</a>.
+  </p>
 </section>
 
 {% endblock %}

@@ -61,7 +61,8 @@ body {
   width: calc(100% - #{$margin * 2});
   height: $header-height;
   display: flex;
-  flex-align: center;
+  align-items: center;
+  gap: 1em;
 
   &__links {
     margin-left: 2rem;
