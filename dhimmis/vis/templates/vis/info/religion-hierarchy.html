@@ -23,47 +23,55 @@
   each religious group occupies a line, which is indented according to its rank in the hierarchy.
 </p>
 <p>
-  Each line consists of an <em>abbreviation</em> for the religious group, a <em>node</em>, displayed as a bar, with the colour associated with the group, and a checkbox used for filtering.
+  Each line consists of an <em>abbreviation</em> for the religious group, a <em>node,</em> displayed as a bar, with the colour associated with the group, and a checkbox used for filtering.
   Hovering with the mouse over the line displays a tooltip with the full name of the religious group and the number of evidences for the group based on the currently applied filters.
 </p>
 
 <p>
   The general religious affiliation (e.g., Christianity) is on the first level of the hierarchy.
-  For other religions beside Christianity, Islam, and Judaism, we made the pragmatic choice to group them under the category <em>Other</em>.
+  For other religions beside Christianity, Islam, and Judaism, we made the pragmatic choice to group them under the category <em>Other.</em>
 </p>
 
 <p>
   The religious groups each have a distinct color.
   For Christianity (red), Islam (green), and Judaism (blue), religious groups belonging to these general religious affiliations have hues of the same colour.
-  (However, the difference between colours is limited because of the amount of religious groups.)
-  In <em>Confidence mode</em> (cf. the pane <em>{{ full_documentation_link('settings-display-mode', 'Settings') }}</em>), the bars of the groups are colored based on the average confidence of the represented data.
+  However, the difference between colours is limited because of the amount of religious groups.
+  In <em>confidence mode</em> (cf. the pane <em>{{ full_documentation_link('settings-display-mode', 'Settings') }}</em>), the bars of the groups are colored based on the average confidence of the represented data.
 </p>
 
 <h4>Details regarding colouring and saturation</h4>
 
 <p>
-  Depending on the options <em>Show filtered data</em> (<em>All data</em> or <em>Only active</em>) as well as <em>Display mode</em> (<em>Religion</em> or <em>Confidence</em> mode) in the <em>Settings</em>, the coloring of the bars changes:
+  Depending on the options <em>show filtered data</em> (<em>all data</em> or <em>only active</em>) as well as <em>display mode</em> (<em>religion</em> or <em>confidence</em> mode) in the <em>settings,</em> the coloring of the bars changes:
 </p>
-<dl>  
-    <dt><em>Only active</em>, <em>Religion mode</em></dt>
-    <dd>A bar has only one colour. If <em>any</em> data related to a religious group is active, the bar has saturated colors;
-    if all data related to a religious group is filtered out, the bar is shown in a less saturated colour.</dd>
-    <dt><em>All data</em>, <em>Religion mode</em></dt>
-    <dd>A bar can be divided into two parts:
-    a saturated and a less saturated part.
-    The less saturated part represents the relative amount of data currently filtered out.</dd>
-    <dt><em>Only active</em>, <em>Confidence mode</em></dt>
-    <dd>A bar can be divided into several sections.
-    Each section represents the relative amount of data with a certain level of confidence.</dd>
-    <dt><em>All data</em>, <em>Confidence mode</em></dt>
-    <dd>A bar can be divided into two general parts:
-    a saturated and a less saturated part representing the data currently active or filtered out, respectively.
-    Each part can have several sections, which each represent the relative amount of data with a certain level of confidence.</dd>
+<dl>
+    <dt><em>Only active,</em> <em>religion mode</em></dt>
+    <dd>
+      A bar has only one colour.
+      If <em>any</em> data related to a religious group is active, the bar has saturated colors;
+      if all data related to a religious group is filtered out, the bar is shown in a less saturated colour.
+    </dd>
+    <dt><em>All data,</em> <em>religion mode</em></dt>
+    <dd>
+      A bar can be divided into two parts, a saturated and a less saturated part.
+      The less saturated part represents the relative amount of data currently filtered out.
+    </dd>
+    <dt><em>Only active,</em> <em>confidence mode</em></dt>
+    <dd>
+      A bar can be divided into several sections.
+      Each section represents the relative amount of data with a certain level of confidence.
+    </dd>
+    <dt><em>All data,</em> <em>confidence mode</em></dt>
+    <dd>
+      A bar can be divided into two general parts:
+      a saturated and a less saturated part, representing the data currently active or filtered out, respectively.
+      Each part can have several sections, which each represent the relative amount of data with a certain level of confidence.
+    </dd>
 </dl>
 
 <p>
-  The <em>aspect of confidence</em> used for the visualization can be selected in the view <em>Confidence</em>;
-  there, the currently used aspect is indicated with an <i class="fa fa-eye"></i> eye symbol below the column.
+  The <em>aspect of confidence</em> used for the visualization can be selected in the <em>confidence view.</em>
+  There, the currently used aspect is indicated with an <i class="fa fa-eye"></i> eye symbol below the column.
 </p>
 
 <h3>Interaction</h3>
@@ -73,8 +81,8 @@
 <p>
   Clicking on a line will <em>select</em> the religous group.
   This group will be highlighted, and other groups will be displayed in less saturated colors.
-  The selection is <em>linked</em> to related data in all views.
-  For instance, map glyphs in the <em>Map</em> representing evidences with the selected religion will be highlighted, other locations will be represented by less saturated colors.
+  The data represented by the selection will be <em>brushed,</em> and is <em>linked</em> to related data in all views.
+  For instance, map glyphs in the <em>map</em> representing evidences with the selected religion will be highlighted, other locations will be represented by less saturated colors.
 </p>
 
 
@@ -82,7 +90,7 @@
 
 <p>
   The checkbox of a religious group can be unchecked, which leads to filtering out this group throughout the entire visualization.
-  Depending on whether <em>Only active</em> or <em>All data</em> mode is selected in the <em>Settings</em>, data that has been filtered out is either hidden or displayed in less saturated colours.
+  Depending on whether <em>only active</em> or <em>all data</em> mode is selected in the <em>settings,</em> data that has been filtered out is either hidden or displayed in less saturated colours.
 </p>
 <p>
   There are two basic modes for filtering by religion (more details further below):
@@ -95,7 +103,7 @@
 <h5>Simple Mode</h5>
 
 <p>
-  In <em>Simple</em> mode, data is filtered simply according to the checked or unchecked religions.
+  In <em>simple</em> mode, data is filtered simply according to the checked or unchecked religions.
   Initially, all religions are checked.
   To filter out a religion, it can be unchecked in the checkbox column.
 </p>
@@ -115,15 +123,15 @@
 {% endif %}
 
 <p>
-  In <em>Advanced</em> mode, it is possible to filter not individual religions but different <em>combinations</em> of religions.
+  In <em>advanced</em> mode, it is possible to filter not individual religions but different <em>combinations</em> of religions.
   For instance, analysis may require to show places where two or more of the following three religious groups exist together: the Syriac Orthodox Church (SYR), the Armenian Church (ARM), and the Church of the East (COE) &ndash; but not those places where only one of the three is present.
   In this case, evidences are active if, for any combination, all religions of that combination are present at a place.
 </p>
 
 <p>
-  Different from <em>Simple</em> mode, there are multiple columns of checkboxes.
+  Different from <em>simple</em> mode, there are multiple columns of checkboxes.
   Each column represents a set of religious groups as described above.
-  To <em>control</em> the filters in <em>Advanced</em> mode, columns can be added by using the <i class="fa fa-fw fa-plus"></i> plus button above each column.
+  To <em>control</em> the filters in <em>advanced</em> mode, columns can be added by using the <i class="fa fa-fw fa-plus"></i> plus button above each column.
   Every column (except the last remaining one) can be deleted by pressing the <i class="fa fa-fw fa-trash"></i> delete button above the column.
 </p>
 
@@ -140,9 +148,9 @@
   <li>Click the <em>Apply</em> button.</li>
 </ul>
 <p>
-  <em>Note</em>: If only places should match the filter where <em>all</em> of these three religious groups are present, only one column in <em>Advanced</em> mode is necessary with all three groups checked.
+  <em>Note</em>: If only places should match the filter where <em>all</em> of these three religious groups are present, only one column in <em>advanced</em> mode is necessary with all three groups checked.
   This must be understood as <q>evidences with COE <strong>and</strong> ARM <strong>and</strong> SYR.</q>
-  In turn, this differs from checking the three religious groups in <em>Simple</em> mode, which equals <q>evidences with COE <strong>or</strong> ARM <strong>or</strong> SYR.</q>
+  In turn, this differs from checking the three religious groups in <em>simple</em> mode, which equals <q>evidences with COE <strong>or</strong> ARM <strong>or</strong> SYR.</q>
 </p>
 </article>
 
@@ -157,7 +165,7 @@
 
 <dl>
   <dt>
-    <i class="fa fa-fw fa-history"></i> Revert filters:
+    <i class="fa fa-fw fa-history"></i> Revert filters
   </dt>
   <dd>
     This button is found in the top left corner of the view.
@@ -165,14 +173,14 @@
     that is, all changes that are not <em>applied</em> yet are discarded.
   </dd>
   <dt>
-    <i class="fa fa-fw fa-circle-o"></i> Uncheck all boxes in this column:
+    <i class="fa fa-fw fa-circle-o"></i> Uncheck all boxes in this column
   </dt>
   <dd>
     This button is found at the top of each checkbox column.
     Clicking it will uncheck all boxes in the column.
   </dd>
   <dt>
-    <i class="fa fa-fw fa-rotate-90 fa-exchange"></i> Invert all boxes in this column:
+    <i class="fa fa-fw fa-rotate-90 fa-exchange"></i> Invert all boxes in this column
   </dt>
   <dd>
     This button is found at the top of each checkbox column.
@@ -180,18 +188,18 @@
     that is, boxes that were checked are unchecked, and vice versa.
   </dd>
   <dt>
-    <i class="fa fa-fw fa-dot-circle-o"></i> Check all boxes in this column:
+    <i class="fa fa-fw fa-dot-circle-o"></i> Check all boxes in this column
   </dt>
   <dd>
     This button is found at the top of each checkbox column.
     Clicking it will check all boxes in the column.
   </dd>
   <dt>
-    <i class="fa fa-fw fa-adjust"></i> Toggle subtree:
+    <i class="fa fa-fw fa-adjust"></i> Toggle subtree
   </dt>
   <dd>
     This button is present to the <em>left</em> of some of the checkboxes in each column;
-    namely regarding religions that have <q>children</q> in the hierarchy.
+    namely regarding religions that have <em>children</em> in the hierarchy.
     Clicking the button will check or uncheck this religion and all its children in the respective column.
     Whether clicking checks or unchecks depends on whether the majority of checkboxes in the subtree are checked.
   </dd>
