@@ -1,0 +1,104 @@
+<p>
+  The explanations used in this documentation, and in the info texts in the visualization, use terminology and concepts from information visualization.
+  We have attempted to make these texts as understandable as possible to the general public, but some understanding of the concepts used is still required.
+  Here, we introduce the terms we used, and explain the visualization types.
+</p>
+
+<h3>Interactive Visualization</h3>
+
+<p>
+  Card et al. formalized the data visualization pipeline in 1998 (see <a href="https://infovis-wiki.net/wiki/Visualization_Pipeline">here</a> for reference).
+  This pipeline specifies the steps that data goes through from its source representation to the point where the viewer of the visualization sees it.
+  The pipeline consists of four steps, in which certain operations are applied to data, transforming the data for the next step.
+  After the last step, the data is present as pixels on a screen, or ink on paper.
+  The pipeline allows for viewers to <em>interact</em> with each of the four steps.
+  Interaction with the steps affects the end result differently.
+  In general, only the last three steps are interacted with, and we will focus on these in this explanation.
+</p>
+
+<p>
+  In this case, the data is already processed into a consistent, clean form, which is stored in the database.
+  Through the <strong>data transformations,</strong> the <em>source data</em> is transformed into <em>data tables</em> (where <q>tables</q> means suitably structured data).
+  These transformations can include general data mapping, aggregation (such as counting or averaging), and filtering (such as: only include data after the year 1,000 CE).
+  By <em>applying filters</em> in the visualization or changing, for example, the <em>display mode</em> in the settings (cf. {{ full_documentation_link('settings-display-mode', 'here') }}), viewers can interact with the data transformation step.
+</p>
+
+<p>
+  The data tables are then <em>mapped</em> to visual structures in the <strong>visual mapping</strong> step.
+  For example, in a bar chart visualization, data items are mapped to rectangles, and the value is mapped to the height of the respective rectangle.
+  In general, data attributes are mapped to <em>visual variables.</em>
+  Visual variables include, but are not limited to:
+  Position, length (height, width, diameter), area, shape, color value, color hue, or texture.
+  Examples for interaction with the visual mappings are to switch between <em>qualitative</em> and <em>quantitative</em> mode for the timeline (cf. {{ full_documentation_link('settings-timeline-mode', 'here') }}).
+  In this case, data is either mapped to rectangles of different colors, or to stacked area.
+  Keep in mind that in this situation, the <em>data transformation</em> step is also affected.
+</p>
+
+<p>
+  The visual structures are then <em>rendered</em> to the views.
+  In this step, the <strong>view transformations,</strong> the visual perspective on the data is also modified.
+  This is done via geometric transformations: translation, scaling, and rotation (although the latter is used less frequently).
+  The viewer can interact with this step, for example, via zooming and panning (cf. {{ full_documentation_link('terminology-zooming-panning', 'here', true) }}).
+</p>
+
+<article id="terminology-zooming-panning">
+<h4>Zooming and Panning</h4>
+
+<p>
+  <em>Zooming</em> and <em>panning</em> are two interaction types that take part in the image space of the visualization.
+  However, they might still interact with other parts of the information visualization pipeline, rather than just with the view transformation step.
+</p>
+
+<h5>Zooming</h5>
+
+<p>
+  <em>Zooming</em> is the process of increasing or decreasing the scale of the visualized image.
+  In a map, that means showing a smaller area of the map in more detail (zooming in), or showing a larger area in less detail (zooming out).
+  In a timeline, this could mean showing a shorter time span in more detail, or a longer time span in less detail.
+</p>
+
+<p>
+  In most cases in information visualization, zooming is not merely a geometrical scaling operation.
+  Rather, zooming in means data can be displayed with more detail, and less aggregated.
+  Similarly, zooming out, data needs to be aggregated more.
+  Hence, zooming often involves not only the view transformation step, but also the data transformation and visual mapping steps, of the information visualization pipeline.
+  This type of zooming is also called <em>semantic zooming;</em>
+  as opposed to <em>geometric zooming,</em> which only affects the the view transformation step.
+</p>
+
+<h5>Panning</h5>
+
+<p>
+  <em>Panning</em> is the process of changing the <em>geometrical translation</em> of the visualized image.
+  Panning does not affect the visual mapping, but only the view transformation.
+  Some examples for panning include:
+</p>
+
+<ul>
+  <li>
+    Moving a map's center around, such that, for example, an area to the east is now shown.
+    In maps, panning is often possible by clicking, then dragging the mouse, then releasing.
+    In this case, there is no zooming involved.
+  </li>
+  <li>
+    Moving the visible area in a timeline.
+    For example, the timeline first shows the time span from 600 CE to 800 CE.
+    After panning, the time span shown is from 650 CE to 850 CE;
+    the timeline was panned by 50 years.
+  </li>
+</ul>
+</article>
+
+
+<h4>Multiple Coordinated Views</h4>
+<h4>Filtering</h4>
+<h5>Multi-faceted Filtering</h5>
+<h4>Selection</h4>
+<h4>Brushing and Linking</h4>
+
+<h3>Visualization Types</h3>
+
+<h4>Bar Chart and Stacked Bar Chart</h4>
+<h4>Stacked Area Chart</h4>
+<h4>Indented Tree</h4>
+<h4>Gantt Chart</h4>
