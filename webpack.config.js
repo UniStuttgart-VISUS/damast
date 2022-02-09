@@ -291,7 +291,8 @@ module.exports = function(env, argv) {
       [
         {
           'user-log/userlog.css': './src/scss/userlog.scss',
-          'changelog/changelog.css': './src/scss/changelog.scss',
+          'changelog/changelog.css': './src/scss/changelog_license.scss',
+          'license/license.css': './src/scss/changelog_license.scss',
           'api/api.css': './src/scss/documentation.scss',
           'index/index.css': './src/scss/documentation-root.scss',
           'annotator/style.css': './src/scss/annotator-documentation.scss',

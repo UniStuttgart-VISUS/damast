@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 import os
-from .app import FlaskApp
 
 # Server
 def create_app():
+    from .app import FlaskApp
     app = FlaskApp(__name__, template_folder='templates')
 
     with app.app_context():

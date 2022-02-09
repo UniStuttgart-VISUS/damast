@@ -32,6 +32,7 @@ from apscheduler.schedulers.gevent import GeventScheduler
 from .response_compression import compress
 from .postgres_database import postgres_database
 from .annotator.suggestions import register_scheduler as register_scheduler_for_annotation_suggestions
+from .reporting.check_evict import register_scheduler as register_scheduler_for_report_eviction
 
 
 @lru_cache(1)
@@ -490,7 +491,9 @@ class FlaskApp(flask.Flask):
 
     def _init_scheduler(self):
         '''
-        Create a scheduler that rebuilds the materialized view(s) in the database regularly.
+        Create a scheduler that rebuilds the materialized view(s) in the
+        database and evicts from the report database regularly. This also
+        regularly recreates annotation suggestions.
         '''
         def rebuild_view(self):
             try:
@@ -504,5 +507,6 @@ class FlaskApp(flask.Flask):
         self.scheduler.add_job(rebuild_fn, trigger='interval', minutes=10, start_date=datetime.datetime.now()+datetime.timedelta(seconds=10))
 
         register_scheduler_for_annotation_suggestions(self.scheduler)
+        register_scheduler_for_report_eviction(self.scheduler)
 
         self.scheduler.start()

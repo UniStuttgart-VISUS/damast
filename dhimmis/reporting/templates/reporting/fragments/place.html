@@ -6,7 +6,7 @@
 {%- set uris = _p.external_uris -%}
 {%- set alternative_names = _p.alternative_names -%}
 <section id="place{{ p.id }}" class="place item">
-  <h2 data-reference-label="p{{ p.id }}">{{p.name}}</h2>
+  <h3 data-reference-label="p{{ p.id }}">{{p.name}}</h3>
 
   <p>
     {% if p.place_type == 'Unknown' %}

@@ -3,7 +3,7 @@
 {% macro create_evidence(e) %}
 {%- set footnotes.has_footnotes = false -%}
 <section class="item" id="evidence{{ e.evidence.id }}">
-  <h2 data-reference-label="e{{ e.evidence.id }}">{{ e.evidence.religion }} <span class="regular">in</span> {{ e.evidence.place_name }}</h2>
+  <h3 data-reference-label="e{{ e.evidence.id }}">{{ e.evidence.religion }} <span class="regular">in</span> {{ e.evidence.place_name }}</h3>
 
   <p>
     {% if e.evidence.evidence_visible %}Visible{% else %}Hidden{% endif %}

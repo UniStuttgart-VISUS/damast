@@ -39,9 +39,10 @@ from .report_database import get_report_database
 from ..postgres_database import postgres_database
 from .tex import render_tex_report
 from .html import render_html_report
+from .place_sort import sort_placenames, sort_alternative_placenames
 
 
-def create_report(pg, filter_json, current_user, report_uuid, report_url, map_url, directory):
+def create_report(pg, filter_json, current_user, started, report_uuid, report_url, map_url, directory):
     try:
         with pg.get_cursor(readonly=True) as cursor:
             filters = filter_json['filters']
@@ -274,7 +275,7 @@ def create_report(pg, filter_json, current_user, report_uuid, report_url, map_ur
                 WHERE N.place_id = %s
                 ORDER BY L.id ASC;''', (place.id,))
                 cursor.execute(query)
-                alternative_names = list(cursor.fetchall())
+                alternative_names = sort_alternative_placenames(cursor.fetchall())
 
                 query = cursor.mogrify('''SELECT
                     format(UN.short_name, EPU.uri_fragment) AS short,
@@ -290,6 +291,8 @@ def create_report(pg, filter_json, current_user, report_uuid, report_url, map_ur
                 external_uris = list(cursor.fetchall())
 
                 places.append(Place(place, external_uris, alternative_names))
+
+            places = sort_placenames(places, keyfn=lambda place: place.place.name)
 
             # religion data
             cursor.execute('''SELECT
@@ -392,9 +395,10 @@ def create_report(pg, filter_json, current_user, report_uuid, report_url, map_ur
 
             # metadata
             _fmt = '%A, %B %-d, %Y, at %H:%M %Z'
-            current_time_ = datetime.now().astimezone()
+            current_time_ = started.astimezone()
             current_time = current_time_.strftime(_fmt)
             current_time_machine = current_time_.isoformat()
+            current_time_short = current_time_.strftime('%B %-d, %Y')
             export_user = filter_json['metadata']['createdBy']
             export_time_ = dateutil.parser.parse(filter_json['metadata']['createdAt']).astimezone()
             export_time = export_time_.strftime(_fmt)
@@ -407,6 +411,7 @@ def create_report(pg, filter_json, current_user, report_uuid, report_url, map_ur
 
             metadata = dict(current_user=current_user,
                     current_time=current_time,
+                    current_time_short=current_time_short,
                     current_time_machine=current_time_machine,
                     export_user=export_user,
                     export_time=export_time,
@@ -525,12 +530,12 @@ if __name__ == '__main__':
 
     try:
         with get_report_database() as db:
-            db.execute('SELECT user, filter FROM reports WHERE uuid = :u;', dict(u=report_uuid))
-            username, filter_gzip = db.fetchone()
+            db.execute('SELECT user, filter, started FROM reports WHERE uuid = :u;', dict(u=report_uuid))
+            username, filter_gzip, started = db.fetchone()
             filters = json.loads(gzip.decompress(filter_gzip))
 
             pg = postgres_database()
-            create_report(pg, filters, username, report_uuid, report_url, map_url, directory)
+            create_report(pg, filters, username, started, report_uuid, report_url, map_url, directory)
 
     except Exception as err:
         now = datetime.now().replace(microsecond=0).astimezone().isoformat()

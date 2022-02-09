@@ -28,5 +28,8 @@ app.register_blueprint(annotator)
 from .changelog import app as changelog
 app.register_blueprint(changelog)
 
+from .license import app as license_
+app.register_blueprint(license_)
+
 from .vis import app as vis
 app.register_blueprint(vis)

@@ -186,7 +186,7 @@ def get_place_details(c, place_id):
     d['comment'] = comment
 
     # get list of alternative names
-    c.execute("""SELECT name_var.name as name, language.name as language
+    c.execute("""SELECT name_var.name as name, language.name as language, transcription
                     FROM
                         (SELECT id, name FROM place WHERE id = %(place_id)s) as P
                     INNER JOIN name_var ON P.id = name_var.place_id
