@@ -1,7 +1,7 @@
                                 CHANGELOG
 
 
-2022-01-xx                                                           v1.0.5
+2022-02-09                                                           v1.0.5
 
 The server can now be configured to evict old reports. Evicted reports can
 still be retrieved from the filters, but the report contents need to be
