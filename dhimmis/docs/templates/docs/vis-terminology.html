@@ -89,12 +89,54 @@
 </ul>
 </article>
 
-
+<article id="terminology-mcv">
 <h4>Multiple Coordinated Views</h4>
+
+{% if show_figures %}
+<figure id="fig-full-vis-screenshot">
+  <img src="{{ url_for('docs.vis.static', filename='full-vis-screenshot.png') }}">
+  <figcaption>
+    Screenshot of the visualization, consisting of multiple coordinated views.
+    Each view visualizes one aspect of the data, and interactions with one view are reflected in the others.
+  </figcaption>
+</figure>
+{% endif %}
+
+<p>
+  A MCV visualization (multiple coordinated views) consists of multiple <em>views.</em>
+  These views are visually separated, either by just empty space between them, or by borders.
+  In our visualization (see {{ full_documentation_link('fig-full-vis-screenshot', 'this screenshot', true) }}), each view is displayed in a separate UI element.
+  These UI elements are called <em>panes</em> and can be resized, rearranged, or maximized; similar to how windows can be interacted with in an operating system such as Microsoft Windows.
+</p>
+
+<p>
+  In an MCV, each view shows a different perspective on the <em>same data;</em>
+  that is, the view visualizes a specific aspect of the data.
+  In our visualization, one view (the timeline) visualizes the temporal aspect of the data, another the geospatial (the map), and so on.
+  However, the same underlying data is shown in each view.
+  Further, the views are <em>coordinated,</em> meaning that interaction with one of the views reflects into the other views.
+  One example seen in {{ full_documentation_link('fig-full-vis-screenshot', 'this screenshot', true) }}:
+  Filtering the time range in the timeline view also affects the data shown in the map view.
+  Now, only the places with evidence from that time range are shown.
+  For more details on the different interactions; see the sections on
+  {{ full_documentation_link('terminology-filtering', 'filtering', true) }},
+  {{ full_documentation_link('terminology-selection', 'selection', true) }}, and
+  {{ full_documentation_link('terminology-brushing-linking', 'brushing and linking', true) }}.
+</p>
+</article>
+
+<article id="terminology-filtering">
 <h4>Filtering</h4>
 <h5>Multi-faceted Filtering</h5>
+</article>
+
+<article id="terminology-selection">
 <h4>Selection</h4>
+</article>
+
+<article id="terminology-brushing-linking">
 <h4>Brushing and Linking</h4>
+</article>
 
 <h3>Visualization Types</h3>
 
