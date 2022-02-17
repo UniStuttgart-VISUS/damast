@@ -174,6 +174,51 @@
 
 <article id="terminology-brushing-linking">
 <h4>Brushing and Linking</h4>
+
+{% if show_figures %}
+<figure id="fig-brushing-linking">
+  <img src="{{ url_for('docs.vis.static', filename='brushing-linking.png') }}">
+  <figcaption>
+    Example for brushing and linking.
+    The evidence of two religious groups is visualized (top).
+    After selecting the Church of the East (COE) in the religion view, evidence of COE is <em>brushed,</em> and the respective visual representations of that data are <em>linked</em> in all views (bottom).
+    In the religion view, all other religions' representations are desaturated and darkened.
+    In the map, all map glyphs for places or clusters of places not containing COE evidence are darkened and desaturated.
+  </figcaption>
+</figure>
+{% endif %}
+
+<p>
+  Brushing and linking is a process used in interactive MCV visualizations to help users understand the connection between different views, or rather, between different aspects of the visualized data.
+  First, the user {{ full_documentation_link('terminology-selection', 'selects', true) }} some visual element in the visualization.
+  The visualization interprets that selection, and performs <em>brushing</em> on the underlying data that is represented by that element.
+  Next, the visualization <em>links</em> the brushed data in <em>all views</em> by applying specific highlighting to them.
+</p>
+
+<p>
+  In our visualization, the brushing always happens on a subset of the visualized evidence.
+  The linking is then done in all views, including the one the selection and brushing originated from.
+  In most views, we display linked elements by keeping them in the same saturation, but desaturating and darkening all elements that are <em>not</em> linked.
+  One exception is the timeline, where linking will <em>only</em> show the temporal data from the brushed subset, and all other data will be hidden.
+  In our visualization, clicking on the same selected element again will remove the selection and also clear the brushing and linking.
+  Selecting any other visual element will <em>replace</em> the brushed subset instead.
+  In the map, the brushing and linking can also be cleared by clicking in an empty place.
+</p>
+
+<p>
+  A source of confusion with the term <em><q>brushing</q></em> can be that it is interpreted in the sense of <q>paint brush;</q>
+  i.e., that the brushing itself is the part where the visual representation of elements changes.
+  However, that is the <em>linking</em> part.
+  Rather, <q>brushing</q> should be understood as in <q>brushing (touching) with one's fingers</q>:
+  <em>Selecting</em> a subset of data touches (brushes) them, and the subset of data is highlighted in all views, thereby visually <em>linking</em> the data back to the selection and providing context.
+</p>
+
+<p>
+  {{ full_documentation_link('fig-brushing-linking', 'This screenshot', true) }} shows an example of brushing and linking in our visualization:
+  Evidence from two religions is visualized.
+  Clicking on one of these religions in the religion view <em>selects</em> it and <em>brushes</em> the respective evidence.
+  The visual representations of this subset of evidence is then <em>linked</em> in all views by desaturating the elements that are not part of the subset.
+</p>
 </article>
 
 <h3>Visualization Types</h3>
