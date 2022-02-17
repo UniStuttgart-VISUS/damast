@@ -113,7 +113,7 @@
   In an MCV, each view shows a different perspective on the <em>same data;</em>
   that is, the view visualizes a specific aspect of the data.
   In our visualization, one view (the timeline) visualizes the temporal aspect of the data, another the geospatial (the map), and so on.
-  However, the same underlying data is shown in each view.
+  However, the same underlying data (evidence) is shown in each view.
   Further, the views are <em>coordinated,</em> meaning that interaction with one of the views reflects into the other views.
   One example seen in {{ full_documentation_link('fig-full-vis-screenshot', 'this screenshot', true) }}:
   Filtering the time range in the timeline view also affects the data shown in the map view.
@@ -127,7 +127,36 @@
 
 <article id="terminology-filtering">
 <h4>Filtering</h4>
-<h5>Multi-faceted Filtering</h5>
+
+<p>
+  Our visualization is a <em>top-down visualization,</em> meaning that initially, all the data is shown, and users can then drill down into that data to find smaller, more specific subsets of the data.
+  The drill-down is realized by applying <em>filters</em> to the data.
+  A filter is a criterion which can decide for each datum whether that datum matches or not.
+  Applying a filter to a dataset results in a subset (not necessarily a <em>proper subset</em>) of the dataset.
+</p>
+
+<p>
+  An example for a filter in our visualization is to select a time span in the timeline.
+  The filter then specifies the time span within which the evidence must lie to still be visualized.
+  Another example is to specify one or more sources that the evidence must be attributed to;
+  in that case, the data visualized would be that from these sources only.
+</p>
+
+<p>
+  Our MCV visualization implements <em>multi-faceted filtering.</em>
+  That means that each view can have a separate filter active at the same time.
+  Because the views show different aspects of the same data, the filters also apply to different aspects of the data:
+  The timeline filter applies to the temporal aspect of the evidence, the map filter applies to the geospatial aspect of the evidence, and so on.
+  <em>Between views,</em> the filters are applied in conjuction, meaning that an evidence is shown only if it matches <em>all</em> filters;
+  for example, if the map and timeline both have an active filter, evidence is only visualized if it is within the specified time span <em>and</em> within the specified geographical region.
+</p>
+
+<p>
+  <em>Within views,</em> the filters are applied in disjunction, meaning that an evidence matches the filter if it matches <em>any</em> of the criteria;
+  for example, if a religion filter with two religions is active, it matches evidence that has <em>either</em> one or the other religion.
+  This behavior is logical, after all, there could not be evidence that has <em>both</em> religions at once, or is attributed to two places at once.
+  Still, it is important to be aware of this functionality.
+</p>
 </article>
 
 <article id="terminology-selection">
