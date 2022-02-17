@@ -1,4 +1,4 @@
-<svg class="svg-defs" width="0" height="0">
+<svg class="svg-defs" width="0" height="0" aria-hidden="true">
   <defs>
     <!-- PATHS FOR RELIGION SYMBOLS -->
     <path id="cross" d="m -4.4245977,-50.241394 -0.011,25.91502 -33.2036263,-0.0139 -0.0041,9.7182 33.2036263,0.014 -0.02794,65.86729 9.718202,0.005 0.02788,-65.86739 33.2036237,0.0139 0.0042,-9.71821 -33.2036347,-0.0139 0.011,-25.91504 z" stroke="none" fill="var(--clr-icon)"></path>

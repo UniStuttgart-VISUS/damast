@@ -30,7 +30,7 @@
       (True, 'root-app.impressum', 'Impressum', 'question-circle'),
       (True, 'root-app.datenschutz', 'Datenschutz', 'shield')
     ]) }}
-      <nav class="extra">
+      <nav class="extra" aria-label="Copyright and GitHub link">
         <ul class="link-list">
           <li>&copy; 2019&ndash;2022 Max Franke and contributors.</li>
           <li>
@@ -53,7 +53,7 @@
     {{ flash_messages() }}
     <div id="goldenlayout-root" class="container"></div>
 {%- if testing -%}
-  <div class="environment-label">Testing</div>
+  <div class="environment-label" role="note" aria-label="Testing server label">Testing</div>
 {%- endif -%}
   </body>
 </html>
