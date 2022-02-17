@@ -1,3 +1,4 @@
+{#- vim: set ft=htmldjango : -#}
 <p>
   The explanations used in this documentation, and in the info texts in the visualization, use terminology and concepts from information visualization.
   We have attempted to make these texts as understandable as possible to the general public, but some understanding of the concepts used is still required.
@@ -161,6 +162,14 @@
 
 <article id="terminology-selection">
 <h4>Selection</h4>
+
+<p>
+  <em>Selection</em> is a user interaction with the data.
+  In our visualization, selection is done by <em>clicking</em> on some visual element with the computer mouse.
+  Clicking, for example, a map glyph in the map informs the visualization about the fact that the user selected that glyph.
+  Everything that happens after the click is no longer part of the selection itself, but rather what the visualization does <em>in reaction to</em> the selection.
+  See {{ full_documentation_link('terminology-brushing-linking', 'brushing and linking', true) }} for the main purpose of selection.
+</p>
 </article>
 
 <article id="terminology-brushing-linking">
