@@ -4,19 +4,26 @@
 {{ super() }}
 <link rel="stylesheet" href="{{ url_for('root-app.file', path='style.css') }}">
 {% endblock %}
+{% block extra %}
+<aside>
+<nav aria-label="Page navigation">
+  <h2>Jump to</h2>
+  <ul>
+    <li><a href="#main-title">Top</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#data">Data Used</a></li>
+    <li><a href="#features">Features</a></li>
+  </ul>
+</nav>
+</aside>
+{% endblock %}
+{% block mainattr %}style="background-image:url({{ url_for('root-app.file', path='root-background.jpg') }})"{% endblock %}
 {% block content %}
 
-<section class="background-image"
-         aria-hidden="true"
-         style="background-image:url({{ url_for('root-app.file', path='root-background.jpg') }})"></section>
-
-<section class="text_section">
-
-  <div class="title_section text_subsection">
-
-    <h1 id="main_title">DAMAST</h1>
-
-    <h2>A Research System to Analyse Multi-Religious Constellations in the Islamicate World</h2>
+<article>
+  <section class="subsection title-section" id="main-title">
+    <h1>Damast</h1>
+    <h2>A Research System to Analyze Multi-Religious Constellations in the Islamicate World</h2>
 
     <figure class="illustration">
       <img
@@ -27,25 +34,18 @@
       <figcaption id="fig-map-caption">Partial screenshot from the map</figcaption>
     </figure>
 
-    <p id="main_navigation">
-    <a href="#about">About</a> |
-    <a href="#data">Data Used</a> |
-    <a href="#features">Features</a>
-    </p>
-
     <p>
     DAMAST provides an <strong>interactive visualization</strong> to gain new insights on the multi-religious landscapes of the Middle East under Muslim rule during the Middle Ages (7th
     to 14th century).
     More than 8300 evidences of the presence of different religious communities at more than 442 places have been examined and recorded and are now accessible as a <strong>web-based geo-temporal multi-view system.</strong>
     </p>
+</section>
 
-  </div>
-
-  <div class="text_subsection">
-
+  <section class="subsection">
     <p>
     Although today&mdash;and today for the first time&mdash;, a mono-religious situation emerges in the Middle East, during the Medieval centuries, specific groups of Non-Muslims (especially Jews, Christians, and Zoroastrians) were tolerated and had in turn to accept a lower legal status, the so-called Dhimmi status.
-    <strong>This led to great religious diversity in the Medieval Muslim world.</strong>Thus, in the many cities of the Muslim world, the divers Muslim strands as well as different churches of Eastern Christianity and Jewish traditions were living side by side.
+    <strong>This led to great religious diversity in the Medieval Muslim world.</strong>
+    Thus, in the many cities of the Muslim world, the divers Muslim strands as well as different churches of Eastern Christianity and Jewish traditions were living side by side.
     Often, three or even four Christian bishops resided in one city.
     Together, these religious groups formed the fabric of every-day life and culture in the Islamicate world.
     This grade of religious diversity is not found in the medieval cities of the Latin, Byzantine and Caucasian worlds, which were dominated by Christian rule.
@@ -62,19 +62,16 @@
     have been rethought and revived by embedding them into a new approach of visual analytics. At the same time, the project boosted methods of visual analytics and information visualization as, e.g., how to visually represent uncertainty
     and analytic provenance information. The project thus contributes to both disciplines, historiography and visualization research.
     </p>
-
-  </div>
 </section>
+</article>
 
-<section class="background_image"></section>
+<article>
 
-<section class="text_section">
-
-  <div id="about" class="text_subsection">
+  <section id="about" class="subsection">
 
     <h2>About</h2>
 
-    <p class="go_to_top"><a href="#main_title"></a></p>
+    <p class="go-to-top"><a href="#main-title"></a></p>
 
     <p>
     DAMAST offers the visualization software created and the data collected in the project <strong><i>Dhimmis and Muslims — Analysing Multi-Religious Spaces in the Medieval Muslim World</i></strong>, in short: DhiMu. DhiMu was carried out from 2016 until 2021 as a collaboration between the Institute for Medieval History II of Goethe University Frankfurt, led by Dorothea Weltecke (since October 2021: Professor for European History of the Middle Ages at Humboldt-Universität zu Berlin), and the Institute of Visualization and Interactive Systems of the University of Stuttgart.
@@ -86,25 +83,30 @@
     You can <strong>get in touch</strong> writing an e-mail to <a href="mailto:contact@damast.hu-berlin.de">contact@damast.hu-berlin.de</a>.
     </p>
 
-    <div class=logos>
-      <img src="logo_hu.svg" />
-      <img src="logo_vis.png" />
-      <img src="logo_goethe.svg" />
-      <img src="logo_vw.png" />
+    <div class="logos">
+      <a class="logo logo--larger" href="https://www.geschichte.hu-berlin.de/de/bereiche-und-lehrstuehle/gmspaet/mittelalterliche-geschichte-ii/personen/prof-dr-dorothea-weltecke">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/Huberlin-logo.svg" alt="Logo Humboldt University Berlin">
+      </a>
+      <a class="logo" href="https://www.vis.uni-stuttgart.de/projekte/dhimmis-and-muslims/">
+        <img src="https://www.vis.uni-stuttgart.de/system/modules/de.stuttgart.uni.v3.basics/resources/img/svg/logo-de.svg" alt="Logo University of Stuttgart">
+      </a>
+      <a class="logo logo--md" href="https://www.geschichte.uni-frankfurt.de/87681539/dhimmis_and_muslims">
+        <img src="https://upload.wikimedia.org/wikipedia/de/f/f0/Goethe-Logo.svg" alt="Logo Goethe University">
+      </a>
+      <a class="logo" href="https://portal.volkswagenstiftung.de/search/projectDetails.do?ref=93252">
+        <img class="white" src="https://www.volkswagenstiftung.de/profiles/vwst/theme/volkswagen/images/logo.svg" alt="Logo VolkswagenStiftung">
+      </a>
     </div>
 
-    <hr class="divisionline" />
-  </div>
+    <hr />
+  </section>
 
-  <div id="scholars" class="text_subsection">
+  <section id="scholars" class="subsection">
 
     <h3>Scholars Involved</h3>
 
     <details>
-
-      <summary>
-        <span></span>
-      </summary>
+      <summary></summary>
 
       <h4>Principial Investigators</h4>
 
@@ -136,44 +138,38 @@
       </p>
 
     </details>
-  </div>
+  </section>
 
-  <div id="publications" class="text_subsection">
+  <section id="publications" class="subsection">
 
     <h3>Publications</h3>
 
     <details>
 
-      <summary>
-        <span></span>
-      </summary>
+      <summary></summary>
 
       <p>
       The following works have been published in the context of DAMAST:
       </p>
 
-      <p class="bibliography_item tobedone">
+      <p class="bibliography-item tobedone">
       Weltecke, Dorothea; Barczok, Ralph; Vest, Bernd A.: ### (forthcoming).
       </p>
 
-      <p class="bibliography_item">
+      <p class="bibliography-item">
       Franke, Max, Ralph Barczok, Steffen Koch, and Dorothea Weltecke. <q>Confidence as a First-class Attribute in Digital Humanities Data.</q> In: <i>Proceedings of the 4th VIS4DH Workshop</i>, VIS 2019, Vancouver. October 20–25, 2019, IEEE (2019). <a href="https://vis4dh.dbvis.de/2019/papers/2019/VIS4DH2019_paper_1.pdf">https://vis4dh.dbvis.de/2019/papers/2019/VIS4DH2019_paper_1.pdf</a>.
       </p>
 
     </details>
-  </div>
+  </section>
 
-  <div id="how-to-cite" class="text_subsection">
+  <section id="how-to-cite" class="subsection">
 
     <h3>How to Cite</h3>
 
     <details>
 
-      <summary>
-        <p>
-        <span></span>
-        </p>
-      </summary>
+      <summary></summary>
 
       <p>
       The data underlying the visualization and reports will not be expanded or substantially revised;
@@ -185,28 +181,24 @@
       If you want to refer to DAMAST as such, we recommend to use the following bibliographical information:
       </p>
 
-      <p class="bibliography_item tobedone">
+      <p class="bibliography-item tobedone">
       Weltecke, Dorothea, Steffen Koch, Ralph Barczok, Max Franke, Florian Jäckel, and Bernd A. Vest, eds. <i>DAMAST – A Research System to Analyze Multi-Religious Constellations in the Islamicate World.</i> April 2022. Accessed <code>#dynamic_date as, e.g., April 6, 2016]#</code>. https://damast.hu-berlin.de, data deposited at DaRUS, https://doi.org/10.18419/darus-2318.
       </p>
 
       <p>
-      For <strong>specific references</strong>, such as <a href="#reports">reports</a> or <a href="#place_uris">place URIs</a>, appropriate information on how to cite, including a permanent link, is provided individually.
+      For <strong>specific references</strong>, such as <a href="#reports">reports</a> or <a href="#place-uris">place URIs</a>, appropriate information on how to cite, including a permanent link, is provided individually.
       </p>
 
     </details>
-  </div>
+  </section>
 
-  <div id="sourcecode" class="text_subsection">
+  <section id="sourcecode" class="subsection">
 
     <h3>Source Code and Data Repository</h3>
 
     <details>
 
-      <summary>
-        <p>
-        <span></span>
-        </p>
-      </summary>
+      <summary></summary>
 
       <p>
       The <strong>source code</strong> of the visualization is freely available on GitHub:
@@ -219,16 +211,16 @@
       </p>
 
     </details>
-  </div>
-</section>
+  </section>
+</article>
 
-<section id="data" class="text_section">
+<article id="data" class="section">
 
-  <div class="text_subsection">
+  <section class="subsection">
 
     <h2>Data Used</h2>
 
-    <p class="go_to_top"><a href="#main_title"></a></p>
+    <p class="go-to-top"><a href="#main-title"></a></p>
 
     <figure class="illustration">
       <img
@@ -246,21 +238,17 @@
     deposited on DaRUS (<a href="https://doi.org/10.18419/darus-2318">https://doi.org/10.18419/darus-2318</a>).
     </p>
 
-    <hr class="divisionline" />
+    <hr />
 
-  </div>
+  </article>
 
-  <div class="text_subsection">
+  <article class="subsection">
 
     <h3 id="sources">Sources</h3>
 
     <details>
 
-      <summary>
-        <p>
-        <span></span>
-        </p>
-      </summary>
+      <summary></summary>
 
       <p>
       DAMAST uses <strong>well established data collections in secondary sources</strong>. Information from the following works of reference was included:
@@ -313,38 +301,30 @@
       </ul>
 
     </details>
-  </div>
+  </section>
 
-  <div class="text_subsection">
+  <section class="subsection">
 
     <h3 id="scope">Scope of Time and Space</h3>
 
     <details>
 
-      <summary>
-        <p>
-        <span></span>
-        </p>
-      </summary>
+      <summary></summary>
 
       <p>
       DAMAST visualizes evidence <em>from the 7th to the 14th century</em> in the <em>area of the former Roman and Sassanian empires</em>.
       </p>
 
     </details>
-  </div>
+  </section>
 
-  <div class="text_subsection">
+  <section class="subsection">
 
-    <h3 id="choice_of_places">Choice of Places</h3>
+    <h3 id="choice-of-places">Choice of Places</h3>
 
     <details>
 
-      <summary>
-        <p>
-        <span></span>
-        </p>
-      </summary>
+      <summary></summary>
 
       <p>
       Places included in the data were chosen with regard to their <strong>importance for the respective religious community:</strong>
@@ -370,19 +350,15 @@
       </p>
 
     </details>
-  </div>
+  </section>
 
-  <div class="text_subsection">
+  <section class="subsection">
 
-    <h3 id="religious_groups">Religious Groups</h3>
+    <h3 id="religious-groups">Religious Groups</h3>
 
     <details>
 
-      <summary>
-        <p>
-        <span></span>
-        </p>
-      </summary>
+      <summary></summary>
 
       <p>
       The following religious groups are treated by DAMAST:
@@ -430,19 +406,15 @@
       </p>
 
     </details>
-  </div>
+  </section>
 
-  <div class="text_subsection">
+  <section class="subsection">
 
     <h3 id="tags">Tags</h3>
 
     <details>
 
-      <summary>
-        <p>
-        <span></span>
-        </p>
-      </summary>
+      <summary></summary>
 
       <p>
       In addition to religious affiliation, time, and place, DAMAST implements tags to <strong>enhance the data and to enable more specific filtering</strong> of the database and visualization.
@@ -453,19 +425,15 @@
       </p>
 
     </details>
-  </div>
+  </section>
 
-  <div class="text_subsection">
+  <section class="subsection">
 
     <h3 id="confidence">Confidence</h3>
 
     <details>
 
-      <summary>
-        <p>
-        <span></span>
-        </p>
-      </summary>
+      <summary></summary>
 
       <p>
       DAMAST <strong>includes ambiguous information without distorting the visualization</strong> by attributing data with levels of confidence. (No attribution of confidence would either lead to the <em>exclusion of data</em> or
@@ -499,18 +467,16 @@
       </ul>
 
     </details>
-  </div>
-</section>
+  </section>
+</article>
 
-<section class="background_image"></section>
+<article>
 
-<section class="text_section">
-
-  <div class="text_subsection">
+  <section class="subsection">
 
     <h2 id="features">Features</h2>
 
-    <p class="go_to_top"><a href="#main_title"></a></p>
+    <p class="go-to-top"><a href="#main-title"></a></p>
 
     <figure class="illustration">
       <img
@@ -537,20 +503,16 @@
     In what follows, only a brief overview is presented. In addition, video tutorials are provided.
     </p>
 
-    <hr class="divisionline" />
-  </div>
+    <hr />
+  </section>
 
-  <div class="text_subsection">
+  <section class="subsection">
 
-    <h3 id="visualization_overview">Visualization</h3>
+    <h3 id="visualization-overview">Visualization</h3>
 
     <details>
 
-      <summary>
-        <p>
-        <span></span>
-        </p>
-      </summary>
+      <summary></summary>
 
       <p>
       The principal object of DAMAST is to visualize the different aspects of the data such as religion, place, time, source, etc. <a href="#data">as described above</a>.
@@ -573,19 +535,15 @@
       </p>
 
     </details>
-  </div>
+  </section>
 
-  <div class="text_subsection">
+  <section class="subsection">
 
-    <h3 id="place_uris">Place URI Pages</h3>
+    <h3 id="place-uris">Place URI Pages</h3>
 
     <details>
 
-      <summary>
-        <p>
-        <span></span>
-        </p>
-      </summary>
+      <summary></summary>
 
       <p>
       To provide <strong>all the information collected regarding a specific place</strong>, DAMAST offers a so-called <em>place URI page</em> for each place in the database. These can be accessed via the view <em>Location List</em> or through <em>Places</em> in the top menu.
@@ -605,19 +563,15 @@
       </ul>
 
     </details>
-  </div>
+  </section>
 
-  <div class="text_subsection">
+  <section class="subsection">
 
     <h3 id="reports">Reports</h3>
 
     <details>
 
-      <summary>
-        <p>
-        <span></span>
-        </p>
-      </summary>
+      <summary></summary>
 
       <p>
       In order to <strong>document, share, and reference the results</strong> when using DAMAST, reports can be generated. This is done either via the <em>Settings</em> view or through <em>Docs</em> &gt; <em>Create report from database</em> in the top menu.
@@ -658,42 +612,22 @@
       </p>
 
     </details>
-  </div>
+  </section>
 
-  <div class="text_subsection">
+  <section class="subsection">
 
     <h3>Video Tutorials</h3>
 
     <details>
 
-      <summary>
-        <p>
-        <span></span>
-        </p>
-      </summary>
+      <summary></summary>
 
       <p class="tobedone">
       ### content ###
       </p>
 
     </details>
-  </div>
-</section>
-
-
-<div class="logos">
-  <a class="logo logo--larger" href="https://www.geschichte.hu-berlin.de/de/bereiche-und-lehrstuehle/gmspaet/mittelalterliche-geschichte-ii/personen/prof-dr-dorothea-weltecke">
-    <img src="{{ url_for('root-app.static_public', filename='huberlin-logo-white.svg') }}" alt="Logo Humboldt University Berlin">
-  </a>
-  <a class="logo" href="https://www.geschichte.uni-frankfurt.de/87681539/dhimmis_and_muslims">
-    <img src="https://www.geschichte.uni-frankfurt.de/assets/ci/head_logo-3f4b9591169c7a3095f77eb21e4d00649f1ed7bdc00ace2e4eb2c9b5285e07ea.svg" alt="Logo Goethe University">
-  </a>
-  <a class="logo" href="https://www.vis.uni-stuttgart.de/projekte/dhimmis-and-muslims/">
-    <img src="https://www.vis.uni-stuttgart.de/system/modules/de.stuttgart.uni.v3.basics/resources/img/svg/logo-inverted-de.svg" alt="Logo University of Stuttgart">
-  </a>
-  <a class="logo" href="https://portal.volkswagenstiftung.de/search/projectDetails.do?ref=93252">
-    <img class="white" src="https://www.volkswagenstiftung.de/profiles/vwst/theme/volkswagen/images/logo-white.svg" alt="Logo VolkswagenStiftung">
-  </a>
-</div>
+  </section>
+</article>
 
 {% endblock %}
