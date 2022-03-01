@@ -1,6 +1,26 @@
 @use 'common/colors' as *;
 @use 'common/mixins';
 
+// main layout: scroll <main> content
+body {
+  display: grid;
+  grid-template-rows: max-content auto max-content;
+  grid-template-columns: minmax(min-content, 50ch) auto;
+  grid-template-areas: "header header"
+                       "aside main"
+                       "footer footer";
+  width: calc(100vw - 1rem);
+  height: calc(100vh - 1rem);
+}
+
+header { grid-area: header }
+aside  { grid-area: aside }
+main   { grid-area: main }
+footer { grid-area: footer }
+
+
+main { overflow: auto }
+
 
 .content {
   @include mixins.baseFlexBlock();
