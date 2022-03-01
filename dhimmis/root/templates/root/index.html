@@ -20,9 +20,11 @@
 
     <figure class="illustration">
       <img
-          src="illustration_map.jpg"
+          src="{{ url_for('root-app.file', path='root-illustration-map.png') }}"
+          aria-describedby="fig-map-caption"
           alt="Partial screenshot from the map"
           title="Partial screenshot from the map"/>
+      <figcaption id="fig-map-caption">Partial screenshot from the map</figcaption>
     </figure>
 
     <p id="main_navigation">
@@ -101,9 +103,7 @@
     <details>
 
       <summary>
-        <p>
         <span></span>
-        </p>
       </summary>
 
       <h4>Principial Investigators</h4>
@@ -124,7 +124,7 @@
       </p>
 
       <p>
-      <strong><a href="https://www.vis.uni-stuttgart.de/en/institute/team/Franke/">Max Franke, M.Sc.</a></strong> &mdash; Ph.D. Student, Institute for Visualization and Interactive Systems (VIS), Research Group Graphical Interactive Systems
+      <strong><a href="https://www.vis.uni-stuttgart.de/en/institute/team/Franke/">Max Franke, M.Sc.</a></strong> &mdash; Postgraduate, Institute for Visualization and Interactive Systems (VIS), Research Group Graphical Interactive Systems
       </p>
 
       <p>
@@ -145,9 +145,7 @@
     <details>
 
       <summary>
-        <p>
         <span></span>
-        </p>
       </summary>
 
       <p>
@@ -224,8 +222,6 @@
   </div>
 </section>
 
-<section class="background_image"></section>
-
 <section id="data" class="text_section">
 
   <div class="text_subsection">
@@ -236,11 +232,12 @@
 
     <figure class="illustration">
       <img
-          src="illustration_data.jpg"
+          src="{{ url_for('root-app.file', path='root-illustration-data.png') }}"
           alt="Partial screenshot of the data model"
+          aria-describedby="fig-data-caption"
           title="Partial screenshot of the data model"/>
-      <figcaption>
-        <p>Partial screenshot of the data model</p>
+      <figcaption id="fig-data-caption">
+        Partial screenshot of the data model.
       </figcaption>
     </figure>
 
@@ -517,10 +514,11 @@
 
     <figure class="illustration">
       <img
-          src="illustration_visualization.jpg"
+          src="{{ url_for('root-app.file', path='root-illustration-vis.png') }}"
           alt="Partial Screenshot of the Visualization"
+          aria-describedby="fig-vis-caption"
           title="Partial Screenshot of the Visualization"/>
-      <figcaption><p>Partial screenshot of the visualization</p></figcaption>
+      <figcaption id="fig-vis-caption">Partial screenshot of the visualization.</figcaption>
     </figure>
 
     <p>
