@@ -113,3 +113,189 @@
     }
   }
 }
+
+
+// new
+
+
+/* General settings */
+
+html {
+  scroll-behavior: smooth;
+}
+
+main {
+  margin: 0 auto;
+  max-width: 1200px;
+
+  font-family: Verdana;
+  line-height: 1.3;
+  text-align: justify;
+}
+
+h1, h2, h3, h4 {
+  text-align: center;
+  color: #003366;
+}
+
+a {
+  color: #003366
+}
+
+strong {
+  color: #003366;
+}
+
+.tobedone {
+  background-color: rgb(255, 255, 165);
+}
+
+/* Title Section */
+
+div.title_section > h1 {
+  font-weight: normal;
+  font-size: 260%;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+div.title_section > h2 {
+  font-size: 160%;
+}
+
+#main_navigation {
+  text-align: center;
+  font-weight: normal;
+  font-size: 130%;
+}
+
+div.title_section > p {
+  font-size: 120%;
+}
+
+/* Logos Section */
+
+.logos {
+  display: flex;
+  justify-content: center;
+  padding-top: 10pt;
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
+.logos img {
+  width: 22%;
+  padding: 3%;
+  align-self: center;
+  vertical-align: middle;
+}
+
+/* Background Parallax */
+
+.background-image {
+
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: repeat;
+  background-size: cover;
+
+  /*background-image: url("damask2.jpg");*/
+
+  min-height: 300px;
+  max-height: 300px;
+}
+
+/* General Structure */
+
+.text_section {
+  margin-top: 30pt;
+  margin-bottom: 30pt;
+}
+
+.text_subsection {
+  margin-top: 20pt;
+  margin-left: 20%;
+  margin-right: 20%;
+  margin-bottom: 25pt;
+}
+
+.divisionline {
+  margin-bottom: 25pt;
+
+  background-color: #003366;
+  height: 1pt;
+  border: none;
+}
+
+.go_to_top {
+  text-align: center;
+}
+
+p.go_to_top a {
+  color: #8FA5B2;
+  text-decoration: none !important;
+}
+
+p.go_to_top a::after{
+  content: "– back to top –";
+}
+
+/* Expanding Sections */
+
+summary {
+  list-style: none;
+}
+
+summary::-webkit-details-marker {
+  display: none
+}
+
+summary p {
+  text-align: center;
+  margin-top: -8pt;
+
+  font-size: 90%;
+  color: #8FA5B2;
+}
+
+summary span {
+  cursor: pointer;
+}
+
+summary span::after {
+  content: '– show more –';
+}
+
+details[open] summary span::after {
+  content: "– show less –";
+}
+
+/* illustrations */
+
+figure.illustration {
+  margin-top: 25pt;
+  margin-bottom: 25pt;
+}
+
+figure.illustration img {
+  max-width: 100%;
+
+  opacity: 0.9;
+
+  border-style: solid;
+  border-width: 2pt;
+  border-color: #003366;
+}
+
+figure.illustration p {
+  text-align: center;
+  color: #8FA5B2;
+  font-size: 90%;
+}
+
+/* Individual Classes */
+
+.bibliography_item {
+  margin-left: 10%;
+  margin-right: 10%;
+}
