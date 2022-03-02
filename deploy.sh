@@ -145,7 +145,7 @@ fi
 
 sleep 1
 
-version=$(echo -n $(git describe --tags) | tr -sc '[a-zA-Z0-9_.-]' '-')
+version=$(echo -n $(git describe --tags) | tr -sc '[a-zA-Z0-9_.\-]' '-')
 imagename="damast:$version-$(echo $env | tr '[:upper:]' '[:lower:]')"
 filename="$imagename.tgz"
 

@@ -35,11 +35,46 @@ import shutil
 from jinja2 import Template, Environment, FileSystemLoader, pass_context
 import jinja2.exceptions
 
-from .report_database import get_report_database
+from .report_database import get_report_database, DatabaseVersion
 from ..postgres_database import postgres_database
 from .tex import render_tex_report
 from .html import render_html_report
 from .place_sort import sort_placenames, sort_alternative_placenames
+from .eviction import does_evict
+
+
+
+def get_database_version_info(report_uuid):
+    # if no eviction happens, we do not care about database version either
+    if not does_evict():
+        return None
+
+    with get_report_database() as db:
+        db.execute(F'SELECT {", ".join(DatabaseVersion._fields)} FROM database_version ORDER BY version ASC;')
+        versions = list(map(lambda tpl: DatabaseVersion(*tpl), db.fetchall()))
+
+        if len(versions) == 0:
+            raise RuntimeError('Report eviction is turned on, but no database versions are given in the report database.')
+
+        db.execute('SELECT R.database_version, V.date FROM reports R JOIN database_version V ON R.database_version = V.version WHERE uuid = ?;', (report_uuid,))
+        (reportversion, date) = db.fetchone()
+
+        # if the version is the last one, we can ignore it
+        if reportversion == versions[-1].version:
+            return None
+
+        logging.getLogger('flask.error').warning('Report %s was originally generated with database version %d (%s), but the current version is %d (%s). Will add the appropriate disclaimers to the report contents.',
+                report_uuid,
+                reportversion,
+                date.strftime('%Y-%m-%d'),
+                versions[-1].version,
+                versions[-1].date.strftime('%Y-%m-%d'))
+
+        return dict(
+                original_version=reportversion,
+                versions=versions
+                )
+
 
 
 def create_report(pg, filter_json, current_user, started, report_uuid, report_url, map_url, directory):
@@ -409,6 +444,9 @@ def create_report(pg, filter_json, current_user, started, report_uuid, report_ur
             filter_desc = get_filter_description(filters, cursor)
             filter_desc_tex = get_filter_description_tex(filters, cursor)
 
+            # check database versions
+            dbversiondata = get_database_version_info(report_uuid)
+
             metadata = dict(current_user=current_user,
                     current_time=current_time,
                     current_time_short=current_time_short,
@@ -437,6 +475,7 @@ def create_report(pg, filter_json, current_user, started, report_uuid, report_ur
                     place_map=place_map,
                     map_url=map_url,
                     report_url=report_url,
+                    dbversiondata=dbversiondata,
                     )
 
             content = render_html_report(context)

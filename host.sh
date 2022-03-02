@@ -32,6 +32,7 @@ run() {
         --env DHIMMIS_OVERRIDE_PATH="/data/override" \
         --env DHIMMIS_VISITOR_ROLES="user,readdb,vis,reporting" \
         --env DHIMMIS_MAP_STYLES="map-styles.json" \
+        --env DHIMMIS_REPORT_EVICTION_DEFERRAL=1 \
         $imagename
 }
 

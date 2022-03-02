@@ -222,6 +222,21 @@ p.error-message {
   }
 }
 
+.no-url {
+  font-style: italic;
+  color: $clr-gray;
+}
+
+section#version-disclaimer table {
+  width: 100%;
+
+  th, td {
+    padding: 1ex;
+    vertical-align: top;
+    text-align: start;
+  }
+}
+
 figure.place-map {
   width: max-content;
   margin: auto;
