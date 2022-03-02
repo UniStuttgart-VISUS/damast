@@ -21,6 +21,9 @@
 \usepackage{lastpage}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{amssymb}
 
 
 \usepackage{fontspec}
@@ -60,6 +63,53 @@
 \ihead*{\textsc{\rightmark}}
 
 \tableofcontents
+
+<% if dbversiondata %>
+\clearpage
+\chapter*{Version Disclaimer}
+\label{chapter:version-disclaimer}
+\addcontentsline{toc}{chapter}{\nameref{chapter:version-disclaimer}}
+\markboth{Version Disclaimer}{Version Disclaimer}
+
+The instance of \emph{Damast} this report was generated on has \emph{report eviction} turned on.
+That means that the contents of reports that have not been accessed for a while are deleted to save storage space.
+The reports in question can still be accessed, but will be re-created on demand from the database.
+On systems with report eviction, the assumption is that there are no major changes to the underlying data in the database, to ensure that the report content overall does not change.
+However, in some cases smaller updates to the data might still happen.
+This report was originally created with a different version of the underlying data, but was evicted and now re-created with a newer version.
+Some changes to its contents might be present.
+
+This is the chronological history to the data in this \emph{Damast} instance.
+The last entry is the version of the database this report was created with.
+The version the report was originally created with is marked with an arrow:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\footnotesize
+\begin{longtable}{@{}p{1cm}p{1.5cm}p{6cm}p{5.8cm}@{}}
+  \textbf{Version} & \textbf{Date} & \textbf{URL} & \textbf{Description} \\
+  \hline
+  \endhead
+    <% for ver in dbversiondata.versions %>
+      <%- if ver.version == dbversiondata.original_version -%>
+      $\blacktriangleright$
+      <%- endif -%>
+      \hfill << ver.version >>
+      &
+      << ver.date >>
+      &
+      <%- if ver.url -%>
+      \scriptsize{\url{<< ver.url | texsafe >>}}
+      <%- else -%>
+      ---
+      <%- endif -%>
+      &
+      << ver.description >>
+      \\
+    <% endfor %>
+\end{longtable}
+\end{center}
+<% endif %>
 
 \chapter{Query Description}
 \label{sec:filters}

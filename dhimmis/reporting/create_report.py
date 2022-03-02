@@ -475,6 +475,7 @@ def create_report(pg, filter_json, current_user, started, report_uuid, report_ur
                     place_map=place_map,
                     map_url=map_url,
                     report_url=report_url,
+                    dbversiondata=dbversiondata,
                     )
 
             content = render_html_report(context)

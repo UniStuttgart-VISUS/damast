@@ -19,7 +19,7 @@ PRAGMA foreign_keys = ON;
 CREATE TABLE database_version (
       version INTEGER NOT NULL PRIMARY KEY,
       date DATE NOT NULL,
-      url TEXT NOT NULL,
+      url TEXT,
       description TEXT NOT NULL
 );
 
