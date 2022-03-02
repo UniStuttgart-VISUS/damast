@@ -12,6 +12,15 @@ import flask
 import traceback
 
 _database_schema = '''
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE database_version (
+      version INTEGER NOT NULL PRIMARY KEY,
+      date DATE NOT NULL,
+      url TEXT NOT NULL,
+      description TEXT NOT NULL
+);
+
 CREATE TABLE reports (
       uuid TEXT NOT NULL PRIMARY KEY,
       user TEXT NOT NULL,
@@ -21,11 +30,13 @@ CREATE TABLE reports (
       last_access DATETIME NOT NULL,
       access_count INTEGER NOT NULL DEFAULT 0,
       server_version TEXT NOT NULL,
+      database_version INTEGER DEFAULT NULL,
       filter BLOB DEFAULT NULL,
       content BLOB DEFAULT NULL,
       pdf_map BLOB DEFAULT NULL,
       pdf_report BLOB DEFAULT NULL,
-      evidence_count INTEGER NOT NULL DEFAULT 0
+      evidence_count INTEGER NOT NULL DEFAULT 0,
+      FOREIGN KEY (database_version) REFERENCES database_version(version)
   );
 '''
 
@@ -35,12 +46,31 @@ def _convert_datetime(val):
     return None
 sqlite3.register_converter('DATETIME', _convert_datetime)
 
+
+def _check_eviction_enabled():
+    try:
+        deferral = int(os.environ.get('DHIMMIS_REPORT_EVICTION_DEFERRAL'))
+    except (TypeError, ValueError):
+        deferral = None
+
+    try:
+        maxsize = int(os.environ.get('DHIMMIS_REPORT_EVICTION_MAXSIZE'))
+    except (TypeError, ValueError):
+        maxsize = None
+
+    return (deferral is not None) or (maxsize is not None)
+
+
 @contextmanager
 def get_report_database():
     filepath = os.environ.get('DHIMMIS_REPORT_FILE', '/data/reports.db')
     if not os.path.exists(filepath):
+        if _check_eviction_enabled():
+            raise RuntimeError('Report eviction is enabled, but the report database does not yet exist. Please create the report database manually')
+
+        logging.getLogger('flask.error').info('Report database at %s does not exist. Creating.', filepath)
         con = sqlite3.connect(filepath, detect_types=sqlite3.PARSE_DECLTYPES)
-        con.execute(_database_schema)
+        con.executescript(_database_schema)
         cur = con.cursor()
         yield cur
         con.commit()
@@ -89,8 +119,19 @@ def start_report(username, server_version, filter_json):
     filter_content = gzip.compress(json.dumps(filter_json).encode('utf-8'))
 
     with get_report_database() as db:
-        db.execute('''INSERT INTO reports (uuid, user, started, server_version, filter, report_state, last_access, access_count)
-            VALUES (:uuid, :user, :started, :server_version, :filter, :report_state, :last_access, :access_count);''',
+        dbversion = None
+        if _check_eviction_enabled():
+            # report eviction enabled: need current database version
+            db.execute('SELECT version FROM database_version ORDER BY version DESC LIMIT 1;')
+            ver = db.fetchone()
+
+            if ver is None:
+                raise RuntimeError('Report eviction is enabled, but the report database contains no database versions.')
+
+            (dbversion,) = ver
+
+        db.execute('''INSERT INTO reports (uuid, user, started, server_version, database_version, filter, report_state, last_access, access_count)
+            VALUES (:uuid, :user, :started, :server_version, :database_version, :filter, :report_state, :last_access, :access_count);''',
             {
                 "uuid": u,
                 "user": username,
@@ -100,6 +141,7 @@ def start_report(username, server_version, filter_json):
                 "report_state": "started",
                 "last_access": now,
                 "access_count": 0,
+                "database_version": dbversion,
                 })
 
         _run_report_generation(u)
