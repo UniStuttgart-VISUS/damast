@@ -3,7 +3,9 @@
 
 2022-02-xx                                                           v1.0.6
 
-Add navigation ARIA labels where appropriate.
+Add navigation ARIA labels where appropriate. Warn about changed underlying
+data in re-created evicted reports by adding data version history to the
+report database.
 
 
 2022-02-09                                                           v1.0.5
