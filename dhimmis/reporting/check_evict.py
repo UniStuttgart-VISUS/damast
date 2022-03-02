@@ -4,6 +4,7 @@ import logging
 import traceback
 
 from .report_database import get_report_database, evict_report, ReportTuple
+from .eviction import get_eviction_params, does_evict
 
 def register_scheduler(sched):
     if 'DHIMMIS_REPORT_EVICTION_DEFERRAL' in os.environ or 'DHIMMIS_REPORT_EVICTION_MAXSIZE' in os.environ:
@@ -23,15 +24,7 @@ def check_for_evictable():
     ${DHIMMIS_REPORT_EVICTION_MAXSIZE} MB, reports are also evicted in
     ascending order of last access time.
     '''
-    try:
-        deferral = int(os.environ.get('DHIMMIS_REPORT_EVICTION_DEFERRAL'))
-    except (TypeError, ValueError):
-        deferral = None
-
-    try:
-        maxsize = int(os.environ.get('DHIMMIS_REPORT_EVICTION_MAXSIZE'))
-    except (TypeError, ValueError):
-        maxsize = None
+    deferral, maxsize = get_eviction_params()
 
     if deferral is None and maxsize is None:
         logging.getLogger('flask.error').warning('Report eviction is not turned on, but the eviction check function was called.')

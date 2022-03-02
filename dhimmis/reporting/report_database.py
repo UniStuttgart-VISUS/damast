@@ -11,6 +11,8 @@ import logging
 import flask
 import traceback
 
+from .eviction import does_evict
+
 _database_schema = '''
 PRAGMA foreign_keys = ON;
 
@@ -47,25 +49,11 @@ def _convert_datetime(val):
 sqlite3.register_converter('DATETIME', _convert_datetime)
 
 
-def _check_eviction_enabled():
-    try:
-        deferral = int(os.environ.get('DHIMMIS_REPORT_EVICTION_DEFERRAL'))
-    except (TypeError, ValueError):
-        deferral = None
-
-    try:
-        maxsize = int(os.environ.get('DHIMMIS_REPORT_EVICTION_MAXSIZE'))
-    except (TypeError, ValueError):
-        maxsize = None
-
-    return (deferral is not None) or (maxsize is not None)
-
-
 @contextmanager
 def get_report_database():
     filepath = os.environ.get('DHIMMIS_REPORT_FILE', '/data/reports.db')
     if not os.path.exists(filepath):
-        if _check_eviction_enabled():
+        if does_evict():
             raise RuntimeError('Report eviction is enabled, but the report database does not yet exist. Please create the report database manually')
 
         logging.getLogger('flask.error').info('Report database at %s does not exist. Creating.', filepath)
@@ -84,7 +72,8 @@ def get_report_database():
         con.close()
 
 
-ReportTuple = namedtuple('ReportTuple', ['uuid', 'user', 'server_version', 'report_state', 'started', 'completed', 'content', 'pdf_map', 'pdf_report', 'filter', 'evidence_count', 'last_access', 'access_count'])
+ReportTuple = namedtuple('ReportTuple', ['uuid', 'user', 'server_version', 'database_version', 'report_state', 'started', 'completed', 'content', 'pdf_map', 'pdf_report', 'filter', 'evidence_count', 'last_access', 'access_count'])
+DatabaseVersion = namedtuple('DatabaseVersion', ['version', 'date', 'url', 'description'])
 
 
 def _run_report_generation(report_id, rerun=False):
@@ -120,7 +109,7 @@ def start_report(username, server_version, filter_json):
 
     with get_report_database() as db:
         dbversion = None
-        if _check_eviction_enabled():
+        if does_evict():
             # report eviction enabled: need current database version
             db.execute('SELECT version FROM database_version ORDER BY version DESC LIMIT 1;')
             ver = db.fetchone()
