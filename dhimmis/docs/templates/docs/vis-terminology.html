@@ -8,7 +8,7 @@
 <h3>Interactive Visualization</h3>
 
 <p>
-  Card et al. formalized the data visualization pipeline in 1998 (see <a href="https://infovis-wiki.net/wiki/Visualization_Pipeline">here</a> for reference).
+  Card et al. formalized the <dfn>data visualization pipeline</dfn> in 1998 (see <a href="https://infovis-wiki.net/wiki/Visualization_Pipeline">here</a> for reference).
   This pipeline specifies the steps that data goes through from its source representation to the point where the viewer of the visualization sees it.
   The pipeline consists of four steps, in which certain operations are applied to data, transforming the data for the next step.
   After the last step, the data is present as pixels on a screen, or ink on paper.
@@ -27,7 +27,7 @@
 <p>
   The data tables are then <em>mapped</em> to visual structures in the <strong>visual mapping</strong> step.
   For example, in a bar chart visualization, data items are mapped to rectangles, and the value is mapped to the height of the respective rectangle.
-  In general, data attributes are mapped to <em>visual variables.</em>
+  In general, data attributes are mapped to <dfn>visual variables.</dfn>
   Visual variables include, but are not limited to:
   Position, length (height, width, diameter), area, shape, color value, color hue, or texture.
   Examples for interaction with the visual mappings are to switch between <em>qualitative</em> and <em>quantitative</em> mode for the timeline (cf. {{ full_documentation_link('settings-timeline-mode', 'here') }}).
@@ -53,7 +53,7 @@
 <h5>Zooming</h5>
 
 <p>
-  <em>Zooming</em> is the process of increasing or decreasing the scale of the visualized image.
+  <dfn>Zooming</dfn> is the process of increasing or decreasing the scale of the visualized image.
   In a map, that means showing a smaller area of the map in more detail (zooming in), or showing a larger area in less detail (zooming out).
   In a timeline, this could mean showing a shorter time span in more detail, or a longer time span in less detail.
 </p>
@@ -63,14 +63,14 @@
   Rather, zooming in means data can be displayed with more detail, and less aggregated.
   Similarly, zooming out, data needs to be aggregated more.
   Hence, zooming often involves not only the view transformation step, but also the data transformation and visual mapping steps, of the information visualization pipeline.
-  This type of zooming is also called <em>semantic zooming;</em>
-  as opposed to <em>geometric zooming,</em> which only affects the the view transformation step.
+  This type of zooming is also called <dfn>semantic zooming;</dfn>
+  as opposed to <dfn>geometric zooming,</dfn> which only affects the the view transformation step.
 </p>
 
 <h5>Panning</h5>
 
 <p>
-  <em>Panning</em> is the process of changing the <em>geometrical translation</em> of the visualized image.
+  <dfn>Panning</dfn> is the process of changing the <em>geometrical translation</em> of the visualized image.
   Panning does not affect the visual mapping, but only the view transformation.
   Some examples for panning include:
 </p>
@@ -104,10 +104,10 @@
 {% endif %}
 
 <p>
-  A MCV visualization (multiple coordinated views) consists of multiple <em>views.</em>
+  A MCV visualization (multiple coordinated views) consists of multiple <dfn>views.</dfn>
   These views are visually separated, either by just empty space between them, or by borders.
   In our visualization (see {{ full_documentation_link('fig-full-vis-screenshot', 'this screenshot', true) }}), each view is displayed in a separate UI element.
-  These UI elements are called <em>panes</em> and can be resized, rearranged, or maximized; similar to how windows can be interacted with in an operating system such as Microsoft Windows.
+  These UI elements are called <dfn>panes</dfn> and can be resized, rearranged, or maximized; similar to how windows can be interacted with in an operating system such as Microsoft Windows.
 </p>
 
 <p>
@@ -131,7 +131,7 @@
 
 <p>
   Our visualization is a <em>top-down visualization,</em> meaning that initially, all the data is shown, and users can then drill down into that data to find smaller, more specific subsets of the data.
-  The drill-down is realized by applying <em>filters</em> to the data.
+  The drill-down is realized by applying <dfn>filters</dfn> to the data.
   A filter is a criterion which can decide for each datum whether that datum matches or not.
   Applying a filter to a dataset results in a subset (not necessarily a <em>proper subset</em>) of the dataset.
 </p>
@@ -144,7 +144,7 @@
 </p>
 
 <p>
-  Our MCV visualization implements <em>multi-faceted filtering.</em>
+  Our MCV visualization implements <dfn>multi-faceted filtering.</dfn>
   That means that each view can have a separate filter active at the same time.
   Because the views show different aspects of the same data, the filters also apply to different aspects of the data:
   The timeline filter applies to the temporal aspect of the evidence, the map filter applies to the geospatial aspect of the evidence, and so on.
@@ -164,7 +164,7 @@
 <h4>Selection</h4>
 
 <p>
-  <em>Selection</em> is a user interaction with the data.
+  <dfn>Selection</dfn> is a user interaction with the data.
   In our visualization, selection is done by <em>clicking</em> on some visual element with the computer mouse.
   Clicking, for example, a map glyph in the map informs the visualization about the fact that the user selected that glyph.
   Everything that happens after the click is no longer part of the selection itself, but rather what the visualization does <em>in reaction to</em> the selection.
@@ -189,7 +189,7 @@
 {% endif %}
 
 <p>
-  Brushing and linking is a process used in interactive MCV visualizations to help users understand the connection between different views, or rather, between different aspects of the visualized data.
+  <dfn>Brushing and linking</dfn> is a process used in interactive MCV visualizations to help users understand the connection between different views, or rather, between different aspects of the visualized data.
   First, the user {{ full_documentation_link('terminology-selection', 'selects', true) }} some visual element in the visualization.
   The visualization interprets that selection, and performs <em>brushing</em> on the underlying data that is represented by that element.
   Next, the visualization <em>links</em> the brushed data in <em>all views</em> by applying specific highlighting to them.
