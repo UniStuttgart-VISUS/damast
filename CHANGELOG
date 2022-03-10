@@ -5,7 +5,8 @@
 
 Add navigation ARIA labels where appropriate. Warn about changed underlying
 data in re-created evicted reports by adding data version history to the
-report database.
+report database. Ignore "modifier letter left/right half ring" for place
+name sorting.
 
 
 2022-02-09                                                           v1.0.5
