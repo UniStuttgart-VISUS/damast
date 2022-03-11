@@ -6,7 +6,8 @@
 Add navigation ARIA labels where appropriate. Warn about changed underlying
 data in re-created evicted reports by adding data version history to the
 report database. Ignore "modifier letter left/right half ring" for place
-name sorting.
+name sorting. The source list is now sorted alphabetically as a second key,
+after evidence count.
 
 
 2022-02-09                                                           v1.0.5
