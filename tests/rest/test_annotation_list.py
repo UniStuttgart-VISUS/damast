@@ -1,8 +1,8 @@
 import pytest
 import re
 import psycopg2.extras
-import dhimmis
-from dhimmis.postgres_rest_api.util import NumericRangeEncoder
+import damast
+from damast.postgres_rest_api.util import NumericRangeEncoder
 import flask
 import json
 from functools import namedtuple

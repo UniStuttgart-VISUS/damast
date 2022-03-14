@@ -26,7 +26,7 @@ The directory also contains a Python script for user management.
 ## Map for Reports
 
 For the reports, a vector map is required.
-The processed file is checked in, and can be found [here](../dhimmis/reporting/map-data/features.geo.json.gz).
+The processed file is checked in, and can be found [here](../damast/reporting/map-data/features.geo.json.gz).
 However, the map can also be recreated from the NaturalEarth data using the files in the [`report-map`](./report-map/) directory.
 
 

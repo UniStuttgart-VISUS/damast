@@ -178,5 +178,5 @@ Now, when running the server and navigating to `https://<host>/${DAMAST_PROXYPRE
 
 Keep in mind that all contents of the static directory will be served without user authentication.
 For details on which paths templates must be put under for proper override, refer to the `template/` directories of the blueprints in the repository.
-For details on how to inherit from the base template, refer to the [base template](./dhimmis/templates/base.html) and other, inheriting templates.
+For details on how to inherit from the base template, refer to the [base template](./damast/templates/base.html) and other, inheriting templates.
 Adding static files while the server is running should work without problems, but templates are not hot-loaded in production systems, so the server needs to be restarted if the templates change.

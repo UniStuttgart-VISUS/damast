@@ -162,7 +162,7 @@ fi
 
 printf "\n\033[0;36mSyncing assets for docker image\033[0m\n\n"
 
-fs_hash=$(find dhimmis -type f \
+fs_hash=$(find damast -type f \
   | xargs sha1sum \
   | awk '{print $1}' \
   | sha1sum - \
@@ -171,7 +171,7 @@ cat util/docker/{base,prod}.in \
   | sed "s/@REBUILD_HASH@/$fs_hash/g" \
   | ssh ${build_user}@${build_server} "cat > $tmpdir/Dockerfile"
 rsync --info=flist2,misc0,stats0 -iavzz \
-  dhimmis \
+  damast \
   ${build_user}@${build_server}:$tmpdir/
 
 
