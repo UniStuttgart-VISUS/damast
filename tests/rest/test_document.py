@@ -1,6 +1,6 @@
 import pytest
 import re
-import dhimmis
+import damast
 import flask
 import json
 from functools import namedtuple
@@ -186,8 +186,8 @@ def test_document(client_ro, minimal_testuser, document):
                 if is_bytes:
                     assert rv.data == doc.content[start:end+1]
                 else:
-                    inner_text_expected = dhimmis.document_fragment.inner_text(doc.content)[start:end+1]
-                    inner_text = dhimmis.document_fragment.inner_text(rv.data)
+                    inner_text_expected = damast.document_fragment.inner_text(doc.content)[start:end+1]
+                    inner_text = damast.document_fragment.inner_text(rv.data)
 
                     assert inner_text_expected == inner_text, (start, end, doc.content_length, len(inner_text_expected))
 

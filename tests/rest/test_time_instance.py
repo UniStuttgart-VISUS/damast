@@ -1,12 +1,12 @@
 import pytest
 import re
-import dhimmis
+import damast
 import flask
 import psycopg2.extras
 import json
 from functools import namedtuple
 from urllib.parse import quote
-from dhimmis.postgres_rest_api.util import NumericRangeEncoder
+from damast.postgres_rest_api.util import NumericRangeEncoder
 
 from database.testdata import time_group_table, time_instance_table
 

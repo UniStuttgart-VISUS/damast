@@ -8,7 +8,7 @@ import sqlite3
 from passlib.hash import bcrypt
 from client_fixture import create_client
 
-from dhimmis.user import User
+from damast.user import User
 
 testusers = []
 with open('tests/testusers.yaml') as f:
@@ -71,7 +71,7 @@ def ro_database(worker_id, cleanup_old_docker_containers):
         '--rm',
         '--name', F'postgres-ro-{worker_id}',
         '-p', F'{port}:5432',
-        'dhimmis-pytest-testdb'
+        'damast-pytest-testdb'
         ], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
 
     # wait for docker to be up
@@ -115,7 +115,7 @@ def database(worker_id, cleanup_old_docker_containers, autouse=True):
         '--rm',
         '--name', F'postgres-{worker_id}',
         '-p', F'{port}:5432',
-        'dhimmis-pytest-testdb'
+        'damast-pytest-testdb'
         ], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
 
     # wait for docker to be up

@@ -1,4 +1,4 @@
-from dhimmis.document_fragment import extract_fragment
+from damast.document_fragment import extract_fragment
 from functools import namedtuple
 import pytest
 import html5lib

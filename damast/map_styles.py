@@ -41,11 +41,11 @@ with open(_schema_path) as f:
     _schema = jsonschema.Draft7Validator(_cont)
 
 _styles = None
-if 'DHIMMIS_MAP_STYLES' not in os.environ:
+if 'DAMAST_MAP_STYLES' not in os.environ:
     _styles = _default_styles
     _logger.info('No map style file provided, default map tile selection will be used.')
 else:
-    dms = os.environ.get('DHIMMIS_MAP_STYLES')
+    dms = os.environ.get('DAMAST_MAP_STYLES')
     _styles_path = os.path.join('/data', dms)
 
     if not os.path.isfile(_styles_path):

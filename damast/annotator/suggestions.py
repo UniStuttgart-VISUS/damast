@@ -26,21 +26,21 @@ logger = logging.getLogger('flask.error')
 
 
 def start_refresh_job():
-    p = subprocess.Popen(['python', '-m', 'dhimmis.annotator.suggestions'])
+    p = subprocess.Popen(['python', '-m', 'damast.annotator.suggestions'])
     logger.info(F'Starting annotation suggestion refresh (PID {p.pid}).')
 
 
 def register_scheduler(sched):
     try:
-        interval = int(os.environ.get('DHIMMIS_ANNOTATION_SUGGESTION_REBUILD'))
+        interval = int(os.environ.get('DAMAST_ANNOTATION_SUGGESTION_REBUILD'))
         if interval < 1:
-            logger.warning('DHIMMIS_ANNOTATION_SUGGESTION_REBUILD has an invalid value (%d), disabling.', interval)
+            logger.warning('DAMAST_ANNOTATION_SUGGESTION_REBUILD has an invalid value (%d), disabling.', interval)
             interval = None
 
     except TypeError:
         interval = None
     except ValueError:
-        logger.error('DHIMMIS_ANNOTATION_SUGGESTION_REBUILD has an invalid value ("%s"), disabling.', os.environ.get('DHIMMIS_ANNOTATION_SUGGESTION_REBUILD'))
+        logger.error('DAMAST_ANNOTATION_SUGGESTION_REBUILD has an invalid value ("%s"), disabling.', os.environ.get('DAMAST_ANNOTATION_SUGGESTION_REBUILD'))
         interval = None
 
     if interval is not None:

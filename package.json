@@ -16,7 +16,7 @@
     "type": "git",
     "url": "https://github.tik.uni-stuttgart.de/frankemx/damast"
   },
-  "license": "none",
+  "license": "MIT",
   "dependencies": {
     "@cfworker/json-schema": "^1.8.0",
     "@geoman-io/leaflet-geoman-free": "^2.11.2",

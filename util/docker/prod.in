@@ -2,17 +2,17 @@
 RUN /bin/true @REBUILD_HASH@
 
 # files
-COPY ./dhimmis /dhimmis
+COPY ./damast /damast
 
-ARG DHIMMIS_VERSION
-ARG DHIMMIS_ENVIRONMENT
-ARG DHIMMIS_PORT
-ENV DHIMMIS_VERSION="$DHIMMIS_VERSION"
-ENV DHIMMIS_ENVIRONMENT="$DHIMMIS_ENVIRONMENT"
-ENV DHIMMIS_PORT="$DHIMMIS_PORT"
+ARG DAMAST_VERSION
+ARG DAMAST_ENVIRONMENT
+ARG DAMAST_PORT
+ENV DAMAST_VERSION="$DAMAST_VERSION"
+ENV DAMAST_ENVIRONMENT="$DAMAST_ENVIRONMENT"
+ENV DAMAST_PORT="$DAMAST_PORT"
 
 # server port
-EXPOSE $DHIMMIS_PORT
+EXPOSE $DAMAST_PORT
 
-CMD ["sh", "-c", "/usr/bin/env python3 -m gunicorn -b 127.0.0.1:$DHIMMIS_PORT 'dhimmis:create_app()' --worker-class=gevent --workers=1 --threads=4 --timeout 0"]
+CMD ["sh", "-c", "/usr/bin/env python3 -m gunicorn -b 127.0.0.1:$DAMAST_PORT 'damast:create_app()' --worker-class=gevent --workers=1 --threads=4 --timeout 0"]
 

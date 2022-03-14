@@ -26,7 +26,7 @@ build() {
   (
     cd tests/database
     sudo -u ${SUDO_USER:-root} make Dockerfile
-    docker build -t dhimmis-pytest-testdb .
+    docker build -t damast-pytest-testdb .
   )
 
   if [ ! -d pyenv ]

@@ -1,4 +1,4 @@
-imagename = dhimmis-pytest-testdb
+imagename = damast-pytest-testdb
 
 # these tables are generated
 generated_tables =
@@ -36,10 +36,10 @@ generated_sql = $(addprefix sql-data.d/,$(addsuffix -data.generated.sql, $(gener
 
 all: $(imagename)
 
-$(imagename): sql-data.d/*.sql sql-data.d/30-create-dhimmis-users.sql $(generated_sql) Dockerfile
+$(imagename): sql-data.d/*.sql sql-data.d/30-create-damast-users.sql $(generated_sql) Dockerfile
 	docker build -t $@ .
 
-sql-data.d/30-create-dhimmis-users.sql: ../testusers.yaml
+sql-data.d/30-create-damast-users.sql: ../testusers.yaml
 	./create_users.py $< > $@
 
 $(generated_sql): $(generated_tables)
@@ -47,7 +47,7 @@ $(generated_sql): $(generated_tables)
 $(generated_tables): FORCE
 	python3 testdata.py $@
 
-Dockerfile: sql-data.d/30-create-dhimmis-users.sql $(generated_sql)
+Dockerfile: sql-data.d/30-create-damast-users.sql $(generated_sql)
 	hash=$$(sha1sum sql-data.d/* \
 		| awk '{print $$1}' \
 		| sha1sum - \

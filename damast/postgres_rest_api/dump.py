@@ -46,7 +46,7 @@ def dump():
 
     result = subprocess.check_output(command, env=environ, stderr=subprocess.DEVNULL)
 
-    fname=datetime.datetime.now().astimezone().strftime('dhimmis_pgdump_%Y%m%dT%H%M%S.sql.gz')
+    fname=datetime.datetime.now().astimezone().strftime('damast_pgdump_%Y%m%dT%H%M%S.sql.gz')
     response = flask.make_response((result, 200, {
         'Content-Type': 'application/gzip',
         'Content-Disposition': F'attachment; filename="{fname}"',
