@@ -1,5 +1,5 @@
 [Unit]
-Description=Flask application for damast Prototype
+Description=Flask application for Damast Prototype
 Wants=network-online.target pgadmin4.service docker.service nginx.service
 After=network-online.target
 
