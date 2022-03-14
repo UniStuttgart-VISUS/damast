@@ -37,7 +37,7 @@ module.exports = function(env, argv) {
         'style.css': `./src/scss/vis.scss`,
       },
       output: {
-        path: path.resolve(__dirname, 'dhimmis/vis/static/'),
+        path: path.resolve(__dirname, 'damast/vis/static/'),
       },
       mode: argv.mode || 'development',
       devtool: (argv.mode === 'production') ? false : 'eval-cheap-source-map',
@@ -132,7 +132,7 @@ module.exports = function(env, argv) {
         'geodb.css': './src/scss/geodb.scss',
       },
       output: {
-        path: path.resolve(__dirname, 'dhimmis/geodb_editor/static'),
+        path: path.resolve(__dirname, 'damast/geodb_editor/static'),
       },
       mode: argv.mode || 'development',
       devtool: (argv.mode === 'production') ? false : 'eval-cheap-source-map',
@@ -198,7 +198,7 @@ module.exports = function(env, argv) {
         'document-creation.css': './src/scss/annotator-document-creation.scss',
       },
       output: {
-        path: path.resolve(__dirname, 'dhimmis/annotator/static'),
+        path: path.resolve(__dirname, 'damast/annotator/static'),
       },
       mode: argv.mode || 'development',
       devtool: (argv.mode === 'production') ? false : 'eval-cheap-source-map',
@@ -269,7 +269,7 @@ module.exports = function(env, argv) {
           'public/flash': './src/flashes',
           'public/cookies': './src/cookies',
         },
-        'dhimmis/root/static/',
+        'damast/root/static/',
         [
           {from: 'src/assets/favicons/', to: 'public/'},
           {from: 'node_modules/font-awesome/css/font-awesome.min.css', to: 'public/font-awesome/css'},
@@ -283,7 +283,7 @@ module.exports = function(env, argv) {
         {
           'login.css': './src/scss/login.scss',
         },
-        'dhimmis/login/static/',
+        'damast/login/static/',
         []
       ],
 
@@ -291,13 +291,14 @@ module.exports = function(env, argv) {
       [
         {
           'user-log/userlog.css': './src/scss/userlog.scss',
-          'changelog/changelog.css': './src/scss/changelog.scss',
+          'changelog/changelog.css': './src/scss/changelog_license.scss',
+          'license/license.css': './src/scss/changelog_license.scss',
           'api/api.css': './src/scss/documentation.scss',
           'index/index.css': './src/scss/documentation-root.scss',
           'annotator/style.css': './src/scss/annotator-documentation.scss',
           'vis/style.css': './src/scss/visualization-documentation.scss',
         },
-        'dhimmis/docs/static/',
+        'damast/docs/static/',
         [
           { from: 'src/assets/annotator-documentation/', to: 'annotator', },
           { from: 'src/assets/visualization-documentation/', to: 'vis', },
@@ -312,7 +313,7 @@ module.exports = function(env, argv) {
           'report-list.css': './src/scss/reporting-list.scss',
           '422.css': './src/scss/reporting-422.scss',
         },
-        'dhimmis/reporting/static/',
+        'damast/reporting/static/',
         [],
       ],
 
@@ -324,7 +325,7 @@ module.exports = function(env, argv) {
           'uri.css': './src/scss/uri.scss',
           'place-search.css': './src/scss/uri-place-search.scss',
         },
-        'dhimmis/uri/static/',
+        'damast/uri/static/',
         [
           {from: 'node_modules/leaflet/dist/leaflet.css', to: '.'},
           {to: 'images/', from: 'node_modules/leaflet-color-number-markers/dist/img/marker-icon-2x-blue.png'},

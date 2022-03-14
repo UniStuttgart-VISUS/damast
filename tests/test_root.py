@@ -1,5 +1,5 @@
 import pytest
-import dhimmis
+import damast
 
 nologin_paths = [
     '/login',

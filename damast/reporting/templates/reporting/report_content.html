@@ -1,0 +1,187 @@
+{% set footnote_lut = dict() %}
+{% set footnotes = namespace(i=1) %}
+{%- from 'reporting/fragments/macros.html' import create_evidence_linklist with context -%}
+{%- from 'reporting/fragments/evidence.html' import create_evidence with context -%}
+{%- from 'reporting/fragments/place.html' import create_place with context -%}
+{%- from 'reporting/fragments/religion.html' import create_religion with context -%}
+{%- from 'reporting/fragments/person.html' import create_person with context -%}
+{%- from 'reporting/fragments/timeline.html' import create_timeline with context -%}
+{%- from 'reporting/fragments/metadata.html' import creation_metadata, filter_description with context -%}
+
+<nav role="toc">
+  <h2>Table of Contents</h2>
+  <ul>
+    {%- if dbversiondata -%}
+    <li><a href="#version-disclaimer">Version Disclaimer</a></li>
+    {%- endif -%}
+    <li><a href="#filters">Query Description</a></li>
+    <li><a href="#evidences">Evidences</a></li>
+    <li><a href="#places">Places</a></li>
+    <li><a href="#religions">Religions</a></li>
+    {%- if persons|length -%}
+    <li><a href="#persons">Persons</a></li>
+    {%- endif -%}
+    <li><a href="#timeline">Timeline</a></li>
+    <li><a href="#sources">Sources</a></li>
+    <li><a href="#cite">How to Cite</a></li>
+  </ul>
+</nav>
+
+{% if dbversiondata %}
+<section id="version-disclaimer">
+  <h2>Version Disclaimer</h2>
+
+  <p>
+    The instance of <em>Damast</em> this report was generated on has <em>report eviction</em> turned on.
+    That means that the contents of reports that have not been accessed for a while are deleted to save storage space.
+    The reports in question can still be accessed, but will be re-created on demand from the database.
+    On systems with report eviction, the assumption is that there are no major changes to the underlying data in the database, to ensure that the report content overall does not change.
+    However, in some cases smaller updates to the data might still happen.
+    This report was originally created with a different version of the underlying data, but was evicted and now re-created with a newer version.
+    Some changes to its contents might be present.
+  </p>
+
+  <p>
+    This is the chronological history to the data in this <em>Damast</em> instance.
+    The last entry is the version of the database this report was created with.
+    The version the report was originally created with is marked with an arrow:
+  </p>
+
+  <table>
+    <tr>
+      <th></th>
+      <th>Version</th>
+      <th>Date</th>
+      <th>URL</th>
+      <th>Description</th>
+    </tr>
+    {% for ver in dbversiondata.versions %}
+    <tr>
+      <td>
+        {%- if ver.version == dbversiondata.original_version -%}
+        &#x2B9E;
+        {%- endif -%}
+      </td>
+      <td>{{ ver.version }}</td>
+      <td>{{ ver.date }}</td>
+      <td>
+        {%- if ver.url -%}
+        <a href="{{ ver.url }}">{{ ver.url }}</a>
+        {%- else -%}
+        <span class="no-url">&mdash;</span>
+        {%- endif -%}
+      </td>
+      <td>{{ ver.description }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</section>
+{% endif %}
+
+<section id="filters">
+  <h2>Query Description</h2>
+
+  {{ creation_metadata(metadata) }}
+
+  {{ filter_description(filter_desc) }}
+
+  <p>
+    This report contains:
+    <strong>{{ evidences | length }}</strong> distinct evidences,
+    <strong>{{ places | length }}</strong> distinct places,
+    <strong>{{ religions | length }}</strong> distinct religions,
+    {% if persons|length %}
+    <strong>{{ persons | length }}</strong> distinct persons,
+    {% endif %}
+    based on <strong>{{ sources | length }}</strong> distinct sources.
+  </p>
+</section>
+
+<section id="evidences">
+  <h2>Evidences</h2>
+
+  {% for evidence in evidences %}
+    {{ create_evidence(evidence) }}
+  {% endfor %}
+</section>
+
+<section id="places">
+  <h2>Places</h2>
+
+  <figure class="place-map">
+    {{ place_map | safe }}
+
+    <figcaption>
+      Made with <a href="https://www.naturalearthdata.com/">Natural Earth</a>.
+      <a href="{{ map_url }}" target="_blank">[PDF]</a>
+    </figcaption>
+  </figure>
+
+  {% for place in places %}
+    {{ create_place(place) }}
+  {% endfor %}
+</section>
+
+<section id="religions">
+  <h2>Religions</h2>
+
+  {% for religion in religions %}
+    {{ create_religion(religion) }}
+  {% endfor %}
+</section>
+
+{%- if persons|length -%}
+<section id="persons">
+  <h2>Persons</h2>
+
+  {% for person in persons %}
+    {{ create_person(person) }}
+  {% endfor %}
+</section>
+{%- endif -%}
+
+<section id="timeline">
+  <h2>Timeline</h2>
+
+  {{ create_timeline(time_data) }}
+</section>
+
+{% if sources %}
+<section id="sources">
+  <h2>Sources</h2>
+
+  <ul class="source-list">
+    {% for i, source in sources %}
+    <li id="source{{source.id}}" class="source">
+      <span class="source__short" >
+        {{ source.short }}
+      </span>
+      <p class="source__name">
+        {{ source.name }}
+        <span class="source__type">{{ source.source_type }}</span>
+      </p>
+      <p class="source__name">
+        {{ create_evidence_linklist(source_evidence[source.id], before='', middle=' based on this source: ', after='') }}
+      </p>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+
+<section id="cite">
+  <h2>How to Cite</h2>
+
+  <p>We suggest to cite this report in the following way:</p>
+  <blockquote>
+    Damast report <code>{{ report_id }}</code>,
+    based on data by Ralph Barczok and Bernd A. Vest, and the visualization of
+    <em>Damast &mdash; A Research System to Analyze Multi-Religious Constellations in the Islamicate World,</em>
+    edited by Dorothea Weltecke, Steffen Koch, Ralph Barczok, Max Franke, Florian Jäckel, and Bernd A. Vest.
+    <time date="2022-04">April 2022</time>.
+    Created <time datetime="{{ metadata.current_time_machine }}">{{ metadata.current_time_short }}</time>.
+    <a href="{{ report_url }}">{{ report_url }}</a>, data deposited at DaRUS: <a href="https://doi.org/10.18419/darus-2318">https://doi.org/10.18419/darus-2318</a>.
+  </blockquote>
+</section>
+

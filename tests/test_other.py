@@ -1,5 +1,5 @@
 import pytest
-import dhimmis
+import damast
 
 @pytest.fixture(params=['a', 'b', 'c'])
 def dummy(request):

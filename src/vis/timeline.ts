@@ -180,7 +180,10 @@ export default class Timeline extends View<any, any> {
   }
 
   private timeFilterIndicator(data: [number, number]): void {
+    // if the entire time span is filtered (=no filter), do not show the indicator
+    const noFilter = JSON.stringify(this.totalDomain) === JSON.stringify(data);
     const h0 = this._cached_bbox.height - brush_height;
+
     let r = this.overview_g.selectAll('rect.overview-filter-indicator')
       .data([data]) as d3.Selection<SVGRectElement, any, any, any>;
     r.enter()
@@ -192,7 +195,7 @@ export default class Timeline extends View<any, any> {
       .attr('height', 5)
       .attr('width', d => this.x_overview(d[1]) - this.x_overview(d[0]))
       .attr('fill', 'white')
-      .attr('opacity', 0.6);
+      .attr('opacity', noFilter ? 0 : 0.6);
   }
 
   private _cached_bbox: DOMRect = null;
@@ -284,8 +287,8 @@ export default class Timeline extends View<any, any> {
       this.zoom(scroll);
     });
 
-    this.brushMoved();
     this.createOverview(d2, bbox.width, bbox.height);
+    this.brushMoved();  // after createOverview so the indicator does not get removed again
   }
 
   private brushMoved(): void {

@@ -1,5 +1,5 @@
 import pytest
-import dhimmis
+import damast
 
 from conftest import get_headers
 

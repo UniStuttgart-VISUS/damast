@@ -1,0 +1,8 @@
+{% from 'reporting/fragments/macros.html' import create_evidence_linklist with context %}
+
+{% macro create_religion(r) %}
+<section id="religion{{ r.id }}" class="item">
+  <h3 data-reference-label="r{{ r.id }}">{{ r.name }}</h3>
+  <p>{{ create_evidence_linklist(r.evidence_ids, before='', after='') }}</p>
+</section>
+{% endmacro %}

@@ -1,0 +1,61 @@
+{%- macro create_footnote(key) -%}
+{%- set _dummy = footnote_lut.update({ key: footnotes.i }) %}
+{%- set footnotes.has_footnotes = true -%}
+<sup id="footnote{{ footnotes.i }}-source"><a href="#footnote{{ footnotes.i }}" class="footnote-link">[{{ footnotes.i }}]</a></sup>
+{%- set footnotes.i = footnotes.i + 1 -%}
+{%- endmacro -%}
+
+{%- macro generate_footnote(val, key) -%}
+{%- if val -%}
+{%- set footnote = footnote_lut.get(key) -%}
+<li id="footnote{{ footnote }}">
+  <a class="footnote-number" href="#footnote{{ footnote }}-source">
+    <sup>[{{ footnote }}]</sup>
+  </a>
+  <em><q>{{ val }}</q></em>
+</li>
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro create_evidence_linklist(ids, before='(', middle='', after=')') -%}
+{{ before|safe }}<strong>{{ ids | length }}</strong>
+{%- if ids | length != 1 %} evidences {% else %} evidence {% endif -%}
+{{ middle }}
+{%- for evidence_id in ids -%}
+<a class="evidence-backlink" href="#evidence{{ evidence_id }}"><sup>[e{{ evidence_id }}]</sup></a>
+{%- endfor -%}
+{{ after|safe }}
+{%- endmacro -%}
+
+{%- macro download_filter_link(uuid, short=false) -%}
+<a href="{{ url_for('reporting.get_report_filter', report_id=uuid) }}" download="filters_{{ uuid }}.json">
+  <i class="fa fa-filter"></i>
+  {% if not short %}
+  Download filter
+  {% endif %}
+</a>
+{%- endmacro -%}
+
+{%- macro rerun_report_link(uuid, short=false) -%}
+<a href="{{ url_for('reporting.rerun_report', report_id=uuid) }}" target="_blank">
+  <i class="fa fa-repeat"></i>
+  {% if not short %}
+  Re-run report
+  {% endif %}
+</a>
+{%- endmacro -%}
+
+{%- macro evict_report_link(uuid) -%}
+<a href="{{ url_for('reporting.evict_report', report_id=uuid) }}" target="_self">
+  <i class="fa fa-chain-broken"></i>
+</a>
+{%- endmacro -%}
+
+{%- macro visualization_with_filter_link(uuid, short=false) -%}
+<a href="{{ url_for('vis.root') }}#{{ uuid }}" target="_blank">
+  <i class="fa fa-area-chart"></i>
+  {% if not short %}
+  Show in visualization
+  {% endif %}
+</a>
+{%- endmacro -%}

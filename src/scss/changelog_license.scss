@@ -1,0 +1,17 @@
+@use 'common/colors' as *;
+@use 'common/mixins';
+
+.content {
+  @include mixins.baseFlexBlock();
+  color: $clr-fg;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+pre {
+  font-size: 0.8rem;
+  width: max-content;
+  margin: 1rem;
+}

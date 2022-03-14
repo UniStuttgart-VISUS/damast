@@ -1,0 +1,14 @@
+{% from 'reporting/fragments/macros.html' import create_evidence_linklist with context %}
+
+{% macro create_person(p) %}
+<section id="person{{ p.id }}" class="item">
+  <h3 data-reference-label="pe{{ p.id }}">
+    <em>{{ p.person_type }}</em>
+    {{ p.name }}
+    {%- if p.time_range -%}
+    <em> ({{ p.time_range }})</em>
+    {%- endif -%}
+  </h3>
+  <p>{{ create_evidence_linklist(p.evidence_ids, before='', after='') }}</p>
+</section>
+{% endmacro %}

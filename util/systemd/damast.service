@@ -1,0 +1,16 @@
+[Unit]
+Description=Flask application for Damast Prototype
+Wants=network-online.target pgadmin4.service docker.service nginx.service
+After=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+Restart=no
+WorkingDirectory=/www
+ExecStart=/bin/sh run_server.sh
+ExecStop=/bin/docker stop damast
+
+[Install]
+WantedBy=multi-user.target
+

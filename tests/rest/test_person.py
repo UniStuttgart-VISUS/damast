@@ -1,6 +1,6 @@
 import pytest
 import re
-import dhimmis
+import damast
 import flask
 import json
 from functools import namedtuple
