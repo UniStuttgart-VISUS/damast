@@ -4,331 +4,630 @@
 {{ super() }}
 <link rel="stylesheet" href="{{ url_for('root-app.file', path='style.css') }}">
 {% endblock %}
+{% block extra %}
+<aside>
+<nav aria-label="Page navigation">
+  <h2>Jump to</h2>
+  <ul>
+    <li><a href="#main-title">Top</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#data">Data Used</a></li>
+    <li><a href="#features">Features</a></li>
+  </ul>
+</nav>
+</aside>
+{% endblock %}
+{% block mainattr %}style="background-image:url({{ url_for('root-app.file', path='root-background.jpg') }})"{% endblock %}
 {% block content %}
-<div class="language-selector">
-  <i class="fa fa-lg fa-fw fa-globe"></i>
-  <a href="?"
-     {% if language != 'de' -%}disabled{%- endif %}
-     title="View page in English / Auf Englisch lesen"
-     aria-labelledby="English/Englisch"
-     >EN</a>
-  /
-  <a href="?lang=de"
-     {% if language == 'de' -%}disabled{%- endif %}
-     title="View page in German / Auf Deutsch lesen"
-     aria-labelledby="German/Deutsch"
-     >DE</a>
-</div>
 
-<div class="infobox--temporary">
-  <h3>What is happening here?</h3>
+<article>
+  <section class="subsection title-section" id="main-title">
+    <h1>Damast</h1>
+    <h2>A Research System to Analyze Multi-Religious Constellations in the Islamicate World</h2>
 
-  <p>
-    This page will soon become publically accessible, and function as a project page.
-    The rest of the pages, such as the visualization, will stay behind authentication for now.
-  </p>
+    <figure class="illustration">
+      <img
+          src="{{ url_for('root-app.file', path='root-illustration-map.png') }}"
+          aria-describedby="fig-map-caption"
+          alt="Partial screenshot from the map"
+          title="Partial screenshot from the map"/>
+      <figcaption id="fig-map-caption">Partial screenshot from the map</figcaption>
+    </figure>
 
-  <p>
-    Sharing what we're doing with the rest of the internet is something I want to prepare carefully.
-    For now, this page is only accessible with a login.
-    Please let me know if you want any changes or additions to the text shown here!
-    And of course, this box will not be part of the final page.
-  </p>
+    <p>
+    DAMAST provides an <strong>interactive visualization</strong> to gain new insights on the multi-religious landscapes of the Middle East under Muslim rule during the Middle Ages (7th
+    to 14th century).
+    More than 8300 evidences of the presence of different religious communities at more than 442 places have been examined and recorded and are now accessible as a <strong>web-based geo-temporal multi-view system.</strong>
+    </p>
+</section>
 
-  <span class="signature">Max</span>
-</div>
+  <section class="subsection">
+    <p>
+    Although today&mdash;and today for the first time&mdash;, a mono-religious situation emerges in the Middle East, during the Medieval centuries, specific groups of Non-Muslims (especially Jews, Christians, and Zoroastrians) were tolerated and had in turn to accept a lower legal status, the so-called Dhimmi status.
+    <strong>This led to great religious diversity in the Medieval Muslim world.</strong>
+    Thus, in the many cities of the Muslim world, the divers Muslim strands as well as different churches of Eastern Christianity and Jewish traditions were living side by side.
+    Often, three or even four Christian bishops resided in one city.
+    Together, these religious groups formed the fabric of every-day life and culture in the Islamicate world.
+    This grade of religious diversity is not found in the medieval cities of the Latin, Byzantine and Caucasian worlds, which were dominated by Christian rule.
+    </p>
 
-<h1>
-  Dhimmis and Muslims
-  <span class="subtitle">Analysing Multi-Religious Spaces in the Medieval Muslim World</span>
-</h1>
+    <p>
+    <strong>However, the diachronic and synchronic complexity of these multi-religious populations is still understudied.</strong>
+    Basic knowledge about the exact distribution and even the sheer existence of religious groups in many places is still lacking.
+    So far, historical narratives are still based on impressions of singular sources and traditional views rather than empirical data.
+    </p>
 
-<p>
-{%- if language == 'de' -%}
-<em>&bdquo;Dhimmis and Muslims &mdash; Analysing Multi-Religious Spaces in the Medieval Muslim World&ldquo;</em> ist ein gemeinsames Projekt des Lehrstuhls für Mittelalterliche Geschichte II der Goethe-Universität in Frankfurt und dem Institut für Visualisierung und Interaktive Systeme, das von der VolkswagenStiftung als Teil des <em>&bdquo;Mixed Methods&ldquo;</em>-Programms gefördert wird.
-{%- else -%}
-The project <em>&ldquo;Dhimmis and Muslims &mdash; Analysing Multi-Religious Spaces in the Medieval Muslim World&rdquo;</em> is a collaboration between the Institute for Medieval History II of the Goethe University in Frankfurt and the Institute of Visualization and Interactive Systems.
-It is funded by the Volkswagen Foundation as part of the <em>&ldquo;Mixed Methods&rdquo;</em> program.
-{%- endif -%}
-</p>
+    <p>
+    <strong>Information from multiple sources can now be analyzed and compared, something not possible using texts, tables or static maps</strong>. Thus, traditional historiographical methods of heuristics and qualitative source analysis
+    have been rethought and revived by embedding them into a new approach of visual analytics. At the same time, the project boosted methods of visual analytics and information visualization as, e.g., how to visually represent uncertainty
+    and analytic provenance information. The project thus contributes to both disciplines, historiography and visualization research.
+    </p>
+</section>
+</article>
 
-{%- if language == 'de' -%}
-<p>Zielsetzung des Projekts ist die Entwicklung eines Visualisierungsansatzes, der zu neuen Erkenntnissen über multireligiöses Zusammenleben unter Muslimischer Ägide im Nahen und Mittleren Osten während des Mittelalters führen soll.
-Insbesondere sollen Informationen über multireligiöse Städte und Siedlungen erforscht, über eine Datenbank mittels interaktiver Visualisierung zugänglich gemacht werden.
-Außerdem wird ein web-basierter, auf interaktiv verknüpften Ansichten beruhender Ansatz für die räumlich-zeitliche Analyse und den Vergleich von Informationen aus unterschiedlichen Quellen geschaffen.
-</p>
+<article>
 
-<p>
-Dadurch werden klassische historiographischer Methoden der Heuristik und der qualitativen Quellenanalyse mittels eines interaktiven, visuellen Ansatzes neu überdacht und wiederbelebt.
-Gleichzeitig befördert das Projekt die Entwicklung von Methoden der Visuellen Analytik und Informationsvisualisierung, einschließlich interaktiver Text-Mining-Ansätze, visueller Repräsentation von Unsicherheiten und analytischer Provenienzinformation.
-Damit liefert das Projekt Beiträge für die Geschichts- und die Visualisierungsforschung.
-</p>
-{%- else -%}
-<p>
-The objective of this joint project is to develop a novel visualization approach in order to gain new insights on the multi-religious landscapes of the Middle East under Muslim rule during the Middle Ages (7th to 14th century).
-In particular, information on multi-religious communities are researched and made available in a database accessible through interactive visualization as well as through a pilot web-based geo-temporal multi-view system to analyze and compare information from multiple sources.
-Thus, we rethink and revive traditional historiographical methods of heuristics, qualitative source analysis and narratives by embedding them into a new visual analytics approach.
-The project boosts at the same time methods of visual analytics and information visualization as, e.g., how to interactively improve text mining, to visually represent uncertainty and analytic provenance information.
-The project contributes to both disciplines, historiography and visualization research.
-</p>
-{%- endif -%}
+  <section id="about" class="subsection">
 
-{%- if language == 'de' -%}
-<h2>Details</h2>
-{%- else -%}
-<h2>Details</h2>
-{%- endif -%}
+    <h2>About</h2>
 
-<p>
-{%- if language == 'de' -%}
-Die Frage, wie religiöse Vielfalt in unseren Gesellschaften ermöglicht werden kann, ist heute ein viel diskutiertes und politisch relevantes Thema.
-Zugleich sind religiöse Minderheiten in vielen Regionen des Nahen Ostens einer tödlichen Bedrohung ausgesetzt.
-Tägliche Gewalt, Bürgerkrieg und religiöse Säuberungen drohen, die letzten Reste multireligiöser Vergangenheit auszulöschen.
-Der Konflikt zwischen Sunniten und Schiiten führt in Städten wie Bagdad zu einem beschleunigten Prozess der topographischen Trennung.
-Diese Entwicklung geht mit der Zerstörung schriftlicher und archäologischer Quellen einher.
-{%- else -%}
-Today, the question of how to organize religious diversity in our societies is a much discussed and politically relevant topic.
-At the same time religious minorities in many regions of the Middle East are facing a deadly threat.
-Every-day violence, civil war and religious cleansing threatens to wipe out the last remainders of the multi-religious past.
-The conflict between Sunnis and Shiites causes a quickening process of topographical separation in cities like Baghdad.
-This development goes along with the destruction of written and archaeological sources.
-{%- endif -%}
-</p>
+    <p class="go-to-top"><a href="#main-title"></a></p>
 
-<p>
-{%- if language == 'de' -%}
-Heute, und nur heute, entsteht im Nahen Osten eine Situation der Monoreligiosität.
-Während des Mittelalters wurden jedoch bestimmte Gruppen von Nicht-Muslimen (insbesondere Juden, Christen oder Zoroastrier) toleriert, die ihrerseits einen niedrigeren Rechtsstatus (den so genannten Dhimmi-Status) akzeptieren mussten.
-Diese rechtliche Konstruktion und der politische Pragmatismus führten zu einer großen religiösen Vielfalt in der mittelalterlichen muslimischen Welt.
-So lebten in den vielen Städten der muslimischen Welt die verschiedenen muslimischen Strömungen (z.B. Sunniten, Schiiten) sowie verschiedene Kirchen des östlichen Christentums (Melkiten, Syrisch-Orthodoxe oder Ostkirche) und jüdische Traditionen (Karaiten, Rabbaniten) nebeneinander.
-Oftmals gab es drei oder sogar vier christliche Bischöfe in einer Stadt.
-Zusammen prägten sie das Gefüge des alltäglichen Lebens und der Kultur in der islamischen Welt.
-Diesen Grad an religiöser Vielfalt findet man nicht in den mittelalterlichen Städten der römischen, byzantinischen und kaukasischen Welt, die von christlicher Herrschaft geprägt waren (Weltecke, 2013).
-{%- else -%}
-Today, and only today, a mono-religious situation emerges in the Middle East.
-During the Medieval centuries, however, specific groups of Non-Muslims (especially Jews, Christians or Zoroastrians) were tolerated and had in turn to accept a lower legal status (the so-called Dhimmi-status).
-This legal construction and political pragmatism led to a great religious diversity in the Medieval Muslim world.
-Thus, in the many cities of the Muslim world the divers Muslim strands (e.g., Sunnis, Shiites) as well as different churches of Eastern Christianity (Melkite, Syriac orthodox or Church of the East) and Jewish traditions (Karaites, Rabbanites) were living side by side.
-Often three or even four Christian bishops resided in one city.
-Together they formed the fabric of every-day life and culture in the Islamicate world.
-This grade of religious diversity is not found in the medieval cities of the Latin, Byzantine and Caucasian worlds, which were dominated by Christian rule (Weltecke, 2013).
-{%- endif -%}
-</p>
+    <p>
+    DAMAST offers the visualization software created and the data collected in the project <strong><i>Dhimmis and Muslims — Analysing Multi-Religious Spaces in the Medieval Muslim World</i></strong>, in short: DhiMu. DhiMu was carried out from 2016 until 2021 as a collaboration between the Institute for Medieval History II of Goethe University Frankfurt, led by Dorothea Weltecke (since October 2021: Professor for European History of the Middle Ages at Humboldt-Universität zu Berlin), and the Institute of Visualization and Interactive Systems of the University of Stuttgart.
+    It was funded by the Volkswagen Foundation as part of the <i><a href="https://portal.volkswagenstiftung.de/search/projectDetails.do?ref=93252">Mixed Methods</a></i> program.
+    Starting in October 2020, the project was also partially integrated in the Kollegforschungsgruppe “Polycentricity and Plurality of Premodern Christianity” (POLY) at Goethe University Frankfurt, funded by the DFG.
+    </p>
 
-<p>
-{%- if language == 'de' -%}
-Die diachrone und synchrone Komplexität dieses multireligiösen Zusammenlebens ist jedoch noch wenig erforscht.
-Grundlegende Kenntnisse über die genaue Verteilung und sogar die bloße Existenz religiöser Gruppen an vielen Orten fehlen noch immer.
-Bislang basieren historische Erzählungen noch immer eher auf Eindrücken aus singulären Quellen und traditionellen Ansichten als auf empirischen Daten.
-Unser Ansatz für die zeitliche und geographische Visualisierung ermöglicht es dem Wissenschaftler, diese Zwänge zu umgehen und fundierte Hypothesen über das Ausmaß multireligiösen Lebens in Asien und Nordafrika zu entwickeln.
-Darüber hinaus ermöglichen die visuelle Analyse und interaktiv zugängliche, strukturierte Datenbanken es Historikern, multireligiöse Situationen im Hinblick auf wichtige Kategorien wie Segregation oder Integration zu qualifizieren, die in den traditionellen Quellen nicht thematisiert werden.
-Der Umfang und die unterschiedliche Vertrauenswürdigkeit der verfügbaren Quellen legen einen solchen neuen computergestützten Ansatz nahe.
-Das Projekt entwickelt interaktive Visualisierungsmethoden für das automatisch gestützte Text-Mining, zur Unterstützung des Analyseprozesses gewonnener Informationen, für die Bestimmung ihrer Konfidenz und deren visuellen Vergleich, Aggregation und Korrelation im räumlich-zeitlichen Kontext.
-{%- else -%}
-However, the diachronic and synchronic complexity of these multi-religious populations is still understudied.
-Basic knowledge about the exact distribution and even the sheer existence of religious groups in many places is still lacking.
-So far, historical narratives are still based on impressions of singular sources and traditional views rather than empirical data.
-Our approach for temporal and geographical visualization allows the scholar to circumvent these constraints and develop grounded hypotheses on the scale of multi-religious life in Asia and North Africa.
-In addition, visual analysis and interactively accessible, structured databases enable historians to qualify multi-religious situations with regard to important categories like segregation or integration, which are no topic of the traditional sources.
-The size and the bias of the available sources call for such a new computer-aided approach.
-The project develops interactive visualization methods for semi-automatic text mining, the process of analyzing the gained information, for determining its certainty and to aggregate, correlate and compare them visually in geo-temporal contexts.
-{%- endif -%}
-</p>
+    <p>
+    You can <strong>get in touch</strong> writing an e-mail to <a href="mailto:contact@damast.hu-berlin.de">contact@damast.hu-berlin.de</a>.
+    </p>
 
+    <div class="logos">
+      <a class="logo logo--larger" href="https://www.geschichte.hu-berlin.de/de/bereiche-und-lehrstuehle/gmspaet/mittelalterliche-geschichte-ii/personen/prof-dr-dorothea-weltecke">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/Huberlin-logo.svg" alt="Logo Humboldt University Berlin">
+      </a>
+      <a class="logo" href="https://www.vis.uni-stuttgart.de/projekte/dhimmis-and-muslims/">
+        <img src="https://www.vis.uni-stuttgart.de/system/modules/de.stuttgart.uni.v3.basics/resources/img/svg/logo-de.svg" alt="Logo University of Stuttgart">
+      </a>
+      <a class="logo logo--md" href="https://www.geschichte.uni-frankfurt.de/87681539/dhimmis_and_muslims">
+        <img src="https://upload.wikimedia.org/wikipedia/de/f/f0/Goethe-Logo.svg" alt="Logo Goethe University">
+      </a>
+      <a class="logo" href="https://portal.volkswagenstiftung.de/search/projectDetails.do?ref=93252">
+        <img class="white" src="https://www.volkswagenstiftung.de/profiles/vwst/theme/volkswagen/images/logo.svg" alt="Logo VolkswagenStiftung">
+      </a>
+    </div>
 
-{%- if language == 'de' -%}
-<h2>Projektpartner</h2>
+    <hr />
+  </section>
 
-<p>
-Das Projekt <em>&bdquo;Dhimmis and Muslims &mdash; Analysing Multi-Religious Spaces in the Medieval Muslim World&ldquo;</em> wird von der VolkswagenStiftung als Teil des <em>&bdquo;Mixed Methods&ldquo;</em>-Programms gefördert.
-<a href="https://portal.volkswagenstiftung.de/search/projectDetails.do?ref=93252">
-  <i class="fa fa-fw fa-sm fa-external-link"></i>
-  Hier
-</a> geht es zur Projektseite bei der VolkswagenStiftung.
-</p>
+  <section id="scholars" class="subsection">
 
-<p>
-Auf Seiten des Instituts für Geschichtswissenschaften der Humboldt-Universität zu Berlin ist
-<a href="https://www.geschichte.hu-berlin.de/de/bereiche-und-lehrstuehle/gmspaet/mittelalterliche-geschichte-ii/personen/prof-dr-dorothea-weltecke">
-  <i class="fa fa-fw fa-sm fa-external-link"></i>
-  Prof. Dr. Dorothea Weltecke
-</a>
-(<a href="https://www.geschichte.uni-frankfurt.de/66156354/Dorothea_Weltecke"><i class="fa fa-fw fa-sm fa-external-link"></i> vormals</a> am Lehrstuhl für Mittelalterliche Geschichte II der Goethe-Universität Frankfurt/Main) involviert.
-Auf Seiten des
-<a href="https://www.geschichte.uni-frankfurt.de/87681539/Dhimmis_and_Muslims">
-  <i class="fa fa-fw fa-sm fa-external-link"></i>
-  Lehrstuhls für Mittelalterliche Geschichte II
-</a>
-an der Goethe-Universität Frankfurt/Main ist
-<a href="https://www.geschichte.uni-frankfurt.de/66162272/Ralph_Barczok">
-  <i class="fa fa-fw fa-sm fa-external-link"></i>
-  Dr. Ralph Barczok
-</a>
-an dem Projekt beteiligt.
-Auf Seiten des
-<a href="https://www.vis.uni-stuttgart.de/projekte/dhimmis-and-muslims/">
-  <i class="fa fa-fw fa-sm fa-external-link"></i>
-Instituts für Visualisierung und Interaktive Systeme
-</a>
-der Universität Stuttgart sind
-<a href="https://www.vis.uni-stuttgart.de/institut/team/Koch-00006/">
-  <i class="fa fa-fw fa-sm fa-external-link"></i>
-  Dr. Steffen Koch
-</a>
-und
-<a href="https://www.vis.uni-stuttgart.de/institut/team/Franke-00003/">
-  <i class="fa fa-fw fa-sm fa-external-link"></i>
-  Max Franke, M.Sc.
-</a>
-beteiligt.
-Prof. Dr. Weltecke und Dr. Koch sind wissenschaftliche Projektleiter.
-</p>
+    <h3>Scholars Involved</h3>
 
-{%- else -%}
-<h2>Project Partners</h2>
+    <details>
+      <summary></summary>
 
-<p>
-The <em>&ldquo;Dhimmis and Muslims &mdash; Analysing Multi-Religious Spaces in the Medieval Muslim World&rdquo;</em> project is funded by the Volkswagen Foundation as part of the <em>&ldquo;Mixed Methods&rdquo;</em> program.
-The project page on the Volkswagen Foundation website is available
-<a href="https://portal.volkswagenstiftung.de/search/projectDetails.do?ref=93252">
-  <i class="fa fa-fw fa-sm fa-external-link"></i>
-  here.
-</a>
-</p>
+      <h4>Principial Investigators</h4>
 
-<p>
-<a href="https://www.geschichte.hu-berlin.de/de/bereiche-und-lehrstuehle/gmspaet/mittelalterliche-geschichte-ii/personen/prof-dr-dorothea-weltecke">
-  <i class="fa fa-fw fa-sm fa-external-link"></i>
-  Prof. Dr. Dorothea Weltecke
-</a>
-is involved in the project for the Historical Institute at the Humboldt University in Berlin
-(<a href="https://www.geschichte.uni-frankfurt.de/66156354/Dorothea_Weltecke"><i class="fa fa-fw fa-sm fa-external-link"></i> formerly</a> with the Institute for Medieval History II at the Goethe University in Frankfurt/Main).
-<a href="https://www.geschichte.uni-frankfurt.de/66162272/Ralph_Barczok">
-  <i class="fa fa-fw fa-sm fa-external-link"></i>
-  Dr. Ralph Barczok
-</a>
-is involved in the project for the
-<a href="https://www.geschichte.uni-frankfurt.de/87681539/Dhimmis_and_Muslims">
-  <i class="fa fa-fw fa-sm fa-external-link"></i>
-  Institute for Medieval History II
-</a>
-at the Goethe University in Frankfurt/Main.
-<a href="https://www.vis.uni-stuttgart.de/institut/team/Koch-00006/">
-  <i class="fa fa-fw fa-sm fa-external-link"></i>
-  Dr. Steffen Koch
-</a>
-and
-<a href="https://www.vis.uni-stuttgart.de/institut/team/Franke-00003/">
-  <i class="fa fa-fw fa-sm fa-external-link"></i>
-  Max Franke, M.Sc.
-</a>
-are involved in the project for the
-<a href="https://www.vis.uni-stuttgart.de/projekte/dhimmis-and-muslims/">
-  <i class="fa fa-fw fa-sm fa-external-link"></i>
-  Institute for Visualization and Interactive Systems
-</a>
-at the University of Stuttgart.
-Prof. Dr. Weltecke and Dr. Koch act as principal investigators for the project.
-</p>
-{%- endif -%}
+      <p>
+      <strong><a href="https://www.geschichte.hu-berlin.de/de/bereiche-und-lehrstuehle/gmspaet/personen/zis/weltecke-dorothea">Prof. Dr. Dorothea Weltecke</a></strong> &mdash; Professor for European History of the Middle Ages, Historical Institute,
+      Humboldt-Universität zu Berlin (formerly with the Institute for Medieval History II at Goethe University Frankfurt)
+      </p>
 
+      <p>
+      <strong><a href="https://www.vis.uni-stuttgart.de/institut/team/Koch-00026/">Dr. Steffen Koch</a></strong> &mdash; Research Associate, Institute for Visualization and Interactive Systems (VIS), Research Group Graphical Interactive Systems
+      </p>
 
-{%- if language == 'de' -%}
-<h2>Veröffentlichungen</h2>
-{%- else -%}
-<h2>Publications</h2>
-{%- endif -%}
-<ul class="publications">
-  <li>
-    <span class="authors">
-      Franke, Max;
-      Barczok, Ralph;
-      Koch, Steffen;
-      and Weltecke, Dorothea:
-    </span>
-    <span class="title">
-      Confidence as a First-class Attribute in Digital Humanities Data.
-    </span>
-    In:
-    <span class="conference">
-      Proceedings of the 4th VIS4DH Workshop, VIS 2019, Vancouver, Canada, October 20&ndash;25, 2019,
-    </span>
-    <span class="publisher">IEEE</span>
-    <span class="year">(2019)</span>.
+      <h4>Researchers</h4>
 
-    <a href="https://vis4dh.dbvis.de/2019/papers/2019/VIS4DH2019_paper_1.pdf" target="_blank">
-      <i class="fa fa-fw fa-sm fa-file-pdf-o"></i>
-      Link
-    </a>
-  </li>
-  <li>
-    <span class="authors">
-      Franke, Max;
-      John, Markus;
-      Knabben, Moritz;
-      Keck, Jana;
-      Blascheck, Tanja;
-      and Koch, Steffen:
-    </span>
-    <span class="title">
-      LilyPads: Exploring the Spatiotemporal Dissemination of Historical Newspaper Articles.
-    </span>
-    In:
-    <span class="conference">
-      Proceedings of the 15th International Conference on Computer Vision, Imaging and Computer Graphics Theory and Applications &mdash; Volume 3: IVAPP,
-      Valetta, Malta, February 27&ndash;29, 2020
-    </span>
-    <span class="pages">
-      (pp. 17&ndash;28).
-    </span>
-    <span class="publisher">SciTePress,</span>
-    <span class="year">2020</span>.
+      <p>
+      <strong><a href="https://www.geschichte.uni-frankfurt.de/f7/ralph-barczok-66162272">Dr. Ralph Barczok</a></strong> &mdash; Researcher at the Institute for Medieval History II, Goethe University in Frankfurt/Main
+      </p>
 
-    <a href="https://scitepress.org/PublicationsDetail.aspx?ID=%2fRCT509B2z8%3d" target="_blank">
-      <i class="fa fa-fw fa-sm fa-external-link"></i>
-      Link
-    </a>
-  </li>
-  <li>
-    <span class="authors">
-      Franke, Max;
-      Martin, Henry;
-      Koch, Steffen;
-      and Kurzhals, Kuno:
-    </span>
-    <span class="title">
-      Visual Analysis of Spatio-temporal Phenomena with 1D Projections.
-    </span>
-    In:
-    <span class="conference">
-      Computer Graphics Forum 40(3)
-    </span>
-    <span class="pages">
-      (pp. 335&ndash;347).
-    </span>
-    <span class="publisher">CGF</span>
-    <span class="year">(2021)</span>.
+      <p>
+      <strong><a href="https://www.vis.uni-stuttgart.de/en/institute/team/Franke/">Max Franke, M.Sc.</a></strong> &mdash; Postgraduate, Institute for Visualization and Interactive Systems (VIS), Research Group Graphical Interactive Systems
+      </p>
 
-    <a href="https://doi.org/10.1111/cgf.14311" target="_blank">
-      <i class="fa fa-fw fa-sm fa-external-link"></i>
-      Link
-    </a>
-  </li>
-</ul>
+      <p>
+      <strong><a href="https://www.geschichte.hu-berlin.de/de/bereiche-und-lehrstuehle/gmspaet/personen/zis/jaeckel-florian">Dr. des. Florian Jäckel</a></strong> &mdash; Researcher at the professorship for European History of the Middle Ages, Historical Institute, Humboldt-Universität zu Berlin
+      </p>
 
-<div class="logos">
-  <a class="logo logo--larger" href="https://www.geschichte.hu-berlin.de/de/bereiche-und-lehrstuehle/gmspaet/mittelalterliche-geschichte-ii/personen/prof-dr-dorothea-weltecke">
-    <img src="{{ url_for('root-app.static_public', filename='huberlin-logo-white.svg') }}" alt="Logo Humboldt University Berlin">
-  </a>
-  <a class="logo" href="https://www.geschichte.uni-frankfurt.de/87681539/dhimmis_and_muslims">
-    <img src="https://www.geschichte.uni-frankfurt.de/assets/ci/head_logo-3f4b9591169c7a3095f77eb21e4d00649f1ed7bdc00ace2e4eb2c9b5285e07ea.svg" alt="Logo Goethe University">
-  </a>
-  <a class="logo" href="https://www.vis.uni-stuttgart.de/projekte/dhimmis-and-muslims/">
-    <img src="https://www.vis.uni-stuttgart.de/system/modules/de.stuttgart.uni.v3.basics/resources/img/svg/logo-inverted-de.svg" alt="Logo University of Stuttgart">
-  </a>
-  <a class="logo" href="https://portal.volkswagenstiftung.de/search/projectDetails.do?ref=93252">
-    <img class="white" src="https://www.volkswagenstiftung.de/profiles/vwst/theme/volkswagen/images/logo-white.svg" alt="Logo VolkswagenStiftung">
-  </a>
-</div>
+      <p>
+      <strong><a href="https://www.geschichte.uni-frankfurt.de/83779788/Dr__Bernd_Andreas_Vest">Dr. Bernd A. Vest</a></strong> &mdash; Researcher at the Institute for Medieval History II, Goethe University in Frankfurt/Main
+      </p>
+
+    </details>
+  </section>
+
+  <section id="publications" class="subsection">
+
+    <h3>Publications</h3>
+
+    <details>
+
+      <summary></summary>
+
+      <p>
+      The following works have been published in the context of DAMAST:
+      </p>
+
+      <p class="bibliography-item tobedone">
+      Weltecke, Dorothea; Barczok, Ralph; Vest, Bernd A.: ### (forthcoming).
+      </p>
+
+      <p class="bibliography-item">
+      Franke, Max, Ralph Barczok, Steffen Koch, and Dorothea Weltecke. <q>Confidence as a First-class Attribute in Digital Humanities Data.</q> In: <i>Proceedings of the 4th VIS4DH Workshop</i>, VIS 2019, Vancouver. October 20–25, 2019, IEEE (2019). <a href="https://vis4dh.dbvis.de/2019/papers/2019/VIS4DH2019_paper_1.pdf">https://vis4dh.dbvis.de/2019/papers/2019/VIS4DH2019_paper_1.pdf</a>.
+      </p>
+
+    </details>
+  </section>
+
+  <section id="how-to-cite" class="subsection">
+
+    <h3>How to Cite</h3>
+
+    <details>
+
+      <summary></summary>
+
+      <p>
+      The data underlying the visualization and reports will not be expanded or substantially revised;
+      only obvious errors will be corrected.
+      Thus, <strong>reference to DAMAST will be consistent over time and citable via the respective permalinks.</strong>
+      </p>
+
+      <p>
+      If you want to refer to DAMAST as such, we recommend to use the following bibliographical information:
+      </p>
+
+      <p class="bibliography-item tobedone">
+      Weltecke, Dorothea, Steffen Koch, Ralph Barczok, Max Franke, Florian Jäckel, and Bernd A. Vest, eds. <i>DAMAST – A Research System to Analyze Multi-Religious Constellations in the Islamicate World.</i> April 2022. Accessed <code>#dynamic_date as, e.g., April 6, 2016]#</code>. https://damast.hu-berlin.de, data deposited at DaRUS, https://doi.org/10.18419/darus-2318.
+      </p>
+
+      <p>
+      For <strong>specific references</strong>, such as <a href="#reports">reports</a> or <a href="#place-uris">place URIs</a>, appropriate information on how to cite, including a permanent link, is provided individually.
+      </p>
+
+    </details>
+  </section>
+
+  <section id="sourcecode" class="subsection">
+
+    <h3>Source Code and Data Repository</h3>
+
+    <details>
+
+      <summary></summary>
+
+      <p>
+      The <strong>source code</strong> of the visualization is freely available on GitHub:
+      <a href="https://github.com/UniStuttgart-VISUS/damast ">https://github.com/UniStuttgart-VISUS/damast </a>
+      </p>
+
+      <p>
+      The <strong>data underlying the visualization</strong> has been deposited on DaRUS (<em>Data Repository der Universität Stuttgart:</em>
+      <a href="https://doi.org/10.18419/darus-2318">https://doi.org/10.18419/darus-2318</a>
+      </p>
+
+    </details>
+  </section>
+</article>
+
+<article id="data" class="section">
+
+  <section class="subsection">
+
+    <h2>Data Used</h2>
+
+    <p class="go-to-top"><a href="#main-title"></a></p>
+
+    <figure class="illustration">
+      <img
+          src="{{ url_for('root-app.file', path='root-illustration-data.png') }}"
+          alt="Partial screenshot of the data model"
+          aria-describedby="fig-data-caption"
+          title="Partial screenshot of the data model"/>
+      <figcaption id="fig-data-caption">
+        Partial screenshot of the data model.
+      </figcaption>
+    </figure>
+
+    <p>
+    In what follows, an overview of the data collected and underlying the visualization is given. More details and extensive arguments for our procedure and choices are published as <span class="tobedone">###</span>. The data has been
+    deposited on DaRUS (<a href="https://doi.org/10.18419/darus-2318">https://doi.org/10.18419/darus-2318</a>).
+    </p>
+
+    <hr />
+
+  </article>
+
+  <article class="subsection">
+
+    <h3 id="sources">Sources</h3>
+
+    <details>
+
+      <summary></summary>
+
+      <p>
+      DAMAST uses <strong>well established data collections in secondary sources</strong>. Information from the following works of reference was included:
+      </p>
+
+      <ul>
+        <li>
+          Fiey's Oriens Christianus Novus
+        </li>
+        <li>
+          Dictionnaire d’histoire et de géographie ecclésiastiques
+        </li>
+        <li>
+          Encyclopaedia of Islam (Third, Second, and First Edition)
+        </li>
+        <li>
+          Encyclopedia of Iran
+        </li>
+        <li>
+          Encyclopedia Judaica
+        </li>
+        <li>
+          Encyclopedia of Jews in the Islamic World
+        </li>
+        <li>
+          Timm's Das christlich-koptische Ägypten in arabischer Zeit
+        </li>
+        <li>
+          Prosopographie der mittelbyzantinischen Zeit
+        </li>
+        <li>
+          Tabula Imperii Byzantini
+        </li>
+        <li>
+          Vest's Melitene
+        </li>
+        <li>
+          Coptic Encyclopedia
+        </li>
+      </ul>
+
+      <p>
+      Additionally, one <strong>primary source</strong> from each of the three main religions was included:
+      </p>
+
+      <ul>
+        <li>Al-Muqaddasī's Aḥsan al-taqāsīm (“The Best of Divisions”)</li>
+        <li>Benjamin of Tudela's Sefer ha-Masa'ot (“The Book of Travels”)</li>
+        <li>The Lists of Armenian Bishoprics ###</li>
+      </ul>
+
+    </details>
+  </section>
+
+  <section class="subsection">
+
+    <h3 id="scope">Scope of Time and Space</h3>
+
+    <details>
+
+      <summary></summary>
+
+      <p>
+      DAMAST visualizes evidence <em>from the 7th to the 14th century</em> in the <em>area of the former Roman and Sassanian empires</em>.
+      </p>
+
+    </details>
+  </section>
+
+  <section class="subsection">
+
+    <h3 id="choice-of-places">Choice of Places</h3>
+
+    <details>
+
+      <summary></summary>
+
+      <p>
+      Places included in the data were chosen with regard to their <strong>importance for the respective religious community:</strong>
+      </p>
+
+      <ul>
+        <li>
+          buildings used for religious purposes: temples, mosques, churches, synagogues, etc.
+        </li>
+        <li>
+          sees of patriarchs, bishops, and other high officials in the church hierarchy in the case of Christianity
+        </li>
+        <li>
+          <span class="tobedone">###</span> in the case of Judaism
+        </li>
+        <li>
+          cities recorded by al-Muqaddasī (metropolis: <i>miṣr</i>, capital of a province: <i>kūra</i>, or of a district: <i>nāḥiya</i>
+        </li>
+      </ul>
+
+      <p>
+      Often, the exact location of a settlement has changed over time or is not exactly clear. One way DAMAST handles this problem is to assign a specific <em>level of confidence</em> to the localization (cf. the section on <a href="#confidence">confidence</a>          below).
+      </p>
+
+    </details>
+  </section>
+
+  <section class="subsection">
+
+    <h3 id="religious-groups">Religious Groups</h3>
+
+    <details>
+
+      <summary></summary>
+
+      <p>
+      The following religious groups are treated by DAMAST:
+      </p>
+
+      <ul style="columns: 2;">
+        <li>Christianity</li>
+        <ul>
+          <li>Church of the East (<q>Nestorians</q>)</li>
+          <li>Melkites (Rūm)</li>
+          <li>Latin</li>
+          <li>Maronites</li>
+          <li>Georgians</li>
+          <li>Copts</li>
+          <li>Syriac Orthodox</li>
+          <li>Armenians</li>
+        </ul>
+        <li>Islam</li>
+        <ul>
+          <li>Shiites</li>
+          <li>Sunnis</li>
+          <li>Kharijites</li>
+        </ul>
+        <li>Judaism</li>
+        <ul>
+          <li>Rabbanites</li>
+          <li>Karaites</li>
+          <li>Samaritans</li>
+        </ul>
+        <li>Other</li>
+        <ul>
+          <li>Zoroastrianism</li>
+          <li>Buddhism</li>
+          <li>Manichaeism</li>
+          <li>Pagans</li>
+          <li>Hindus</li>
+          <li>Yazidis</li>
+          <br/>
+          <br/>
+        </ul>
+      </ul>
+
+      <p>
+      If it is not clear from a given source what group is meant, the general religious affiliation (e.g., Christianity) was recorded instead.
+      </p>
+
+    </details>
+  </section>
+
+  <section class="subsection">
+
+    <h3 id="tags">Tags</h3>
+
+    <details>
+
+      <summary></summary>
+
+      <p>
+      In addition to religious affiliation, time, and place, DAMAST implements tags to <strong>enhance the data and to enable more specific filtering</strong> of the database and visualization.
+      </p>
+
+      <p>
+      For instance, an evidence could be tagged as <q>bishopric</q> or <q>metropolitan residence</q>, enabling to visualize only places that are metropolitan sees rather than all Christian presence.
+      </p>
+
+    </details>
+  </section>
+
+  <section class="subsection">
+
+    <h3 id="confidence">Confidence</h3>
+
+    <details>
+
+      <summary></summary>
+
+      <p>
+      DAMAST <strong>includes ambiguous information without distorting the visualization</strong> by attributing data with levels of confidence. (No attribution of confidence would either lead to the <em>exclusion of data</em> or
+      to <em>presenting uncertain information as seemingly equally certain.</em>)
+      </p>
+
+      <p>
+      <strong>Five levels of confidence</strong> were used:
+      </p>
+
+      <ul>
+        <li> certain</li>
+        <li> probable</li>
+        <li> contested</li>
+        <li> uncertain</li>
+        <li> false</li>
+        </p>
+      </ul>
+
+      <p>
+      The following <strong>aspects of information</strong> were each attributed with a specific level of confidence:
+      </p>
+
+      <ul>
+        <li>Location – Is the place in the database at the provided location (i.e., geo-coordinates)?</li>
+        <li>Place attribution – Was the religious group present at this place, rather than another one, e.g., one with a similar name?</li>
+        <li>Time span – Was the religious group present during this time span?</li>
+        <li>Religion – Was it this religious group, rather than another one?</li>
+        <li>Source – Is the information provided by the source credible?</li>
+        <li>Interpretation – Do we interpret the information correctly?</li>
+      </ul>
+
+    </details>
+  </section>
+</article>
+
+<article>
+
+  <section class="subsection">
+
+    <h2 id="features">Features</h2>
+
+    <p class="go-to-top"><a href="#main-title"></a></p>
+
+    <figure class="illustration">
+      <img
+          src="{{ url_for('root-app.file', path='root-illustration-vis.png') }}"
+          alt="Partial Screenshot of the Visualization"
+          aria-describedby="fig-vis-caption"
+          title="Partial Screenshot of the Visualization"/>
+      <figcaption id="fig-vis-caption">Partial screenshot of the visualization.</figcaption>
+    </figure>
+
+    <p>
+    DAMAST offers several features, such as the <strong>visualization</strong> with its different views to filter and interactively display the data, the possibility to <strong>generate reports</strong> based on the current result of your research, and the <strong>collected information for each place</strong> in the database on so-called <em>place URI pages.</em>
+    </p>
+
+    <p>
+    Many of the controls of the visualization of DAMAST should be <strong>intuitive and easily understood</strong> through trial and error.
+    <strong>Hovering with the mouse</strong> over a specific element will generally display a tooltip providing additional information.
+    More specific and advanced aspects are best understood by reading the <strong>info texts</strong>.
+    These can be accessed when clicking on the question mark symbol in the upper right corner of the respective view.
+    <strong>An extensive documentation</strong> including the info texts as well as a introduction to the general principles of the visualization can be found <a href="documentation">here</a>.
+    </p>
+
+    <p>
+    In what follows, only a brief overview is presented. In addition, video tutorials are provided.
+    </p>
+
+    <hr />
+  </section>
+
+  <section class="subsection">
+
+    <h3 id="visualization-overview">Visualization</h3>
+
+    <details>
+
+      <summary></summary>
+
+      <p>
+      The principal object of DAMAST is to visualize the different aspects of the data such as religion, place, time, source, etc. <a href="#data">as described above</a>.
+      The presentation is organized in different menus, so-called <em>views</em>, including a map, a timeline, and various lists and tables.
+      </p>
+
+      <p>
+      Each <em>view</em> is also used for <strong>filtering</strong> based on the different aspects of the data, allowing for a very fine-grained analysis.
+      Applying the filters interactively changes the map and the rest of the visualized data (e.g., the figures given in the different views).
+      </p>
+
+      <p>
+      Apart from filtering the data, individual aspects can be temporarily <strong>brushed and linked,</strong> highlighting related data across all views.
+      </p>
+
+      <p>
+      In the <em>Settings</em> pane, different <em>modes</em> of the visualization can be switched.
+      For instance, instead of only showing data matching the current filters, in <em>All data</em> mode data that has been filtered out is shown as well but in less saturated colors.
+      Also, further features can be accessed (such as <a href="#reports">generating reports</a>).
+      </p>
+
+    </details>
+  </section>
+
+  <section class="subsection">
+
+    <h3 id="place-uris">Place URI Pages</h3>
+
+    <details>
+
+      <summary></summary>
+
+      <p>
+      To provide <strong>all the information collected regarding a specific place</strong>, DAMAST offers a so-called <em>place URI page</em> for each place in the database. These can be accessed via the view <em>Location List</em> or through <em>Places</em> in the top menu.
+      </p>
+
+      <p>
+      A place URI page contains:
+      </p>
+
+      <ul>
+        <li>A box with an overview at the right side, including an interactive minimap, showing the position of the place, its main toponym and its geo-coordinates</li>
+        <li>A brief general description</li>
+        <li><em>Names</em> &ndash; a list of the different toponyms of a town in different languages including Latin transcription</li>
+        <li><em>See Also</em> &ndash; a list of external references</li>
+        <li><em>Religions</em> &ndash; a list of all religions with their time of presence according to the respective sources</li>
+        <li><em>Sources</em> &ndash; a list of these sources</li>
+      </ul>
+
+    </details>
+  </section>
+
+  <section class="subsection">
+
+    <h3 id="reports">Reports</h3>
+
+    <details>
+
+      <summary></summary>
+
+      <p>
+      In order to <strong>document, share, and reference the results</strong> when using DAMAST, reports can be generated. This is done either via the <em>Settings</em> view or through <em>Docs</em> &gt; <em>Create report from database</em> in the top menu.
+      </p>
+
+      <p>
+      A report contains:
+      </p>
+
+      <ul>
+        <li>A description of all the filters applied (<q>Query Description</q>)</li>
+        <li>A note on how to cite the report</li>
+        <li>Separate lists of all evidences, places, and religions based on the filters</li>
+        <li>A representation of the timeline based on the filters</li>
+        <li>A list of all Sources underlying the Evidences</li>
+      </ul>
+
+      <p>
+      After generation, the report is presented as a <strong>static webpage with a permanent link.</strong> Each report has a <em>Universally Unique Identifier</em> (UUID), which is also part of this permanent link.
+      </p>
+
+      <p style="text-align: center;">
+      <strong>Note that the UUID or permanent link needs to be recorded by the user to access the report later!</strong>
+      </p>
+
+      <p>
+      From the report’s webpage, several other features are available, such as a <strong><em>PDF</em> for offline use or sharing</strong> and a <em>JSON</em> file that contains the filters and can later be used to recreate the report.</p>
+
+      <p>
+      <strong>The report can be re-run</strong> in case the underlying data of the visualization has changed.
+      Note that in the case of this public instance of the tool, the data will not be expanded or substantially revised;
+      only obvious errors will be corrected.
+      </p>
+
+      <p>
+      Also, the data underlying the report can be shown in the visualization;
+      filters can thus be adapted and, e.g., <strong>a new, slightly altered report can be generated</strong>, based on the original one.
+      </p>
+
+    </details>
+  </section>
+
+  <section class="subsection">
+
+    <h3>Video Tutorials</h3>
+
+    <details>
+
+      <summary></summary>
+
+      <p class="tobedone">
+      ### content ###
+      </p>
+
+    </details>
+  </section>
+</article>
 
 {% endblock %}

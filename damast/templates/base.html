@@ -31,11 +31,12 @@
   {%- from 'consent_popup.html' import consent_popup with context -%}
   {{ consent_popup() }}
   {%- endblock -%}
-  <main class="content">
+  <main class="content" {%- block mainattr -%}{%- endblock -%}>
     {% block content %}
 
     {% endblock %}
   </main>
+  {%- block extra -%}{%- endblock -%}
   <footer class="footer">
     {% block footer %}
     <span class="footer__text" aria-label="Copyright and GitHub link">
