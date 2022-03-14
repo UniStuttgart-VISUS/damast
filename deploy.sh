@@ -9,7 +9,7 @@ env="TESTING"
 basedir="/www-testing"
 
 # systemd service name
-service="dhimmis-testing"
+service="damast-testing"
 
 # server port
 port=8001
@@ -77,7 +77,7 @@ do
       # deploy to production
       env="PRODUCTION"
       basedir="/www"
-      service="dhimmis"
+      service="damast"
       port=8000
       ;;
     d)
@@ -185,9 +185,9 @@ pass ssh/${build_server}/${build_user} \
           -t $imagename \
           --build-arg=USER_ID=$www_user_id \
           --build-arg=GROUP_ID=$www_group_id \
-          --build-arg=DHIMMIS_ENVIRONMENT=$env \
-          --build-arg=DHIMMIS_VERSION=$version \
-          --build-arg=DHIMMIS_PORT=$port \
+          --build-arg=DAMAST_ENVIRONMENT=$env \
+          --build-arg=DAMAST_VERSION=$version \
+          --build-arg=DAMAST_PORT=$port \
           ."
 
 

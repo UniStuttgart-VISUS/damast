@@ -71,7 +71,7 @@ An exemplary creation of a Docker image (fictional values, please refer to [`dep
 
 ``` bash
 # calculate hash of server files to determine if the COPY instruction should be repeated
-$ fs_hash=$(find dhimmis -type f \
+$ fs_hash=$(find damast -type f \
     | xargs sha1sum \
     | awk '{print $1}' \
     | sha1sum - \
@@ -86,9 +86,9 @@ $ cat util/docker/{base,prod}.in \
 $ sudo docker build -t damast:latest \
     --build-arg=USER_ID=50 \
     --build-arg=GROUP_ID=50 \
-    --build-arg=DHIMMIS_ENVIRONMENT=PRODUCTION \
-    --build-arg=DHIMMIS_VERSION=v1.0.0 \
-    --build-arg=DHIMMIS_PORT=8000 \
+    --build-arg=DAMAST_ENVIRONMENT=PRODUCTION \
+    --build-arg=DAMAST_VERSION=v1.0.0 \
+    --build-arg=DAMAST_PORT=8000 \
     .
 ```
 
@@ -113,22 +113,22 @@ The following configuration environment variables exist, although most have a se
 
 | Environment Variable | Default Value | Description |
 |---|---|---|
-| `DHIMMIS_ENVIRONMENT` | | Server environment (`PRODUCTION`, `TESTING`, or `PYTEST`). This decides with which PostgreSQL database to connect (`ocn`, `testing`, and `pytest` (on Docker container) respectively. This is usually set via the Docker image. |
-| `DHIMMIS_VERSION` | | Software version. This is usually set via the Docker image. |
-| `DHIMMIS_USER_FILE` | `/data/users.db` | Path to SQLite3 file with users, passwords, roles. |
-| `DHIMMIS_REPORT_FILE` | `/data/reports.db` | File to which reports are stored during generation. |
-| `DHIMMIS_SECRET_FILE` | `/dev/null` | File with JWT and app secret keys. These are randomly generated if not passed, but that is impractical for testing with hot reload (user sessions do not persist). For a production server, this should be empty. |
-| `DHIMMIS_PROXYCOUNT` | `1` | How many reverse proxies the server is behind. This is necessary for proper HTTP redirection and cookie paths. |
-| `DHIMMIS_PROXYPREFIX` | `/` | Reverse proxy prefix. |
-| `DHIMMIS_OVERRIDE_PATH` | | A directory path under which a `template/` and `static/` directory can be placed. Templates within the `template/` directory will be prioritized over the internal ones. This can be used to provide a different template for a certain page, such as the impressum. |
-| `DHIMMIS_VISITOR_ROLES` | | If not empty, contains a comma-separated list of roles a visitor (not logged-in) to the site will receive, which in turn governs which pages will be available without user account. If the variable does not exist, visitors will only see public pages. |
-| `DHIMMIS_MAP_STYLES` | | If not empty, a relative filename (under `/data`) on the Docker filesystem to a JSON with map styles. These will be used in the Leaflet map. If not provided, the [default styles](./dhimmis/map_styles.py) will be used. See also: [JSON schema](./src/assets/schemas/map-styles.json). |
-| `DHIMMIS_REPORT_EVICTION_DEFERRAL` | | If not empty, the number of days of not being accessed before a reports contents (HTML, PDF, map) are *evicted.* Evicted reports can always be regenerated from their state and filter JSON. Eviction happens to save space and improve performance on systems where many reports are anticipated. *This should not be activated on systems with changing databases!* |
-| `DHIMMIS_REPORT_EVICTION_MAXSIZE` | | If not empty, the file size in megabytes (MB) of report contents (HTML, PDF, map) above which reports will be evicted. If this is set and the sum of content sizes in the report database *after deferral eviction* is above this number, additional reports are evicted until the sum of sizes is lower than this number. Reports are evicted in ascending order of last access date (the least-recently accessed first). The same rules as above apply. |
-| `DHIMMIS_ANNOTATION_SUGGESTION_REBUILD` | | If not empty, the number of days between annotation suggestion rebuilds. In that case, the suggestions are recreated over night every X days. If empty, the annotation suggestions are never recreated, which might be favorable on a system with a static database. |
+| `DAMAST_ENVIRONMENT` | | Server environment (`PRODUCTION`, `TESTING`, or `PYTEST`). This decides with which PostgreSQL database to connect (`ocn`, `testing`, and `pytest` (on Docker container) respectively. This is usually set via the Docker image. |
+| `DAMAST_VERSION` | | Software version. This is usually set via the Docker image. |
+| `DAMAST_USER_FILE` | `/data/users.db` | Path to SQLite3 file with users, passwords, roles. |
+| `DAMAST_REPORT_FILE` | `/data/reports.db` | File to which reports are stored during generation. |
+| `DAMAST_SECRET_FILE` | `/dev/null` | File with JWT and app secret keys. These are randomly generated if not passed, but that is impractical for testing with hot reload (user sessions do not persist). For a production server, this should be empty. |
+| `DAMAST_PROXYCOUNT` | `1` | How many reverse proxies the server is behind. This is necessary for proper HTTP redirection and cookie paths. |
+| `DAMAST_PROXYPREFIX` | `/` | Reverse proxy prefix. |
+| `DAMAST_OVERRIDE_PATH` | | A directory path under which a `template/` and `static/` directory can be placed. Templates within the `template/` directory will be prioritized over the internal ones. This can be used to provide a different template for a certain page, such as the impressum. |
+| `DAMAST_VISITOR_ROLES` | | If not empty, contains a comma-separated list of roles a visitor (not logged-in) to the site will receive, which in turn governs which pages will be available without user account. If the variable does not exist, visitors will only see public pages. |
+| `DAMAST_MAP_STYLES` | | If not empty, a relative filename (under `/data`) on the Docker filesystem to a JSON with map styles. These will be used in the Leaflet map. If not provided, the [default styles](./damast/map_styles.py) will be used. See also: [JSON schema](./src/assets/schemas/map-styles.json). |
+| `DAMAST_REPORT_EVICTION_DEFERRAL` | | If not empty, the number of days of not being accessed before a reports contents (HTML, PDF, map) are *evicted.* Evicted reports can always be regenerated from their state and filter JSON. Eviction happens to save space and improve performance on systems where many reports are anticipated. *This should not be activated on systems with changing databases!* |
+| `DAMAST_REPORT_EVICTION_MAXSIZE` | | If not empty, the file size in megabytes (MB) of report contents (HTML, PDF, map) above which reports will be evicted. If this is set and the sum of content sizes in the report database *after deferral eviction* is above this number, additional reports are evicted until the sum of sizes is lower than this number. Reports are evicted in ascending order of last access date (the least-recently accessed first). The same rules as above apply. |
+| `DAMAST_ANNOTATION_SUGGESTION_REBUILD` | | If not empty, the number of days between annotation suggestion rebuilds. In that case, the suggestions are recreated over night every X days. If empty, the annotation suggestions are never recreated, which might be favorable on a system with a static database. |
 | `FLASK_ACCESS_LOG` | `/data/access_log` | Path to `access_log` (for logging). |
 | `FLASK_ERROR_LOG` | `/data/error_log` | Path to `error_log` (for logging). |
-| `DHIMMIS_PORT` | `8000` | Port at which `gunicorn` serves the content. **Note:** This is set via the Dockerfile, and also only used in the Dockerfile. |
+| `DAMAST_PORT` | `8000` | Port at which `gunicorn` serves the content. **Note:** This is set via the Dockerfile, and also only used in the Dockerfile. |
 | `PGHOST` | `localhost` | PostgreSQL hostname. |
 | `PGPASSWORD` | | PostgreSQL password. This is important to set and depends on how the database is set up. |
 | `PGPORT` | `5432` | PostgreSQL port |
@@ -139,14 +139,14 @@ The following configuration environment variables exist, although most have a se
 
 When running the server, it might be necessary to override some pages;
 for example, one might want a different home page, or a different impressum.
-The server uses the `DHIMMIS_OVERRIDE_PATH` environment variable to load such overrides.
-If it is set, the Flask server creates an extra blueprint, and the directory `${DHIMMIS_OVERRIDE_PATH}/templates/` is added to the Jinja2 template search path with precedence.
-Further, the files in the `${DHIMMIS_OVERRIDE_PATH}/static/` directory will be served without requiring any authentication under the URL `${DHIMMIS_PROXYPREFIX}/override/static/<file path>` (use `url_for('override.static', filename='<file path>')` in templates).
+The server uses the `DAMAST_OVERRIDE_PATH` environment variable to load such overrides.
+If it is set, the Flask server creates an extra blueprint, and the directory `${DAMAST_OVERRIDE_PATH}/templates/` is added to the Jinja2 template search path with precedence.
+Further, the files in the `${DAMAST_OVERRIDE_PATH}/static/` directory will be served without requiring any authentication under the URL `${DAMAST_PROXYPREFIX}/override/static/<file path>` (use `url_for('override.static', filename='<file path>')` in templates).
 
 An example how this could be used to use an own home page with a separate stylesheet is listed below.
 In this example, the `/data` directory in the Docker image is already mapped to the `/www` directory on the host.
 In the `/www` directory on the host, we create the directories `override/static/` and `override/templates/`.
-Then, we can pass the environment variable `DHIMMIS_OVERRIDE_PATH` to the Docker container as `/data/override`.
+Then, we can pass the environment variable `DAMAST_OVERRIDE_PATH` to the Docker container as `/data/override`.
 
 Content of `/www/override/templates/root/index.html`:
 ``` html
@@ -174,7 +174,7 @@ h1 {
 }
 ```
 
-Now, when running the server and navigating to `https://<host>/${DHIMMIS_PROXYPREFIX}/`, the new home page should be served, and the stylesheet loaded.
+Now, when running the server and navigating to `https://<host>/${DAMAST_PROXYPREFIX}/`, the new home page should be served, and the stylesheet loaded.
 
 Keep in mind that all contents of the static directory will be served without user authentication.
 For details on which paths templates must be put under for proper override, refer to the `template/` directories of the blueprints in the repository.
