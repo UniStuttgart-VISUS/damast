@@ -83,8 +83,8 @@
 
     \coordinate (tmp) at ($ (damast-label.south west) + (0.1,-0.2) $);
     \foreach \name/\label/\value/\varname in {
-      proxycount/{Reverse proxy count}/1/DHIMMIS\_PROXY\_COUNT,
-      proxyprefix/{Reverse proxy prefix}/{/}/DHIMMIS\_PROXY\_PREFIX,
+      proxycount/{Reverse proxy count}/1/DAMAST\_PROXY\_COUNT,
+      proxyprefix/{Reverse proxy prefix}/{/}/DAMAST\_PROXY\_PREFIX,
       gunicorn/{\texttt{gunicorn} port}/8000/GUNICORN\_PORT,
     } {
       \node [anchor=north west,inner sep=0] (psql-\name-label) at ($ (tmp) + (0,-0.2) $) { \scriptsize \label \phantom{Iq} };
@@ -139,11 +139,11 @@
 
       \coordinate (tmp) at (0,-0.5);
       \foreach \name/\title/\label/\varname in {
-        userdb/User file/users.db/DHIMMIS\_USER\_FILE,
-        report/Report database/reports.db/DHIMMIS\_REPORT\_FILE,
+        userdb/User file/users.db/DAMAST\_USER\_FILE,
+        report/Report database/reports.db/DAMAST\_REPORT\_FILE,
         access/Access log/access\_log/FLASK\_ACCESS\_LOG,
         error/Error log/error\_log/FLASK\_ERROR\_LOG,
-        override/Override directory//DHIMMIS\_OVERRIDE\_PATH%
+        override/Override directory//DAMAST\_OVERRIDE\_PATH%
       } {
         \coordinate (nw) at ($ (tmp) + (0.3,0) $);
         \coordinate (ne) at ($ (nw) + (2.2,0) $);
@@ -211,7 +211,7 @@
     \node [inner xsep=2pt,inner ysep=1pt,anchor=north west] (tmp) at (tmp.south west) { \tiny\verb!proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;! };
     \node [inner xsep=2pt,inner ysep=1pt,anchor=north west] (tmp) at (tmp.south west) { \tiny\verb!proxy_set_header X-Forwarded-Host  $host;! };
     \node [inner xsep=2pt,inner ysep=1pt,anchor=north west] (tmp) at (tmp.south west) { \tiny\verb!proxy_set_header X-Forwarded-Port  $server_port;! };
-    \node [inner xsep=2pt,inner ysep=1pt,anchor=north west] (tmp) at (tmp.south west) { \tiny\verb!proxy_set_header X-Forwarded-Prefix ${DHIMMIS_PROXY_PREFIX};! };
+    \node [inner xsep=2pt,inner ysep=1pt,anchor=north west] (tmp) at (tmp.south west) { \tiny\verb!proxy_set_header X-Forwarded-Prefix ${DAMAST_PROXY_PREFIX};! };
     \node [inner xsep=2pt,inner ysep=1pt,anchor=north west] (tmp) at (tmp.south west) { \tiny\verb!proxy_set_header X-Forwarded-Proto $scheme;! };
 
     \path let \p1 = (nginx-conf-ne),

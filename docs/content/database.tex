@@ -184,7 +184,7 @@ In the backend, this is controlled mainly by differentiating HTTP verbs: \verb!G
   \texttt{HEAD} requests, which are handled similarly to \texttt{GET} requests by most servers, are also read-only.
 } are read-only, \verb!PATCH!, \verb!PUT! and \verb!DELETE! are writing\footnote{%
   The default behavior is to distinguish the HTTP verbs that way.
-  However, the method decorator that provides the database cursor and distinguishes between read-only access and writing access (see \texttt{rest\_endpoint} in \texttt{dhimmis/postgres\_rest\_api/decorators.py}) can take an optional argument controlling which verbs are considered read-only.
+  However, the method decorator that provides the database cursor and distinguishes between read-only access and writing access (see \texttt{rest\_endpoint} in \texttt{damast/postgres\_rest\_api/decorators.py}) can take an optional argument controlling which verbs are considered read-only.
   This is used for the \texttt{/rest/find-alternative-names} endpoint, which requires a payload and therefore is a \texttt{POST} request, but can be used with only the \texttt{readdb} role.
 }.
 Read-only users are also passed a read-only cursor to the endpoint code.
@@ -202,7 +202,7 @@ For different functionalities of the site, there are more specific roles, where 
   \item[\texttt{pgadmin}]
     This role is historical from when the pgAdmin4 server was still reverse-proxied behind the Damast server.
     Now (if there is one on the host system at all), the pgAdmin4 server is reverse-proxied by the web-facing reverse proxy server (e.g., NGINX, see~\cref{fig:structure}).
-    If the user has the \verb!pgadmin! role, a link to \verb!${DHIMMIS_PROXYPREFIX}/pgadmin/! is shown in the header.
+    If the user has the \verb!pgadmin! role, a link to \verb!${DAMAST_PROXYPREFIX}/pgadmin/! is shown in the header.
   \item[\texttt{reporting}]
     This role grants the user access to the reporting functionality.
     Because report generation requires database access, the \verb!readdb! role is needed as well.
@@ -215,7 +215,7 @@ For different functionalities of the site, there are more specific roles, where 
     This role grants the user access to the visualization.
     To populate the visualization with the data from the database, the \verb!readdb! role is required as well.
   \item[\texttt{visitor}]
-    This role is given to visitors alongside those in \verb!${DHIMMIS_VISITOR_ROLES}!, if visitor handling is enabled.
+    This role is given to visitors alongside those in \verb!${DAMAST_VISITOR_ROLES}!, if visitor handling is enabled.
     There is not yet any use for that role, but it could be used in future to grant visitors access to an endpoint even if they do not have any of the other roles required for it.
 \end{description}
 
@@ -257,7 +257,7 @@ CREATE TABLE users (
 \end{lstfloat}
 
 The SQLite3 user database (see~\cref{lst:userdb}) contains only one table, \verb!users!.
-The file is stored in the runtime configuration directory (see~\cref{sec:runtime-configuration}), and its location can be configured using the \verb!DHIMMIS_USER_FILE! environment variable (\verb!/data/users.db! by default).
+The file is stored in the runtime configuration directory (see~\cref{sec:runtime-configuration}), and its location can be configured using the \verb!DAMAST_USER_FILE! environment variable (\verb!/data/users.db! by default).
 
 Each user is listed here as a separate record, with their user name as the unique \verb!id! field.
 Passwords are stored as \verb!htpasswd(1)! hashes.
@@ -307,7 +307,7 @@ CREATE TABLE reports (
 \end{lstfloat}
 
 This SQLite3 database (see~\cref{lst:reportdb}) contains the reports and their metadata (see~\cref{sec:reporting}).
-The file is stored in the runtime configuration directory (see~\cref{sec:runtime-configuration}), and its location can be configured using the \verb!DHIMMIS_REPORT_FILE! environment variable (\verb!/data/reports.db! by default).
+The file is stored in the runtime configuration directory (see~\cref{sec:runtime-configuration}), and its location can be configured using the \verb!DAMAST_REPORT_FILE! environment variable (\verb!/data/reports.db! by default).
 
 The UUID of the report is used as a primary key.
 Regarding metadata, the user provisioning the report, the start time, the (possibly empty) end time, the and server version are stored.
