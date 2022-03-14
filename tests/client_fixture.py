@@ -38,7 +38,7 @@ def create_client(testusers, port, user_db_content, readonly=True):
     conn = sqlite3.connect(reports_fname)
     cur = conn.cursor()
 
-    cur.execute(damast.reporting.report_database._database_schema)
+    cur.executescript(damast.reporting.report_database._database_schema)
 
     conn.commit()
     conn.close()
