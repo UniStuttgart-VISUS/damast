@@ -33,14 +33,15 @@
 <h4>Short Names</h4>
 <p>
   The second column shows the <strong>short name</strong> of the source, generally an abbreviation.
-  The full name of the source with bibliographical details is available via a tooltip, i.e., when hovering over the name with the mouse.
+  The full name of the source with bibliographical details is available via a tooltip;
+  that is, when hovering over the name with the mouse.
 </p>
 
 <h4>Religion/Confidence Segmentation Visualization</h4>
 <p>
-  The third column visualizes the segmentation of the evidences on the religions or on the levels of confidence, depending on the <em>mode</em> (cf. {{ full_documentation_link('settings-display-mode', 'Display mode') }} in the <em>Settings pane</em>;
-  in <em>Confidence Mode</em>, instead of religion, the currently selected aspect of confidence is used).
-  The visualization used is a normalized stacked barchart.
+  The third column visualizes the segmentation of the evidences on the religions or on the levels of confidence, depending on the chosen <em>display mode</em> (cf. {{ full_documentation_link('settings-display-mode', 'Display mode') }} in the <em>settings pane</em>;
+  in <em>confidence mode,</em> instead of religion, the currently selected aspect of confidence is used.)
+  The visualization used is a normalized stacked bar chart.
   Because the total width of the bars is the same regardless of the amount of evidences, the width of each segment signifies the number of evidences with that religion or confidence level <em>in relation to</em> the total evidence count for that source.
 </p>
 
@@ -56,36 +57,39 @@
 
 <h4>Selection</h4>
 <p>
-  Clicking on a row will <em>select</em> the source and <em>link</em> related data in all views.
-  For instance, locations in the <em>Map</em> with evidences from the selected source will be highlighted, other locations will be represented by less saturated colors.
+  Clicking on a row will <em>select</em> the source, <em>brush</em> the represented data, and <em>link</em> related data in all views.
+  For instance, locations in the <em>map</em> with evidences from the selected source will be highlighted, other locations will be represented by less saturated colors.
   Clicking on the same row again will reset the selection.
-  Selecting a different row, or an element in a different view, will replace the selection.
-  Only one source can be selected at a time.
+  Selecting a different row, or an element in a different view, will replace the selection;
+  that is, only one source can be selected at a time.
 </p>
 
 <h4>Filtering</h4>
 <p>
   A source can be filtered out from the visualized data in all views by (un-)checking the respective checkbox.
-  Note that the selection is not applied until the <em>Apply</em> button is clicked.
+  Note that the new filter is not applied until the <em>Apply</em> button is clicked.
+  This button is disabled if the selected filters are matching the data currently visualized.
 </p>
 <p>
-  Checking multiple (or all) sources works as a <em>logical disjunction</em>:
+  Checking multiple (or all) sources works as a <em>logical disjunction:</em>
   an evidence is matched if it stems from <em>any</em> of the checked sources.
-  The source filter works together with filters from other views in <em>logical conjunction</em>;
-  for instance, if only source X and religion Y are selected in the respective views, only evidences with source X <em>and</em> religion Y are matched.
+</p>
+<p>
+  The source filter works together with filters from other views in <em>logical conjunction;</em>
+  for instance, if only source X and religion Y are set active in the respective views, only evidences with source X <em>and</em> religion Y are matched.
 </p>
 
 <p>
   Three additional buttons in the top left corner make filtering more convenient:
 </p>
-  <dl>
-    <dt><i class="fa fa-fw fa-lg fa-circle-o"></i> Uncheck all</dt>
-    <dd>Uncheck all checkboxes.</dd>
-    <dt><i class="fa fa-fw fa-lg fa-rotate-90 fa-exchange"></i> Invert</dt>
-    <dd>
-      Invert all checkboxes.
-      Checked boxes are unchecked, unchecked boxes are checked.
-    </dd>
-    <dt><i class="fa fa-fw fa-lg fa-dot-circle-o"></i> Check all</dt>
-    <dd>Check all checkboxes.</dd>
-  </dl>
+<dl>
+  <dt><i class="fa fa-fw fa-lg fa-circle-o"></i> Uncheck all</dt>
+  <dd>Uncheck all checkboxes.</dd>
+  <dt><i class="fa fa-fw fa-lg fa-rotate-90 fa-exchange"></i> Invert</dt>
+  <dd>
+    Invert all checkboxes.
+    Checked boxes are unchecked, unchecked boxes are checked.
+  </dd>
+  <dt><i class="fa fa-fw fa-lg fa-dot-circle-o"></i> Check all</dt>
+  <dd>Check all checkboxes.</dd>
+</dl>
