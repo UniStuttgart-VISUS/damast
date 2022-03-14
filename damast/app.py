@@ -37,7 +37,7 @@ from .reporting.check_evict import register_scheduler as register_scheduler_for_
 
 @lru_cache(1)
 def get_software_version():
-    vs = os.environ.get('DHIMMIS_VERSION', None)
+    vs = os.environ.get('DAMAST_VERSION', None)
     if vs is not None:
         return vs
 
@@ -56,18 +56,18 @@ class FlaskApp(flask.Flask):
         self.config.from_file('config.json', load=json.load)
 
         # app environment
-        environment = os.environ.get('DHIMMIS_ENVIRONMENT', 'TESTING')
+        environment = os.environ.get('DAMAST_ENVIRONMENT', 'TESTING')
         is_testing = environment in ('TESTING', 'PYTEST')
         self.config['TESTING'] = is_testing
-        self.config['DHIMMIS_ENVIRONMENT'] = environment
+        self.config['DAMAST_ENVIRONMENT'] = environment
 
         # cookie and session cookie path
-        self.cookiepath = os.environ.get('DHIMMIS_PROXYPREFIX', '/')
+        self.cookiepath = os.environ.get('DAMAST_PROXYPREFIX', '/')
         self.config['SESSION_COOKIE_PATH'] = self.cookiepath
 
         # load secrets, or generate them
         try:
-            with open(os.environ.get('DHIMMIS_SECRET_FILE', '/dev/null')) as f:
+            with open(os.environ.get('DAMAST_SECRET_FILE', '/dev/null')) as f:
                 _secrets = json.load(f)
         except:
             _secrets = dict()
@@ -76,7 +76,7 @@ class FlaskApp(flask.Flask):
         self.config['jwt_secret'] = _secrets.get('jwt_secret', genword(entropy='secure', charset='ascii_72')).encode('ascii')
 
         # ProxyFix
-        proxies_count = int(os.environ.get('DHIMMIS_PROXYCOUNT', '1'))
+        proxies_count = int(os.environ.get('DAMAST_PROXYCOUNT', '1'))
         self.wsgi_app = ProxyFix(self.wsgi_app, x_for=proxies_count, x_proto=proxies_count, x_host=proxies_count, x_port=proxies_count, x_prefix=1)
 
         self._init_logging()
@@ -99,7 +99,7 @@ class FlaskApp(flask.Flask):
 
     def _init_base_blueprints(self):
         # if a override path is provided, try to load templates from there first
-        overpath = os.environ.get('DHIMMIS_OVERRIDE_PATH', None)
+        overpath = os.environ.get('DAMAST_OVERRIDE_PATH', None)
 
         if overpath is None:
             logging.getLogger('flask.error').info('No override path provided.')
@@ -180,7 +180,7 @@ class FlaskApp(flask.Flask):
 
     def _init_auth(self):
         # init database
-        dbfile = os.environ.get('DHIMMIS_USER_FILE', '/data/users.db')
+        dbfile = os.environ.get('DAMAST_USER_FILE', '/data/users.db')
         self.user_db = sqlite3.connect(dbfile, detect_types=sqlite3.PARSE_DECLTYPES)
         def _onclose():
             if self.user_db:

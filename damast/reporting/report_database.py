@@ -51,7 +51,7 @@ sqlite3.register_converter('DATETIME', _convert_datetime)
 
 @contextmanager
 def get_report_database():
-    filepath = os.environ.get('DHIMMIS_REPORT_FILE', '/data/reports.db')
+    filepath = os.environ.get('DAMAST_REPORT_FILE', '/data/reports.db')
     if not os.path.exists(filepath):
         if does_evict():
             raise RuntimeError('Report eviction is enabled, but the report database does not yet exist. Please create the report database manually')
@@ -79,7 +79,7 @@ DatabaseVersion = namedtuple('DatabaseVersion', ['version', 'date', 'url', 'desc
 def _run_report_generation(report_id, rerun=False):
     # run subprocess
     sub_args = [
-        'python', '-m', 'dhimmis.reporting.create_report',
+        'python', '-m', 'damast.reporting.create_report',
         report_id,
         flask.url_for('reporting.get_report', report_id=report_id, _external=True),  # absolute URL to report
         flask.url_for('reporting.get_map', report_id=report_id),  # relative URL to map

@@ -471,7 +471,7 @@ def create_report(pg, filter_json, current_user, started, report_uuid, report_ur
                     metadata=metadata,
                     filter_desc=filter_desc,
                     report_id=report_uuid,
-                    server_version=os.environ.get('DHIMMIS_VERSION', ''),
+                    server_version=os.environ.get('DAMAST_VERSION', ''),
                     place_map=place_map,
                     map_url=map_url,
                     report_url=report_url,

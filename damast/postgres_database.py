@@ -20,10 +20,10 @@ def postgres_database():
     pg_user = os.environ.get('PGUSER', 'api')
     pg_host = os.environ.get('PGHOST', 'localhost')
     pg_port = os.environ.get('PGPORT', '5432')
-    if os.environ.get('DHIMMIS_ENVIRONMENT') == 'PYTEST':
+    if os.environ.get('DAMAST_ENVIRONMENT') == 'PYTEST':
         pg_db = os.environ.get('PGDATABASE', 'none')
     else:
-        pg_db = _databases.get(os.environ.get('DHIMMIS_ENVIRONMENT'))
+        pg_db = _databases.get(os.environ.get('DAMAST_ENVIRONMENT'))
     pg_pass = os.environ.get('PGPASSWORD', None)
 
     if pg_pass is None:
