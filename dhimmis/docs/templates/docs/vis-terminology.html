@@ -1,7 +1,7 @@
 {#- vim: set ft=htmldjango : -#}
 <p>
-  The explanations used in this documentation, and in the info texts in the visualization, use terminology and concepts from information visualization.
-  We have attempted to make these texts as understandable as possible to the general public, but some understanding of the concepts used is still required.
+  The explanations provided in the present documentation as well as in the info texts in the visualization, use terminology and concepts from information visualization.
+  We strove to render these texts as accesible as possible to a wider audience, but some basic understanding of the concepts used is still required.
   Here, we introduce the terms we used, and explain the visualization types.
 </p>
 
@@ -9,23 +9,23 @@
 
 <p>
   Card et al. formalized the <dfn>data visualization pipeline</dfn> in 1998 (see <a href="https://infovis-wiki.net/wiki/Visualization_Pipeline">here</a> for reference).
-  This pipeline specifies the steps that data goes through from its source representation to the point where the viewer of the visualization sees it.
-  The pipeline consists of four steps, in which certain operations are applied to data, transforming the data for the next step.
-  After the last step, the data is present as pixels on a screen, or ink on paper.
+  This pipeline specifies the steps that data goes through from its source representation to the point where the viewer of the visualization can see the data.
+  The pipeline consists of four steps, in which certain operations are applied, transforming the data for the next step.
+  After the last step, the data is present as pixels on a screen (or as ink on paper).
   The pipeline allows for viewers to <em>interact</em> with each of the four steps.
-  Interaction with the steps affects the end result differently.
-  In general, only the last three steps are interacted with, and we will focus on these in this explanation.
+  Interaction with the steps affects the end result in different ways.
+  In general, only the last three steps are interacted with, and we will focus on these in what follows.
 </p>
 
 <p>
-  In this case, the data is already processed into a consistent, clean form, which is stored in the database.
-  Through the <strong>data transformations,</strong> the <em>source data</em> is transformed into <em>data tables</em> (where <q>tables</q> means suitably structured data).
+  Second step: Here, the data is already processed into a consistent, clean form, which is stored in the database.
+  Through the <strong>data transformations,</strong> the <em>source data</em> is transformed into <em>data tables</em> (i.e., suitably structured data).
   These transformations can include general data mapping, aggregation (such as counting or averaging), and filtering (such as: only include data after the year 1,000 CE).
   By <em>applying filters</em> in the visualization or changing, for example, the <em>display mode</em> in the settings (cf. {{ full_documentation_link('settings-display-mode', 'here') }}), viewers can interact with the data transformation step.
 </p>
 
 <p>
-  The data tables are then <em>mapped</em> to visual structures in the <strong>visual mapping</strong> step.
+  Third step: The data tables are then <em>mapped</em> to visual structures in the <strong>visual mapping</strong> step.
   For example, in a bar chart visualization, data items are mapped to rectangles, and the value is mapped to the height of the respective rectangle.
   In general, data attributes are mapped to <dfn>visual variables.</dfn>
   Visual variables include, but are not limited to:
@@ -36,7 +36,7 @@
 </p>
 
 <p>
-  The visual structures are then <em>rendered</em> to the views.
+  Last step: The visual structures are then <em>rendered</em> to the views.
   In this step, the <strong>view transformations,</strong> the visual perspective on the data is also modified.
   This is done via geometric transformations: translation, scaling, and rotation (although the latter is used less frequently).
   The viewer can interact with this step, for example, via zooming and panning (cf. {{ full_documentation_link('terminology-zooming-panning', 'here', true) }}).
@@ -54,16 +54,16 @@
 
 <p>
   <dfn>Zooming</dfn> is the process of increasing or decreasing the scale of the visualized image.
-  In a map, that means showing a smaller area of the map in more detail (zooming in), or showing a larger area in less detail (zooming out).
+  In a map, zooming means showing a smaller area of the map in more detail (zooming in), or showing a larger area in less detail (zooming out).
   In a timeline, this could mean showing a shorter time span in more detail, or a longer time span in less detail.
 </p>
 
 <p>
   In most cases in information visualization, zooming is not merely a geometrical scaling operation.
-  Rather, zooming in means data can be displayed with more detail, and less aggregated.
-  Similarly, zooming out, data needs to be aggregated more.
-  Hence, zooming often involves not only the view transformation step, but also the data transformation and visual mapping steps, of the information visualization pipeline.
-  This type of zooming is also called <dfn>semantic zooming;</dfn>
+  Rather, <q>zooming</q> in means data can be displayed with more detail and less aggregated.
+  Similarly, when <q>zooming out,</q> data needs to be aggregated more.
+  Hence, zooming often involves not only the view transformation step, but also the data transformation and visual mapping steps of the information visualization pipeline.
+  This type of zooming is also called <dfn>semantic zooming,</dfn>
   as opposed to <dfn>geometric zooming,</dfn> which only affects the the view transformation step.
 </p>
 
@@ -105,18 +105,18 @@
 
 <p>
   A MCV visualization (multiple coordinated views) consists of multiple <dfn>views.</dfn>
-  These views are visually separated, either by just empty space between them, or by borders.
+  These views are visually separated, either just by empty space between them or by borders.
   In our visualization (see {{ full_documentation_link('fig-full-vis-screenshot', 'this screenshot', true) }}), each view is displayed in a separate UI element.
-  These UI elements are called <dfn>panes</dfn> and can be resized, rearranged, or maximized; similar to how windows can be interacted with in an operating system such as Microsoft Windows.
+  These UI elements are called <dfn>panes</dfn> and can be resized, rearranged, or maximized, similar to the way windows can be interacted with in an operating system such as Microsoft Windows.
 </p>
 
 <p>
   In an MCV, each view shows a different perspective on the <em>same data;</em>
   that is, the view visualizes a specific aspect of the data.
-  In our visualization, one view (the timeline) visualizes the temporal aspect of the data, another the geospatial (the map), and so on.
+  In our visualization, one view (the timeline) visualizes the temporal aspect of the data, another view the geospatial aspect (the map), and so on.
   However, the same underlying data (evidence) is shown in each view.
-  Further, the views are <em>coordinated,</em> meaning that interaction with one of the views reflects into the other views.
-  One example seen in {{ full_documentation_link('fig-full-vis-screenshot', 'this screenshot', true) }}:
+  Additionaly, the views are <em>coordinated,</em> meaning that interaction with one of the views is reflected by changes in the other views.
+  {{ full_documentation_link('fig-full-vis-screenshot', 'This screenshot', true) }} provides an example:
   Filtering the time range in the timeline view also affects the data shown in the map view.
   Now, only the places with evidence from that time range are shown.
   For more details on the different interactions; see the sections on
@@ -130,22 +130,22 @@
 <h4>Filtering</h4>
 
 <p>
-  Our visualization is a <em>top-down visualization,</em> meaning that initially, all the data is shown, and users can then drill down into that data to find smaller, more specific subsets of the data.
+  Our visualization is a <em>top-down visualization,</em> meaning that initially, all data is shown, and users can then <q>drill down</q> into that data to find smaller, more specific subsets of the data.
   The drill-down is realized by applying <dfn>filters</dfn> to the data.
   A filter is a criterion which can decide for each datum whether that datum matches or not.
   Applying a filter to a dataset results in a subset (not necessarily a <em>proper subset</em>) of the dataset.
 </p>
 
 <p>
-  An example for a filter in our visualization is to select a time span in the timeline.
+  An example for a filter in our visualization is to select a time span from the timeline.
   The filter then specifies the time span within which the evidence must lie to still be visualized.
   Another example is to specify one or more sources that the evidence must be attributed to;
-  in that case, the data visualized would be that from these sources only.
+  in that case, the data visualized would stem from these sources only.
 </p>
 
 <p>
-  Our MCV visualization implements <dfn>multi-faceted filtering.</dfn>
-  That means that each view can have a separate filter active at the same time.
+  Our MCV visualization implements <dfn>multi-faceted filtering;</dfn>
+  that is each view can have a separate filter active at the same time.
   Because the views show different aspects of the same data, the filters also apply to different aspects of the data:
   The timeline filter applies to the temporal aspect of the evidence, the map filter applies to the geospatial aspect of the evidence, and so on.
   <em>Between views,</em> the filters are applied in conjuction, meaning that an evidence is shown only if it matches <em>all</em> filters;
@@ -155,7 +155,7 @@
 <p>
   <em>Within views,</em> the filters are applied in disjunction, meaning that an evidence matches the filter if it matches <em>any</em> of the criteria;
   for example, if a religion filter with two religions is active, it matches evidence that has <em>either</em> one or the other religion.
-  This behavior is logical, after all, there could not be evidence that has <em>both</em> religions at once, or is attributed to two places at once.
+  This behavior is logical as there could not be evidence that has <em>both</em> religions at once, or is attributed to two places at the same time.
   Still, it is important to be aware of this functionality.
 </p>
 </article>
@@ -198,7 +198,7 @@
 <p>
   In our visualization, the brushing always happens on a subset of the visualized evidence.
   The linking is then done in all views, including the one the selection and brushing originated from.
-  In most views, we display linked elements by keeping them in the same saturation, but desaturating and darkening all elements that are <em>not</em> linked.
+  In most views, we display linked elements by keeping them in the same saturation, but all elements that are <em>not</em> linked are desaturated and darkened.
   One exception is the timeline, where linking will <em>only</em> show the temporal data from the brushed subset, and all other data will be hidden.
   In our visualization, clicking on the same selected element again will remove the selection and also clear the brushing and linking.
   Selecting any other visual element will <em>replace</em> the brushed subset instead.
