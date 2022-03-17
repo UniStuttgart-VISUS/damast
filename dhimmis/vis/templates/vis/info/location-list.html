@@ -82,10 +82,8 @@ Places can be searched, selected and filtered.
 <p>
   Behind the place name, the <em>location confidence</em> of each place is shown as a small, colored circle.
   The color scale is the same as in the <em>confidence view.</em>
-</p>
-<p>
-  In <em>all data</em> mode (cf. the <em>{{ full_documentation_link('settings-all-data-only-active', 'Settings pane') }}</em>), when the filter set for <em>location confidence</em> does not match the place’s location confidence, the name is displayed <span style="font-style:italic;color:#d61;font-weight:700;filter:brightness(90%)saturate(60%)">in italics, darker, and in less saturated colors.</span>
-  Also, the confidence circle is not filled in that case.
+  In <em>all data</em> mode (cf. the <em>{{ full_documentation_link('settings-all-data-only-active', 'Settings pane') }}</em>), when the filter set for <em>location confidence</em> does not match the place’s location confidence, this confidence circle is not filled.
+  Also, the name is displayed <span style="font-style:italic;color:#d61;font-weight:700;filter:brightness(90%)saturate(60%)">in italics, darker, and in less saturated colors</span> in that case.
 </p>
 
 {% if show_figures %}
@@ -274,14 +272,14 @@ Places can be searched, selected and filtered.
     The <em>place set</em> now contains all places where there are evidences of Islam between 800 and 900.
     <br>
     <strong>Important:</strong> Do <em>not yet</em> apply the <em>place set.</em>
-    That would affect the other views.
+    This would affect the other views.
   </li>
   <li><em>Filter</em> by religion using the <em>religion view,</em> choosing <em>Jewish</em> groups only, then click <em>Apply.</em></li>
   <li>
     <em>Remove</em> the shown places from the <em>place set</em> by clicking the <em>set subtraction</em> button.
     The <em>place set</em> now only shows places where there are evidences of Islam between 800 and 900, but <em>not</em> of Judaism.
   </li>
-  <li><em>Apply</em> the place filter by clicking on the <em>Apply</em> button.</li>
+  <li><em>Apply</em> the place filter by clicking on the <em>Apply</em> button. <em>Note:</em> The map is blank; this is normal as you have just filtered out all places with presence of Judaism while the <em>religion view</em> is still set to show Judaism only.</li>
   <li><em>Filter</em> by religion using the <em>religion view,</em> choosing <em>Christian</em> groups only, then click <em>Apply.</em></li>
 </ol>
 </section>

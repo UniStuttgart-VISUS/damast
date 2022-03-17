@@ -44,16 +44,20 @@
 <p>
   When <em>hovering</em> over a glyph, it loses opacity and the aggregated locations are indicated on the map as small turquoise dots (maybe partially covered by the glyph).
   While hovering, a tooltip is also shown, which provides information on the number of evidences, of religions, and of places related to the glyph.
-  If the glyph does not aggregate more than five places, for each place the toponym, geographical coordinates, and more information on the evidences belonging to that place are provided.
+  As long as the glyph does not aggregate more than five places, the toponym, geographical coordinates, and more information on the evidences belonging to that place are provided for each place.
   Even more details are provided if the glyph only represents one place.
 </p>
 
 <h5>Aggregation of Religions</h5>
 <p>
-  A map glyph consists of up to four circles, each representing a general religious affiliations.
-  For example, Judaism is represented by a circle with a Star of David.
-  All religions other than Islam, Judaism, and Christianity are pragmatically summarized under <q>Other.</q>
+  A map glyph consists of up to four circles, each representing a general religious affiliation with a distinct symbol and color.
 </p>
+<ul>
+  <li>Christianity: cross, red/orange </li>
+  <li>Islam: crescent, green</li>
+  <li>Judaism: Star of David, blue</li>
+  <li>Other: dot, varying colors</li>
+</ul>
 <p>
   Generally, multiple religious groups belonging to the same general religious affiliation are aggregated to one circle.
   This circle then functions like a pie chart:
@@ -67,17 +71,14 @@
   Note that this aggregation may result from other filters or interactions with the map, not just filtering using the <em>religion view,</em> as the map glyphs are dynamically altered based on many different criteria.
 </p>
 <p>
-  Also, remember that the placement and aggregation of map glyphs depends on the data currently active as well as the zoom level&mdash;not, however, on the current center of the map.
-  In other words, <q>all map glyphs <em>currently displayed</em></q> in the paragraph above includes map glyphs outside the current scope of the map that will appear when panning the map.
+  Note that placement and aggregation of map glyphs depends on the data currently active as well as the zoom level&mdash;not, however, on the current center of the map.
+  In other words, <q>all map glyphs <em>currently displayed</em></q> includes map glyphs outside the current scope of the map that will appear when panning the map.
 </p>
 <p>
-  If at least one glyph that is currently displayed would have more than four circles, it would aggregate multiple religious groups into one circle.
-  This same aggregation will apply to all other glyphs as well, even if, in sum, they have less than four circles.
-  Otherwise, the perceived variety and distribution of religions would be skewed.
-  For example, in many locations in modern Turkey, only the two Christian groups SYR (Syriac Orthodox Church) and MELK (Melkite Church) were present, which could result in map glyphs having two circles with a cross.
-  However, a city in that general area with a high level of religious diversity (such as Aleppo) would need to aggregate all Christian groups in order not to have more than four circles.
-  Accordingly, a location with only two Christian groups would be represented by a map glyph with two circles for Christianity while a location with many Christian groups (and others) would be displayed with only one such circle.
-  This could be easily misinterpreted.
+  If in at least one glyph currently displayed multiple religious groups are aggregated into one circle,
+  this same aggregation will apply to <em>all</em> other glyphs as well, even if, in sum, they have less than four circles and would otherwise not be aggregated.
+  Otherwise, the perceived variety and distribution of religions would be skewed;
+  for example, a location with only two Christian groups would be represented by a map glyph with two circles for Christianity while a location with many Christian groups as well as other groups would be displayed with only one such circle.
 </p>
 
 <p>
@@ -109,7 +110,7 @@
   <em>Z</em>-ordering of the glyphs ensures that glyphs with fewer religious groups appear in front of larger glyphs with more religious groups.
 </p>
 <p>
-  <em>Note:</em> This mode should be used with due caution when interpreting the results.
+  <em>Note:</em> For both modes, the specific way of representing the data should be considered when interpreting the results.
 </p>
 </article>
 
@@ -144,21 +145,18 @@
 <h4>What the Map is <em>not</em> Showing</h4>
 
 <p>
+  <span class="small-caps">Damast</span> visualizes religious constellations in cities and towns of the Islamicate world with static Non-Muslim communities.
   The map does <em>not</em> depict a representation of the population density in the medieval Middle East.
-  In other words, an area with no or little map glyphs is not necesarrily less populated than other areas.
+  In other words, an area with no or only few map glyphs is not necesarrily less populated than other areas.
   The map makes no claim to be complete, nor does it show the general distribution of religions in a given area.
 </p>
 
 <p>
-  The goal is explicitly to visualize <em>coexistence</em> of institutionalized religion.
   Empty areas on the map can have multiple reasons:
   <ul>
-    <li>The area is outside the region of interest of the project, e.g., Europe.</li>
+    <li>The area is outside the geographical scope of <span class="small-caps">Damast</span>, e.g., Europe.</li>
     <li>No data for a city was collected.</li>
-    <li>
-      The city in question was purely Muslim, with no other religious communities.
-      The existence of institutionalized Islam in that place or region and during that time period is more or less given, but not the main focus of the project.
-    </li>
+    <li>No data on non-Muslim communities was available.</li>
   </ul>
 </p>
 
