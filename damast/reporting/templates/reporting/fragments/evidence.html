@@ -8,16 +8,17 @@
   <p>
     {% if e.evidence.evidence_visible %}Visible{% else %}Hidden{% endif %}
     evidence
-    {%- if e.evidence.evidence_comment -%}
-      {{ create_footnote('evidence_comment' ~ e.evidence.id) }}
-    {% endif %}
     with
     {% if e.evidence.interpretation_confidence %}
       <em>{{ e.evidence.interpretation_confidence }}</em>
     {% else %}
       no
     {% endif %}
-    interpretation confidence.
+    interpretation confidence
+    {%- if e.evidence.evidence_comment -%}
+      {{ create_footnote('evidence_comment' ~ e.evidence.id) }}
+    {%- endif -%}
+    .
     The religion
     <strong>{{ e.evidence.religion }}</strong><a class="religion-link" href="#religion{{ e.evidence.religion_id }}"><sup>[r{{ e.evidence.religion_id}}]</sup></a>
     <em>({{ e.evidence.religion_confidence or 'no confidence value' }})</em>

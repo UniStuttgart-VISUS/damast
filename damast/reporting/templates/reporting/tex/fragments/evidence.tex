@@ -6,17 +6,17 @@
   <% else %>
   Hidden
   <% endif %>
-  evidence
-  <%- if e.evidence.evidence_comment -%>
-    \footnote{<< e.evidence.evidence_comment | texsafe >>}
-  <% endif %>
-  with
+  evidence with
   <% if e.evidence.interpretation_confidence %>
     \emph{<< e.evidence.interpretation_confidence >>}
   <% else %>
     no
   <% endif %>
-  interpretation confidence.
+  interpretation confidence
+  <%- if e.evidence.evidence_comment -%>
+    \footnote{<< e.evidence.evidence_comment | texsafe >>}
+  <%- endif -%>
+  .
   The religion
   \textbf{<< e.evidence.religion | texsafe >>}$^\textsc{\hyperlink{religion<<e.evidence.religion_id>>}{[r<<e.evidence.religion_id>>]}}$
   \emph{(<< e.evidence.religion_confidence or 'no confidence value' >>)}
