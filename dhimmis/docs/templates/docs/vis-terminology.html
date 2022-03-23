@@ -227,9 +227,37 @@
 </p>
 </article>
 
+
 <h3>Visualization Types</h3>
 
+<p>
+  A number of visualization types are used in Damast.
+  The proper scientific terms are used in the description below, and are introduced here.
+</p>
+
 <h4>Bar Chart and Stacked Bar Chart</h4>
+
+<p>
+  In a <strong>bar chart,</strong> categories are represented by rectangular bars, usually with a common baseline in one dimension, and a common width.
+  The height of each bar encodes a value associated with the respective category.
+  Bar charts can be horizontal as well, in which case the height of the bars is constant, and the width encodes value instead.
+  In Damast, the bar charts used are horizontal, for example in the {{ full_documentation_link('source', 'source view', true) }}.
+</p>
+
+<p>
+  A special case of bar charts are <strong>stacked bar charts,</strong> in which each category, or bar, is further divided.
+  Each segment of the bar encodes a sub-category's value.
+  In Damast, stacked bar charts are used in the {{ full_documentation_link('untimed-data', 'untimed data view', true) }}, where each general religious affiliation is represented by a bar, and its specific religious groups by segments of that bar.
+  In <em>all data mode,</em> all regular bar charts turn into stacked bar charts, with one segment for active data, and one for filtered-out data.
+  Similarly, in <em>confidence mode,</em> a segment for each represented level of confidence is shown.
+</p>
+
+<p>
+  A even more special case is the <strong>normalized</strong> stacked bar chart, where the width (or height) of the bars is constant across bars as well.
+  Hence, the width of individual segments encodes their <em>relative</em> proportion within the parent category.
+  Normalized stacked bar charts appear in the {{ full_documentation_link('source', 'source view', true) }}, where they show the distribution of religious groups (or confidence levels) within each source.
+</p>
+
 <h4>Stacked Area Chart</h4>
 <h4>Indented Tree</h4>
 <h4>Gantt Chart</h4>
