@@ -19,7 +19,7 @@
       {{ create_footnote('evidence_comment' ~ e.evidence.id) }}
     {%- endif -%}
     .
-    The religion
+    The religious group
     <strong>{{ e.evidence.religion }}</strong><a class="religion-link" href="#religion{{ e.evidence.religion_id }}"><sup>[r{{ e.evidence.religion_id}}]</sup></a>
     <em>({{ e.evidence.religion_confidence or 'no confidence value' }})</em>
     {%- if e.evidence.religion_instance_comment -%}

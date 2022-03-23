@@ -102,14 +102,14 @@ def _verbalize_religion(religion_filter, cursor):
         relnames = list(map(lambda x: '\\textbf{%s}'%x.name, cursor.fetchall()))
 
         if len(relnames) == 1:
-            return F'The evidence must reference the religion {relnames[0]}.'
+            return F'The evidence must reference the religious group {relnames[0]}.'
         elif len(relnames) == 2:
-            return F'The evidence must reference either of the religions {relnames[0]} or {relnames[1]}.'
+            return F'The evidence must reference either of the religious groups {relnames[0]} or {relnames[1]}.'
 
         rs = ', '.join(relnames[:-1])
         rz = relnames[-1]
 
-        return F'The evidence must reference one of the following religions: {rs}, or {rz}.'
+        return F'The evidence must reference one of the following religious groups: {rs}, or {rz}.'
 
 
     else:
@@ -119,7 +119,7 @@ def _verbalize_religion(religion_filter, cursor):
         if count == 0:
             return 'The religion filter does not permit any values at all. The filter will therefore not match \\emph{any} evidence. This is probably an oversight.'
 
-        ret = 'The evidence must be attributed to a place where \\emph{at least} one of the following combinations of religions have, at some point, existed based on evidence in the database:\\begin{itemize}'
+        ret = 'The evidence must be attributed to a place where \\emph{at least} one of the following combinations of religious groups have, at some point, existed based on evidence in the database:\\begin{itemize}'
         rets = []
 
         for rels in religion_filter['filter']:
