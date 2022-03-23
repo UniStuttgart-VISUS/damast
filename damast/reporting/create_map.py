@@ -26,7 +26,7 @@ warnings.simplefilter('ignore', category=ShapelyDeprecationWarning)
 _min_dx_mercator = 1113194.908  # 10° at equator
 crs = 'EPSG:4326'
 
-with gzip.open(os.path.join(os.getcwd(), 'dhimmis', 'reporting/map-data', 'features.geo.json.gz')) as f:
+with gzip.open(os.path.join(os.getcwd(), 'damast', 'reporting/map-data', 'features.geo.json.gz')) as f:
     features = gpd.GeoSeries.from_file(f, crs=crs, driver='GeoJSON')
     waterbodies_full = features[features.apply(lambda x: x.type in ('Polygon', 'MultiPolygon'))]
     rivers_full = features[features.apply(lambda x: x.type in ('Line', 'LineString', 'MultiLineString'))]

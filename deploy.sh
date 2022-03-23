@@ -9,7 +9,7 @@ env="TESTING"
 basedir="/www-testing"
 
 # systemd service name
-service="dhimmis-testing"
+service="damast-testing"
 
 # server port
 port=8001
@@ -77,7 +77,7 @@ do
       # deploy to production
       env="PRODUCTION"
       basedir="/www"
-      service="dhimmis"
+      service="damast"
       port=8000
       ;;
     d)
@@ -145,7 +145,7 @@ fi
 
 sleep 1
 
-version=$(echo -n $(git describe --tags) | tr -sc '[a-zA-Z0-9_.-]' '-')
+version=$(echo -n $(git describe --tags) | tr -sc '[a-zA-Z0-9_.\-]' '-')
 imagename="damast:$version-$(echo $env | tr '[:upper:]' '[:lower:]')"
 filename="$imagename.tgz"
 
@@ -162,7 +162,7 @@ fi
 
 printf "\n\033[0;36mSyncing assets for docker image\033[0m\n\n"
 
-fs_hash=$(find dhimmis -type f \
+fs_hash=$(find damast -type f \
   | xargs sha1sum \
   | awk '{print $1}' \
   | sha1sum - \
@@ -171,7 +171,7 @@ cat util/docker/{base,prod}.in \
   | sed "s/@REBUILD_HASH@/$fs_hash/g" \
   | ssh ${build_user}@${build_server} "cat > $tmpdir/Dockerfile"
 rsync --info=flist2,misc0,stats0 -iavzz \
-  dhimmis \
+  damast \
   ${build_user}@${build_server}:$tmpdir/
 
 
@@ -185,9 +185,9 @@ pass ssh/${build_server}/${build_user} \
           -t $imagename \
           --build-arg=USER_ID=$www_user_id \
           --build-arg=GROUP_ID=$www_group_id \
-          --build-arg=DHIMMIS_ENVIRONMENT=$env \
-          --build-arg=DHIMMIS_VERSION=$version \
-          --build-arg=DHIMMIS_PORT=$port \
+          --build-arg=DAMAST_ENVIRONMENT=$env \
+          --build-arg=DAMAST_VERSION=$version \
+          --build-arg=DAMAST_PORT=$port \
           ."
 
 

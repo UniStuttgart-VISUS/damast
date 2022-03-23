@@ -1,5 +1,5 @@
 import pytest
-import dhimmis
+import damast
 from database.testdata import evidence_table
 
 from conftest import get_headers

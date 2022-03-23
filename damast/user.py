@@ -17,7 +17,7 @@ _disallowed_visitor_roles = set(('writedb', 'dev', 'admin'))
 
 def default_visitor_roles():
     # get default roles for visitors
-    roles_str = os.environ.get('DHIMMIS_VISITOR_ROLES')
+    roles_str = os.environ.get('DAMAST_VISITOR_ROLES')
     if roles_str is None:
         logging.getLogger('flask.error').info('Visitor handling is disabled.')
         return None

@@ -137,11 +137,11 @@ export default class SettingsPane {
     // update metadata source to "filesystem"
     eventData.data.metadata.source = 'filesystem';
 
-    const blob = new Blob([JSON.stringify(eventData.data)], {type: 'application/dhimmis-state+json'});
+    const blob = new Blob([JSON.stringify(eventData.data)], {type: 'application/damast-state+json'});
     const url = window.URL.createObjectURL(blob);
 
     const a = document.createElement('a');
-    a.download = `dhimmis-muslims-${d3.timeFormat('%Y%m%dT%H%M%S')(new Date())}.state.json`;
+    a.download = `damast-muslims-${d3.timeFormat('%Y%m%dT%H%M%S')(new Date())}.state.json`;
     a.style.display = 'none';
     a.href = url;
 

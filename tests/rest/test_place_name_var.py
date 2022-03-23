@@ -1,5 +1,5 @@
 import pytest
-import dhimmis
+import damast
 import flask
 import json
 import urllib.parse
