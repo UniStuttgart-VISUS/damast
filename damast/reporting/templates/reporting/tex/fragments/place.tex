@@ -45,14 +45,11 @@ at
   \begin{itemize}
     <% for e in uris %>
     \item
-      \textsc{<< e.short | texsafe >>} in
-      \emph{<< e.name | texsafe >>}
+      << e.name | texsafe >>
       <%- if e.comment -%>
-      : \emph{\enquote{<< e.comment | texsafe >>}}
-      <%- else -%>
-      .
-      <%- endif -%>\\
-      \url{<< e.uri >>}
+      \footnote{<< e.comment | texsafe >>}
+      <%- endif -%>
+      : \url{<< e.uri >>}
     <% endfor %>
   \end{itemize}
 <% endif %>

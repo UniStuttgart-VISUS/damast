@@ -316,7 +316,8 @@ def create_report(pg, filter_json, current_user, started, report_uuid, report_ur
                     format(UN.short_name, EPU.uri_fragment) AS short,
                     format(UN.uri_pattern, EPU.uri_fragment) AS uri,
                     EPU.comment,
-                    ED.name
+                    ED.name,
+                    EPU.id
                 FROM external_place_uri EPU
                 JOIN uri_namespace UN ON EPU.uri_namespace_id = UN.id
                 JOIN external_database ED ON UN.external_database_id = ED.id
