@@ -23,12 +23,14 @@
   Evidences are represented by so-called map glyphs.
   By default, these map glyphs are <strong>clustered</strong> (i.e., <strong>aggregated,</strong> or <q>summarized</q>).
 </p>
+
 <p>
   This aggregation depends on the data currently active and on the current zoom level of the map;
   that is, once the zoom level or filters are changed, the map is populated with glyphs according to the aggregation rules;
   simply <em>panning</em> the map will not affect the map glyphs.
   More details are given below.
 </p>
+
 <p>
   This <em>map mode</em> is called <em>clustered.</em>
   It can be changed in the settings (cf. the {{ full_documentation_link('map-unclustered-mode', 'info text below', true) }} and the info text of the <em>{{ full_documentation_link('settings-map-mode', 'Settings pane') }}</em>).
@@ -49,36 +51,41 @@
 </p>
 
 <h5>Aggregation of Religions</h5>
+
 <p>
-  A map glyph consists of up to four circles, each representing a general religious affiliation with a distinct symbol and color.
+  A map glyph consists of up to four circles, each representing a general religious affiliation with a distinct symbol and color:
 </p>
+
 <ul>
-  <li>Christianity: cross, red/orange </li>
+  <li>Christianity: cross, red/orange</li>
   <li>Islam: crescent, green</li>
   <li>Judaism: Star of David, blue</li>
   <li>Other: dot, varying colors</li>
 </ul>
+
 <p>
   Generally, multiple religious groups belonging to the same general religious affiliation are aggregated to one circle.
   This circle then functions like a pie chart:
   in <em>religion mode</em> (set by default), each piece of the pie chart represents a different religious group in its respective color and the piece's size shows the amount of evidences of that religious group relative to the overall evidences of its general religious affiliation.
   In <em>confidence mode,</em> the division of the circle or pie chart is based on the evidences attributed with different levels of confidence and is colored accordingly.
 </p>
+
 <p>
   However, if, regarding <em>all</em> map glyphs currently displayed, no more than four religous groups are to be represented, there can be more than one circle representing a general religious affiliation.
   For instance, if only COE (Church of the East), SYR (Syriac Orthodox Church), and SUN (Sunni Islam) are filtered using the <em>religion view,</em> any given map glyph cannot have more than three circles.
   Accordingly, both COE and SYR will be represented by an individual circle with a cross and the respective color.
   Note that this aggregation may result from other filters or interactions with the map, not just filtering using the <em>religion view,</em> as the map glyphs are dynamically altered based on many different criteria.
 </p>
+
 <p>
   Note that placement and aggregation of map glyphs depends on the data currently active as well as the zoom level&mdash;not, however, on the current center of the map.
   In other words, <q>all map glyphs <em>currently displayed</em></q> includes map glyphs outside the current scope of the map that will appear when panning the map.
 </p>
+
 <p>
-  If in at least one glyph currently displayed multiple religious groups are aggregated into one circle,
-  this same aggregation will apply to <em>all</em> other glyphs as well, even if, in sum, they have less than four circles and would otherwise not be aggregated.
+  If in at least one glyph currently displayed multiple religious groups are aggregated into one circle, this same aggregation will apply to <em>all</em> other glyphs as well, even if, in sum, they have less than four circles and would otherwise not be aggregated.
   Otherwise, the perceived variety and distribution of religions would be skewed;
-  for example, a location with only two Christian groups would be represented by a map glyph with two circles for Christianity while a location with many Christian groups as well as other groups would be displayed with only one such circle.
+  for example, a location with only two Christian groups would be represented by a map glyph with two circles for Christianity, while a location with many Christian groups as well as other groups would be displayed with only one such circle.
 </p>
 
 <p>
@@ -109,6 +116,7 @@
   Overlap can and will happen in this mode, even when zooming out to a relative small scale.
   <em>Z</em>-ordering of the glyphs ensures that glyphs with fewer religious groups appear in front of larger glyphs with more religious groups.
 </p>
+
 <p>
   <em>Note:</em> For both modes, the specific way of representing the data should be considered when interpreting the results.
 </p>
