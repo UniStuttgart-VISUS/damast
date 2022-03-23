@@ -1,7 +1,7 @@
 {#- vim: set ft=htmldjango : -#}
 <p>
   The explanations provided in the present documentation as well as in the info texts in the visualization, use terminology and concepts from information visualization.
-  We strove to render these texts as accesible as possible to a wider audience, but some basic understanding of the concepts used is still required.
+  We strove to make these texts as accessible as possible to a wider audience, but some basic understanding of the concepts used is still required.
   Here, we introduce the terms we used, and explain the visualization types.
 </p>
 
@@ -12,7 +12,7 @@
   This pipeline specifies the steps that data goes through, from its source representation to the point where it is presented to person using the visualization.
   The pipeline consists of four steps, in which certain operations are applied, transforming the data for the next step.
   After the last step, the data is present as pixels on a screen (or as ink on paper).
-  The pipeline allows for viewers to <em>interact</em> and influence the process in each of the four steps, changing the end result in different ways.
+  The pipeline allows for viewers to <em>interact</em> with and influence the process in each of the four steps, changing the end result in different ways.
   In a first step, the data has been processed into a consistent, clean form, which is stored in the database.
   In general, user interaction only applies to the last three steps, and we will focus on these in what follows.
 </p>
@@ -24,7 +24,7 @@
 </p>
 
 <p>
-  In the third step, the data tables are <em>mapped</em> to visual structures: the so-called <strong>visual mapping</strong>.
+  In the third step, called the <strong>visual mapping,</strong> the data tables are <em>mapped</em> to visual structures.
   For example, in a bar chart visualization, data items are mapped to rectangles, and the value is mapped to the height of the respective rectangle.
   In general, data attributes are mapped to <dfn>visual variables.</dfn>
   Visual variables include, but are not limited to:
@@ -59,18 +59,18 @@
 
 <p>
   In most cases in information visualization, zooming is not merely a geometrical scaling operation (such as zooming in on a picture, simply enlarging the size in which pixels are shown).
-  Rather, zooming-in means that data can be displayed with more detail and less aggregated.
+  Rather, zooming in means that data can be displayed with more detail and less aggregated.
   Similarly, when zooming out, data needs to be aggregated more.
   Hence, zooming often involves not only the <em>view transformation</em> step, but also the <em>data transformation</em> and <em>visual mapping</em> steps as parts in the information visualization pipeline.
   This type of zooming is also called <dfn>semantic zooming,</dfn>
-  as opposed to <dfn>geometric zooming,</dfn> which only affects the the view transformation step.
+  as opposed to <dfn>geometric zooming,</dfn> which only affects the view transformation step.
 </p>
 
 <h5>Panning</h5>
 
 <p>
   <dfn>Panning</dfn> is the process of changing the <em>geometrical translation</em> of the visualized image.
-  Panning does not affect <em>visual mapping</em>, <em>view transformation</em>.
+  Panning does not affect <em>visual mapping</em>, but only <em>view transformation</em>.
   Examples for panning include:
 </p>
 
@@ -110,10 +110,10 @@
 </p>
 
 <p>
-  In a MCV visualization, each view shows <em>a different perspective</em> on the <em>same data;</em>
+  In an MCV visualization, each view shows a <em>different perspective</em> on the <em>same data;</em>
   that is, the view visualizes a specific aspect of the data.
   In Damast, one view visualizes the temporal aspect of the data (the timeline), another view the geospatial aspect (the map), and so on.
-  However, the same underlying data (evidence) is shown in each view. <!-- rather: evidences? -->
+  However, the same underlying data (evidences) is shown in each view.
   Further, the views are <em>coordinated,</em> meaning that interaction with one of the views is reflected by changes in other views.
   {{ full_documentation_link('fig-full-vis-screenshot', 'This screenshot', true) }} provides an example:
   Filtering by time range in the timeline view also affects the data shown in the map view.
@@ -129,10 +129,10 @@
 <h4>Filtering</h4>
 
 <p>
-  Damast is a <em>top-down visualization,</em> meaning that initially, all data is shown, and users can then <q>drill down</q> into that data to find smaller, more specific subsets of the data.
+  Damast is a <em>top-down visualization,</em> meaning that initially, all data is shown, and users can then <em>drill down</em> into that data to find smaller, more specific subsets of the data.
   The drill-down is realized by applying <dfn>filters</dfn> to the data.
-  A filter decides for each datum whether it matches specific criteria or not. <!-- I changed this from singular to plural; however, does *a* filter only correspond to *one* criterion or to multiple criteria? -->
-  Applying a filter to a dataset results in a subset of the dataset (not necessarily a <em>proper subset</em> in mathematical terms). <!-- correct? -->
+  A filter decides for each datum whether it matches specific criteria or not.
+  Applying a filter to a dataset results in a subset of the dataset (not necessarily a <em>proper subset</em> in mathematical terms).
 </p>
 
 <p>
@@ -143,20 +143,23 @@
 </p>
 
 <p>
-  Since Damast is a MCV visualization ({{full_documentation_link('terminology-mcv', 'see above', true) }}), it implements <dfn>multi-faceted filtering:</dfn>
-  each view can have a separate filter active at the same time.
+  Our MCV visualization ({{full_documentation_link('terminology-mcv', 'see above', true) }}) implements <dfn>multi-faceted filtering.</dfn>
+  That means that each view can have a separate filter active at the same time.
   Because the views show different aspects of the same data, the filters, too, apply to different aspects of the data:
   The timeline filter applies to the temporal aspect of the evidence, the map filter applies to the geospatial aspect of the evidence, and so on.
+</p>
 
-
-  Generally, one should be aware of how these filters work <em>between</em> as against <em>within</em> views. <em>Between views,</em> the filters are applied in conjuction; that is, an evidence is shown only if it matches <em>all</em> filters.
+<p>
+  Generally, one should be aware of how these filters work <em>between</em> as against <em>within</em> views.
+  <em>Between views,</em> the filters are applied in conjuction;
+  that is, an evidence is shown only if it matches <em>all</em> filters.
   For example, if the map and timeline both have an active filter, evidence is only visualized if it is within the specified time span <em>and</em> within the specified geographical region.
 </p>
 
 <p>
   <em>Within views,</em> the filters are applied in disjunction; that is, an evidence matches the filter if it matches <em>any</em> of the criteria.
   For example, if a religion filter with two religions is active, it matches evidence that has <em>either</em> one <em>or</em> the other religion.
-  This behavior is logical, in that there cab be no evidence that has <em>both</em> religions at the same time, or is attributed to two places at once.
+  This behavior is logical, in that there can be no evidence that has <em>both</em> religions at the same time, or is attributed to two places at once.
 </p>
 </article>
 
@@ -200,7 +203,9 @@
   The linking is then done in all views, including the one the selection and brushing originated from.
   In most views, we display linked elements by keeping their saturation, while all elements that are <em>not</em> linked are desaturated and darkened.
   A notable exception to this behavior is the timeline, where linking will show the temporal data from the brushed subset only, while all other data will be hidden.
+</p>
 
+<p>
   Clicking on the same selected element again will <em>revert</em> the selection and also clear the brushing and linking.
   Selecting any other visual element will instead <em>replace</em> the selection and brushing and linking will apply to the new subset accordingly.
   In the map, the brushing and linking can also be cleared by clicking in an empty place.
@@ -208,9 +213,9 @@
 
 <p>
   A source of confusion with the term <em><q>brushing</q></em> can be that it is interpreted in the sense of <q>paint brush;</q>
-  in that sense, the brushing itself would be a change of the visual representation of the elements (e.g. there being highlighted).
+  in that sense, the brushing itself would be a change of the visual representation of the elements (e.g., their being highlighted).
   However, this change of the visual representation is the <em>linking</em> part.
-  Rather, <q>brushing</q> should be understood as in <q>touching with one's fingers</q>:
+  Rather, <q>brushing</q> should be understood as in <q>touching (or brushing) with one's fingers</q>:
   <em>Selecting</em> a subset of data touches (brushes) them, and the subset of data is highlighted in all views, thereby visually <em>linking</em> the data to the selection and providing context.
 </p>
 
