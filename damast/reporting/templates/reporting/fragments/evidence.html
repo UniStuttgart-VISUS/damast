@@ -2,6 +2,7 @@
 
 {% macro create_evidence(e) %}
 {%- set footnotes.has_footnotes = false -%}
+{%- set footnotes.footnote_keys = [] -%}
 <section class="item" id="evidence{{ e.evidence.id }}">
   <h3 data-reference-label="e{{ e.evidence.id }}">{{ e.evidence.religion }} <span class="regular">in</span> {{ e.evidence.place_name }}</h3>
 
@@ -69,13 +70,14 @@
     {% endif %}
   </p>
 
+
   {% if e.source_instances | length == 0 %}
   {% elif e.source_instances | length == 1 %}
   {% set si = e.source_instances[0] %}
   <p>
     This information is based on
     <a class="source-reference" href="#source{{ si.source_id }}">{{ si.short }}</a>
-    {% if si.source_page %}<em>{{ si.source_page }}</em>{% endif %}
+    {%- if si.source_page -%}: <em>{{ si.source_page }}</em>{% endif %}
     {% if si.source_confidence -%}
     and is rated
     <em>{{ si.source_confidence }}</em>
@@ -83,10 +85,11 @@
     with no source confidence
     {%- endif -%}
     {%- if si.comment -%}
-    : <em><q>{{ si.comment }}</q></em>
-    {%- else -%}
-    .
+      {% set footnotekey = 'evidence_' ~ e.id ~ '_source_instance_comment_' ~ si.id %}
+      {{ create_footnote(footnotekey) }}
+      {% set _dummy = footnotes.footnote_keys.append((footnotekey, si.comment)) %}
     {%- endif -%}
+    .
   </p>
   {% else %}
   <p>
@@ -96,7 +99,7 @@
   <ul class="source-references">
     {% for si in e.source_instances %}
     <li>
-      <a class="source-reference" href="#source{{ si.source_id }}">{{ si.short }}</a>
+      <a class="source-reference" href="#source{{ si.source_id }}">{{ si.short }}</a>:
       <em>{{ si.source_page }},</em>
       {% if si.source_confidence -%}
       <em>{{ si.source_confidence }}</em>
@@ -104,10 +107,11 @@
       no source confidence
       {%- endif -%}
       {%- if si.comment -%}
-      : <em><q>{{ si.comment }}</q></em>
-      {%- else -%}
-      .
+      {% set footnotekey = 'evidence_' ~ e.id ~ '_source_instance_comment_' ~ si.id %}
+      {{ create_footnote(footnotekey) }}
+      {% set _dummy = footnotes.footnote_keys.append((footnotekey, si.comment)) %}
       {%- endif -%}
+      .
     </li>
     {% endfor %}
   </ul>
@@ -122,6 +126,9 @@
     {%- for ti in e.evidence.time_instances or [] -%}
     {{ generate_footnote(ti.comment, 'evidence_time_instance_comment' ~ e.evidence.id ~ ':' ~ ti.id) }}
     {%- endfor -%}
+    {% for k, v in footnotes.footnote_keys %}
+    {{ generate_footnote(v, k) }}
+    {% endfor %}
   </ul>
   {% endif %}
 </section>

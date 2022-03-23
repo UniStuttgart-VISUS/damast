@@ -70,8 +70,8 @@
   <% set si = e.source_instances[0] %>
     This information is based on
     \textsc{\hyperlink{source<<si.source_id>>}{<<si.short | texsafe>>}}
-    <% if si.source_page %>
-    \emph{<< si.source_page | texsafe >>}
+    <%- if si.source_page -%>
+    : \emph{<< si.source_page | texsafe >>}
     <% endif %>
     <% if si.source_confidence -%>
     and is rated
@@ -80,10 +80,9 @@
     with no source confidence
     <%- endif -%>
     <%- if si.comment -%>
-    : \emph{\enquote{<< si.comment | texsafe >>}}
-    <%- else -%>
-    .
+    \footnote{<< si.comment | texsafe >>}
     <%- endif -%>
+    .
   <% else %>
     This information is based on the following sources:
 
@@ -91,8 +90,8 @@
     <% for si in e.source_instances %>
     \item
     \textsc{\hyperlink{source<<si.source_id>>}{<<si.short | texsafe>>}}
-    <% if si.source_page %>
-    \emph{<< si.source_page | texsafe >>}
+    <%- if si.source_page -%>
+    : \emph{<< si.source_page | texsafe >>}
     <% endif %>
     <% if si.source_confidence -%>
     and is rated
@@ -101,10 +100,9 @@
     with no source confidence
     <%- endif -%>
     <%- if si.comment -%>
-    : \emph{\enquote{<< si.comment | texsafe >>}}
-    <%- else -%>
-    .
+    \footnote{<< si.comment | texsafe >>}
     <%- endif -%>
+    .
     <% endfor %>
     \end{itemize}
   <% endif %>
