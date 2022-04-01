@@ -217,9 +217,11 @@ def _verbalize_tags(tag_filter, cursor):
 
 
 def get_filter_description(filters, cursor):
-    return [
-            'The evidence must be \emph{visible.}',
-            'The place must be \emph{visible.}',
-            'The place type must be \emph{visible.}',
-            *verbalize(filters, cursor),
-            ]
+    return {
+            'implicit': [
+                'The evidence must be \emph{visible.}',
+                'The place must be \emph{visible.}',
+                'The place type must be \emph{visible.}',
+                ],
+            'explicit': verbalize(filters, cursor),
+            }
