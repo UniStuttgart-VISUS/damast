@@ -97,14 +97,14 @@ def _verbalize_religion(religion_filter, cursor):
         relnames = list(map(lambda x: F'<strong>{x.name}</strong>', cursor.fetchall()))
 
         if len(relnames) == 1:
-            return F'The evidence must reference the religion {relnames[0]}.'
+            return F'The evidence must reference the religious group {relnames[0]}.'
         elif len(relnames) == 2:
-            return F'The evidence must reference either of the religions {relnames[0]} or {relnames[1]}.'
+            return F'The evidence must reference either of the religious groups {relnames[0]} or {relnames[1]}.'
 
         rs = ', '.join(relnames[:-1])
         rz = relnames[-1]
 
-        return F'The evidence must reference one of the following religions: {rs}, or {rz}.'
+        return F'The evidence must reference one of the following religious groups: {rs}, or {rz}.'
 
 
     else:
@@ -114,7 +114,7 @@ def _verbalize_religion(religion_filter, cursor):
         if count == 0:
             return F'<span class="verbalization-restrictive-filter-warning">The religion filter does not permit any values at all. The filter will therefore not match <em>any</em> evidence. This is probably an oversight.</span>'
 
-        ret = 'The evidence must be attributed to a place where <em>at least</em> one of the following combinations of religions have, at some point, existed based on evidence in the database:<ul>'
+        ret = 'The evidence must be attributed to a place where <em>at least</em> one of the following combinations of religious groups have, at some point, existed based on evidence in the database:<ul>'
         rets = []
 
         for rels in religion_filter['filter']:
@@ -212,9 +212,11 @@ def _verbalize_tags(tag_filter, cursor):
 
 
 def get_filter_description(filters, cursor):
-    return [
-            'The evidence must be <em>visible.</em>',
-            'The place must be <em>visible.</em>',
-            'The place type must be <em>visible.</em>',
-            *verbalize(filters, cursor),
-            ]
+    return {
+            'implicit': [
+                'The evidence must be <em>visible.</em>',
+                'The place must be <em>visible.</em>',
+                'The place type must be <em>visible.</em>',
+                ],
+            'explicit': verbalize(filters, cursor),
+            }

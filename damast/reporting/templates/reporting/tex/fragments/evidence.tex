@@ -6,18 +6,18 @@
   <% else %>
   Hidden
   <% endif %>
-  evidence
-  <%- if e.evidence.evidence_comment -%>
-    \footnote{<< e.evidence.evidence_comment | texsafe >>}
-  <% endif %>
-  with
+  evidence with
   <% if e.evidence.interpretation_confidence %>
     \emph{<< e.evidence.interpretation_confidence >>}
   <% else %>
     no
   <% endif %>
-  interpretation confidence.
-  The religion
+  interpretation confidence
+  <%- if e.evidence.evidence_comment -%>
+    \footnote{<< e.evidence.evidence_comment | texsafe >>}
+  <%- endif -%>
+  .
+  The religious group
   \textbf{<< e.evidence.religion | texsafe >>}$^\textsc{\hyperlink{religion<<e.evidence.religion_id>>}{[r<<e.evidence.religion_id>>]}}$
   \emph{(<< e.evidence.religion_confidence or 'no confidence value' >>)}
   <%- if e.evidence.religion_instance_comment -%>
@@ -25,7 +25,7 @@
   <% endif %>
   was mentioned in the
   <% if e.evidence.place_type == 'Unknown' %>
-    place
+    unspecified place
   <% else %>
   \emph{<< e.evidence.place_type|lower | texsafe >>}
   <% endif %>
@@ -70,8 +70,8 @@
   <% set si = e.source_instances[0] %>
     This information is based on
     \textsc{\hyperlink{source<<si.source_id>>}{<<si.short | texsafe>>}}
-    <% if si.source_page %>
-    \emph{<< si.source_page | texsafe >>}
+    <%- if si.source_page -%>
+    : \emph{<< si.source_page | texsafe >>}
     <% endif %>
     <% if si.source_confidence -%>
     and is rated
@@ -80,10 +80,9 @@
     with no source confidence
     <%- endif -%>
     <%- if si.comment -%>
-    : \emph{\enquote{<< si.comment | texsafe >>}}
-    <%- else -%>
-    .
+    \footnote{<< si.comment | texsafe >>}
     <%- endif -%>
+    .
   <% else %>
     This information is based on the following sources:
 
@@ -91,8 +90,8 @@
     <% for si in e.source_instances %>
     \item
     \textsc{\hyperlink{source<<si.source_id>>}{<<si.short | texsafe>>}}
-    <% if si.source_page %>
-    \emph{<< si.source_page | texsafe >>}
+    <%- if si.source_page -%>
+    : \emph{<< si.source_page | texsafe >>}
     <% endif %>
     <% if si.source_confidence -%>
     and is rated
@@ -101,10 +100,9 @@
     with no source confidence
     <%- endif -%>
     <%- if si.comment -%>
-    : \emph{\enquote{<< si.comment | texsafe >>}}
-    <%- else -%>
-    .
+    \footnote{<< si.comment | texsafe >>}
     <%- endif -%>
+    .
     <% endfor %>
     \end{itemize}
   <% endif %>

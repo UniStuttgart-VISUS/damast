@@ -11,7 +11,8 @@
 {% endif %}
 
 <p>
-  This view shows different <strong>settings and features.</strong>
+  This pane shows different <strong>settings</strong> pertaining to the visualization.
+  It also offers some <strong>functionalities</strong> to store or load these settings and to generate reports from the currently shown data.
 </p>
 
 <section id="settings-vis-settings">
@@ -19,7 +20,7 @@
 
 <p>
   These are settings that directly affect the visualization.
-  In particular, they control which data is shown and in what way.
+  In particular, they control which data is shown and in which way.
 </p>
 
 
@@ -27,8 +28,9 @@
 <h4>Show filtered data</h4>
 
 <p>
-  This switch controls if data is visualized although it does not match the currently applied filters.
-  If <em>All data</em> is selected, non-matched data is represented by less saturated colors.
+  This switch controls if data is visualized although it <strong>does not match the currently applied filters.</strong>
+  If <em>All data</em> is selected, non-matched data is shown in less saturated colors.
+  Otherwise, it is not shown at all.
 </p>
 </article>
 
@@ -36,37 +38,39 @@
 <h4>Display mode</h4>
 
 <p>
-  This switch controls which aspect of the data is mapped to color.
-  If <em>Religion</em> is selected, religion is used for coloring, using the color scheme in the view <em>Religion</em>.
-  If <em>Confidence</em> is selected, the level of confidence is used, using the color scheme in the view <em>Confidence</em>.
-  The <em>aspect of confidence</em> used for the visualization can be selected in the view <em>Confidence</em>;
+  This switch controls <strong>which aspect of the data</strong> is mapped to color.
+  If <em>Religion</em> is selected, religion is used for coloring, using the color scheme in the <em>religion view.</em>.
+  If <em>Confidence</em> is selected, the level of confidence is used, using the color scheme in the <em>confidence view.</em>
+  The <em>aspect of confidence</em> used for the visualization can be selected in the <em>confidence view;</em>
   there, the currently used aspect is indicated with an <i class="fa fa-eye"></i> eye symbol below the column.
 </p>
 </article>
 
+<article id="settings-timeline-mode">
 <h4>Timeline mode</h4>
 
 <p>
-  This switch controls whether the <em>Timeline</em> shows a qualitative summary or quantitative information.
+  This switch controls whether the <em>timeline</em> shows <strong>a qualitative summary or quantitative information</strong>.
   If <em>Quantitative</em> is selected, the number of evidences of that type in that year is represented by the height of the area.
-  The timeline then looks like a <em>stacked area chart</em>.
-  If <em>Qualitative</em> is selected, the timeline only shows <em>whether</em> there are evidences of that type each year.
-  The timeline then looks like a <em>Gantt chart</em>.
+  The <em>timeline</em> then looks like a <em>stacked area chart.</em>
+  If <em>Qualitative</em> is selected, the <em>timeline</em> only shows <em>whether</em> there are evidences of that type each year.
+  The <em>timeline</em> then looks like a <em>Gantt chart.</em>
 </p>
+</article>
 
 <article id="settings-map-mode">
 <h4>Map mode</h4>
 
 <p>
-  This switch controls whether map glyphs are <em>clustered</em> or <em>unclustered</em>.
-  By default, glyphs are clustered:
-  zooming out will lead to religions attributed to different places being <q>summarized</q>.
-  (Note that for these <q>summaries</q>, all places are treated equally;
+  This switch controls whether map glyphs are <strong><em>clustered</em> or <em>unclustered.</em></strong>
+  By default, glyphs are <em>clustered:</em>
+  zooming out will lead to religions attributed to different places being <em>clustered</em> (<q>summarized</q>).
+  (Note that for these clusters, all places are treated equally;
   for example, the distribution of religions of place A and place B is combined without taking into account any further aspects of A or B.)
 </p>
 <p>
-  If glyphs are unclustered, one small symbol per place and religion is shown.
-  <em>Note</em>: This mode may lead to overlap of symbols when zooming out even to a relative small scale and should thus be used with due caution when interpreting the results.
+  If glyphs are <em>unclustered,</em> one small symbol per place and religion is shown.
+  <em>Note:</em> This mode may lead to overlap of symbols when zooming out even to a relative small scale and should, thus, be used with due caution when interpreting the results.
 </p>
 </article>
 </section>
@@ -75,9 +79,10 @@
 <h3>Generate Report</h3>
 
 <p>
-  With this feature, a detailed <strong>text report</strong> can be generated, which presents all data according to the applied filters.
+  With this feature, a detailed <strong>text report</strong> can be generated, which presents all data matched by the currently applied filters.
   The report will also contain information on the filter criteria that led to the selection of data.
-  After clicking <em>Generate report</em>, a new tab in the browser will open. A report can also be created by uploading a <em>visualization state</em> that was safed and downloaded beforehand (see below).
+  After clicking <em>Generate report,</em> a new tab in the browser will open.
+  A report can also be created by uploading a <em>visualization state</em> that was saved and downloaded beforehand (see {{ full_documentation_link('settings-persist-state', 'below', true) }}).
   More about reports can be found on the <a href="{{ url_for('root-app.root') }}" target="_blank">start page</a>.
 </p>
 <p>
@@ -85,8 +90,8 @@
 </p>
 
 <p>
-  This section also has a button labeled <em>Describe filters</em>.
-  Clicking this button will open a small window (a so-called modal window) within the visualization that describes the currently active filters in text form.
+  This section also has a button labeled <em>Describe filters.</em>
+  Clicking this button will open a small window (a so-called modal window) that describes the currently active filters in text form.
   This description is the same as the one at the top of a report.
 </p>
 
@@ -94,17 +99,17 @@
 <h3>Layout Settings</h3>
 
 <p>
-  The current layout of the visualization, i.e. the arrangement of the views, can be saved.
+  The <strong>current layout</strong> of the visualization; i.e., the arrangement of the views, can be saved.
   This feature is only available if the option <em>All cookies</em> is accepted in the <em>Cookie preferences</em> (accessible through the menu bar on top).
-  The <em>Layout settings</em> will only persist for the currently used browser and computer (using <code>localStorage</code>).
+  The <em>layout settings</em> will only persist for the currently used browser and computer (using <code>localStorage</code>).
   You can also reset the layout to the initial state. Note that this will reload the page.
 </p>
 <p>
-  <em>Note</em>: Depending on your browser settings, cookies may be deleted after closing the browser, which leads to the loss of the saved <em>Layout settings</em>.
-  In this case, the <em>Persist state</em> feature (see below) can be used as an alternative.
+  <em>Note:</em> Depending on your browser settings, cookies may be deleted after closing the browser, which leads to the loss of the saved <em>layout settings.</em>
 </p>
 
 
+<article id="settings-persist-state">
 <h3>Persist State</h3>
 
 <p>
@@ -114,12 +119,13 @@
 
 <ul>
   <li>the <em>filters</em> that are currently applied,</li>
-  <li>the center point, zoom level, and visible layers of the <em>Map</em>, and</li>
-  <li>the <em>Visualization settings</em> (cf. {{ full_documentation_link('settings-vis-settings', 'above', true) }}).</li>
+  <li>the center point, zoom level, and visible layers of the <em>map,</em> and</li>
+  <li>the <em>visualization settings</em> (cf. {{ full_documentation_link('settings-vis-settings', 'above', true) }}).</li>
 </ul>
 
 <p>
   These settings are <span class="no-break"><i class="fa fa-download"></i> <em>downloaded</em></span> as a file to the computer.
   Later, such a file can be <span class="no-break"><i class="fa fa-upload"></i> <em>uploaded</em></span> to restore the state.
-  What is more, the file can be shared to either present your results or to (re-)generate a report based on the filters.
+  The file can also be shared to either present your results or to (re-)generate a report based on the filters.
 </p>
+</article>

@@ -1,6 +1,6 @@
 <% macro creation_metadata(m) %>
 
-This report was generated using \emph{Damast} on
+This report was generated using \textsc{Damast} on
 \emph{<< m.current_time | texsafe >>}
 by \textbf{<< m.current_user | texsafe >>}
   <% if m.source == 'visualization' %>
@@ -25,7 +25,7 @@ by \textbf{<< m.current_user | texsafe >>}
 
 
 <% macro filter_description(d) %>
-<% if d | length == 0 %>
+<% if d.implicit | length == 0 and d.explicit | length == 0 %>
 
 The applied filters make \emph{no} restrictions on the displayed evidences.
 
@@ -35,9 +35,18 @@ The applied filters make the following restrictions on evidences.
 Only evidence that matches \emph{all} of the criteria are considered valid under the filter and are shown:
 
 \begin{itemize}
-  <% for fi in d %>
+  <% for fi in d.explicit %>
   \item << fi >>
   <% endfor %>
+
+  <% if d.implicit | length > 0 %>
+  \item These filters are applied, but cannot be set by the user:
+    \begin{itemize}
+      <% for fi in d.implicit %>
+      \item << fi >>
+      <% endfor %>
+    \end{itemize}
+  <% endif %>
 \end{itemize}
 <% endif %>
 <% endmacro %>

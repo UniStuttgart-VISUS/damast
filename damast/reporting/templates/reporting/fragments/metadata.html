@@ -2,7 +2,7 @@
 
 {% macro creation_metadata(m) %}
 <p>
-  This report was generated using <em>Damast</em> on
+  This report was generated using <span class="small-caps">Damast</span> on
   <em><time datetime="{{ m.current_time_machine }}">{{ m.current_time }}</time></em>
   by
   <strong>{{ m.current_user }}</strong>
@@ -28,7 +28,7 @@
 
 
 {% macro filter_description(d) %}
-{% if d | length == 0 %}
+{% if d.implicit | length == 0 and d.explicit | length == 0 %}
 <p>
   The applied filters make <em>no</em> restrictions on the displayed evidences.
 </p>
@@ -39,9 +39,17 @@
 </p>
 
 <ul>
-  {% for fi in d %}
+  {% for fi in d.explicit %}
   <li>{{ fi | safe }}</li>
   {% endfor %}
+  {% if d.implicit | length > 0 %}
+  <li>These filters are applied, but cannot be set by the user:</li>
+  <ul>
+    {% for fi in d.implicit %}
+    <li>{{ fi | safe }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
 </ul>
 {% endif %}
 {% endmacro %}
