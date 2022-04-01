@@ -1,0 +1,254 @@
+{#- vim: set ft=htmldjango : -#}
+{% from 'docs/vis-documentation-macros.html' import full_documentation_link with context %}
+
+{% if show_figures %}
+<figure id="fig-map-1">
+  <img src="{{ url_for('docs.vis.static', filename='map-1.png') }}">
+  <figcaption>
+    The map pane in <em>clustered</em> <em>map mode.</em>
+  </figcaption>
+</figure>
+{% endif %}
+
+
+<p>
+  The <strong><em>map</em></strong> visualizes the geographical aspect of the data, i.e., the evidences for the presence of religious groups at different locations.
+</p>
+
+<h3>Content</h3>
+
+<h4>Map Glyphs</h4>
+
+<p>
+  Evidences are represented by so-called map glyphs.
+  By default, these map glyphs are <strong>clustered</strong> (i.e., <strong>aggregated,</strong> or <q>summarized</q>).
+</p>
+
+<p>
+  This aggregation depends on the data currently active and on the current zoom level of the map;
+  that is, once the zoom level or filters are changed, the map is populated with glyphs according to the aggregation rules;
+  simply <em>panning</em> the map will not affect the map glyphs.
+  More details are given below.
+</p>
+
+<p>
+  This <em>map mode</em> is called <em>clustered.</em>
+  It can be changed in the settings (cf. the {{ full_documentation_link('map-unclustered-mode', 'info text below', true) }} and the info text of the <em>{{ full_documentation_link('settings-map-mode', 'Settings pane') }}</em>).
+</p>
+
+<h5>Aggregation of Locations</h5>
+
+<p>
+  Locations are <em>aggregated</em> to eliminate overlap, and so, by default, each map glyph represents <strong>one or more</strong> cities, depending on the zoom level.
+  <em>Note:</em> For this aggregation, all places are treated equally;
+  that is, the distribution of religions of place A and place B is combined without taking into account any further aspects of A or B.)
+</p>
+<p>
+  When <em>hovering</em> over a glyph, it loses opacity and the aggregated locations are indicated on the map as small turquoise dots (maybe partially covered by the glyph).
+  While hovering, a tooltip is also shown, which provides information on the number of evidences, of religions, and of places related to the glyph.
+  As long as the glyph does not aggregate more than five places, the toponym, geographical coordinates, and more information on the evidences belonging to that place are provided for each place.
+  Even more details are provided if the glyph only represents one place.
+</p>
+
+<h5>Aggregation of Religions</h5>
+
+<p>
+  A map glyph consists of up to four circles, each representing a general religious affiliation with a distinct symbol and color:
+</p>
+
+<ul>
+  <li>Christianity: cross, red/orange</li>
+  <li>Islam: crescent, green</li>
+  <li>Judaism: Star of David, blue</li>
+  <li>Other: dot, varying colors</li>
+</ul>
+
+<p>
+  Generally, multiple religious groups belonging to the same general religious affiliation are aggregated to one circle.
+  This circle then functions like a pie chart:
+  in <em>religion mode</em> (set by default), each piece of the pie chart represents a different religious group in its respective color and the piece's size shows the amount of evidences of that religious group relative to the overall evidences of its general religious affiliation.
+  In <em>confidence mode,</em> the division of the circle or pie chart is based on the evidences attributed with different levels of confidence and is colored accordingly.
+</p>
+
+<p>
+  However, if, regarding <em>all</em> map glyphs currently displayed, no more than four religous groups are to be represented, there can be more than one circle representing a general religious affiliation.
+  For instance, if only COE (Church of the East), SYR (Syriac Orthodox Church), and SUN (Sunni Islam) are filtered using the <em>religion view,</em> any given map glyph cannot have more than three circles.
+  Accordingly, both COE and SYR will be represented by an individual circle with a cross and the respective color.
+  Note that this aggregation may result from other filters or interactions with the map, not just filtering using the <em>religion view,</em> as the map glyphs are dynamically altered based on many different criteria.
+</p>
+
+<p>
+  Note that placement and aggregation of map glyphs depends on the data currently active as well as the zoom level&mdash;not, however, on the current center of the map.
+  In other words, <q>all map glyphs <em>currently displayed</em></q> includes map glyphs outside the current scope of the map that will appear when panning the map.
+</p>
+
+<p>
+  If in at least one glyph currently displayed multiple religious groups are aggregated into one circle, this same aggregation will apply to <em>all</em> other glyphs as well, even if, in sum, they have less than four circles and would otherwise not be aggregated.
+  Otherwise, the perceived variety and distribution of religions would be skewed;
+  for example, a location with only two Christian groups would be represented by a map glyph with two circles for Christianity, while a location with many Christian groups as well as other groups would be displayed with only one such circle.
+</p>
+
+<p>
+  In <em>only active</em> mode, data that has been filtered out disappears from the map.
+  Note that this can lead to glyphs having less circles, if, for example, all Christian data of a glyph has been filtered out.
+  In <em>all data</em> mode, data that has been filtered out is indicated by less saturated colors.
+</p>
+
+
+<article id="map-unclustered-mode">
+<h4>Unclustered Mode</h4>
+
+{% if show_figures %}
+<figure id="fig-map-2">
+  <img src="{{ url_for('docs.vis.static', filename='map-2.png') }}">
+  <figcaption>
+    The map pane in <em>unclustered</em> <em>map mode.</em>
+  </figcaption>
+</figure>
+{% endif %}
+
+
+<p>
+  The aggregation or clustering of places can be turned off in the <em>settings pane.</em>
+  In this <em>map mode,</em> called <em>unclustered,</em> each location is represented by an individual glyph.
+  Here, the glyphs consist of smaller circles, one for each religious group.
+  These circles are arranged in a hexagonal pattern.
+  Overlap can and will happen in this mode, even when zooming out to a relative small scale.
+  <em>Z</em>-ordering of the glyphs ensures that glyphs with fewer religious groups appear in front of larger glyphs with more religious groups.
+</p>
+
+<p>
+  <em>Note:</em> For both modes, the specific way of representing the data should be considered when interpreting the results.
+</p>
+</article>
+
+<h4>Layers</h4>
+
+<p>
+  The map provides multiple layers, which can be controlled from the layer control in the upper right corner.
+  One of two <em>base layers</em> is always selected and shown:
+  by default, a layer based on a custom map from <a href="https://www.mapbox.com/about/maps">MapBox</a> is selected, which shows topological features but no geo-political borders (i.e., borders of modern nation states).
+  As an alternative, a map provided by the <a href="https://imperium.ahlfeldt.se/">Digital Atlas of the Roman Empire (DARE)</a> can be selected as the base layer.
+</p>
+
+<p>
+  In addition, one or more overlay layers can be shown:
+</p>
+  <dl>
+    <dt><em>Markers</em></dt>
+    <dd>consists of the clustered or unclustered map glyphs. It is shown by default.</dd>
+    <dt><em>Diversity Markers</em></dt>
+    <dd>displays all locations, without clustering, each colored according to its religious diversity (i.e., the number of distinct religions present in each place). The color scale <a href="https://github.com/d3/d3-scale-chromatic#interpolateViridis">Viridis</a> is used, where low values are mapped to violet, and high values to yellow.</dd>
+    <dt><em>Diversity Distribution</em></dt>
+    <dd>shows an estimation of the religious diversity and is colored according to the same scale as the <em>diversity markers.</em></dd>
+    <dt><em>Distribution</em></dt>
+    <dd>shows an estimation of the density of evidences.</dd>
+  </dl>
+<p>
+  <em>Note:</em> The two layers for diversity (one displaying markers, the other displaying a heatmap) are <em>alternative</em> representations of the <em>same</em> data.
+  Thus, they should not be both displayed at the same time.
+  Similarly, the two layers using markers (the default one displaying map glyphs and the one displaying markers of diversity) should not be shown together.
+</p>
+
+<h4>What the Map is <em>not</em> Showing</h4>
+
+<p>
+  <span class="small-caps">Damast</span> visualizes religious constellations in cities and towns of the Islamicate world with static Non-Muslim communities.
+  The map does <em>not</em> depict a representation of the population density in the medieval Middle East.
+  In other words, an area with no or only few map glyphs is not necesarrily less populated than other areas.
+  The map makes no claim to be complete, nor does it show the general distribution of religions in a given area.
+</p>
+
+<p>
+  Empty areas on the map can have multiple reasons:
+  <ul>
+    <li>The area is outside the geographical scope of <span class="small-caps">Damast</span>, e.g., Europe.</li>
+    <li>No data for a city was collected.</li>
+    <li>No data on non-Muslim communities was available.</li>
+  </ul>
+</p>
+
+<p>
+  Furthermore, in <em>clustered</em> mode, the overall size of the map glyphs (i.e., the number of circles) does <em>not</em> directly correlate with the number of religions or evidences;
+  for instance, a map glyph with three circles does not necessarily represent more evidences than one with only two circles.
+</p>
+
+<h3>Interaction</h3>
+
+<p>
+  The map can be interactively zoomed and panned (i.e., the center of the map is moved).
+</p>
+
+<h4>Selection</h4>
+
+<p>
+  Clicking on a map glyph will <em>select</em> the represented places, <em>brush</em> the represented data, and <em>link</em> the respective data in the rest of the views.
+  Likewise, brushing data in other views will link the respective places in the map.
+  Also, selecting a place in the location list will pan the map to center on that place.
+  Map glyphs that are not linked will be displayed in less saturated colors.
+  Linking persists when zooming, even if clustered glyphs split up or merge.
+  Note, however, that a map glyph often represents more than one location.
+  In this case, <em>all</em> of the circles belonging to the glyph are highlighted, even if the linking only refers to part of the evidences.
+  For instance, a place from the <em>location list,</em> which only has evidences of the general religious affiliation <q>Christian</q>, may be selected.
+  If this place is aggregated with other places that additionally have, for instance, Islamic evidences, both the circle with the crescent as well as the one with the cross are highlighted.
+</p>
+
+<h4>Geographical Filtering</h4>
+
+{% if show_figures %}
+<figure id="fig-map-3">
+  <img src="{{ url_for('docs.vis.static', filename='map-3.png') }}">
+  <figcaption>
+    The map pane with the Geoman editor open, and a polygon being edited.
+  </figcaption>
+</figure>
+{% endif %}
+
+<p>
+  Evidences can be filtered by geographical location.
+  This is done by drawing the respective bounding shapes into the map.
+  For this, the Leaflet plugin for <a href="https://geoman.io/leaflet-geoman">Geoman</a> is used.
+  The respective tools to control the filters are available by clicking on the button with the <i class="fa fa-filter"></i> funnel in the upper left corner of the map, below the zoom buttons.
+  The button then expands to a set of controls, arranged in three blocks:
+  the first block for adding elements, the second for editing them, and the third to apply, remove or revert the filters.
+  These are described in detail below.
+  Tooltips are shown when hovering over the individual buttons.
+</p>
+
+<p>
+  The first block is for <em>adding</em> new elements to the bounds.
+  <ul>
+    <li>A rectangular area can be added, by first clicking in the map to select one corner, then moving the mouse, and clicking again to select the opposite corner.</li>
+    <li>
+      The second option is to add a polygon.
+      Here, a new point is appended to the polygon each time you click in the map.
+      To complete the polygon, click on the first node.
+    </li>
+    <li>
+      The last option is to add a circle.
+      Click once to select the center, move the mouse, then click again once the circle has the appropriate radius.
+      Note that the circle is converted to a GeoJSON polygon when saving.
+    </li>
+  </ul>
+</p>
+
+<p>
+  The second block contains controls for <em>editing</em> existing elements.
+  It is possible to
+  <ul>
+    <li>move points on existing shapes,</li>
+    <li>move entire shapes,</li>
+    <li>cut (subtract) a polygon from an existing shape, and</li>
+    <li>remove entire shapes.</li>
+  </ul>
+  Note that polygons can only be moved or removed individually <em>before</em> they have been applied as filters.
+</p>
+
+<p>
+  The last block contains controls to <em>apply</em> the created bounds to the dataset filter.
+  <ul>
+    <li>The <i class="fa fa-trash"></i> trash can button removes all existing shapes.</li>
+    <li>The <i class="fa fa-undo"></i> undo button reverts the bounds back to the state of the currently active filter, i.e., the geographical filters applied last. It then collapses the menu.</li>
+    <li>The <i class="fa fa-save"></i> save button applies the new bounds to the dataset filter, and then closes the editor.</li>
+  </ul>
+</p>

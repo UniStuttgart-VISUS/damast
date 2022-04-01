@@ -1,0 +1,53 @@
+<% macro creation_metadata(m) %>
+
+This report was generated using \textsc{Damast} on
+\emph{<< m.current_time | texsafe >>}
+by \textbf{<< m.current_user | texsafe >>}
+  <% if m.source == 'visualization' %>
+  via direct export from the visualization.
+  <% elif m.source == 'filesystem' %>
+  using a filter state that was generated on
+  \emph{<< m.export_time | texsafe >>}
+  by
+  \textbf{<< m.export_user | texsafe >>.}
+  <% else %>
+  using the filter state of report \texttt{<< m.source >>}
+  that was generated on
+  \emph{<< m.export_time >>}
+  by
+  \textbf{<< m.export_user | texsafe >>.}
+  <% endif %>
+  The filter matched
+  \textbf{<< m.evidence_count >>}~evidences
+  in the visualization at the time of export.
+
+<% endmacro %>
+
+
+<% macro filter_description(d) %>
+<% if d.implicit | length == 0 and d.explicit | length == 0 %>
+
+The applied filters make \emph{no} restrictions on the displayed evidences.
+
+<% else %>
+
+The applied filters make the following restrictions on evidences.
+Only evidence that matches \emph{all} of the criteria are considered valid under the filter and are shown:
+
+\begin{itemize}
+  <% for fi in d.explicit %>
+  \item << fi >>
+  <% endfor %>
+
+  <% if d.implicit | length > 0 %>
+  \item These filters are applied, but cannot be set by the user:
+    \begin{itemize}
+      <% for fi in d.implicit %>
+      \item << fi >>
+      <% endfor %>
+    \end{itemize}
+  <% endif %>
+\end{itemize}
+<% endif %>
+<% endmacro %>
+

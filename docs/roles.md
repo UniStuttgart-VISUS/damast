@@ -31,4 +31,4 @@ users can just be part of one or a few:
 | `pgadmin` | Allows access to pgAdmin. |
 | `reporting` | Allows access to the reporting functionality. |
 | `vis` | Allows access to the visualization. |
-| `visitor` | This role is given to visitors alongside those in `DHIMMIS_VISITOR_ROLES`, if visitor handling is enabled. |
+| `visitor` | This role is given to visitors alongside those in `DAMAST_VISITOR_ROLES`, if visitor handling is enabled. |

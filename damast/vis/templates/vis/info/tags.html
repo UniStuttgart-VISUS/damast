@@ -1,0 +1,91 @@
+{#- vim: set ft=htmldjango : -#}
+{% from 'docs/vis-documentation-macros.html' import full_documentation_link with context %}
+
+{% if show_figures %}
+<figure id="fig-tags">
+  <img src="{{ url_for('docs.vis.static', filename='tags.png') }}">
+  <figcaption>
+    The tags view.
+    Three tags were selected.
+  </figcaption>
+</figure>
+{% endif %}
+
+<p>
+  This view shows <strong>tags</strong> which are associated with evidences (i.e., a set of data concerning a place, religious group, time span, and the respective confidences).
+  Tags were implemented to include additional information and to make further distinctions possible.
+  For instance, the tag <em>Bishopric</em> is attributed to evidences referring to bishoprics as distinguished from <em>metropolitan sees</em>.
+  This way, the visualized data can be filtered according to additional criteria.
+  Note that, by default, all tags are <em>deselected.</em>
+  This means that no filters based on tags are active (cf. {{ full_documentation_link('tags-interaction', 'below', true) }}).
+</p>
+
+<h3>Contents</h3>
+<p>
+  The view consists of a table, in which each row represents one tag.
+  The rows are sorted by descending number of evidences.
+  In what follows, the respective columns of one given row are described.
+</p>
+
+<dl>
+  <dt>Checkboxes</dt>
+  <dd>
+    The first column contains a <em>checkbox</em> used for filtering.
+  </dd>
+
+  <dt>Tag Names</dt>
+  <dd>
+    The second column shows the name of the tag.
+    Generally, the name should be self-explanatory.
+    Further information is displayed when hovering with the mouse.
+  </dd>
+
+  <dt>Evidence Count Visualization</dt>
+  <dd>
+    The third column visualizes the count of evidences for each source.
+    The less saturated part of the bar represents evidences that are not active (i.e., do not match the current filters).
+  </dd>
+</dl>
+
+<section id="tags-interaction">
+<h3>Interaction</h3>
+
+<h4>Selection</h4>
+<p>
+  Clicking on a row will <em>select</em> the tag, <em>brush</em> the represented data, and <em>link</em> related data in all views.
+  For instance, locations in the <em>map</em> with evidences with the selected tag will be highlighted, other locations will be represented by less saturated colors.
+  Clicking on the same row again will reset the selection.
+  Selecting a different row, or an element in a different view, will replace the selection.
+  Only one tag at a time can be selected.
+</p>
+
+<h4>Filtering</h4>
+<p>
+  The visualized data can be filtered according to one tag or multiple tags in all views by (un-)checking the appropriate checkbox or checkboxes.
+  Keep in mind that an evidence can have no tag, one tag, or multiple tags.
+  If, for instance, it has no tag, its visibility is not affected by the checkboxes.
+  If, on the other hand, it has multiple tags, its visibility is only affected by (un-)checking all respective checkboxes.
+  Note that the selection is not applied until the <em>Apply</em> button is clicked.
+
+  Checking multiple (or all) tags works as a <em>logical disjunction:</em>
+  an evidence is matched if it is assigned <em>any</em> of the checked tags.
+  The tag filter works together with filters from other views in <em>logical conjunction:</em>
+  for instance, if only tag X and religion Y are selected in the respective views, only evidences with tag X <em>and</em> religion Y are matched.
+</p>
+
+<p>
+  Two additional buttons in the top left corner make filtering more convenient:
+</p>
+<dl>
+  <dt><i class="fa fa-fw fa-trash"></i></i> Clear all filters</dt>
+  <dd>
+    Uncheck all checkboxes;
+    that is, remove all filters based on tags.
+    Note that this is not applied until the <em>Apply</em> button is clicked.
+  </dd>
+  <dt><i class="fa fa-fw fa-history"></i> Revert checkboxes</dt>
+  <dd>
+    Revert all checkboxes to represent the state of filters applied last.
+  </dd>
+</dl>
+</section>

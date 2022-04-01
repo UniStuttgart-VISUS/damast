@@ -18,20 +18,21 @@ run() {
         -it \
         --init \
         --rm \
-        --volume="$(pwd)/dhimmis:/dhimmis:z" \
+        --volume="$(pwd)/damast:/damast:z" \
         --volume="$(pwd)/devdata:/data/:z" \
         --net=host \
         --env FLASK_DEBUG=1 \
         --env FLASK_ACCESS_LOG=/data/access_log \
         --env FLASK_ERROR_LOG=/data/error_log \
         --env PGPASSWORD=$(pass db/narcocorrido.visus.uni-stuttgart.de/api) \
-        --env DHIMMIS_REPORT_FILE=/data/reports.db \
-        --env DHIMMIS_USER_FILE=/data/users.db \
-        --env DHIMMIS_SECRET_FILE=/data/secrets.json \
-        --env DHIMMIS_VERSION="$version" \
-        --env DHIMMIS_OVERRIDE_PATH="/data/override" \
-        --env DHIMMIS_VISITOR_ROLES="user,readdb,vis,reporting" \
-        --env DHIMMIS_MAP_STYLES="map-styles.json" \
+        --env DAMAST_REPORT_FILE=/data/reports.db \
+        --env DAMAST_USER_FILE=/data/users.db \
+        --env DAMAST_SECRET_FILE=/data/secrets.json \
+        --env DAMAST_VERSION="$version" \
+        --env DAMAST_OVERRIDE_PATH="/data/override" \
+        --env DAMAST_VISITOR_ROLES="user,readdb,vis,reporting" \
+        --env DAMAST_MAP_STYLES="map-styles.json" \
+        --env DAMAST_REPORT_EVICTION_DEFERRAL=1 \
         $imagename
 }
 
@@ -40,7 +41,7 @@ build() {
   www_group_id=1001
   env="TESTING"
   basedir="/www"
-  service="dhimmis"
+  service="damast"
   port=8000
 
   cat util/docker/{base,dev}.in > Dockerfile
@@ -49,8 +50,8 @@ build() {
           -t $imagename \
           --build-arg=USER_ID=$www_user_id \
           --build-arg=GROUP_ID=$www_group_id \
-          --build-arg=DHIMMIS_ENVIRONMENT=$env \
-          --build-arg=DHIMMIS_PORT=$port \
+          --build-arg=DAMAST_ENVIRONMENT=$env \
+          --build-arg=DAMAST_PORT=$port \
           --build-arg=OWN_USER_ID=$(id -u) \
           --build-arg=OWN_USER_NAME=$(whoami) \
           .
@@ -62,8 +63,8 @@ Usage: host.sh [-h] [-b]
 
 Host the Flask server locally. This will run a special variant of the Docker
 container, which mounts the local devdata/ directory as the /data volume on the
-Docker host, for runtime configuration and logging. The local dhimmis/ source
-folder is mounted to the /dhimmis volume.
+Docker host, for runtime configuration and logging. The local damast/ source
+folder is mounted to the /damast volume.
 
   -h    Show this help and exit
   -b    Instead of hosting the server, build the necessary Docker image

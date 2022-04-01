@@ -51,7 +51,10 @@ class SourceListWorker extends DataWorker<any> {
           return d;
         });
 
-      source_data.sort((a,b) => b.data.length - a.data.length);
+      source_data.sort((a,b) => {
+        if (a.data.length === b.data.length) return a.short.localeCompare(b.short);
+        return b.data.length - a.data.length;
+      });
 
       await this.sendToMainThread({
         type: 'set-data',

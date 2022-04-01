@@ -1,4 +1,4 @@
-TARGETFILE = ../../dhimmis/reporting/map-data/features.geo.json.gz
+TARGETFILE = ../../damast/reporting/map-data/features.geo.json.gz
 GEOJSON = $(notdir $(TARGETFILE:.gz=))
 LOD = 10m
 FEATURES = ocean lakes rivers_lake_centerlines

@@ -1,0 +1,78 @@
+{% from 'reporting/fragments/macros.html' import generate_footnote, create_footnote, create_evidence_linklist with context %}
+
+{% macro create_place(_p) %}
+{%- set footnotes.has_footnotes = false -%}
+{%- set p = _p.place -%}
+{%- set uris = _p.external_uris -%}
+{%- set alternative_names = _p.alternative_names -%}
+{%- set footnotes.footnote_keys = [] -%}
+<section id="place{{ p.id }}" class="place item">
+  <h3 data-reference-label="p{{ p.id }}">{{p.name}}</h3>
+
+  <p>
+    {% if p.place_type == 'Unknown' %}
+    <em>Unspecified place</em>
+    {% else %}
+    <em>{{ p.place_type }}</em>
+    {% endif %}
+    at
+    {{ p.geoloc | render_geoloc | safe }}
+    <em>({{ p.confidence or 'unknown location confidence' }})</em>
+    {%- if p.comment -%}
+    : <em><q>{{ p.comment }}</q></em>
+    {%- else -%}
+    .
+    {%- endif -%}
+  </p>
+
+  <p>
+    {{ create_evidence_linklist(p.evidence_ids, before='', middle=' in this place: ', after='') }}
+  </p>
+
+  {% if alternative_names %}
+    <p><em>{{ p.name }}</em> is also known as:</p>
+
+    <ul>
+      {% for a in alternative_names %}
+      <li>
+        <strong>{{ a.name }}</strong>
+        {% if a.transcription %}
+        <em>({{ a.transcription }})</em>
+        {% endif %}
+        {% if a.language != 'Undefined' %}
+        in
+        <em>{{ a.language }}</em>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if uris %}
+    <p><em>{{ p.name }}</em> is linked to:</p>
+
+    <ul>
+      {% for e in uris %}
+      <li>
+        {{ e.name }}
+        {%- if e.comment -%}
+        {% set footnotekey = 'place_' ~ p.id ~ '_uri_comment_' ~ e.id %}
+        {{ create_footnote(footnotekey) }}
+        {% set _dummy = footnotes.footnote_keys.append((footnotekey, e.comment)) %}
+        {%- endif -%}
+        :
+        <a href="{{ e.uri }}">{{ e.uri }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if footnotes.has_footnotes %}
+  <ul class="footnotes">
+    {% for k, v in footnotes.footnote_keys %}
+    {{ generate_footnote(v, k) }}
+    {% endfor %}
+  </ul>
+  {% endif %}
+</section>
+{% endmacro %}

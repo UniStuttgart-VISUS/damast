@@ -1,0 +1,135 @@
+{% from 'reporting/fragments/macros.html' import generate_footnote, create_footnote with context %}
+
+{% macro create_evidence(e) %}
+{%- set footnotes.has_footnotes = false -%}
+{%- set footnotes.footnote_keys = [] -%}
+<section class="item" id="evidence{{ e.evidence.id }}">
+  <h3 data-reference-label="e{{ e.evidence.id }}">{{ e.evidence.religion }} <span class="regular">in</span> {{ e.evidence.place_name }}</h3>
+
+  <p>
+    {% if e.evidence.evidence_visible %}Visible{% else %}Hidden{% endif %}
+    evidence
+    with
+    {% if e.evidence.interpretation_confidence %}
+      <em>{{ e.evidence.interpretation_confidence }}</em>
+    {% else %}
+      no
+    {% endif %}
+    interpretation confidence
+    {%- if e.evidence.evidence_comment -%}
+      {{ create_footnote('evidence_comment' ~ e.evidence.id) }}
+    {%- endif -%}
+    .
+    The religious group
+    <strong>{{ e.evidence.religion }}</strong><a class="religion-link" href="#religion{{ e.evidence.religion_id }}"><sup>[r{{ e.evidence.religion_id}}]</sup></a>
+    <em>({{ e.evidence.religion_confidence or 'no confidence value' }})</em>
+    {%- if e.evidence.religion_instance_comment -%}
+      {{ create_footnote('evidence_religion_instance_comment' ~ e.evidence.id) }}
+    {% endif %}
+    was mentioned in the
+    {% if e.evidence.place_type == 'Unknown' %}
+      unspecified place
+    {% else %}
+    <em>{{ e.evidence.place_type|lower }}</em>
+    {% endif %}
+    <strong>{{ e.evidence.place_name }}</strong><a class="place-link" href="#place{{ e.evidence.place_id }}"><sup>[p{{ e.evidence.place_id}}]</sup></a>
+    <em>({{ e.evidence.place_attribution_confidence or 'no confidence value' }})</em>
+    {%- if e.evidence.place_instance_comment -%}
+      {{ create_footnote('evidence_place_instance_comment' ~ e.evidence.id) }}
+    {% endif %}
+    {% if e.evidence.person_name %}
+      and the
+      <em>{{ e.evidence.person_type | lower }}</em>
+      <strong>{{ e.evidence.person_name }}</strong><a class="person-link" href="#person{{ e.evidence.person_id }}"><sup>[pe{{ e.evidence.person_id}}]</sup></a>
+      <em>({{ e.evidence.person_confidence or 'no confidence value' }})</em>
+      {%- if e.evidence.person_instance_comment -%}
+        {{ create_footnote('evidence_person_instance_comment' ~ e.evidence.id) }}
+      {% endif %}
+    {% endif %}
+    {% if e.evidence.time_instances is none or e.evidence.time_instances|length == 0 %}
+      with <em>no information about time.</em>
+    {% elif e.evidence.time_instances|length == 1 %}
+      {{ e.evidence.time_instances[0].span | render_int4range | safe }}<a class="time-instance-link" href="#time-instance{{ e.evidence.time_instances[0].id }}"><sup>[t{{ e.evidence.time_instances[0].id }}]</sup></a>
+      <em>({{ e.evidence.time_instances[0].confidence or 'no confidence value' }})</em>
+      {%- if e.evidence.time_instances[0].comment -%}
+        {{ create_footnote('evidence_time_instance_comment' ~ e.evidence.id ~ ':' ~ e.evidence.time_instances[0].id) }}
+      {%- endif -%}.
+    {% else %}
+    with <em>{{ e.evidence.time_instances|length }}</em> time instances:
+    <ul>
+      {% for ti in e.evidence.time_instances|sort_int4range %}
+      <li>
+        {{ ti.span | render_int4range | safe }}<a class="time-instance-link" href="#time-instance{{ ti.id }}"><sup>[t{{ ti.id }}]</sup></a>
+        <em>({{ ti.confidence or 'no confidence value' }})</em>
+          {%- if ti.comment -%}
+            {{ create_footnote('evidence_time_instance_comment' ~ e.evidence.id ~ ':' ~ ti.id) }}
+          {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </p>
+
+
+  {% if e.source_instances | length == 0 %}
+  {% elif e.source_instances | length == 1 %}
+  {% set si = e.source_instances[0] %}
+  <p>
+    This information is based on
+    <a class="source-reference" href="#source{{ si.source_id }}">{{ si.short }}</a>
+    {%- if si.source_page -%}: <em>{{ si.source_page }}</em>{% endif %}
+    {% if si.source_confidence -%}
+    and is rated
+    <em>{{ si.source_confidence }}</em>
+    {%- else -%}
+    with no source confidence
+    {%- endif -%}
+    {%- if si.comment -%}
+      {% set footnotekey = 'evidence_' ~ e.id ~ '_source_instance_comment_' ~ si.id %}
+      {{ create_footnote(footnotekey) }}
+      {% set _dummy = footnotes.footnote_keys.append((footnotekey, si.comment)) %}
+    {%- endif -%}
+    .
+  </p>
+  {% else %}
+  <p>
+    This information is based on the following sources:
+  </p>
+
+  <ul class="source-references">
+    {% for si in e.source_instances %}
+    <li>
+      <a class="source-reference" href="#source{{ si.source_id }}">{{ si.short }}</a>:
+      <em>{{ si.source_page }},</em>
+      {% if si.source_confidence -%}
+      <em>{{ si.source_confidence }}</em>
+      {%- else -%}
+      no source confidence
+      {%- endif -%}
+      {%- if si.comment -%}
+      {% set footnotekey = 'evidence_' ~ e.id ~ '_source_instance_comment_' ~ si.id %}
+      {{ create_footnote(footnotekey) }}
+      {% set _dummy = footnotes.footnote_keys.append((footnotekey, si.comment)) %}
+      {%- endif -%}
+      .
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  {% if footnotes.has_footnotes %}
+  <ul class="footnotes">
+    {{ generate_footnote(e.evidence.evidence_comment, 'evidence_comment' ~ e.evidence.id) }}
+    {{ generate_footnote(e.evidence.religion_instance_comment, 'evidence_religion_instance_comment' ~ e.evidence.id) }}
+    {{ generate_footnote(e.evidence.place_instance_comment, 'evidence_place_instance_comment' ~ e.evidence.id) }}
+    {{ generate_footnote(e.evidence.person_instance_comment, 'evidence_person_instance_comment' ~ e.evidence.id) }}
+    {%- for ti in e.evidence.time_instances or [] -%}
+    {{ generate_footnote(ti.comment, 'evidence_time_instance_comment' ~ e.evidence.id ~ ':' ~ ti.id) }}
+    {%- endfor -%}
+    {% for k, v in footnotes.footnote_keys %}
+    {{ generate_footnote(v, k) }}
+    {% endfor %}
+  </ul>
+  {% endif %}
+</section>
+{% endmacro %}

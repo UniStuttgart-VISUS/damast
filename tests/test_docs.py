@@ -1,5 +1,5 @@
 import pytest
-import dhimmis
+import damast
 import gzip
 from functools import namedtuple
 

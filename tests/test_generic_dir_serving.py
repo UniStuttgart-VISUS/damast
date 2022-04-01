@@ -1,5 +1,5 @@
 import pytest
-import dhimmis
+import damast
 import os
 import os.path
 import tempfile
@@ -7,7 +7,7 @@ import shutil
 
 
 @pytest.fixture(scope='module', params=[
-    #('/annotator', 'DHIMMIS_ANNOTATOR_DIR', ['annotator', 'dev', 'admin']),
+    #('/annotator', 'DAMAST_ANNOTATOR_DIR', ['annotator', 'dev', 'admin']),
     ])
 def environment(request):
     return request.param

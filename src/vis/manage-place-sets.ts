@@ -16,7 +16,7 @@ interface PlaceSet {
 async function getSavedPlaceSets(user: User): Promise<PlaceSet[]> {
   const locals: PlaceSet[] = (getConsentCookie() !== 'all')
     ? []
-    : JSON.parse(window.localStorage.getItem('dhimmis.place-sets') || '[]');
+    : JSON.parse(window.localStorage.getItem('damast.place-sets') || '[]');
   locals.forEach(d => d.source = 'local');
 
   // load from DB if allowed to
@@ -78,7 +78,7 @@ async function savePlaceSets(user: User, placesets: PlaceSet[], idx: number | nu
     }
   }
 
-  if (getConsentCookie() === 'all') window.localStorage.setItem('dhimmis.place-sets', JSON.stringify(locals));
+  if (getConsentCookie() === 'all') window.localStorage.setItem('damast.place-sets', JSON.stringify(locals));
 }
 
 

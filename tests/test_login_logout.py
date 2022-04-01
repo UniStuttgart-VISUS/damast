@@ -1,6 +1,6 @@
 import os
 import pytest
-import dhimmis
+import damast
 import flask
 import urllib.parse
 import base64
@@ -64,7 +64,7 @@ def test_password_change(client_ro, testuser, new_password):
             assert rv.status_code == 302, rv.data.decode('utf-8')
 
             # check that new password persists
-            s = sqlite3.connect(os.environ['DHIMMIS_USER_FILE'])
+            s = sqlite3.connect(os.environ['DAMAST_USER_FILE'])
             c = s.cursor()
             c.execute('SELECT password FROM users WHERE id = ?;', (user.name,))
             (newhash,) = c.fetchone()

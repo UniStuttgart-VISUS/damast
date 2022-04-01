@@ -1,0 +1,207 @@
+{#- vim: set ft=htmldjango : -#}
+{% from 'docs/vis-documentation-macros.html' import full_documentation_link with context %}
+
+{% if show_figures %}
+<figure id="fig-religion-hierarchy-1">
+  <img src="{{ url_for('docs.vis.static', filename='religion-hierarchy-1.png') }}">
+  <figcaption>
+    The religion hierarchy in its default state.
+    At the top are the controls to revert the filter, the switch between simple and advanced filter mode, and the apply button.
+    The religions are visualized as an indented tree, and are filtered by enabling the respective checkbox.
+  </figcaption>
+</figure>
+{% endif %}
+
+<p>
+  This view shows <strong>all religious groups</strong> contained in the database and allows for selecting and filtering the data according to religion.
+</p>
+
+<h3>Content</h3>
+
+<p>
+  The list of religious groups is hierarchical and represented by a tree visualization:
+  each religious group occupies a line, which is indented according to its rank in the hierarchy.
+  In technical terms, the higher level is conceptualized as <em>parent,</em> the respective lower levels as <em>children.</em>
+</p>
+<p>
+  Each line consists of an <em>abbreviation</em> for the religious group, a <em>node,</em> displayed as a bar, with the color associated with the group, and a checkbox used for filtering.
+  Hovering with the mouse over the line displays a tooltip with the full name of the religious group and the number of evidences for the group based on the currently applied filters.
+</p>
+
+<p>
+  The general religious affiliation (e.g., Christianity) is on the first level of the hierarchy.
+  For other religions beside Christianity, Islam, and Judaism, we made the pragmatic choice to group them under the category <em>Other.</em>
+</p>
+
+<p>
+  The religious groups each have a distinct color.
+  For Christianity (red), Islam (green), and Judaism (blue), religious groups belonging to these general religious affiliations have hues of the same color.
+  However, the difference between colors is limited because of the amount of religious groups.
+  In <em>confidence mode</em> (cf. the pane <em>{{ full_documentation_link('settings-display-mode', 'Settings') }}</em>), the bars of the groups are colored based on the average confidence of the represented data.
+</p>
+
+<h4>Details Regarding Coloring and Saturation</h4>
+
+<p>
+  Depending on the options <em>show filtered data</em> (<em>all data</em> or <em>only active</em>) as well as <em>display mode</em> (<em>religion</em> or <em>confidence</em> mode) in the <em>settings,</em> the coloring of the bars changes:
+</p>
+<dl>
+    <dt><em>Only active,</em> <em>religion mode</em></dt>
+    <dd>
+      A bar has only one color.
+      If <em>any</em> data related to a religious group is active, the bar has saturated colors;
+      if all data related to a religious group is filtered out, the bar is shown in a less saturated color.
+    </dd>
+    <dt><em>All data,</em> <em>religion mode</em></dt>
+    <dd>
+      A bar can be divided into two parts, a saturated and a less saturated part.
+      The less saturated part represents the relative amount of data currently filtered out.
+    </dd>
+    <dt><em>Only active,</em> <em>confidence mode</em></dt>
+    <dd>
+      A bar can be divided into several sections.
+      Each section represents the relative amount of data with a certain level of confidence.
+    </dd>
+    <dt><em>All data,</em> <em>confidence mode</em></dt>
+    <dd>
+      A bar can be divided into two general parts:
+      a saturated and a less saturated part, representing the data currently active or filtered out, respectively.
+      Each part can have several sections, which each represent the relative amount of data with a certain level of confidence.
+    </dd>
+</dl>
+
+<p>
+  The <em>aspect of confidence</em> used for the visualization can be selected in the <em>confidence view.</em>
+  There, the currently used aspect is indicated with an <i class="fa fa-eye"></i> eye symbol below the column.
+</p>
+
+<h3>Interaction</h3>
+
+<h4>Selection</h4>
+
+<p>
+  Clicking on a line will <em>select</em> the religous group.
+  This group will be highlighted, and other groups will be displayed in less saturated colors.
+  The data represented by the selection will be <em>brushed,</em> and is <em>linked</em> to related data in all views.
+  For instance, map glyphs in the <em>map</em> representing evidences with the selected religion will be highlighted, other locations will be represented by less saturated colors.
+</p>
+
+
+<h4>Filtering</h4>
+
+<p>
+  The checkbox of a religious group can be unchecked, which leads to filtering out this group throughout the entire visualization.
+  Depending on whether <em>only active</em> or <em>all data</em> mode is selected in the <em>settings,</em> data that has been filtered out is either hidden or displayed in less saturated colors.
+</p>
+<p>
+  There are two basic modes for filtering by religion (more details further below):
+  In <em>Simple</em> mode, evidences matching <em>any</em> of the checked religions is shown.
+  In <em>Advanced</em> mode, only evidences from places are shown, where checked <em>combinations</em> of religions were present.
+  Note that, in both modes, the selection is not applied until the <em>Apply</em> button is clicked, which is enabled once there are changes to the filter.
+</p>
+
+
+<h5>Simple Mode</h5>
+
+<p>
+  In <em>simple</em> mode, data is filtered simply according to the checked or unchecked religions.
+  Initially, all religions are checked.
+  To filter out a religion, it can be unchecked in the checkbox column.
+</p>
+
+
+<article id="religion-view-advanced-mode">
+<h5>Advanced Mode</h5>
+
+{% if show_figures %}
+<figure id="fig-religion-hierarchy-2">
+  <img src="{{ url_for('docs.vis.static', filename='religion-hierarchy-2.png') }}">
+  <figcaption>
+    The religion hierarchy in advanced mode.
+    The filter limits evidences to those from places where two or more of the Syriac Orthodox Church (SYR), the Armenian Church (ARM), and the Church of the East (COE) are present.
+  </figcaption>
+</figure>
+{% endif %}
+
+<p>
+  In <em>advanced</em> mode, it is possible to filter not individual religions but different <em>combinations</em> of religions.
+  For instance, analysis may require to show places where two or more of the following three religious groups exist together: the Syriac Orthodox Church (SYR), the Armenian Church (ARM), and the Church of the East (COE) &ndash; but not those places where only one of the three is present.
+  In this case, evidences are active if, for any combination, all religions of that combination are present at a place.
+</p>
+
+<p>
+  Different from <em>simple</em> mode, there are multiple columns of checkboxes.
+  Each column represents a set of religious groups as described above.
+  To <em>control</em> the filters in <em>advanced</em> mode, columns can be added by using the <i class="fa fa-fw fa-plus"></i> plus button above each column.
+  Every column (except the last remaining one) can be deleted by pressing the <i class="fa fa-fw fa-trash"></i> delete button above the column.
+</p>
+
+<p>
+  The following procedure creates a filter corresponding to the analysis described above
+  (see also {{ full_documentation_link('fig-religion-hierarchy-2', 'this figure') }}):
+</p>
+<ul>
+  <li>Switch to <em>advanced</em> mode.</li>
+  <li>Create two additional columns by pressing the <i class="fa fa-fw fa-plus"></i> plus button.</li>
+  <li>In the first column, check SYR and ARM.</li>
+  <li>In the second column, check SYR and COE.</li>
+  <li>In the third column, check ARM and COE.</li>
+  <li>Click the <em>Apply</em> button.</li>
+</ul>
+<p>
+  <em>Note</em>: If only places should match the filter where <em>all</em> of these three religious groups are present, only one column in <em>advanced</em> mode is necessary with all three groups checked.
+  This must be understood as <q>evidences with COE <strong>and</strong> ARM <strong>and</strong> SYR.</q>
+  In turn, this differs from checking the three religious groups in <em>simple</em> mode, which equals <q>evidences with COE <strong>or</strong> ARM <strong>or</strong> SYR.</q>
+</p>
+</article>
+
+<h4>Filter Controls</h4>
+
+<p>
+  A few additional utilities are available for managing the checkbox columns.
+  The controls for adding (<i class="fa fa-fw fa-plus"></i> plus button) and removing (<i class="fa fa-fw fa-trash"></i> delete button) are already described in the {{ full_documentation_link('religion-view-advanced-mode', 'advanced mode description', true) }}.
+  Importantly, columns can only be added in advanced mode, and the last remaining column cannot be removed.
+  The additional controls in the view are:
+</p>
+
+<dl>
+  <dt>
+    <i class="fa fa-fw fa-history"></i> Revert filters
+  </dt>
+  <dd>
+    This button is found in the top left corner of the view.
+    Clicking it reverts the filters back to the state that is currently shown in the visualization;
+    that is, all changes that are not <em>applied</em> yet are discarded.
+  </dd>
+  <dt>
+    <i class="fa fa-fw fa-circle-o"></i> Uncheck all boxes in this column
+  </dt>
+  <dd>
+    This button is found at the top of each checkbox column.
+    Clicking it will uncheck all boxes in the column.
+  </dd>
+  <dt>
+    <i class="fa fa-fw fa-rotate-90 fa-exchange"></i> Invert all boxes in this column
+  </dt>
+  <dd>
+    This button is found at the top of each checkbox column.
+    Clicking it will invert all boxes in the column;
+    that is, boxes that were checked are unchecked, and vice versa.
+  </dd>
+  <dt>
+    <i class="fa fa-fw fa-dot-circle-o"></i> Check all boxes in this column
+  </dt>
+  <dd>
+    This button is found at the top of each checkbox column.
+    Clicking it will check all boxes in the column.
+  </dd>
+  <dt>
+    <i class="fa fa-fw fa-adjust"></i> Toggle subtree
+  </dt>
+  <dd>
+    This button is present to the <em>left</em> of some of the checkboxes in each column;
+    namely regarding religions that have <em>children</em> in the hierarchy.
+    Clicking the button will check or uncheck this religion and all its <em>children</em> in the respective column.
+    Whether clicking checks or unchecks depends on whether the majority of checkboxes in the subtree are checked.
+  </dd>
+</dl>

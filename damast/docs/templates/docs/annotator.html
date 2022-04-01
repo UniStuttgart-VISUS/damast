@@ -1,0 +1,697 @@
+{% extends "base.html" %}
+
+{% block title %}Annotator User Guide{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('docs.annotator.static', filename='style.css') }}">
+{% endblock %}
+
+{% block content %}
+<h1>Annotator User Guide</h1>
+
+<nav aria-label="table of contents" id="toc">
+  <h2>Table of Contents</h2>
+
+  <ul>
+    <li><a href="#database-schema">Database Schema</a></li>
+    <li><a href="#document-selection">Document Selection</a></li>
+    <li><a href="#document-creation">Creating a new Document</a></li>
+    <li><a href="#annotations">Annotations</a>
+      <ul>
+        <li><a href="#annotation-annotator">The Annotator Interface</a></li>
+        <li><a href="#annotation-creation">Creating an Annotation</a></li>
+        <li><a href="#annotation-selection">Selecting an Annotation</a></li>
+        <li><a href="#annotation-editing">Editing an Annotation</a></li>
+        <li><a href="#annotation-deletion">Deleting an Annotation</a></li>
+      </ul>
+    </li>
+    <li><a href="#evidences">Evidences</a>
+      <ul>
+        <li><a href="#evidence-selection">Selecting an Evidence</a></li>
+        <li><a href="#evidence-creation">Creating an Evidence</a></li>
+        <li><a href="#evidence-editing">Editing an Evidence</a></li>
+        <li><a href="#evidence-deletion">Deleting an Evidence</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+<hr />
+
+<section id="database-schema">
+  <h2>Database Schema</h2>
+
+  <figure id="figure-schema">
+    {% include 'docs/figure-schema.svg' %}
+    <figcaption>
+      <span role="number">Fig. 1:</span>
+      Database structure of tables directly involved in storing historical evidence and annotations.
+    </figcaption>
+  </figure>
+
+  <p>
+    The data is stored in a relational database.
+    These are exceptionally efficient in the lookup and querying of specific attributes and subsets of data, as well as complex joins across attributes and tables, at the cost of the readability and intuitivity of the storage format.
+    In particular, storing relationships such as an <em>optional</em> relationship, or a <em>one-to-many</em> relationship, cannot be modeled in a straightforward way, but require intermediate tables.
+    The database structure is, therefore, a bit more complex and fragmented than the mental data model it represents.
+    Still, it is valuable to understand the data model, because the way evidence is generated from annotations and groups of annotations is based very closely on that model.
+  </p>
+
+  <p>
+      <a href="#figure-schema">Fig.&nbsp;1</a> shows a simplified <em>entity-relationship diagram</em> of the tables in the database involved in evidence creation and annotations.
+      One piece of evidence <em>must</em> contain a place and religion, and <em>may</em> contain one person and one or more time spans.
+      In the database, this is represented by instance tuples, where each instance also stores meta-information specific to that tuple, such as a comment and confidence.
+      The instance tuples then point to the base entities (places, religions, persons), which only exist once.
+      The one or more time spans (time instances) are grouped by a singular time group.
+      The instances <em>may</em> be linked to one annotation, such that an annotation can <em>either</em> be for a place, religion, person, or set of time spans.
+      Each annotation is attributed clearly to one document, and each document to one source.
+      An evidence tuple can be derived from zero or more sources, which is coded via the source instance table.
+      In cases where an evidence was created using the annotator, there is only one source instance, whose source is the same as that of the document the annotations belong to.
+  </p>
+
+  <p>
+    An evidence created from the annotator, therefore, is a <em>group</em> of two to four annotations, where one belongs to a place instance, one to a religion instance, zero or one to a person instance, and zero or one to a time group.
+    Evidences created, for example, using the GeoDB-Editor look exactly the same, except that their instances do not have a connected annotation.
+    For more information on the database structure, please reference the
+    <a href="{{ url_for('docs.schema.root') }}">
+      <i class="fa fa-file-pdf-o"></i>
+      database structure PDF.
+    </a>
+  </p>
+</section>
+
+<hr />
+
+<section id="document-selection">
+  <h2>Document Selection</h2>
+
+  <figure id="figure-document-selection">
+    {% include 'docs/figure-select-document.svg' %}
+    <figcaption>
+      <span role="number">Fig. 2:</span>
+      The initial screen of the annotator shows a <em>document selection,</em> where the document to be annotated can be selected.
+      The documents are shown as cards, displaying additional metadata about the document and its underlying source.
+      A separate link leads to a form for creating new documents.
+    </figcaption>
+  </figure>
+
+  <p>
+    When opening the annotator, the first screen shows a list of all available documents, shown in <a href="#figure-document-selection">Fig.&nbsp;2</a>.
+    Each document is represented by a card, which lists some metadata about the document and its source:
+  </p>
+
+  <ul>
+    <li>the ID of the source,</li>
+    <li>the ID of the document,</li>
+    <li>the name of the document (its comment field),</li>
+    <li>the full name of the source,</li>
+    <li>the type of the source (primary source, literature, ...),</li>
+    <li>the short name of the source (e.g., <q>OCN</q>),</li>
+    <li>the document version,</li>
+    <li>the document content type,</li>
+    <li>the number of annotations in that document,</li>
+    <li>and a short preview of the document.</li>
+  </ul>
+
+  <p>
+    The goal of all that metadata is to make perfectly clear which document this is;
+    for example, there could be multiple <em>versions</em> of one source, each being its own <em>document.</em>
+    This could contain differences in spelling, whitespace, and other aspects, which in turn affect the positioning of existing annotations.
+    Therefore, creating new versions of existing documents when the textual content changes is favorable to updating the existing document, as that might create issues with those existing annotations.
+  </p>
+
+  <p>
+    To open a document in the annotator, simply <em>click</em> on the card in question.
+    Besides one card for each existing document, there is also one card at the very end of the list to create a new document.
+    This will link to the document creation form, described <a href="#document-creation">below.</a>
+  </p>
+</section>
+
+<hr />
+
+<section id="document-creation">
+  <h2>Creating a new Document</h2>
+
+  <p>
+    Creating a new document is fairly simple:
+    This will show a page with a form, the contents of which will then populate a new record in the <code>document</code> table.
+    The form has five fields, all of them mandatory, described below:
+  </p>
+
+  <dl>
+    <dt>Source:</dt>
+    <dd>
+      Each document is attributed to a source, which can be selected here using a drop-down menu.
+      The source entry must already exist when creating a new document.
+    </dd>
+    <dt>Version:</dt>
+    <dd>
+      A source can have multiple versions of itself as documents, and so each document must have a version number.
+      This number <strong>must be</strong> unique for each source (i.e., no two documents of the same source may have the same version), and only numerical values are allowed.
+    </dd>
+    <dt>Comment:</dt>
+    <dd>
+      This field is the title of the document.
+      Currently, this is a bit badly named and configured on my part, as <em><q>comment</q></em> does not really fit the purpose of the field: providing a short and ideally unique and recognizable label for a document.
+      On that note, the comment field is currently not enforced to be unique, but it might be favorable to give each document a unique comment in any case.
+      I will at some point clean this up.
+    </dd>
+    <dt>Content type:</dt>
+    <dd>
+      For the moment, annotatable documents can only have two <em>content types:</em>
+      either, they are just plain text, or they are marked-up hypertext (HTML).
+      There are subtle differences in how to calculate text positions between plain text (where each character in the file is visible) and HTML.
+      In HTML, a character in the file might have a special meaning, such as making the following text bold, or forcing a line break.
+      This field is a drop-down menu with those two options.
+      It is important to select the correct one here to avoid strange effects during annotation.
+    </dd>
+    <dt>Content:</dt>
+    <dd>
+      This is a file selection form field.
+      Select the file containing the document text from your hard drive, and its contents will be uploaded and put in the database when submitting the form.
+      By default, the file selection dialog should only show text and HTML files.
+      <br>
+      <strong>Note:</strong> The file you select here will be read by the browser and sent to the server.
+      This is one of the few occasions where the browser is allowed to read your files, or at least one of them.
+      Be careful not to select any confidential or private file by accident, as its contents will be visible to other users of the annotator as well.
+    </dd>
+  </dl>
+
+  <p>
+    After filling out all fields properly, a new document is created by clicking on the green <em>Submit</em> button.
+    This will put the document in the database and navigate back to the <a href="#document-selection">document selection page</a>.
+    Before clicking the button, no data will be sent to the server, and you can clear all form fields by clicking on the gray <em>Reset form</em> button.
+  </p>
+
+  <figure id="figure-virtual-text">
+    <img width="414" height="282" src="{{ url_for('docs.annotator.static', filename='virtual-text.png') }}"></img>
+    <figcaption>
+      <span role="number">Fig. 3a:</span>
+      Virtual text in a document cannot be selected, and is not part of annotations.
+      Virtual text can be placed inline, or as a block element.
+    </figcaption>
+
+    <pre>{%- include "docs/code-listing-virtual-text.html" -%}</pre>
+    <figcaption>
+      <span role="number">Fig. 3b:</span>
+      The HTML source code to produce the virtual text above.
+    </figcaption>
+  </figure>
+
+
+  <p>
+    In theory, all HTML files should be fine to use for annotation purposes.
+    However, there might be special considerations to be made about how you want the text to be represented.
+    In general, I would highly suggest to only use simple, semantic HTML without special styling, images, or even <code>&lt;script&gt;</code> tags<a id="footnote-1-link" class="footnote-link" href="#footnote-1"><sup>1</sup></a>.
+    If you are unsure about any of this, feel free to involve me in the creation of new documents.
+    Some questions you should think about before creating a HTML document for annotation:
+  </p>
+
+  <ul>
+    <li>
+      Are there sections of the text (e.g., page numbers) that are <em><q>not really</q></em> part of the text?
+      That means: those sections should not be selectable or annotatable.
+      Some information on how to incorporate virtual text is given in the paragraph below.
+    </li>
+    <li>
+      Is there text that requires special highlighting or styling?
+      Would such styling interfere with the styling of annotated text or the evidence links?
+    </li>
+    <li>
+      Is the text left-to-right (e.g., latin scripts), right-to-left (e.g., Arabic), or even top-to-bottom, right-to-left (e.g., Chinese)?
+      Is the writing direction mixed (e.g., English headings in Arabic text)?
+    </li>
+  </ul>
+
+  <p>
+    To add <em>virtual</em> text to a document, we use HTML <em>pseudo-elements,</em> which are generated by the browser and are not part of the textual content of the document.
+    Take note that virtual text, therefore, is only possible to add when using HTML, not plain text.
+    Virtual text has the advantage of being skipped by the offset calculations and not being selected, therefore also not being part of the text selection and the annotation content.
+    For adding virtual text, add the respective HTML element (e.g., <code>&lt;h2&gt;</code> or <code>&lt;span&gt;</code>) <em>without</em> any text between the tags.
+    The virtual text itself needs to be passed as an <em>element attribute</em> to the text.
+    The attribute name used is <code>data-virtual-text</code>.
+    The appearance of the virtual text depends on which type of HTML element you use to represent it.
+    Block-level elements, like headings (<code>&lt;h1&gt;</code>, <code>&lt;h2&gt;</code>, etc.), will be represented thus, and inline elements, like <code>&lt;span&gt;</code>, <code>&lt;strong&gt;</code>, or <code>&lt;em&gt;</code>, will be placed inline, which might be useful if the virtual text should be within a paragraph (e.g., for sentence numbering).
+    <a href="#figure-virtual-text">Fig.&nbsp;3a</a> shows an example document with two instances of virtual text:
+    One inline <code>&lt;strong&gt;</code> element, and one block-level <code>&lt;h2&gt;</code> element.
+    The HTML content of the document to produce this effect looks as listed in <a href="#figure-virtual-text">Fig.&nbsp;3b</a>.
+  </p>
+
+  <p class="footnote footnote--first" id="footnote-1">
+    <a href="#footnote-1-link"><sup>1</sup></a>While having <code>&lt;script&gt;</code> tags in the HTML of a document is <em>possible,</em> I would <strong>highly discourage</strong> having them.
+    Not only might they break the annotator functionality in some way, they open up a major security vulnerability to users of the annotator.
+    Before opening up all this functionality to the general public, I intend to add some input sanitation and maybe other security measures to lock this down.
+    Adding <code>&lt;style&gt;</code> tags to the HTML should work as intended and may in some cases even be necessary, but I would discourage overusing this.
+  </p>
+</section>
+
+<hr />
+
+<section id="annotations">
+  <h2>Annotations</h2>
+
+  <p>
+    An <em>annotation,</em> in general, consists of a <em>start</em> and <em>end</em> position within a <em>document,</em> as well as an <em>instance</em> (see <a href="#database-schema"><q>Database Schema</q></a> for more details).
+    Annotations are represented in the text by colored background behind the annotated text passage.
+    In the following, the user controls of the annotator are described, as well as how to create, edit, and delete annotations.
+  </p>
+
+  <section id="annotation-annotator">
+    <h3>The Annotator Interface</h3>
+
+    <figure id="figure-annotator-interface">
+      {% include 'docs/figure-annotator-interface.svg' %}
+      <figcaption>
+        <span role="number">Fig. 4:</span>
+        The annotator consists of of two main components:
+        the <em>document area</em> on the left, and the <em>editor pane</em> on the right.
+        A section on the top displays information about the current document.
+        Annotations are displayed by colored background behind the annotated text.
+        Evidence is represented by links connecting multiple annotations.
+        The evidence is ordered into vertical pathways on the left of the document area, so-called <em>swimlanes.</em>
+      </figcaption>
+    </figure>
+
+    <p>
+      After having selected a document in the <a href="#document-selection">document selection screen</a>, it and its annotations and evidences are displayed in the annotator.
+      The annotator interface, shown also in <a href="#figure-annotator-interface">Fig.&nbsp;4</a>, consists of two main views.
+      The <em>document area</em> on the left shows the document, annotations, and evidences;
+      and the <em>editor pane</em> on the right shows annotation and evidence editors, when open.
+    </p>
+
+    <p>
+      The document area is scrollable, and the document text is displayed here with a large line height to accomodate links between the rows.
+      A scrollbar on the left of the document area shows the current position in the document, and the positions of annotations are also indicated here.
+      Annotations within the text are indicated by a colored background, where different colors signify different types of annotations (place, person, religion, time group).
+    </p>
+
+    <p>
+      Evidences are groups of one place annotation, one religion annotation, zero or one person annotations, and zero or one time group annotations (see <a href="#database-schema"><q>Database Schema</q></a>).
+      In the annotator, they are represented by a line connecting all annotations that are part of the evidence.
+      If the annotations are in different lines of the text, the line takes a detour via the left margin of the document to avoid crossing text.
+      In the margin, the evidence links are horizonally distributed into <em>swimlanes</em> to avoid overdrawing.
+      For multiple evidence links going into the same line of text, they are also vertically distributed in the same fashion.
+    </p>
+
+    <p>
+      The editor pane is where the annotation or evidence editor is displayed when creating or editing an annotation.
+      This is described in more detail below.
+      Initially, the editor pane is empty, as no annotation or evidence is being edited.
+    </p>
+  </section>
+
+  <section id="annotation-creation">
+    <h3>Creating an Annotation</h3>
+
+    <figure id="figure-create-annotation">
+      {% include 'docs/figure-create-annotation.svg' %}
+      <figcaption>
+        <span role="number">Fig. 5:</span>
+        Annotation creation starts by selecting a text passage using the mouse.
+        Then, a dialog window pops up, where the type of annotation is selected.
+        After editing and saving the new annotation, it appears in the text.
+      </figcaption>
+    </figure>
+
+    <p>
+      The process for creating a new annotation is shown in detail in <a href="#figure-create-annotation">Fig.&nbsp;5</a>.
+      Initially, the text passage that is to be annotated needs to be selected using <em>regular text selection;</em>
+      that is, going over the start of the text passage with the mouse, push and hold down the left mouse button, drag the mouse until the end of the text passage, and release the left mouse button.
+      The selection should become highlighted while doing this.
+    </p>
+
+    <p>
+      As soon as you release the left mouse button, the selection of the text passage is finished.
+      The selected text is what will become the annotation.
+      Because there are four types of annotations, depending on which type of instance is represented (see <a href="#database-schema"><q>Database Schema</q></a>), next a pop-up window appears, where the type of annotation needs to be selected.
+      The window also shows the content of the annotation again, and there are four buttons, one for each type of annotation.
+      By clicking one of the buttons, that type is selected, the pop-up window is closed, and the <em>annotation editor</em> is opened.
+      If you want to re-select the text passage or abort the creation of the annotation for any other reason, you can either click on the <span class="red-x"><i class="fa fa-fw fa-times"></i></span> red cross in the top right, or anywhere outside of the pop-up window.
+    </p>
+
+    <p>
+      Next, in the <em>editor pane,</em> an annotation editor appears, where you can fill out the data for that annotation and the connected instance.
+      This editor window is described in more detail in <a href="#annotation-editing"><q>Editing an Annotation</q></a>, as the process for creating and editing existing annotations is quite similar.
+      The only difference is that:
+    </p>
+
+    <ol>
+      <li>the button for closing the editor will cancel creation without a prompt,</li>
+      <li>the delete button at the bottom is instead labeled <em><q>Cancel creation</q></em> and serves the same function,</li>
+      <li>the save button at the bottom is instead labeled <em><q>Create</q></em> and clicking it will persist the new annotation and instance to the database, and</li>
+      <li>the editor row for changing the text extent of the annotation is missing.</li>
+    </ol>
+
+    <p>
+      Finally, after clicking <em><q>Create</q></em> in the editor, the editor will close, and the new annotation will appear in the document.
+      Annotations <em>may</em> overlap, and may even cover exactly the same text passage.
+      It is completely fine to do a text selection over an existing annotation in the text.
+      When annotations overlap, the parts where they do are highlighted in gray instead of the normal annotation colors.
+    </p>
+
+    <figure id="figure-annotation-suggestion">
+      {% include 'docs/figure-annotation-suggestion.svg' %}
+      <figcaption>
+        <span role="number">Fig. 6:</span>
+        Suggestions for new annotations are indicated by yellow curly underlining.
+        These suggestions are based on known names for entities from the database, as well as existing annotation content.
+      </figcaption>
+    </figure>
+
+    <p>
+      The server will also generate suggestions for annotations.
+      These are based on known names (place names, alternative names from other languages, religion and person names) from the database, as well as on existing annotations in the current document.
+      <a href="#figure-annotation-suggestion">Fig.&nbsp;6</a> shows an example:
+      The person <em>Athanasius I bar Gamala</em> has been annotated in the text previously (under the name <em><q>Athanasius</q></em>).
+      Based on that, the suggestion for a person annotation at this position is suggested.
+      <em>Clicking</em> on the annotation suggestion, which is indicated by a yellow curly underline, will open an annotation editor of the respective type, with the suggested entity (place, person, or religion) already selected.
+      The editor now also indicates where the suggestion stems from.
+      Clicking <em>Create</em> will commit the annotation to the database, replacing the suggestion.
+    </p>
+  </section>
+
+  <section id="annotation-selection">
+    <h3>Selecting an Annotation</h3>
+
+    <figure id="figure-annotation-selection">
+      <img width="600" height="220" src="{{ url_for('docs.annotator.static', filename='select-annotation.png') }}"></img>
+      <figcaption>
+        <span role="number">Fig. 7:</span>
+        When clicking on an overlap between two or more annotations, a pop-up window appears, where you can select which annotation you meant to click on.
+      </figcaption>
+    </figure>
+
+    <p>
+      Selecting an annotation is as simple as clicking on it in the document area.
+      When hovering over the annotation with the mouse, it is already outlined.
+      Especially in cases where annotations are very long, or there are overlaps with other annotations, this outline can be helpful for understanding which annotation is currently under the mouse cursor.
+      When annotations overlap and you click on the gray section (i.e., the overlapping part), it is not immediately clear which annotation you want to select.
+      In that case, a pop-up window appears, listing the different annotation candidates with their type and content (see <a href="#figure-annotation-selection">Fig.&nbsp;7</a>).
+      By clicking on the intended annotation in the list here, it is selected.
+      The selection process can be cancelled by clicking on the <span class="red-x"><i class="fa fa-fw fa-times"></i></span> red cross, or anywhere outside of the pop-up window.
+    </p>
+  </section>
+
+  <section id="annotation-editing">
+    <h3>Editing an Annotation</h3>
+
+    <figure id="figure-edit-place-annotation">
+      <img width="741" src="{{ url_for('docs.annotator.static', filename='edit-place-annotation.png') }}"></img>
+      <figcaption>
+        <span role="number">Fig. 8:</span>
+        The annotation editor for a place annotation.
+      </figcaption>
+    </figure>
+
+    <p>
+      In the annotation editor, you can edit the <em>annotation comment,</em> which is the <code>comment</code> field of the record in the <code>annotation</code> table.
+      This might be useful if there is something special about the placement of the annotation in the text, or some useful context.
+      You can also see and edit the textual extent of the annotation (more details in the <a href="#edit-annotation-span">next paragraph</a>).
+      Further, you can edit the <em>instance</em> data.
+      The editors for the different types of annotations, therefore, look slightly different.
+      <a href="#figure-edit-place-annotation">Fig.&nbsp;8</a> shows an editor for a place annotation:
+      Here, the annotation comment field is empty.
+      For the place instance, the place itself, the location confidence, and the comment in the <code>place_instance</code> table can be edited.
+      The place is selected via a drop-down menu, as is the confidence.
+      The comments are entered using text fields.
+      For person and religion annotations, the editors look quite similar, but the first drop-down menu lists persons or religions, respectively.
+    </p>
+
+    <p id="edit-annotation-span">
+      An annotation has a start and end position in the text, which are stored in the <code>annotation</code> table of the database.
+      As the placement of the annotation could need to be changed, the editors provide a way to see the current extent, and to edit it.
+      Under the title <em><q>Annotation extent,</q></em> three elements are visible:
+      A representation of the start and end position of the annotation, a button to start editing, and a text area where the textual content of the annotation is shown.
+      To change the extent, click on the button, which is initially labeled <em><q>Reselect annotation</q></em> (see <a href="#figure-edit-place-annotation">Fig.&nbsp;8</a>)
+      The button now turns red and the text says <em><q>Cancel</q></em> (see <a href="#figure-edit-timegroup-annotation">Fig.&nbsp;9</a>), and clicking it again will go back to the previous state.
+      By now selecting a text passage in the document area, the textual extent of the annotation will be updated.
+      As with all other attributes of the annotation and instance, the changes will only be put into the database when clicking on the save button.
+      The annotation's textual extent can only be edited for existing annotations, and therefore this facility is not displayed when creating a new annotation.
+    </p>
+
+    <figure id="figure-edit-timegroup-annotation">
+      <img width="741" src="{{ url_for('docs.annotator.static', filename='edit-timegroup-annotation.png') }}"></img>
+      <figcaption>
+        <span role="number">Fig. 9:</span>
+        The annotation editor for a time group annotation.
+        For the third time instance, the mandatory end time field is empty, and the input is therefore outlined in red.
+        The user is currently editing the textual extent of the annotation, and the button in that section of the editor therefore reads <em><q>Cancel.</q></em>
+      </figcaption>
+    </figure>
+
+    <p>
+      For the time group annotations, the editor looks a bit different because of the way time groups work:
+      One time group can have zero or more time instances, and all of them would be attributed to the annotation.
+      <a href="#figure-edit-timegroup-annotation">Fig.&nbsp;9</a> shows an editor for a time group annotation.
+      Besides the annotation comment and textual extent, time instances are shown as separate items, where the comment, confidence, start time, and end time can be edited.
+      In this case, start and end time must be numbers, and the end time must be greater than or equal to the start time.
+      Each time instance can separately be removed by clicking on the <em><q>Delete instance</q></em> button in the respective box, and new time instances can be added via the large <em><q>New time instance</q></em> button.
+      All changes, additions and deletions are only persisted to the database when the entire time group annotation is saved with the save button in the lower right, and are not persisted if the editor is closed, discarding the edits.
+    </p>
+
+    <p>
+      Clicking on the <em>reset</em> button in the lower left of the editor will revert the values to their initial state, as if the editor was freshly opened.
+      The editor can be closed by clicking on the cross in the upper right.
+      If there are unsaved changes, a prompt will appear to confirm that those changes should be discarded.
+      The green <em>save</em> button in the lower right will persist all changes to the database.
+      The button will be greyed out and disabled if there are no changes to the annotation yet.
+      The red <em>delete</em> button will delete the instance and annotation, see <a href="#annotation-deletion"><q>Deleting an Annotation</q></a>.
+    </p>
+
+    <p>
+      All form data in the editor is validated.
+      If a field is empty <em>and</em> mandatory (e.g., no place is selected for a new place annotation), the field will be outlined in red to signify that.
+      Similarly, if the content of an input field is invalid (e.g., end time before start time for a time instance), it will be outlined in red as well.
+      In both cases, the save or create button will be disabled and greyed out.
+    </p>
+
+  </section>
+
+  <section id="annotation-deletion">
+    <h3>Deleting an Annotation</h3>
+
+    <figure id="figure-delete-annotation">
+      <img width="521" src="{{ url_for('docs.annotator.static', filename='delete-annotation.png') }}"></img>
+      <figcaption>
+        <span role="number">Fig. 10:</span>
+        A confirmation dialog appears when deleting an annotation.
+      </figcaption>
+    </figure>
+
+    <p>
+      The red <em>delete</em> button in the bottom left of the annotation editor will delete the instance and annotation.
+      Deleting an instance is only possible if the instance is not part of an evidence, and therefore this button is greyed out and disabled if that is the case.
+      When clicking on the button, a confirmation dialog will first appear to make sure that this is the intended action, see <a href="#figure-delete-annotation">Fig.&nbsp;10</a>.
+      When clicking <em>cancel,</em> the deletion is not performed.
+      When clicking <em>delete,</em> the annotation and the instance will be removed from the database, and the annotation will disappear from the document area.
+    </p>
+  </section>
+</section>
+
+<hr />
+
+<section id="evidences">
+  <h2>Evidences</h2>
+
+  <p>
+    An <em>evidence,</em> in general, is a grouping of a <em>place instance,</em> a <em>religion instance,</em> and optionally a <em>person instance</em> and a <em>time group</em> (see <a href="#database-schema"><q>Database Schema</q></a>).
+    In addition, the evidence has a comment field, the <em>interpretation confidence</em> which specifies how confident you are in the interpretation of the source when creating the evidence, and a visibility flag that controls whether the evidence will appear in the visualization or not.
+  </p>
+
+  <p>
+    Each evidence also has a <em>source instance,</em> which for annotator-generated evidences is created automatically based on the document's source.
+    Here, the <em>source confidence,</em> which specifies the source's trustworthiness for that specific evidence, can also be set.
+    Last, evidences can be <em>tagged</em> with zero or more tags.
+  </p>
+
+  <section id="evidence-selection">
+    <h3>Selecting an Evidence</h3>
+
+    <figure id="figure-select-evidence">
+      {% include 'docs/figure-select-evidence.svg' %}
+      <figcaption>
+        <span role="number">Fig. 11:</span>
+        To select an evidence, hover on the link with the mouse.
+        This will already make the link bolder.
+        Then clicking the link will select the evidence.
+        The link will then turn blue and start to be animated, and the contained annotations are also outlined and animated.
+      </figcaption>
+    </figure>
+
+    <p>
+      When selecting an evidence, it is opened in the evidence editor.
+      When creating a new evidence, that new evidence is automatically selected for as long as it is edited.
+      An existing evidence is selected by clicking anywhere on the link.
+      The links are layed out in a way that they overlap as little as possible.
+      To further distinguish which evidence is currently under the cursor, the link gets bolder when the mouse hovers on it.
+      Clicking on a link will <em>select</em> that evidence.
+      It is then opened in the evidence editor.
+      Further, the evidence link and the connected annotations are highlighted differently, with blue color and animation, as shown in <a href="#figure-select-evidence">Fig.&nbsp;11</a>.
+      Selecting a different evidence while the editor is opened will switch to editing that evidence;
+      however, if there are unsaved changes, a confirmation prompt is shown first.
+    </p>
+  </section>
+
+  <section id="evidence-creation">
+    <h3>Creating an Evidence</h3>
+
+    <figure id="figure-create-evidence">
+      <img width="741" src="{{ url_for('docs.annotator.static', filename='create-evidence.png') }}"></img>
+      <figcaption>
+        <span role="number">Fig. 12:</span>
+        Evidence editor for a new evidence.
+        The mandatory place and religion instances are empty, and the evidence can therefore not be created yet.
+      </figcaption>
+    </figure>
+
+    <p>
+      To create an evidence, simply click on the <em><q>New evidence</q></em> button in the top right of the document area (see <a href="#figure-annotator-interface">Fig.&nbsp;4</a>).
+      This will open the evidence editor with a new evidence (see <a href="#figure-create-evidence">Fig.&nbsp;12</a>).
+      While the evidence editor is opened, the button is greyed out and disabled.
+      As with annotations, creating a new or editing an existing evidence is very similar, and so the description of the editor itself is described below, in <a href="#evidence-editing"><q>Editing an Evidence</q></a>.
+      And again, there are slight differences in the three buttons (compare also <a href="#figure-create-evidence">Fig.s&nbsp;12</a> and <a href="#figure-edit-evidence">13</a>).
+    </p>
+
+    <ol>
+      <li>the button for closing the editor will cancel creation without a prompt,</li>
+      <li>the delete button at the bottom is instead labeled <em><q>Cancel creation</q></em> and serves the same function, and</li>
+      <li>the save button at the bottom is instead labeled <em><q>Create</q></em> and clicking it will persist the new evidence to the database.</li>
+    </ol>
+
+  </section>
+
+  <section id="evidence-editing">
+    <h3>Editing an Evidence</h3>
+
+    <figure id="figure-edit-evidence">
+      <img width="741" src="{{ url_for('docs.annotator.static', filename='edit-evidence.png') }}"></img>
+      <figcaption>
+        <span role="number">Fig. 13:</span>
+        Evidence editor for an existing evidence.
+      </figcaption>
+    </figure>
+
+    <p>
+      The evidence editor, shown in <a href="#figure-create-evidence">Fig.s&nbsp;12</a> and <a href="#figure-edit-evidence">13</a>, contains four traditional form fields, which are all optional.
+      These form fields can be edited in a straightforward manner:
+    </p>
+
+    <ul>
+      <li>a text field for the <code>comment</code> field of the evidence,</li>
+      <li>a drop-down menu for the evidence's <em>interpretation confidence,</em></li>
+      <li>a drop-down menu for the source instance's <em>source confidence,</em> and</li>
+      <li>a checkbox to toggle the visibility of the evidence in the visualization<a id="footnote-2-link" class="footnote-link" href="#footnote-2"><sup>2</sup></a>.</li>
+    </ul>
+
+    <figure id="figure-edit-evidence-membership">
+      {% include 'docs/figure-edit-evidence-membership.svg' %}
+      <figcaption>
+        <span role="number">Fig. 14:</span>
+        To toggle membership of an annotation, and its associated <em>instance,</em> to an evidence, click on the annotation while the evidence editor is opened.
+        The link representing the evidence will update instantly.
+      </figcaption>
+    </figure>
+
+    <p>
+      The next four rows represent the place instance, religion instance, person instance, and time group that are part of the evidence.
+      Here, as the place and religion instance are mandatory, these will show up as red when empty (see <a href="#figure-create-evidence">Fig.&nbsp;12</a>).
+      These four fields cannot be directly edited (i.e., by clicking or typing in them), but instead are controlled via the <em>document area.</em>
+      While the editor is opened, the annotations that are part of the evidence are <span style="outline: 2px solid steelblue">outlined in blue</span> and animated.
+      Changing membership of annotations works as follows (see also <a href="#figure-edit-evidence-membership">Fig.&nbsp;14</a>):
+      To add an annotation and its instance to the evidence, <em>click</em> on the annotation.
+      To remove an annotation and its instance that are already part of the evidence, also <em>click</em> on the annotation (clicking <em>toggles</em> membership).
+      If the evidence already contains an instance and annotation of a certain type, clicking on a <em>different</em> annotation of that type <em>replaces</em> the previous instance and annotation with the new ones;
+      for example, if there are two place annotations in the text, one for <strong>Edessa</strong> and one for <strong>Damascus,</strong> with <strong>Edessa</strong> being part of the evidence, clicking on the <strong>Damascus</strong> annotation would replace the place instance in the evidence, and the evidence would now be related to the place Damascus.
+      An instance and annotation can be associated with multiple evidences.
+    </p>
+
+    <p>
+      The fields in the editor displaying the instances cannot be interacted with directly.
+      They show more information on the instances themselves and update automatically.
+      In particular, they show the instance ID, the name and ID of the entity the instance refers to (place, religion, or person), and the respective instance confidence.
+      For the time group, a comma-separated list of all time instances, with start time, end time, and confidence is shown instead.
+      The data about the instances must be fetched from the database when it changes, so directly after opening the editor, or when toggling membership of an annotation and instance, the data is not available for a short while, and a loading indicator is shown instead:
+    </p>
+
+    <blockquote>
+      <i class="fa fa-fw fa-pulse fa-spinner"></i>&nbsp;<em>Loading...</em>
+    </blockquote>
+
+    <p>
+      If no instance of that type is connected, this is indicated instead, as shown in <a href="#figure-create-evidence">Fig.&nbsp;12</a>.
+      As the place and religion instances are mandatory, the absence of those is highlighted in red with more urgency.
+    </p>
+
+    <p>
+      The last part of the evidence editor is the evidence tags.
+      Evidence can be tagged to create specific groups of evidences;
+      for example, evidences that refer to Bishopric residences, or evidences that have been thoroughly reviewed.
+      An evidence can have zero or more tags.
+      For now, all evidence created via the annotator will have the tag <em><i class="fa fa-tag"></i> Annotator beta test</em> assigned to them, and the tag cannot<a id="footnote-3-link" class="footnote-link" href="#footnote-3"><sup>3</sup></a> be removed.
+      The idea is that, until we are sure the annotator does not do anything harmful to the database, we will be able to identify and remove all evidence that was added to the database via the annotator if we so choose.
+      Of course, we can always remove the tag from the evidences later.
+      Tags that are associated with the evidence are displayed at the top in green, tags that are not are displayed below in grey, with a <i class="fa fa-plus"></i> <em>plus</em> symbol instead of the <i class="fa fa-tag"></i> <em>tag</em> symbol.
+      To remove an associated tag, click on it, and it moves to the bottom.
+      Similarly, to add a tag, click on it, and it moves up and becomes green.
+    </p>
+
+    <p>
+      As with the annotation editor, all changes made are only local until you click the <em>save</em> button at the bottom (or, for new evidences, the <em>create</em> button).
+      Using the <em>reset</em> button, the initial state from the database can be restored for all fields, discarding all changes.
+      Clicking on the cross in the top right closes the editor if there are no unsaved changes, otherwise a confirmation prompt is shown first.
+      The same prompt is also shown when trying to open a different evidence by clicking on the respective link in the document area.
+      The <em>delete</em> button deletes the evidence, see <a href="#evidence-deletion"><q>Deleting an Evidence</q></a>.
+      The <em>save</em> button will persist all changes to the database.
+      This button will only be enabled if it is currently possible to save:
+      If there are no changes, it is disabled and greyed out.
+      Further, if there is invalid input (i.e., no place or religion instance selected), saving is also not possible.
+    </p>
+
+    <p>
+      For evidence that is already saved in the database (i.e., when editing evidence, but not during creation), the evidence editor also shows a link at the top labeled <em><q>View this evidence in the GeoDB-Editor.</q></em>
+      Clicking this link will open the GeoDB-Editor, and there select the place of the evidence, scroll down to the evidence table, and select the evidence there as well.
+      For evidence created using the annotator, a similar link exists in the evidence table of the GeoDB-Editor, which opens the appropriate document in the annotator and opens the respective evidence in the evidence editor.
+    </p>
+
+    <p class="footnote footnote--first" id="footnote-2">
+      <a href="#footnote-2-link"><sup>2</sup></a>Evidence tuples that do not have the <code>visible</code> flag set are <em>never loaded</em> from the database.
+      While most other filters in the visualization will hide or show evidence dynamically, evidences that are not <em>visible</em> will never show up.
+      Of course, the visibility can be changed later.
+    </p>
+    <p class="footnote" id="footnote-3">
+      <a href="#footnote-3-link"><sup>3</sup></a>The tag cannot be removed using the annotator.
+      However, it is possible to remove it from the evidence via the GeoDB-Editor.
+      Only do this if you are certain you want to remove the association!
+    </p>
+  </section>
+
+  <section id="evidence-deletion">
+    <h3>Deleting an Evidence</h3>
+
+    <figure id="figure-delete-evidence">
+      <img width="497" src="{{ url_for('docs.annotator.static', filename='delete-evidence.png') }}"></img>
+      <figcaption>
+        <span role="number">Fig. 15:</span>
+        A confirmation dialog appears when deleting an evidence.
+      </figcaption>
+    </figure>
+
+    <p>
+      Clicking on the red <em>delete</em> button in the evidence editor will delete the evidence from the database.
+      A confirmation dialog (see <a href="figure-delete-evidence">Fig.&nbsp;15</a>) will appear first to avoid accidental deletions.
+      In the case of new evidences that have not been saved yet, the button will instead be labeled <em><q>Cancel creation.</q></em>
+    </p>
+
+    <p>
+      Deleting an evidence will <em>not</em> delete the connected annotations and instances.
+      Those will remain in the database and the document area.
+      It will only delete the evidence itself, the source instance, and all tag associations.
+      The deletion will be reflected at once in the document area, where the respective link will also disappear.
+      After deletion, the evidence editor is closed.
+    </p>
+  </section>
+</section>
+
+{% endblock %}
+

@@ -1,11 +1,11 @@
 import pytest
 import re
-import dhimmis
+import damast
 import flask
 import json
 from functools import namedtuple
 from urllib.parse import quote
-from dhimmis.postgres_rest_api.util import NumericRangeEncoder
+from damast.postgres_rest_api.util import NumericRangeEncoder
 
 from database.testdata import evidence_table, place_instance_table, place_table, place_type_table, time_instance_table, religion_instance_table
 

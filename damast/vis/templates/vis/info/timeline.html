@@ -1,0 +1,102 @@
+{#- vim: set ft=htmldjango : -#}
+{% from 'docs/vis-documentation-macros.html' import full_documentation_link with context %}
+
+{% if show_figures %}
+<figure id="fig-timeline-1">
+  <img src="{{ url_for('docs.vis.static', filename='timeline-1.png') }}">
+  <figcaption>
+    The timeline in qualitative mode, showing three religious groups.
+    A time range between 830 and 1090 is set as the filter.
+  </figcaption>
+</figure>
+{% endif %}
+
+
+<p>
+  The <em>Timeline</em> shows the distribution of the different religious groups <strong>along the overall time period:</strong> 600&ndash;1400 CE.
+  In <em>confidence mode,</em> the level of confidence is shown instead of religious groups (cf. the info texts of the <em>{{ full_documentation_link('confidence', 'Confidence view') }}</em> and of the <em>{{ full_documentation_link('settings-pane', 'Settings pane') }}</em>, respectively).
+</p>
+
+<h3>Content</h3>
+
+<p>
+  The <em>timeline</em> consists of two graphs:
+  the <strong><em>main timeline</em></strong> and a smaller <strong><em>overview.</em></strong>
+  The graphs are described in the following.
+</p>
+
+<p>
+  Also, the view changes depending on the choice of <em>show filtered data</em> in the <em>settings</em> (cf. {{ full_documentation_link('settings-pane', 'documentation') }}):
+  in <em>all data</em> mode, data that has been filtered out is indicated by less saturated colors.
+  In <em>only active</em> mode, data that has been filtered out is hidden from the visualization in all views, including the timeline.
+</p>
+
+<h4>Main Timeline / Upper Graph</h4>
+
+{% if show_figures %}
+<figure id="fig-timeline-2">
+  <img src="{{ url_for('docs.vis.static', filename='timeline-2.png') }}">
+  <figcaption>
+    The timeline in qualitative mode.
+  </figcaption>
+</figure>
+{% endif %}
+
+<p>
+  The <em>main timeline</em> shows either a qualitative summary or quantitative information, depending on the <em>timeline mode</em> selected in the <em>settings pane.</em>
+  If <em>quantitative</em> is selected, the number of evidences of that type in that year is encoded into the height of the area as a <em>stacked area chart.</em>
+  If <em>qualitative</em> is selected, the timeline only shows <em>whether</em> there are evidences of that type each year.
+  The colors used in the graph match the ones used in the <em>religion view</em> or <em>confidence view,</em> depending on the <em>display mode</em> selected in the <em>settings pane.</em>
+</p>
+
+<p>
+  Importantly, the <em>main timeline</em> can be used to filter the data according to time (cf. {{ full_documentation_link('timeline-filtering', 'below', true) }}).
+</p>
+
+<h4>Overview / Lower Graph</h4>
+
+<p>
+  The smaller <strong>overview</strong> serves as a <em>minimap</em> for the larger <em>main timeline:</em>
+  it always shows the entire time range contained in the database.
+</p>
+<p>
+  By clicking and dragging in the <em>overview,</em> a rectangle can be drawn which represents a time range.
+  The <em>main timeline</em> <em>zooms</em> to this time range and shows data in greater detail.
+  The overview represented by the lower graph does not change during this <em>zooming</em> in the upper graph.
+  Vice versa, if the data is filtered by clicking and dragging in the <em>main timeline</em> (cf. <q>Filtering</q> {{ full_documentation_link('timeline-filtering', 'below', true) }}), the selected range is indicated as a thick bar below the <em>overview.</em>
+</p>
+<p>
+  The rectangle representing the time range for zooming can be moved by clicking and dragging or altered by changing the width of the rectangle.
+  Note the mouse cursor in form of a grabbing hand (or a four-headed arrow) when hovering over the rectangle or the double-headed arrow when hovering the left and right borders of the rectangle, respectively.
+  Clicking anywhere in the <em>overview</em> outside the rectangle will deactivate the zooming.
+</p>
+
+<h4>Tooltips</h4>
+
+<p>
+  When <strong>hovering</strong> over any of the graphs, a tooltip with a summary of evidences for that year is displayed.
+  If the <em>main timeline</em> shows a smaller time range than the <em>overview,</em> the year in the tooltip depends on whether the mouse cursor is on the <em>main timeline</em> or the <em>overview.</em>
+</p>
+
+<p>
+  When <strong>selecting</strong> data in other views, through <em>brushing and linking,</em> only the selected data shows in the timeline.
+  <em>Note:</em> Selecting data in the timeline itself is not possible.
+</p>
+
+<h3>Interaction</h3>
+
+<article id="timeline-filtering">
+<h4>Filtering</h4>
+
+<p>
+  By <em>clicking and dragging</em> in the <em>main timeline,</em> a rectangle can be drawn which represents a time range.
+  Data outside the time range is filtered out;
+  accordingly, the area outside the rectangle is displayed in less saturated colors.
+  The time range serves as a time filter for the data across all views.
+</p>
+<p>
+  The rectangle representing the time range for filtering can be moved by clicking and dragging or altered by changing the width of the rectangle.
+  Note the mouse cursor in form of a grabbing hand when hovering over the rectangle or the double-headed arrow when hovering the left and right borders of the rectangle, respectively.
+  Clicking anywhere in the <em>main timeline</em> resets the filter.
+</p>
+</article>

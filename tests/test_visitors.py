@@ -1,6 +1,6 @@
 import os
 import pytest
-import dhimmis
+import damast
 import flask
 import urllib.parse
 import base64
@@ -56,10 +56,10 @@ _visitor_roles = [
 @pytest.fixture(params=_visitor_roles, scope='function', autouse=True)
 def visitor_roles(request):
     if request.param.roles is None:
-        if 'DHIMMIS_VISITOR_ROLES' in os.environ:
-            os.environ.pop('DHIMMIS_VISITOR_ROLES')
+        if 'damast_VISITOR_ROLES' in os.environ:
+            os.environ.pop('damast_VISITOR_ROLES')
     else:
-        os.environ['DHIMMIS_VISITOR_ROLES'] = ','.join(request.param.valid)
+        os.environ['damast_VISITOR_ROLES'] = ','.join(request.param.valid)
 
     return request.param
 

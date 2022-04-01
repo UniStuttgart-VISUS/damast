@@ -1,0 +1,110 @@
+<% macro create_evidence(e) %>
+\section*{\hypertarget{evidence<<e.evidence.id>>}{\textsc{[e<< e.evidence.id >>]} << e.evidence.religion | texsafe >> in << e.evidence.place_name | texsafe >>}}
+
+  <% if e.evidence.evidence_visible %>
+  Visible
+  <% else %>
+  Hidden
+  <% endif %>
+  evidence with
+  <% if e.evidence.interpretation_confidence %>
+    \emph{<< e.evidence.interpretation_confidence >>}
+  <% else %>
+    no
+  <% endif %>
+  interpretation confidence
+  <%- if e.evidence.evidence_comment -%>
+    \footnote{<< e.evidence.evidence_comment | texsafe >>}
+  <%- endif -%>
+  .
+  The religious group
+  \textbf{<< e.evidence.religion | texsafe >>}$^\textsc{\hyperlink{religion<<e.evidence.religion_id>>}{[r<<e.evidence.religion_id>>]}}$
+  \emph{(<< e.evidence.religion_confidence or 'no confidence value' >>)}
+  <%- if e.evidence.religion_instance_comment -%>
+    \footnote{ << e.evidence.religion_instance_comment | texsafe >>}
+  <% endif %>
+  was mentioned in the
+  <% if e.evidence.place_type == 'Unknown' %>
+    unspecified place
+  <% else %>
+  \emph{<< e.evidence.place_type|lower | texsafe >>}
+  <% endif %>
+  \textbf{<< e.evidence.place_name | texsafe >>}$^\textsc{\hyperlink{place<<e.evidence.place_id>>}{[p<<e.evidence.place_id>>]}}$
+  \emph{(<< e.evidence.place_attribution_confidence or 'no confidence value' >>)}
+  <%- if e.evidence.place_instance_comment -%>
+    \footnote{<< e.evidence.place_instance_comment | texsafe >>}
+  <% endif %>
+  <% if e.evidence.person_name %>
+    and the
+    \emph{<< e.evidence.person_type | lower | texsafe >>}
+    \textbf{<< e.evidence.person_name | texsafe >>}$^\textsc{\hyperlink{person<<e.evidence.person_id>>}{[pe<<e.evidence.person_id>>]}}$
+    \emph{(<< e.evidence.person_confidence or 'no confidence value' >>)}
+    <%- if e.evidence.person_instance_comment -%>
+      \footnote{<< e.evidence.person_instance_comment | texsafe >>}
+    <% endif %>
+  <% endif %>
+  <% if e.evidence.time_instances is none or e.evidence.time_instances|length == 0 %>
+    with \emph{no information about time.}
+  <% elif e.evidence.time_instances|length == 1 %>
+    << e.evidence.time_instances[0].span | render_int4range >>
+    \emph{(<< e.evidence.time_instances[0].confidence or 'no confidence value' >>)}
+    <%- if e.evidence.time_instances[0].comment -%>
+      \footnote{<< e.evidence.time_instances[0].comment | texsafe >>}
+    <%- endif -%>.
+  <% else %>
+  with \emph{<< e.evidence.time_instances|length >>} time instances:
+  \begin{itemize}
+    <% for ti in e.evidence.time_instances|sort_int4range %>
+    \item
+      << ti.span | render_int4range >>
+      \emph{(<< ti.confidence or 'no confidence value' >>)}
+        <%- if ti.comment -%>
+          \footnote{<< ti.comment | texsafe >>}
+        <% endif %>
+    <% endfor %>
+  \end{itemize}
+  <% endif %>
+
+  <% if e.source_instances | length == 0 %>
+  <% elif e.source_instances | length == 1 %>
+  <% set si = e.source_instances[0] %>
+    This information is based on
+    \textsc{\hyperlink{source<<si.source_id>>}{<<si.short | texsafe>>}}
+    <%- if si.source_page -%>
+    : \emph{<< si.source_page | texsafe >>}
+    <% endif %>
+    <% if si.source_confidence -%>
+    and is rated
+    \emph{<< si.source_confidence >>}
+    <%- else -%>
+    with no source confidence
+    <%- endif -%>
+    <%- if si.comment -%>
+    \footnote{<< si.comment | texsafe >>}
+    <%- endif -%>
+    .
+  <% else %>
+    This information is based on the following sources:
+
+    \begin{itemize}
+    <% for si in e.source_instances %>
+    \item
+    \textsc{\hyperlink{source<<si.source_id>>}{<<si.short | texsafe>>}}
+    <%- if si.source_page -%>
+    : \emph{<< si.source_page | texsafe >>}
+    <% endif %>
+    <% if si.source_confidence -%>
+    and is rated
+    \emph{<< si.source_confidence >>}
+    <%- else -%>
+    with no source confidence
+    <%- endif -%>
+    <%- if si.comment -%>
+    \footnote{<< si.comment | texsafe >>}
+    <%- endif -%>
+    .
+    <% endfor %>
+    \end{itemize}
+  <% endif %>
+
+<% endmacro %>
