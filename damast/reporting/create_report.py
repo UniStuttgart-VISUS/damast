@@ -39,7 +39,7 @@ from .report_database import get_report_database, DatabaseVersion
 from ..postgres_database import postgres_database
 from .tex import render_tex_report
 from .html import render_html_report
-from .place_sort import sort_placenames, sort_alternative_placenames
+from .place_sort import sort_placenames, sort_alternative_placenames, sort_evidence
 from .eviction import does_evict
 
 
@@ -278,6 +278,10 @@ def create_report(pg, filter_json, current_user, started, report_uuid, report_ur
                 WHERE SI.evidence_id = %(eid)s;''', eid=evidence.id)
                 evidences.append(Evidence(evidence, list(cursor.fetchall())))
 
+            # sort evidences first by city name, then by religion name, then by start of first time span
+            evidences = sorted(evidences, key=sort_evidence)
+
+
             source_evidence = { s.id: list(map(lambda e: e.evidence.id, filter(lambda e: any(map(lambda si: si.source_id == s.id, e.source_instances)), evidences))) for _, s in sources }
 
             # place_data
@@ -316,7 +320,8 @@ def create_report(pg, filter_json, current_user, started, report_uuid, report_ur
                     format(UN.short_name, EPU.uri_fragment) AS short,
                     format(UN.uri_pattern, EPU.uri_fragment) AS uri,
                     EPU.comment,
-                    ED.name
+                    ED.name,
+                    EPU.id
                 FROM external_place_uri EPU
                 JOIN uri_namespace UN ON EPU.uri_namespace_id = UN.id
                 JOIN external_database ED ON UN.external_database_id = ED.id

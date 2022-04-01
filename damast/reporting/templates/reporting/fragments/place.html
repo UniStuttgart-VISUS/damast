@@ -5,12 +5,13 @@
 {%- set p = _p.place -%}
 {%- set uris = _p.external_uris -%}
 {%- set alternative_names = _p.alternative_names -%}
+{%- set footnotes.footnote_keys = [] -%}
 <section id="place{{ p.id }}" class="place item">
   <h3 data-reference-label="p{{ p.id }}">{{p.name}}</h3>
 
   <p>
     {% if p.place_type == 'Unknown' %}
-    <em>Place</em>
+    <em>Unspecified place</em>
     {% else %}
     <em>{{ p.place_type }}</em>
     {% endif %}
@@ -53,18 +54,25 @@
     <ul>
       {% for e in uris %}
       <li>
-        <a href="{{ e.uri }}">
-          <span class="uri-short">{{ e.short }}</span>
-          in
-          <em>{{ e.name }}</em></a>
+        {{ e.name }}
         {%- if e.comment -%}
-        : <em><q>{{ e.comment }}</q></em>
-        {%- else -%}
-        .
+        {% set footnotekey = 'place_' ~ p.id ~ '_uri_comment_' ~ e.id %}
+        {{ create_footnote(footnotekey) }}
+        {% set _dummy = footnotes.footnote_keys.append((footnotekey, e.comment)) %}
         {%- endif -%}
+        :
+        <a href="{{ e.uri }}">{{ e.uri }}</a>
       </li>
       {% endfor %}
     </ul>
+  {% endif %}
+
+  {% if footnotes.has_footnotes %}
+  <ul class="footnotes">
+    {% for k, v in footnotes.footnote_keys %}
+    {{ generate_footnote(v, k) }}
+    {% endfor %}
+  </ul>
   {% endif %}
 </section>
 {% endmacro %}
