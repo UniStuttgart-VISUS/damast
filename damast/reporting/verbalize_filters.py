@@ -27,7 +27,7 @@ def verbalize(filters, cursor):
 
     verbs.append(_verbalize_confidence(filters['confidence'],
         'religion_confidence',
-        'The religion confidence of the piece of evidence',
+        'The confidence regarding the religion attributed to the piece of evidence',
         cursor))
 
     verbs.append(_verbalize_confidence(filters['confidence'],
