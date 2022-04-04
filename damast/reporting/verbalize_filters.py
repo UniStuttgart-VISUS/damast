@@ -12,7 +12,7 @@ def verbalize(filters, cursor):
 
     verbs.append(_verbalize_confidence(filters['confidence'],
         'interpretation_confidence',
-        'The interpretation confidence of the evidence',
+        'The confidence of interpretation regarding the evidence',
         cursor))
 
     verbs.append(_verbalize_confidence(filters['confidence'],
