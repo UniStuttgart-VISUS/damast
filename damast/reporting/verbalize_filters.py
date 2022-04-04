@@ -37,7 +37,7 @@ def verbalize(filters, cursor):
 
     verbs.append(_verbalize_confidence(filters['confidence'],
         'source_confidences',
-        'The source confidence of <em>at least one</em> source the piece of evidence was based upon',
+        'The confidence of <em>at least one</em> source upon which the piece of evidence was based',
         cursor))
 
     verbs.append(_verbalize_sources(filters['sources'], cursor))
