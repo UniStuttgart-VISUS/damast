@@ -2,7 +2,8 @@
 
 2022-04-xx                                                           v1.1.1
 
-tba
+Remove necessity for Rust toolchain when building Damast. Fix a bug with
+loading a visualization state with a complex religion filter.
 
 
 2022-04-01                                                           v1.1.0
