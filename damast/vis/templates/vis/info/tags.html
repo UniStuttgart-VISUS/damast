@@ -12,9 +12,9 @@
 {% endif %}
 
 <p>
-  This view shows <strong>tags</strong> which are associated with evidences (i.e., a set of data concerning a place, religious group, time span, and the respective confidences).
+  This view shows <strong>tags</strong> which are associated with pieces of evidence (i.e., sets of data concerning a place, religious group, time span, and the respective confidences).
   Tags were implemented to include additional information and to make further distinctions possible.
-  For instance, the tag <em>Bishopric</em> is attributed to evidences referring to bishoprics as distinguished from <em>metropolitan sees</em>.
+  For instance, the tag <em>Bishopric</em> is attributed to pieces of evidence referring to bishoprics as distinguished from <em>metropolitan sees</em>.
   This way, the visualized data can be filtered according to additional criteria.
   Note that, by default, all tags are <em>deselected.</em>
   This means that no filters based on tags are active (cf. {{ full_documentation_link('tags-interaction', 'below', true) }}).
@@ -23,7 +23,7 @@
 <h3>Contents</h3>
 <p>
   The view consists of a table, in which each row represents one tag.
-  The rows are sorted by descending number of evidences.
+  The rows are sorted by descending number of pieces of evidence.
   In what follows, the respective columns of one given row are described.
 </p>
 
@@ -42,8 +42,8 @@
 
   <dt>Evidence Count Visualization</dt>
   <dd>
-    The third column visualizes the count of evidences for each source.
-    The less saturated part of the bar represents evidences that are not active (i.e., do not match the current filters).
+    The third column visualizes the count of pieces of evidence for each source.
+    The less saturated part of the bar represents pieces of evidence that are not active (i.e., do not match the current filters).
   </dd>
 </dl>
 
@@ -53,7 +53,7 @@
 <h4>Selection</h4>
 <p>
   Clicking on a row will <em>select</em> the tag, <em>brush</em> the represented data, and <em>link</em> related data in all views.
-  For instance, locations in the <em>map</em> with evidences with the selected tag will be highlighted, other locations will be represented by less saturated colors.
+  For instance, locations in the <em>map</em> with pieces of evidence with the selected tag will be highlighted, other locations will be represented by less saturated colors.
   Clicking on the same row again will reset the selection.
   Selecting a different row, or an element in a different view, will replace the selection.
   Only one tag at a time can be selected.
@@ -62,15 +62,15 @@
 <h4>Filtering</h4>
 <p>
   The visualized data can be filtered according to one tag or multiple tags in all views by (un-)checking the appropriate checkbox or checkboxes.
-  Keep in mind that an evidence can have no tag, one tag, or multiple tags.
+  Keep in mind that a piece of evidence can have no tag, one tag, or multiple tags.
   If, for instance, it has no tag, its visibility is not affected by the checkboxes.
   If, on the other hand, it has multiple tags, its visibility is only affected by (un-)checking all respective checkboxes.
   Note that the selection is not applied until the <em>Apply</em> button is clicked.
 
   Checking multiple (or all) tags works as a <em>logical disjunction:</em>
-  an evidence is matched if it is assigned <em>any</em> of the checked tags.
+  a piece of evidence is matched if it is assigned <em>any</em> of the checked tags.
   The tag filter works together with filters from other views in <em>logical conjunction:</em>
-  for instance, if only tag X and religion Y are selected in the respective views, only evidences with tag X <em>and</em> religion Y are matched.
+  for instance, if only tag X and religion Y are selected in the respective views, only pieces of evidence with tag X <em>and</em> religion Y are matched.
 </p>
 
 <p>

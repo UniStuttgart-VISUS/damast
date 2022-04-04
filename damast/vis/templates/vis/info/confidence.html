@@ -7,14 +7,14 @@
   <figcaption>
     The confidence view.
     Aspects of confidence are listed as columns, and confidence levels ordered into rows.
-    Checkboxes control which confidence levels should be shown for each aspect, and the number of evidences for each confidence level and aspect are given in numbers.
+    Checkboxes control which confidence levels should be shown for each aspect, and the number of pieces of evidence for each confidence level and aspect are given.
   </figcaption>
 </figure>
 {% endif %}
 
 
 <p>
-  This view shows the different <strong>level of confidences</strong> attributed to the different elements of an evidence (i.e., place, religious group, time span, etc.).
+  This view shows the different <strong>levels of confidence</strong> attributed to the different elements of a piece of evidence (i.e., place, religious group, time span, etc.).
 </p>
 
 <h3>Contents</h3>
@@ -22,7 +22,7 @@
   The view consists of a table, in which each row represents one <strong>level of confidence</strong> and each column an <strong>aspect of confidence.</strong>
 </p>
 <p>
-  For each cell in the table, a <strong>checkbox</strong> for filtering (cf. {{ full_documentation_link('confidence-filtering', 'further below', true) }}) is displayed as well as the <strong>number of evidences</strong> with the respective confidence and aspect.
+  For each cell in the table, a <strong>checkbox</strong> for filtering (cf. {{ full_documentation_link('confidence-filtering', 'further below', true) }}) is displayed as well as the <strong>number of pieces of evidence</strong> with the respective confidence and aspect.
   The rows are sorted by descending level of confidence.
 </p>
 
@@ -54,8 +54,8 @@
 <dl>
   <dt><em>Timespan confidence</em></dt>
   <dd>
-      signifies the confidence in the veracity of the timespan stored in an evidence.
-      Evidences without a time attribute are assigned the confidence <em>no value.</em>
+      signifies the confidence in the veracity of the timespan stored in a piece of evidence.
+      Pieces of evidence without a time attribute are assigned the confidence <em>no value.</em>
   </dd>
   <dt><em>Location confidence</em></dt>
   <dd>
@@ -68,11 +68,11 @@
   </dd>
   <dt><em>Source confidence</em></dt>
   <dd>
-    signifies the confidence in the veracity and objectivity of the source itself regarding an evidence.
+    signifies the confidence in the veracity and objectivity of the source itself regarding a piece of evidence.
   </dd>
   <dt><em>Confidence of interpretation</em></dt>
   <dd>
-    signifies the confidence in the correct interpretation and recording of the source when entering an evidence into the database.
+    signifies the confidence in the correct interpretation and recording of the source when entering a piece of evidence into the database.
   </dd>
   <dt><em>Religion confidence</em></dt>
   <dd>
@@ -87,7 +87,7 @@
 
 <p>
   For each aspect of confidence and each confidence level, a checkbox is shown in the respective cell.
-  Unchecking a checkbox will filter out evidences with this confidence level for that aspect of confidence.
+  Unchecking a checkbox will filter out pieces of evidence with this confidence level for that aspect of confidence.
   This allows for a very fine-grained control over what data to visualize.
 </p>
 <p>
@@ -97,7 +97,7 @@
 
 <p>
   The filters work in <em>logical conjunction</em> across different aspects of confidence;
-  that is, having filters in place for multiple aspects of confidence will only show evidences that match <em>all</em> filters.
+  that is, having filters in place for multiple aspects of confidence will only show pieces of evidence that match <em>all</em> filters.
 </p>
 
 <p>

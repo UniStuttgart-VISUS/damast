@@ -207,7 +207,7 @@ export default class TagsPane extends View<any, any> {
             .text(d.name);
           if (d.comment) t.root.append('p').text(d.comment);
           t.root.append('p')
-            .text(`${d.active_count} / ${d.active_count + d.inactive_count} evidences`);
+            .text(`${d.active_count} / ${d.active_count + d.inactive_count} pieces of evidence`);
         });
       })
       .on('mousemove', e => this.tooltipManager.move(e.clientX, e.clientY))
