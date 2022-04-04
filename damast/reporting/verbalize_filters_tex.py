@@ -17,7 +17,7 @@ def verbalize(filters, cursor):
 
     verbs.append(_verbalize_confidence(filters['confidence'],
         'location_confidence',
-        'The location confidence regarding the location attributed to the piece of evidence',
+        'The confidence regarding the location attributed to the piece of evidence',
         cursor))
 
     verbs.append(_verbalize_confidence(filters['confidence'],

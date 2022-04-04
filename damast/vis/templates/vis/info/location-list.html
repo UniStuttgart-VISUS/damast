@@ -6,9 +6,9 @@
   <img src="{{ url_for('docs.vis.static', filename='location-list-1.png') }}">
   <figcaption>
     The location list.
-    The <em>location confidence</em> is indicated by a colored marker behind the place name.
+    The <em>confidence of location</em> is indicated by a colored marker behind the place name.
     Places that match the search term at the top are highlighted in orange if their primary name matches, or in yellow if an alternative name matches.
-    Names are shown in italics, darker, and desaturated if their location confidence level is not currently checked.
+    Names are shown in italics, darker, and desaturated if their level regarding confidence of location is not currently checked.
   </figcaption>
 </figure>
 {% endif %}
@@ -37,7 +37,7 @@ Places can be searched, selected and filtered.
 <p id="location-list-unplaced">
   The list <em>Placed</em> contains all locations for which a geographical position is known.
   The list <em>Unplaced</em> contains all locations for which a geographical position is not (yet) known;
-  in this case, <em>location confidence</em> is attributed with <em>no value</em> and colored accordingly.
+  in this case, the <em>confidence of location</em> is attributed with <em>no value</em> and colored accordingly.
 </p>
 
 <p>
@@ -68,7 +68,7 @@ Places can be searched, selected and filtered.
 <ul>
   <li>place type,</li>
   <li>geographical location (i.e., coordinates),</li>
-  <li>location confidence,</li>
+  <li>confidence of location,</li>
   <li>alternative names,</li>
   <li>external URIs referencing the same place.</li>
 </ul>
@@ -80,9 +80,9 @@ Places can be searched, selected and filtered.
 </p>
 
 <p>
-  Behind the place name, the <em>location confidence</em> of each place is shown as a small, colored circle.
+  Behind the place name, the <em>confidence of location</em> of each place is shown as a small, colored circle.
   The color scale is the same as in the <em>confidence view.</em>
-  In <em>all data</em> mode (cf. the <em>{{ full_documentation_link('settings-all-data-only-active', 'Settings pane') }}</em>), when the filter set for <em>location confidence</em> does not match the place’s location confidence, this confidence circle is not filled.
+  In <em>all data</em> mode (cf. the <em>{{ full_documentation_link('settings-all-data-only-active', 'Settings pane') }}</em>), when the filter set for <em>confidence of location</em> does not match the place’s confidence of location, this confidence circle is not filled.
   Also, the name is displayed <span style="font-style:italic;color:#d61;font-weight:700;filter:brightness(90%)saturate(60%)">in italics, darker, and in less saturated colors</span> in that case.
 </p>
 
