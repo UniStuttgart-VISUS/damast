@@ -59,6 +59,10 @@ To build all required files for the frontend (JavaScript, CSS, documentation), t
 $ make prod
 ```
 
+For the web build targets, the `npm` dependencies must have been installed first, see [Installing Dependencies](#Installing-Dependencies).
+For the documentation, a LaTeX distribution including `latexmk` and TikZ must be installed on the system.
+On a Debian or Ubuntu system, these can be installed via the packages `texlive-pictures` and `latexmk`.
+
 
 ### Building the Docker Image
 
