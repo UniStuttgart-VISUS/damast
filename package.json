@@ -1,6 +1,6 @@
 {
   "name": "damast",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.tik.uni-stuttgart.de/frankemx/damast"
+    "url": "https://github.com/UniStuttgart-VISUS/damast"
   },
   "license": "MIT",
   "dependencies": {
