@@ -194,8 +194,9 @@ export class Dataset {
     const data = await this.loadReligionData(places);
 
     await this.parseData(data);
-    await this.purgeUnusedLocations();
     this.updatePlacesActive();
+    this.updateBrushingLinkingLookupTables();
+    await this.purgeUnusedLocations();
   }
 
   get is_advanced_filter_active(): boolean {
@@ -344,6 +345,7 @@ export class Dataset {
 
     if (cs.size) {
       this.updatePlacesActive();
+      this.updateBrushingLinkingLookupTables();
       this.notifyListeners(cs);
     }
   }
@@ -426,7 +428,27 @@ export class Dataset {
     this._minYear = d3array.min(this._place_data.map(d => d.time_span?.start)) || 0;
     this._maxYear = d3array.max(this._place_data.map(d => d.time_span?.end)) || 0;
 
-    // create mapping from religion id to location ids
+    // count data per hierarchy node
+    const visit = node => node.data.data_count = 0;
+    this._hierarchy.each(visit);
+    const append_datum = (religion_id: number, node: d3hier.HierarchyNode<T.OwnHierarchyNode>) => {
+      if (religion_id === node.data.id) {
+        node.data.data_count += 1;
+      }
+    };
+    this._place_data.forEach(datum => this._hierarchy.each(h => append_datum(datum.religion_id, h)));
+
+    this._existing_religions = new Set<number>();
+    this._place_data.forEach(d => this._existing_religions.add(d.religion_id));
+
+    this.createUltimateParentMap();
+
+    return Promise.resolve();
+  }
+
+  private updateBrushingLinkingLookupTables(): void {
+    console.time('rebuilding brushing and linking lookup tables');
+
     this._location_ids_for_religion_id = new Map<number, Set<number>>();
     this._religion_ids_for_location_id = new Map<number, Set<number>>();
     this._source_ids_for_religion_id = new Map<number, Set<number>>();
@@ -450,8 +472,12 @@ export class Dataset {
       });
       this._tuple_ids_for_tag_id.set(tag.id, new Set<number>(tag.evicence_ids));
     });
-    
-    this._place_data.forEach((datum: T.LocationData) => {
+
+    const activePlaces = this.brush_only_active
+      ? this.activePlaces()
+      : this.placeData();
+
+    activePlaces.forEach((datum: T.LocationData) => {
       if (!this._location_ids_for_religion_id.has(datum.religion_id)) {
         this._location_ids_for_religion_id.set(datum.religion_id, new Set<number>([datum.place_id]));
       } else {
@@ -528,37 +554,7 @@ export class Dataset {
       });
     });
 
-    // count data per hierarchy node
-    const visit = node => node.data.data_count = 0;
-    this._hierarchy.each(visit);
-    const append_datum = R.curry((religion_id: number, node: d3hier.HierarchyNode<T.OwnHierarchyNode>) => {
-      if (religion_id === node.data.id) {
-        node.data.data_count += 1;
-      }
-    });
-    this._place_data.forEach(datum => this._hierarchy.each(append_datum(datum.religion_id)));
-
-    this._existing_religions = new Set<number>();
-    this._place_data.forEach(d => this._existing_religions.add(d.religion_id));
-
-    this.createUltimateParentMap();
-    this.buildGroupByPlaceIdSets();
-
-    return Promise.resolve();
-  }
-
-  /**
-   * Build a map that stores a set of religion IDs for each evidence tuple, grouped by location.
-   */
-  private buildGroupByPlaceIdSets(): void {
-    const by_place_id = new Map<number, Set<number>>();
-    this._place_data.forEach(place => {
-      if (!by_place_id.has(place.place_id)) {
-        by_place_id.set(place.place_id, new Set<number>([place.religion_id]));
-      } else {
-        by_place_id.get(place.place_id).add(place.religion_id);
-      }
-    });
+    console.timeEnd('rebuilding brushing and linking lookup tables');
   }
 
   private purgeUnusedLocations(): void {
@@ -615,6 +611,7 @@ export class Dataset {
       this._queued_events.add(scope);
     } else {
       this.updatePlacesActive();
+      this.updateBrushingLinkingLookupTables();
       this.notifyListeners(new Set([scope]));
     }
   }
