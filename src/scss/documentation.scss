@@ -1,5 +1,6 @@
 @use 'common/colors' as *;
 @use 'common/mixins';
+@forward 'common/target-highlight';
 
 .section {
   @include mixins.baseFlexBlock();
@@ -47,23 +48,11 @@
 }
 
 
-@keyframes highlight {
-  0% { background: $clr-bg; }
-  20% { background: #805050; }
-  100% { background: $clr-bg; }
-}
-
-
 .route {
   @include mixins.baseFlexBlock();
 
   padding: 1rem 2rem;
   max-width: 800px;
-
-  &:target {
-    animation: highlight 2s ease;
-  }
-
 
   &__method {
     --base-color: #ccc;
