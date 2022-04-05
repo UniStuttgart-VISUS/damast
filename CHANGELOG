@@ -5,7 +5,7 @@
 Remove necessity for Rust toolchain when building Damast. Fix a bug with
 loading a visualization state with a complex religion filter. Fix a bug
 with brushing and linking sometimes not matching the filtered data. Other
-minor fixes.
+minor fixes. Improve navigation and page layout on longer pages.
 
 
 2022-04-01                                                           v1.1.0
