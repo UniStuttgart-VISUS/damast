@@ -1,9 +1,9 @@
 import * as d3 from 'd3';
 import * as R from 'ramda';
 import * as T from './datatypes';
-import {Dataset,ChangeScope,ChangeListener} from './dataset';
-import {PathInfoStack} from './timeline-data';
-import {ColorScales} from './colorscale';
+import { Dataset, ChangeScope, ChangeListener } from './dataset';
+import { PathInfoStack, stackKey } from './timeline-data';
+import { ColorScales } from './colorscale';
 import * as modal from './modal';
 import View from './view';
 import TooltipManager from './tooltip';
@@ -446,7 +446,7 @@ export default class Timeline extends View<any, any> {
     const items = new Map<string, { id: string | null, active: number, total: number }>();
     this.cachedPathData.ys.forEach((y, i) => {
       const poss = this.cachedPathData.paths[i][idx];
-      const count = poss[1] - poss[0];
+      const count = poss.data[stackKey(y.id, y.active)];
 
       let item;
       if (items.has(`${y.id}`)) item = items.get(`${y.id}`);
