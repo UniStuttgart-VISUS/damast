@@ -8,6 +8,19 @@
 {% endblock %}
 
 {% block content %}
+<nav aria-hidden aria-label="extra scroll navigation" class="collapsible-page-navigation">
+  <input type="checkbox" class="show-hide-navigation" aria-hidden title="Show/hide page navigation" id="show-hide-page-navigation">
+  <label for="show-hide-page-navigation" class="show-hide-navigation"></label>
+  <ul>
+    <li><a href="#toc">Table of Contents</a></li>
+    <li><a href="#database-schema">Database Schema</a></li>
+    <li><a href="#document-selection">Document Selection</a></li>
+    <li><a href="#document-creation">Creating a new Document</a></li>
+    <li><a href="#annotations">Annotations</a></li>
+    <li><a href="#evidences">Evidences</a></li>
+  </ul>
+</nav>
+
 <h1>Annotator User Guide</h1>
 
 <nav aria-label="table of contents" id="toc">
