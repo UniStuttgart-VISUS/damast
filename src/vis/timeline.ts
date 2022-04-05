@@ -465,7 +465,7 @@ export default class Timeline extends View<any, any> {
     if (this.cachedDisplayMode === T.DisplayMode.Religion) {
       vals.sort((a,b) => b.active - a.active || b.total - a.total);
     } else {
-      vals.sort((a, b) => T.confidence_values.indexOf(a.id) - T.confidence_values.indexOf(b.id));
+      vals.sort((a, b) => T.confidence_values.indexOf(a.id as T.Confidence) - T.confidence_values.indexOf(b.id as T.Confidence));
     }
     const total = d3.sum(vals.map(d => d.total));
     const totalActive = d3.sum(vals.map(d => d.active));
