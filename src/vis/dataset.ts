@@ -44,6 +44,7 @@ export enum ChangeScope {
   DisplayMode,
   TimelineMode,
   MapMode,
+  SourceViewSortMode,
   AggregatorFunction,
   DisplayedConfidenceAspect,
   Data_AdvancedReligionFilter
@@ -74,6 +75,7 @@ interface _VisualizationState {
   ["display-mode"]: "religion" | "confidence";
   ["timeline-mode"]: "qualitative" | "quantitative";
   ["map-mode"]: "clustered" | "cluttered";
+  ["source-sort-mode"]: "count" | "name";
   ["confidence-aspect"]: T.ConfidenceType;
   ["map-state"]: T.MapState;
 };
@@ -151,6 +153,7 @@ export class Dataset {
   private _display_mode: T.DisplayMode = ViewModeDefaults.display_mode;
   private _timeline_mode: T.TimelineMode = ViewModeDefaults.timeline_mode;
   private _map_mode: T.MapMode = ViewModeDefaults.map_mode;
+  private _source_sort_mode: T.SourceViewSortMode = ViewModeDefaults.source_sort_mode;
 
   private _existing_religions: Set<number> = new Set<number>();
 
@@ -790,6 +793,17 @@ export class Dataset {
     }
   }
 
+  get source_sort_mode(): T.SourceViewSortMode {
+    return this._source_sort_mode;
+  }
+
+  set source_sort_mode(d: T.SourceViewSortMode) {
+    if (d !== this._source_sort_mode) {
+      this._source_sort_mode = d;
+      this.changed(ChangeScope.SourceViewSortMode);
+    }
+  }
+
   get ultimate_parent(): Map<number, number> {
     return this._ultimate_parent;
   }
@@ -941,6 +955,7 @@ export class Dataset {
       ["display-mode"]: (this._display_mode === T.DisplayMode.Religion) ? 'religion' : 'confidence',
       ["timeline-mode"]: (this._timeline_mode === T.TimelineMode.Qualitative) ? 'qualitative' : 'quantitative',
       ["map-mode"]: (this._map_mode === T.MapMode.Clustered) ? 'clustered' : 'cluttered',
+      ["source-sort-mode"]: (this._source_sort_mode === T.SourceViewSortMode.ByCountDescending) ? 'count' : 'name',
       ["confidence-aspect"]: confidence_keys.get(this._displayed_confidence_aspect),
       ["map-state"]: this._map_state,
       filters: {
@@ -999,6 +1014,11 @@ export class Dataset {
           ? T.MapMode.Clustered
           : T.MapMode.Cluttered;
 
+      if ('source-sort-mode' in state)
+        this._source_sort_mode = (state['source-sort-mode'] === 'count')
+          ? T.SourceViewSortMode.ByCountDescending
+          : T.SourceViewSortMode.ByShortNameAscending;
+
       if ('confidence-aspect' in state)
         this._displayed_confidence_aspect = confidence_aspects.get(state['confidence-aspect']);
 
@@ -1013,6 +1033,7 @@ export class Dataset {
       this.changed(ChangeScope.Location);
       this.changed(ChangeScope.PlaceSet);
       this.changed(ChangeScope.ShowOnlyActive);
+      this.changed(ChangeScope.SourceViewSortMode);
       this.changed(ChangeScope.DisplayMode);
       this.changed(ChangeScope.MapMode);
       this.changed(ChangeScope.DisplayedConfidenceAspect);

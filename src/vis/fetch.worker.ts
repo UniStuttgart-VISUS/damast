@@ -444,6 +444,7 @@ class FetchWorker extends DataWorker<any> {
         religion_order,
         source_filter: this.data.source_filter,
         religion_names: this.data.religions(),
+        sort_mode: this.data.source_sort_mode,
       }
     });
   }
