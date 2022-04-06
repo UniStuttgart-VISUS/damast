@@ -6,7 +6,10 @@ div.source__body {
   $height: 30px;
 
   display: grid;
-  grid-template-columns: min-content 120px 150px minmax(80px, auto);
+  grid-template-columns: 1fr;
+  @supports ( grid-template-columns: subgrid ) {
+    grid-template-columns: min-content 90px 120px minmax(80px, auto);
+  }
   gap: 0.5ex;
   grid-auto-rows: 1fr;
   width: 100%;
@@ -17,11 +20,11 @@ div.source__body {
     $svgpad: 4px;
 
     /* chrome fallback for subgrid */
-    display: contents;
+    grid-template-columns: min-content 90px 120px 1fr;
+    grid-template-columns: subgrid;
 
     display: grid;
     grid-column: 1 / -1;
-    grid-template-columns: subgrid;
     height: $height;
 
     margin: 0.1em;
