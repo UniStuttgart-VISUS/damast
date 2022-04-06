@@ -82,14 +82,12 @@
     <ul>
       {% for e in external_uris %}
       <li>
-        <a href="{{ e.uri }}">
-          <span class="uri-short">{{ e.short }}</span>
-          in
-          <em>{{ e.name }}</em></a>
+        at <em>{{ e.name }}:</em>
+        <a href="{{ e.uri }}">{{ e.uri }}</a>
         {%- if e.comment -%}
-        : <em><q>{{ e.comment }}</q></em>
-        {%- else -%}
-        .
+        <br>
+        Comment:
+        <em><q>{{ e.comment }}</q></em>
         {%- endif -%}
       </li>
       {% endfor %}
