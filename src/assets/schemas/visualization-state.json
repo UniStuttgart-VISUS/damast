@@ -40,6 +40,9 @@
     "map-mode": {
       "enum": ["clustered", "cluttered"]
     },
+    "source-sort-mode": {
+      "enum": ["count", "name"]
+    },
     "confidence-aspect": {
       "enum": [
         "time_confidence",
