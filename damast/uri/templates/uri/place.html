@@ -178,10 +178,10 @@
     {% for sid, fnr in footnote_lut.items() %}
     <li class="source" id="source-{{ sid }}" data-footnote-number="[{{ fnr }}]">
       {{ sources[sid].name }}
-      <em>({{ sources[sid].source_type }})</em>
       {%- if source_pages[sid] -%}
-      <em>: p. {{ source_pages[sid] }}.</em>
-      {%- else -%}.{%- endif -%}
+      <em>: {{ source_pages[sid] }}.</em>
+      {%- else -%}.{% endif %}
+      <em>({{ sources[sid].source_type }})</em>
     </li>
     {% endfor %}
   </ol>
