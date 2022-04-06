@@ -375,6 +375,8 @@ class FlaskApp(flask.Flask):
             if cookie_preference not in ('essential', 'all'):
                 cookie_preference = None
 
+            today = datetime.datetime.now().astimezone().strftime('%B %_d, %Y')
+
             return dict(
                     # inject user into every template
                     user=self.auth.current_user(),
@@ -383,6 +385,7 @@ class FlaskApp(flask.Flask):
                     cookie_preference=cookie_preference,
                     environment='TESTING' if is_testing else 'PRODUCTION',
                     cookie_path=self.cookiepath,
+                    today=today,
                     )
 
 
