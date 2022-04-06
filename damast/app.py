@@ -333,17 +333,13 @@ class FlaskApp(flask.Flask):
 
         @self.errorhandler(500)
         @self.errorhandler(501)
-        def _50x_handler(err):
-            return _render_error(err)
-
-
         @self.errorhandler(Exception)
-        def _generic_exception_handler(err):
+        def _50x_handler(err):
             u = uuid.uuid1()
             l = logging.getLogger('flask.error')
             tb = traceback.format_exc()
             l.error('%s: %s', u, tb)
-            return _50x_handler(werkzeug.exceptions.InternalServerError(F'Something went wrong: {u}'))
+            return _render_error(werkzeug.exceptions.InternalServerError(F'Something went wrong: {u}'))
 
 
     def _init_access_log(self):
@@ -407,6 +403,9 @@ class FlaskApp(flask.Flask):
         # use ETag, not Cache-Control: max-age
         @self.after_request
         def add_header(response):
+            if flask.request.blueprint == 'override':
+                return response
+
             response.add_etag()
             return response.make_conditional(flask.request)
 
