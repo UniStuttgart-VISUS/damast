@@ -299,6 +299,8 @@ class FetchWorker extends DataWorker<any> {
       this.sendMessage(data.data);
     } else if (data.type === 'set-filter') {
       this.data.setSourceFilter(data.data);
+    } else if (data.type === 'set-source-sort-mode') {
+      this.data.source_sort_mode = data.data;
     } else {
       throw data.type;
     }
@@ -511,6 +513,9 @@ class FetchWorker extends DataWorker<any> {
         this.sendMapData(active, religion_order),
         this.sendSettingsData(),
       ]);
+    } else if (cs && cs.size === 1 && cs.has(ChangeScope.SourceViewSortMode)) {
+      // if only source sort mode changed, there is no reason to rebuild all views
+      await this.sendSourceListData(active, religion_order);
     } else {
       await Promise.all([
         this.sendReligionData(active),

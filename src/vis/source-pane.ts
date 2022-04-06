@@ -38,6 +38,13 @@ export default class SourcePane extends View<any, any> {
 
     this.sort_mode_checkbox = this.div.select<HTMLInputElement>('#source-sort-mode').node();
     this.sort_mode_checkbox.checked = this.sort_mode === T.SourceViewSortMode.ByCountDescending;
+    this.sort_mode_checkbox.addEventListener('input', (evt) => {
+      this.sendToDataThread('set-source-sort-mode',
+        this.sort_mode_checkbox.checked
+        ? T.SourceViewSortMode.ByCountDescending
+        : T.SourceViewSortMode.ByShortNameAscending
+      );
+    });
   }
 
   protected openModal() {
