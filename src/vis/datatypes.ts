@@ -115,6 +115,11 @@ export enum MapMode {
   Cluttered,
 };
 
+export enum SourceViewSortMode {
+  ByCountDescending,
+  ByShortNameAscending,
+};
+
 export interface Point {
   x: number;
   y: number;

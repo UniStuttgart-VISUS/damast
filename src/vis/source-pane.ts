@@ -17,9 +17,11 @@ import GoldenLayout from 'golden-layout';
 export default class SourcePane extends View<any, any> {
   private _applied_selected: Set<number>;
   private div: d3.Selection<HTMLDivElement, any, any, any>;
+  private sort_mode_checkbox: HTMLInputElement;
   private readonly tooltipManager = new TooltipManager();
 
   private display_mode: T.DisplayMode = T.DisplayMode.Religion;
+  private sort_mode: T.SourceViewSortMode = T.SourceViewSortMode.ByCountDescending;
   private religion_names: Map<number, string>;
 
   constructor(
@@ -33,6 +35,16 @@ export default class SourcePane extends View<any, any> {
     div.classList.add('source-container');
     div.innerHTML = require('html-loader!./html/sources.template.html').default;
     this.div = d3.select(div);
+
+    this.sort_mode_checkbox = this.div.select<HTMLInputElement>('#source-sort-mode').node();
+    this.sort_mode_checkbox.checked = this.sort_mode === T.SourceViewSortMode.ByCountDescending;
+    this.sort_mode_checkbox.addEventListener('input', (evt) => {
+      this.sendToDataThread('set-source-sort-mode',
+        this.sort_mode_checkbox.checked
+        ? T.SourceViewSortMode.ByCountDescending
+        : T.SourceViewSortMode.ByShortNameAscending
+      );
+    });
   }
 
   protected openModal() {
@@ -58,6 +70,9 @@ export default class SourcePane extends View<any, any> {
     const {source_data, max_per_source} = data;
     this.display_mode = data.display_mode;
     this.religion_names = data.religion_names;
+    this.sort_mode = data.sort_mode;
+
+    this.sort_mode_checkbox.checked = this.sort_mode === T.SourceViewSortMode.ByCountDescending;
 
     this._applied_selected = new Set<number>(source_data.filter(d => d.active).map(d => d.id));
     this.initButtons();

@@ -13,18 +13,21 @@
 
 .source__header {
   display: grid;
-  grid-template-columns: repeat(3, max-content) auto;
+  grid-template-columns: repeat(3, max-content) auto auto;
 
-  & > button:last-of-type {
+  & > :nth-last-child(2),
+  & > :nth-last-child(1) {
     margin-left: auto;
   }
 }
 
 .hierarchy__header {
   display: grid;
-  grid-template-columns: repeat(2, max-content) auto;
+  grid-template-columns: max-content auto auto;
 
-  & > button:last-of-type {
+  // put sort switch and apply button separate
+  & > :nth-last-child(2),
+  & > :nth-last-child(1) {
     margin-left: auto;
   }
 }
