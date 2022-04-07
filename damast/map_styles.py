@@ -6,6 +6,7 @@ import json
 import jsonschema
 import logging
 from .authenticated_blueprint_preparator import AuthenticatedBlueprintPreparator
+from .config import get_config
 
 name = 'map-styles'
 
@@ -40,12 +41,15 @@ with open(_schema_path) as f:
     _cont = json.load(f)
     _schema = jsonschema.Draft7Validator(_cont)
 
+
+conf = get_config()
+
 _styles = None
-if 'DAMAST_MAP_STYLES' not in os.environ:
+if conf.map_styles is None:
     _styles = _default_styles
     _logger.info('No map style file provided, default map tile selection will be used.')
 else:
-    dms = os.environ.get('DAMAST_MAP_STYLES')
+    dms = conf.map_styles
     _styles_path = os.path.join('/data', dms)
 
     if not os.path.isfile(_styles_path):

@@ -36,15 +36,6 @@ from .reporting.check_evict import register_scheduler as register_scheduler_for_
 from .config import get_config
 
 
-@lru_cache(1)
-def get_software_version():
-    vs = os.environ.get('DAMAST_VERSION', None)
-    if vs is not None:
-        return vs
-
-    return '<unknown>'
-
-
 class FlaskApp(flask.Flask):
     def __init__(self, *args, **kwargs):
         kwargs.update(template_folder=None)

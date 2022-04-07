@@ -21,6 +21,7 @@ import hashlib
 
 from ..postgres_database import postgres_database
 from ..document_fragment import tokenize_html_document, tokenize_text_document, inner_text
+from ..config import get_config
 
 logger = logging.getLogger('flask.error')
 
@@ -31,20 +32,10 @@ def start_refresh_job():
 
 
 def register_scheduler(sched):
-    try:
-        interval = int(os.environ.get('DAMAST_ANNOTATION_SUGGESTION_REBUILD'))
-        if interval < 1:
-            logger.warning('DAMAST_ANNOTATION_SUGGESTION_REBUILD has an invalid value (%d), disabling.', interval)
-            interval = None
-
-    except TypeError:
-        interval = None
-    except ValueError:
-        logger.error('DAMAST_ANNOTATION_SUGGESTION_REBUILD has an invalid value ("%s"), disabling.', os.environ.get('DAMAST_ANNOTATION_SUGGESTION_REBUILD'))
-        interval = None
+    conf = get_config()
+    interval = conf.annotation_suggestion_rebuild
 
     if interval is not None:
-
         period = 'each day' if interval == 1 else F'every {interval} days'
         logger.info('Registering annotation suggestion refresh job to run %s at 1AM.', period)
         sched.add_job(start_refresh_job, trigger='cron', day=F'*/{interval}', hour='1', minute='0')

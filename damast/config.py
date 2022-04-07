@@ -1,11 +1,9 @@
 import os
+import sys
 import json
 from dataclasses import dataclass, field, make_dataclass, MISSING
 from typing import List
 from functools import namedtuple
-import logging
-
-logger = logging.getLogger('flask.error')
 
 ConfigEntry = namedtuple(
         'ConfigEntry',
@@ -21,7 +19,20 @@ def _check_environment_valid(raw_value):
         return raw_value
 
     _vs = ", ".join(map(lambda x: F'"{x}"', _valid_environments))
-    raise ValueError(F'DAMAST_ENVIRONMENT must be one of {_vs}.')
+    sys.stderr.write(F'DAMAST_ENVIRONMENT must be one of {_vs}.\n')
+    raise RuntimeError('invalid configuration option')
+
+def _check_rebuild_freq_valid(raw_value):
+    try:
+        interval = int(raw_value)
+        if interval >= 1:
+            return interval
+
+    except:
+        pass
+
+    sys.stderr.write('DAMAST_ANNOTATION_SUGGESTION_REBUILD must be a positive integer.\n')
+    raise RuntimeError('invalid configuration option')
 
 
 _config_entries = [
@@ -178,6 +189,7 @@ _config_entries = [
             envvar = 'DAMAST_ANNOTATION_SUGGESTION_REBUILD',
             varname = 'annotation_suggestion_rebuild',
             type = int,
+            parse_func = _check_rebuild_freq_valid,
             default = None,
             description = 'number of days between annotation suggestion rebuilds',
             ),
