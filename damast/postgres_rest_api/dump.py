@@ -4,6 +4,7 @@ import datetime
 import subprocess
 import werkzeug.exceptions
 from ..authenticated_blueprint_preparator import AuthenticatedBlueprintPreparator
+from ..config import get_config
 
 name = 'dump'
 app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
@@ -13,21 +14,19 @@ def dump():
     if flask.current_app.auth.current_user().visitor:
         raise werkzeug.exceptions.Unauthorized()
 
-    if not flask.request.accept_encodings.best_match('identity'):
-        raise werkzeug.exceptions.NotAcceptable('Endpoint only provides identity encoding.')
+    conf = get_config()
 
     environ = os.environ.copy()
     environ['PGHOST'] = 'localhost'
-    environ['PGPORT'] = os.environ.get('PGPORT', '5432')
+    environ['PGPORT'] = str(conf.pgport)
     environ['PGUSER'] = 'ro_dump'
     environ['PGPASSWORD'] = 'dump'
-    environ['PGDATABASE'] = os.environ.get('PGDATABASE', 'testing' if flask.current_app.config.get('testing', False) else 'ocn')
+    environ['PGDATABASE'] = 'testing' if flask.current_app.config.get('TESTING', False) else 'ocn'
 
     command = [
         'nice', '--adjustment=5',
         'pg_dump',
         '--format=plain',
-        '--compress=9',
         '--no-password'
             ]
 
@@ -46,9 +45,9 @@ def dump():
 
     result = subprocess.check_output(command, env=environ, stderr=subprocess.DEVNULL)
 
-    fname=datetime.datetime.now().astimezone().strftime('damast_pgdump_%Y%m%dT%H%M%S.sql.gz')
+    fname=datetime.datetime.now().astimezone().strftime('damast_pgdump_%Y%m%dT%H%M%S.sql')
     response = flask.make_response((result, 200, {
-        'Content-Type': 'application/gzip',
+        'Content-Type': 'application/sql',
         'Content-Disposition': F'attachment; filename="{fname}"',
         'Content-Length': len(result)
         }))

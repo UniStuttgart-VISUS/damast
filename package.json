@@ -1,6 +1,6 @@
 {
   "name": "damast",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.tik.uni-stuttgart.de/frankemx/damast"
+    "url": "https://github.com/UniStuttgart-VISUS/damast"
   },
   "license": "MIT",
   "dependencies": {
@@ -43,7 +43,7 @@
     "ramda": "^0.27.1",
     "tabulator-tables": "^4.8.2",
     "tslib": "^2.3.0",
-    "wasm-clustering": "git+ssh://git@github.com:mfranke93/wasm-clustering.git#v0.1.3"
+    "wasm-clustering": "git+ssh://git@github.com:mfranke93/wasm-clustering.git#v0.2.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.14.5",

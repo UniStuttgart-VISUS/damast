@@ -29,6 +29,7 @@ export type MessageDataType =
   | 'set-map-filter'
   | 'generate-report'
   | 'describe-filters'
+  | 'set-source-sort-mode'
   ;
 
 export interface MessageData<T> {
