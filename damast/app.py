@@ -60,11 +60,15 @@ class FlaskApp(flask.Flask):
         self._init_logging()
 
         # load secrets, or generate them
-        try:
+        if self.damast_config.secret_file is not None:
             with open(self.damast_config.secret_file) as f:
-                logging.getLogger('flask.error').warning('Loading secrets from file %s. This should not happen on a production server.', f.name)
+                if is_testing:
+                    logging.getLogger('flask.error').info('Loading secrets from file %s.', f.name)
+                else:
+                    logging.getLogger('flask.error').warning('Loading secrets from file %s. This should not happen on a production server.', f.name)
+
                 _secrets = json.load(f)
-        except:
+        else:
             _secrets = dict()
 
         self.secret_key = _secrets.get('secret_key', genword(entropy='secure', charset='ascii_72'))

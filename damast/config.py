@@ -121,7 +121,7 @@ _config_entries = [
             envvar = 'DAMAST_SECRET_FILE',
             varname = 'secret_file',
             type = str,
-            default = '/dev/null',
+            default = None,
             description = 'file with JWT and app secret keys'
             ),
         ConfigEntry(

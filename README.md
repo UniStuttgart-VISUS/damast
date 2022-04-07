@@ -123,7 +123,7 @@ The following configuration environment variables exist, although most have a se
 | `DAMAST_VERSION` | `version` |  | Software version. This is usually set via the Docker image. |
 | `DAMAST_USER_FILE` | `user_file` | `/data/users.db` | Path to SQLite3 file with users, passwords, roles. |
 | `DAMAST_REPORT_FILE` | `report_file` | `/data/reports.db` | File to which reports are stored during generation. |
-| `DAMAST_SECRET_FILE` | `secret_file` | `/dev/null` | File with JWT and app secret keys. These are randomly generated if not passed, but that is impractical for testing with hot reload (user sessions do not persist). For a production server, this should be empty. |
+| `DAMAST_SECRET_FILE` | `secret_file` |  | File with JWT and app secret keys. These are randomly generated if not passed, but that is impractical for testing with hot reload (user sessions do not persist). For a production server, this should be empty. |
 | `DAMAST_PROXYCOUNT` | `proxycount` | `1` | How many reverse proxies the server is behind. This is necessary for proper HTTP redirection and cookie paths. |
 | `DAMAST_PROXYPREFIX` | `proxyprefix` | `/` | Reverse proxy prefix. |
 | `DAMAST_OVERRIDE_PATH` | `override_path` |  | A directory path under which a `template/` and `static/` directory can be placed. Templates within the `template/` directory will be prioritized over the internal ones. This can be used to provide a different template for a certain page, such as the impressum. |
