@@ -42,6 +42,10 @@ from .html import render_html_report
 from .place_sort import sort_placenames, sort_alternative_placenames, sort_evidence
 from .eviction import does_evict
 
+from ..config import get_config
+
+
+conf = get_config()
 
 
 def get_database_version_info(report_uuid):
@@ -476,7 +480,7 @@ def create_report(pg, filter_json, current_user, started, report_uuid, report_ur
                     metadata=metadata,
                     filter_desc=filter_desc,
                     report_id=report_uuid,
-                    server_version=os.environ.get('DAMAST_VERSION', ''),
+                    server_version=conf.version,
                     place_map=place_map,
                     map_url=map_url,
                     report_url=report_url,
@@ -554,7 +558,7 @@ def fail(msg):
 if __name__ == '__main__':
     error_logger = logging.getLogger('flask.error')
     _err_handler = TimedRotatingFileHandler(
-        os.environ.get('FLASK_ERROR_LOG', 'error_log'),
+        conf.error_log,
         when='midnight',
         interval=1,
         backupCount=10)
