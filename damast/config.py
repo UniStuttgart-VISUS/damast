@@ -1,14 +1,10 @@
-import sys
-sys.path= sys.path[1:]
-
 import os
 import json
-from dataclasses import dataclass, field, make_dataclass
+from dataclasses import dataclass, field, make_dataclass, MISSING
 from typing import List
 from functools import namedtuple
 import logging
 
-logging.basicConfig()
 logger = logging.getLogger('flask.error')
 
 ConfigEntry = namedtuple(
@@ -21,8 +17,8 @@ NO_VALUE = make_dataclass('NoValue', [])()
 
 _valid_environments = ('PRODUCTION', 'TESTING', 'PYTEST')
 def _check_environment_valid(raw_value):
-    if raw in _valid_environments:
-        return raw
+    if raw_value in _valid_environments:
+        return raw_value
 
     _vs = ", ".join(map(lambda x: F'"{x}"', _valid_environments))
     raise ValueError(F'DAMAST_ENVIRONMENT must be one of {_vs}.')
@@ -190,11 +186,15 @@ _config_entries = [
 _cfgs = []
 for c in _config_entries:
     if c.default is NO_VALUE:
-        _cfgs.append((c.varname, c.type))
+        default = MISSING
     else:
-        _cfgs.append((c.varname, c.type, field(default=c.default)))
+        default = c.default
 
-_Config = make_dataclass('Config', _cfgs, frozen=True, kw_only=True)
+    _cfgs.append(( c.varname, c.type, field(default = default) ))
+
+# _Config should have `kw_only = True`, but that is only available in Python 3.10 and up
+_cfgs = sorted(_cfgs, key=lambda c: c[2].default != MISSING)
+_Config = make_dataclass('Config', _cfgs, frozen=True)  # , kw_only=True)
 
 
 def get_config():
@@ -228,10 +228,5 @@ def get_config():
                     entry.type.__name__)
             sys.exit(1)
 
+    return _Config(**vals)
 
-
-    c = _Config(**vals)
-    print(c)
-
-
-get_config()
