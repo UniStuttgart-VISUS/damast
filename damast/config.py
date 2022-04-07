@@ -213,8 +213,12 @@ def get_config():
     ''' get configuration with all values '''
     vals = dict()
 
-    # TODO: load from config JSON/... file as well
-    config_from_file = dict()
+    # load from config JSON file as well
+    if 'DAMAST_CONFIG' in os.environ:
+        with open(os.environ['DAMAST_CONFIG']) as f:
+            config_from_file = json.load(f)
+    else:
+        config_from_file = dict()
 
     for entry in _config_entries:
         preprocess = entry.parse_func if entry.parse_func is not None else entry.type
