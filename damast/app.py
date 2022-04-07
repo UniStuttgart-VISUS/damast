@@ -33,15 +33,7 @@ from .response_compression import compress
 from .postgres_database import postgres_database
 from .annotator.suggestions import register_scheduler as register_scheduler_for_annotation_suggestions
 from .reporting.check_evict import register_scheduler as register_scheduler_for_report_eviction
-
-
-@lru_cache(1)
-def get_software_version():
-    vs = os.environ.get('DAMAST_VERSION', None)
-    if vs is not None:
-        return vs
-
-    return '<unknown>'
+from .config import get_config
 
 
 class FlaskApp(flask.Flask):
@@ -54,32 +46,43 @@ class FlaskApp(flask.Flask):
 
         # get configuration
         self.config.from_file('config.json', load=json.load)
+        self.damast_config = get_config()
 
         # app environment
-        environment = os.environ.get('DAMAST_ENVIRONMENT', 'TESTING')
-        is_testing = environment in ('TESTING', 'PYTEST')
+        is_testing = self.damast_config.environment in ('TESTING', 'PYTEST')
         self.config['TESTING'] = is_testing
-        self.config['DAMAST_ENVIRONMENT'] = environment
+        self.config['DAMAST_ENVIRONMENT'] = self.damast_config.environment
 
         # cookie and session cookie path
-        self.cookiepath = os.environ.get('DAMAST_PROXYPREFIX', '/')
+        self.cookiepath = self.damast_config.proxyprefix
         self.config['SESSION_COOKIE_PATH'] = self.cookiepath
 
+        self._init_logging()
+
         # load secrets, or generate them
-        try:
-            with open(os.environ.get('DAMAST_SECRET_FILE', '/dev/null')) as f:
+        if self.damast_config.secret_file is not None:
+            with open(self.damast_config.secret_file) as f:
+                if is_testing:
+                    logging.getLogger('flask.error').info('Loading secrets from file %s.', f.name)
+                else:
+                    logging.getLogger('flask.error').warning('Loading secrets from file %s. This should not happen on a production server.', f.name)
+
                 _secrets = json.load(f)
-        except:
+        else:
             _secrets = dict()
 
         self.secret_key = _secrets.get('secret_key', genword(entropy='secure', charset='ascii_72'))
         self.config['jwt_secret'] = _secrets.get('jwt_secret', genword(entropy='secure', charset='ascii_72')).encode('ascii')
 
         # ProxyFix
-        proxies_count = int(os.environ.get('DAMAST_PROXYCOUNT', '1'))
-        self.wsgi_app = ProxyFix(self.wsgi_app, x_for=proxies_count, x_proto=proxies_count, x_host=proxies_count, x_port=proxies_count, x_prefix=1)
+        proxies_count = self.damast_config.proxycount
+        self.wsgi_app = ProxyFix(self.wsgi_app,
+                x_for=proxies_count,
+                x_proto=proxies_count,
+                x_host=proxies_count,
+                x_port=proxies_count,
+                x_prefix=1)
 
-        self._init_logging()
         self._init_auth()
         self._create_errorhandlers()
         self._init_database()
@@ -99,7 +102,7 @@ class FlaskApp(flask.Flask):
 
     def _init_base_blueprints(self):
         # if a override path is provided, try to load templates from there first
-        overpath = os.environ.get('DAMAST_OVERRIDE_PATH', None)
+        overpath = self.damast_config.override_path
 
         if overpath is None:
             logging.getLogger('flask.error').info('No override path provided.')
@@ -130,7 +133,7 @@ class FlaskApp(flask.Flask):
 
         access_logger = logging.getLogger('flask.access')
         access_logger.addHandler(TimedRotatingFileHandler(
-            os.environ.get('FLASK_ACCESS_LOG', '/data/access_log'),
+            self.damast_config.access_log,
             when='midnight',
             interval=1,
             backupCount=10))
@@ -139,7 +142,7 @@ class FlaskApp(flask.Flask):
         error_logger = logging.getLogger('flask.error')
         error_logger.addFilter(BlueprintFilter())
         _err_handler = TimedRotatingFileHandler(
-            os.environ.get('FLASK_ERROR_LOG', '/data/error_log'),
+            self.damast_config.error_log,
             when='midnight',
             interval=1,
             backupCount=10)
@@ -180,7 +183,7 @@ class FlaskApp(flask.Flask):
 
     def _init_auth(self):
         # init database
-        dbfile = os.environ.get('DAMAST_USER_FILE', '/data/users.db')
+        dbfile = self.damast_config.user_file
         self.user_db = sqlite3.connect(dbfile, detect_types=sqlite3.PARSE_DECLTYPES)
         def _onclose():
             if self.user_db:
@@ -366,7 +369,7 @@ class FlaskApp(flask.Flask):
 
 
     def _init_request_misc(self):
-        self.version = get_software_version()
+        self.version = self.damast_config.version
 
         @self.context_processor
         def template_context():
@@ -392,7 +395,7 @@ class FlaskApp(flask.Flask):
         @self.after_request
         def append_headers(resp):
             is_testing = self.config.get('TESTING', False)
-            resp.headers.set('X-Software-Version', get_software_version())
+            resp.headers.set('X-Software-Version', self.damast_config.version)
             resp.headers.set('X-Server-Environment', 'TESTING' if is_testing else 'PRODUCTION')
 
             # content security policy

@@ -12,6 +12,9 @@ import flask
 import traceback
 
 from .eviction import does_evict
+from ..config import get_config
+
+conf = get_config()
 
 _database_schema = '''
 PRAGMA foreign_keys = ON;
@@ -51,7 +54,7 @@ sqlite3.register_converter('DATETIME', _convert_datetime)
 
 @contextmanager
 def get_report_database():
-    filepath = os.environ.get('DAMAST_REPORT_FILE', '/data/reports.db')
+    filepath = conf.report_file
     if not os.path.exists(filepath):
         if does_evict():
             raise RuntimeError('Report eviction is enabled, but the report database does not yet exist. Please create the report database manually')
