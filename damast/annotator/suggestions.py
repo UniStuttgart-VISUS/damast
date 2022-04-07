@@ -24,7 +24,7 @@ from ..document_fragment import tokenize_html_document, tokenize_text_document, 
 from ..config import get_config
 
 logger = logging.getLogger('flask.error')
-
+conf = get_config()
 
 def start_refresh_job():
     p = subprocess.Popen(['python', '-m', 'damast.annotator.suggestions'])
@@ -32,7 +32,6 @@ def start_refresh_job():
 
 
 def register_scheduler(sched):
-    conf = get_config()
     interval = conf.annotation_suggestion_rebuild
 
     if interval is not None:
@@ -42,7 +41,6 @@ def register_scheduler(sched):
 
     else:
         logger.info('Will not run annotation suggestion refresh job regularly.')
-
 
 
 SearchTerm = namedtuple('SearchTerm', ['terms', 'type', 'source', 'data'])
@@ -325,7 +323,7 @@ def _refresh_for_document(c, document):
 
 if __name__ == '__main__':
     _err_handler = TimedRotatingFileHandler(
-        os.environ.get('FLASK_ERROR_LOG', 'error_log'),
+        conf.error_log,
         when='midnight',
         interval=1,
         backupCount=10)
