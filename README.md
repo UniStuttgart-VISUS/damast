@@ -113,30 +113,41 @@ The [documentation](./docs/) also goes into more details about the setup.
 A directory on the host machine is mapped as a volume to the `/data` directory in the docker container.
 The `/data` directory contains runtime configuration files (`users.db`, `reports.db`, as well as log files).
 The main Docker container requires some additional runtime configuration, for example for the PostgreSQL password, which can be passed as environment variables to Docker using the `--env` and `--env-file` flags.
+Alternatively, configuration values can be stored in a JSON file in the Docker container's `/data` directory (or any other mounted volume), and the path passed via the `DAMAST_CONFIG` environment variable.
 The following configuration environment variables exist, although most have a sensible default:
 
-| Environment Variable | Default Value | Description |
-|---|---|---|
-| `DAMAST_ENVIRONMENT` | | Server environment (`PRODUCTION`, `TESTING`, or `PYTEST`). This decides with which PostgreSQL database to connect (`ocn`, `testing`, and `pytest` (on Docker container) respectively. This is usually set via the Docker image. |
-| `DAMAST_VERSION` | | Software version. This is usually set via the Docker image. |
-| `DAMAST_USER_FILE` | `/data/users.db` | Path to SQLite3 file with users, passwords, roles. |
-| `DAMAST_REPORT_FILE` | `/data/reports.db` | File to which reports are stored during generation. |
-| `DAMAST_SECRET_FILE` | `/dev/null` | File with JWT and app secret keys. These are randomly generated if not passed, but that is impractical for testing with hot reload (user sessions do not persist). For a production server, this should be empty. |
-| `DAMAST_PROXYCOUNT` | `1` | How many reverse proxies the server is behind. This is necessary for proper HTTP redirection and cookie paths. |
-| `DAMAST_PROXYPREFIX` | `/` | Reverse proxy prefix. |
-| `DAMAST_OVERRIDE_PATH` | | A directory path under which a `template/` and `static/` directory can be placed. Templates within the `template/` directory will be prioritized over the internal ones. This can be used to provide a different template for a certain page, such as the impressum. |
-| `DAMAST_VISITOR_ROLES` | | If not empty, contains a comma-separated list of roles a visitor (not logged-in) to the site will receive, which in turn governs which pages will be available without user account. If the variable does not exist, visitors will only see public pages. |
-| `DAMAST_MAP_STYLES` | | If not empty, a relative filename (under `/data`) on the Docker filesystem to a JSON with map styles. These will be used in the Leaflet map. If not provided, the [default styles](./damast/map_styles.py) will be used. See also: [JSON schema](./src/assets/schemas/map-styles.json). |
-| `DAMAST_REPORT_EVICTION_DEFERRAL` | | If not empty, the number of days of not being accessed before a reports' contents (HTML, PDF, map) are *evicted.* Evicted reports can always be regenerated from their state and filter JSON. Eviction happens to save space and improve performance on systems where many reports are anticipated. *This should not be activated on systems with changing databases!* |
-| `DAMAST_REPORT_EVICTION_MAXSIZE` | | If not empty, the file size in megabytes (MB) of report contents (HTML, PDF, map) above which reports will be evicted. If this is set and the sum of content sizes in the report database *after deferral eviction* is above this number, additional reports are evicted until the sum of sizes is lower than this number. Reports are evicted in ascending order of last access date (the least-recently accessed first). The same rules as above apply. |
-| `DAMAST_ANNOTATION_SUGGESTION_REBUILD` | | If not empty, the number of days between annotation suggestion rebuilds. In that case, the suggestions are recreated over night every X days. If empty, the annotation suggestions are never recreated, which might be favorable on a system with a static database. |
-| `FLASK_ACCESS_LOG` | `/data/access_log` | Path to `access_log` (for logging). |
-| `FLASK_ERROR_LOG` | `/data/error_log` | Path to `error_log` (for logging). |
-| `DAMAST_PORT` | `8000` | Port at which `gunicorn` serves the content. **Note:** This is set via the Dockerfile, and also only used in the Dockerfile. |
-| `PGHOST` | `localhost` | PostgreSQL hostname. |
-| `PGPASSWORD` | | PostgreSQL password. This is important to set and depends on how the database is set up. |
-| `PGPORT` | `5432` | PostgreSQL port |
-| `PGUSER` | `api` | PostgreSQL user |
+| Environment Variable | JSON Fieldname | Default Value | Description |
+|---|---|---|---|
+| `DAMAST_CONFIG` | - |  | JSON file to load configuration from. All other configuration values in this table can be passed via this file as key-value entries in the root object, where the key is the "JSON Fieldname" column of this table. |
+| `DAMAST_ENVIRONMENT` | `environment` |  | Server environment (`PRODUCTION`, `TESTING`, or `PYTEST`). This decides with which PostgreSQL database to connect (`ocn`, `testing`, and `pytest` (on Docker container) respectively. This is usually set via the Docker image. |
+| `DAMAST_VERSION` | `version` |  | Software version. This is usually set via the Docker image. |
+| `DAMAST_USER_FILE` | `user_file` | `/data/users.db` | Path to SQLite3 file with users, passwords, roles. |
+| `DAMAST_REPORT_FILE` | `report_file` | `/data/reports.db` | File to which reports are stored during generation. |
+| `DAMAST_SECRET_FILE` | `secret_file` | `/dev/null` | File with JWT and app secret keys. These are randomly generated if not passed, but that is impractical for testing with hot reload (user sessions do not persist). For a production server, this should be empty. |
+| `DAMAST_PROXYCOUNT` | `proxycount` | `1` | How many reverse proxies the server is behind. This is necessary for proper HTTP redirection and cookie paths. |
+| `DAMAST_PROXYPREFIX` | `proxyprefix` | `/` | Reverse proxy prefix. |
+| `DAMAST_OVERRIDE_PATH` | `override_path` |  | A directory path under which a `template/` and `static/` directory can be placed. Templates within the `template/` directory will be prioritized over the internal ones. This can be used to provide a different template for a certain page, such as the impressum. |
+| `DAMAST_VISITOR_ROLES` | `visitor_roles` |  | If not empty, contains a comma-separated list of roles a visitor (not logged-in) to the site will receive, which in turn governs which pages will be available without user account. If the variable does not exist, visitors will only see public pages. |
+| `DAMAST_MAP_STYLES` | `map_styles` |  | If not empty, a relative filename (under `/data`) on the Docker filesystem to a JSON with map styles. These will be used in the Leaflet map. If not provided, the [default styles](./damast/map_styles.py) will be used. See also: [JSON schema](./src/assets/schemas/map-styles.json). |
+| `DAMAST_REPORT_EVICTION_DEFERRAL` | `report_eviction_deferral` |  | If not empty, the number of days of not being accessed before a reports' contents (HTML, PDF, map) are *evicted.* Evicted reports can always be regenerated from their state and filter JSON. Eviction happens to save space and improve performance on systems where many reports are anticipated. *This should not be activated on systems with changing databases!* |
+| `DAMAST_REPORT_EVICTION_MAXSIZE` | `report_eviction_maxsize` |  | If not empty, the file size in megabytes (MB) of report contents (HTML, PDF, map) above which reports will be evicted. If this is set and the sum of content sizes in the report database *after deferral eviction* is above this number, additional reports are evicted until the sum of sizes is lower than this number. Reports are evicted in ascending order of last access date (the least-recently accessed first). The same rules as above apply. |
+| `DAMAST_ANNOTATION_SUGGESTION_REBUILD` | `annotation_suggestion_rebuild` |  | If not empty, the number of days between annotation suggestion rebuilds. In that case, the suggestions are recreated over night every X days. If empty, the annotation suggestions are never recreated, which might be favorable on a system with a static database. |
+| `FLASK_ACCESS_LOG` | `access_log` | `/data/access_log` | Path to `access_log` (for logging). |
+| `FLASK_ERROR_LOG` | `error_log` | `/data/error_log` | Path to `error_log` (for logging). |
+| `DAMAST_PORT` | `port` | `8000` | Port at which `gunicorn` serves the content. **Note:** This is set via the Dockerfile, and also only used in the Dockerfile. |
+| `PGHOST` | `pghost` | `localhost` | PostgreSQL hostname. |
+| `PGPASSWORD` | `pgpassword` |  | PostgreSQL password. This is important to set and depends on how the database is set up. |
+| `PGPORT` | `pgport` | `5432` | PostgreSQL port |
+| `PGUSER` | `pguser` | `api` | PostgreSQL user |
+
+
+Configuration values can be passed in multiple ways.
+The precedence of configuration values is as follows (first entry has the highest precedence):
+
+ 1. Environment variables passed to the Docker process via the `--env` or `--env-file` flags.
+ 2. Environment variables baked into the Docker image (see [./util/docker/](the Dockerfile components)).
+ 3. Configuration entries in the JSON configuration file.
+ 4. The default value.
 
 
 #### Overriding Pages
