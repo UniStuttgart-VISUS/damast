@@ -2,6 +2,66 @@
 
 set -euo pipefail
 
+# print help and exit
+function about() {
+  cat 1>&2 <<EOF
+Usage: deploy.sh [-h] [-bnpr] [-d <timespec>] [-l login] [-H host] [-u <www_uid>] [-g <www_gid>]
+
+Build the client-side assets and bundle the server wheel file. Deploy that to
+the server and restart the Flask server. By default, this deploys to the
+testing environment and restarts the systemd service immediately.
+
+  -h                Show this help and exit
+  -p                Deploy to production environment instead
+  -n                No not re-make assets, deploy as-is
+  -b                Build only: Only create Docker image, no not deploy
+  -r                Remote build: Build Docker image on remote host. This is
+                    faster, as the save and load steps are skipped and the tar
+                    file with an entire Linux distro does not have to be copied
+                    over, but introduces more load on the remote host.
+  -d timespec       Delay the installation and service restart until time. This
+                    uses at and recognizes timespecs as specified by at(1p).
+  -l login          Set login user on the deployment host.
+  -H host           Set the host to deploy to.
+  -u uid            User ID of 'www' user on the target machine.
+  -g gid            Group ID of 'www' group on the target machine.
+EOF
+}
+
+# log messages
+log() {
+  clr_reset=$(tput sgr0)
+
+  case "$1" in
+    major)
+      clr_main=$(tput sgr0; tput setaf 5)
+      clr_important=$(tput setaf 6; tput bold)
+      ;;
+    minor)
+      clr_main=$(tput sgr0; tput setaf 3)
+      clr_important=$(tput setaf 2; tput bold)
+      ;;
+    *)
+      1>&2 echo "Log messages must have major or minor level!"
+      exit 1
+      ;;
+  esac
+  shift
+
+  msg="\n$clr_main$1$clr_reset\n\n"
+
+  shift
+  args=()
+  for arg in "$@"
+  do
+    args+=("$clr_important$arg$clr_main")
+  done
+
+  printf "$msg" "${args[@]}"
+}
+
+## default values
+
 # environment
 env="TESTING"
 
@@ -38,32 +98,7 @@ build_user="$(whoami)"
 deploy_server="narcocorrido.visus.uni-stuttgart.de"
 deploy_user="max"
 
-
-# print help and exit
-function about() {
-  cat 1>&2 <<EOF
-Usage: deploy.sh [-h] [-bnpr] [-d <timespec>] [-l login] [-H host] [-u <www_uid>] [-g <www_gid>]
-
-Build the client-side assets and bundle the server wheel file. Deploy that to
-the server and restart the Flask server. By default, this deploys to the
-testing environment and restarts the systemd service immediately.
-
-  -h                Show this help and exit
-  -p                Deploy to production environment instead
-  -n                No not re-make assets, deploy as-is
-  -b                Build only: Only create Docker image, no not deploy
-  -r                Remote build: Build Docker image on remote host. This is
-                    faster, as the save and load steps are skipped and the tar
-                    file with an entire Linux distro does not have to be copied
-                    over, but introduces more load on the remote host.
-  -d time_arg       Delay the installation and service restart until time. This
-                    uses at and recognizes timespecs as specified by at(1p).
-  -l login          Set login user on the deployment host.
-  -H host           Set the host to deploy to.
-  -u uid            User ID of 'www' user on the target machine.
-  -g gid            Group ID of 'www' group on the target machine.
-EOF
-}
+## values passed via command-line arguments
 
 OPTIND=0
 while getopts hpnd:brl:H:u:g: opt
@@ -119,45 +154,14 @@ do
   esac
 done
 
-# log messages
-log() {
-  clr_reset=$(tput sgr0)
-
-  case "$1" in
-    major)
-      clr_main=$(tput sgr0; tput setaf 5)
-      clr_important=$(tput setaf 6; tput bold)
-      ;;
-    minor)
-      clr_main=$(tput sgr0; tput setaf 3)
-      clr_important=$(tput setaf 2; tput bold)
-      ;;
-    *)
-      1>&2 echo "Log messages must have major or minor level!"
-      exit 1
-      ;;
-  esac
-  shift
-
-  msg="\n$clr_main$1$clr_reset\n\n"
-
-  shift
-  args=()
-  for arg in "$@"
-  do
-    args+=("$clr_important$arg$clr_main")
-  done
-
-  printf "$msg" "${args[@]}"
-}
-
+# set this afterwards, so that it depends on deploy_user and deploy_server
 if [[ $remote_build = 1 ]]
 then
   build_user="$deploy_user"
   build_server="$deploy_server"
 fi
 
-
+# check that no-deploy flag is not used together with remote build
 if [[ $deploy = 0 && $remote_build = 1 ]]
 then
   cat 1>&2 << EOF
@@ -166,6 +170,7 @@ EOF
   exit 1
 fi
 
+# create a temporary directory for build files
 tmpdir=$(ssh ${build_user}@${build_server} mktemp -d)
 
 if [[ $deploy = 1 ]]
@@ -175,9 +180,9 @@ else
   log major "BUILDING %s WITHOUT DEPLOY..." "$env"
 fi
 
-sleep 1
-
+# version: git tag, plus optionally a divergence, but only allow a certain set of characters
 version=$(echo -n $(git describe --tags) | tr -sc '[a-zA-Z0-9_.\-]' '-')
+# name of Docker image, e.g.: damast:v1.6.2rc1-testing
 imagename="damast:$version-$(echo $env | tr '[:upper:]' '[:lower:]')"
 filename="$imagename.tgz"
 
@@ -190,20 +195,26 @@ then
   log minor "Starting clean minimized build"
   make prod
 else
+  # always ensure these are copied into the damast/ directory
   make CHANGELOG LICENSE
 fi
 
 log major "Building docker image for %s on %s@%s" "$version" "$build_user" "$build_server"
 log minor "Syncing assets for docker image"
 
+# create hash from damast/ file contents
 fs_hash=$(find damast -type f \
   | xargs sha1sum \
   | awk '{print $1}' \
   | sha1sum - \
   | awk '{print $1}')
+
+# use hash to ensure new files are copied into the Docker image
 cat util/docker/{base,prod}.in \
   | sed "s/@REBUILD_HASH@/$fs_hash/g" \
   | ssh ${build_user}@${build_server} "cat > $tmpdir/Dockerfile"
+
+# copy files to build server (can be local machine)
 rsync --info=flist2,misc0,stats0 -iavzz \
   damast \
   ${build_user}@${build_server}:$tmpdir/
@@ -228,7 +239,7 @@ log major "Deploying to %s on %s" "$env" "$deploy_server"
 
 if [[ $deploy = 1 ]]
 then
-
+  # local build: save docker image, copy it over
   if [[ $remote_build = 0 ]]
   then
     log minor "Exporting docker image for %s" "$version"
@@ -244,7 +255,7 @@ then
   fi
 
 
-  # run_server.sh
+  # create run script, which needs the systemd service name and the image name
   sed "s/!!SYSTEMD_SERVICE_NAME!!/$service/" util/run_server.sh.in \
     | sed "s/!!DOCKER_IMAGE_NAME!!/$imagename/" \
     | ssh ${build_user}@${build_server} "cat > $tmpdir/run_server.sh"
@@ -260,8 +271,11 @@ then
       util/list_reports.py \
       "${deploy_user}@${deploy_server}:$basedir"
 
+    # on remote build, copy run script to correct directory
     ssh ${deploy_user}@${deploy_server} "cp -v $tmpdir/run_server.sh $basedir"
   else
+    # on local build, also copy run script
+
     rsync --info=flist2,misc0,stats0 -ivzz \
       util/logstat.awk \
       util/sqlite3-user-file/user_management.py \
@@ -280,15 +294,16 @@ then
     # image already on server, only restart (with new run_server.sh)
     cat >$jobfile <<- EOF
 		systemctl restart $service
-    echo Restarted systemd service $service with image $imagename.
+		echo Restarted systemd service $service with image $imagename.
 		EOF
 
   else
+    # load image, then restart
     cat >$jobfile <<- EOF
 		systemctl stop $service
 		docker load < /tmp/$filename && rm /tmp/$filename
 		systemctl start $service
-    echo Restarted systemd service $service with image $imagename.
+		echo Restarted systemd service $service with image $imagename.
 		EOF
   fi
 
