@@ -401,11 +401,7 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
   }
 
   protected openModal(): void {
-    modal.create_modal(
-      400, 300,
-      'Hierarchy of Religious Denominations',
-      'religion-hierarchy.html'
-    );
+    modal.showInfoboxFromURL('Hierarchy of Religious Denominations', 'religion-hierarchy.html');
   }
 
   private onBrush(

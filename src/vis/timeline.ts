@@ -385,11 +385,7 @@ export default class Timeline extends View<any, any> {
   }
 
   protected openModal(): void {
-    modal.create_modal(
-      400, 300,
-      'Timeline',
-      'timeline.html'
-    );
+    modal.showInfoboxFromURL('Timeline', 'timeline.html');
   }
 
   private onMouseEnter(evt: MouseEvent) {

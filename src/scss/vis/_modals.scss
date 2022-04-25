@@ -2,6 +2,17 @@
 
 @forward '../common/target-highlight';
 
+dialog {
+  max-height: 50vh;
+  overflow-y: auto;
+
+  h1, h2, h3, h4, h5, h6,
+  p, ul, ol, article, section,
+  dl, blockquote {
+    max-width: 65ch;
+  }
+}
+
 .modal {
   position: relative;
   z-index: 2000;
