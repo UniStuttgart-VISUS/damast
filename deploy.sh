@@ -119,6 +119,38 @@ do
   esac
 done
 
+# log messages
+log() {
+  clr_reset=$(tput sgr0)
+
+  case "$1" in
+    major)
+      clr_main=$(tput sgr0; tput setaf 5)
+      clr_important=$(tput setaf 6; tput bold)
+      ;;
+    minor)
+      clr_main=$(tput sgr0; tput setaf 3)
+      clr_important=$(tput setaf 2; tput bold)
+      ;;
+    *)
+      1>&2 echo "Log messages must have major or minor level!"
+      exit 1
+      ;;
+  esac
+  shift
+
+  msg="\n$clr_main$1$clr_reset\n\n"
+
+  shift
+  args=()
+  for arg in "$@"
+  do
+    args+=("$clr_important$arg$clr_main")
+  done
+
+  printf "$msg" "${args[@]}"
+}
+
 if [[ $remote_build = 1 ]]
 then
   build_user="$deploy_user"
@@ -138,9 +170,9 @@ tmpdir=$(ssh ${build_user}@${build_server} mktemp -d)
 
 if [[ $deploy = 1 ]]
 then
-  printf "\033[0;35mDEPLOYING TO \033[1;32m%s\033[0;35m (building as \033[1;36m%s\033[0;35m@\033[1;36m%s\033[0;35m)...\033[0m\n\n" "$env" "$build_user" "$build_server"
+  log major "DEPLOYING TO %s (building as %s@%s)..." "$env" "$build_user" "$build_server"
 else
-  printf "\033[0;35mBUILDING \033[1;32m%s\033[0;35m WITHOUT DEPLOY...\033[0m\n\n" "$env"
+  log major "BUILDING %s WITHOUT DEPLOY..." "$env"
 fi
 
 sleep 1
@@ -151,16 +183,18 @@ filename="$imagename.tgz"
 
 if [[ $remake = 1 ]]
 then
-  printf "\033[0;36mCleaning previous build artifacts\033[0m\n\n"
+  log major "Rebuilding targets for deploy"
+  log minor "Cleaning previous build artifacts"
   make clean
 
-  printf "\n\033[0;36mStarting clean minimized build\033[0m\n\n"
+  log minor "Starting clean minimized build"
   make prod
 else
   make CHANGELOG LICENSE
 fi
 
-printf "\n\033[0;36mSyncing assets for docker image\033[0m\n\n"
+log major "Building docker image for %s on %s@%s" "$version" "$build_user" "$build_server"
+log minor "Syncing assets for docker image"
 
 fs_hash=$(find damast -type f \
   | xargs sha1sum \
@@ -175,8 +209,7 @@ rsync --info=flist2,misc0,stats0 -iavzz \
   ${build_user}@${build_server}:$tmpdir/
 
 
-
-printf "\n\033[0;36mBuilding docker image for \033[1;35m%s\033[0;36m on \033[1;36m%s\033[0;35m@\033[1;36m%s\033[0;35m\033[0m\n\n" "$version" "$build_user" "$build_server"
+log minor "Building docker image"
 
 pass ssh/${build_server}/${build_user} \
   | ssh ${build_user}@${build_server} "cd ${tmpdir} && \
@@ -191,12 +224,14 @@ pass ssh/${build_server}/${build_user} \
           ."
 
 
+log major "Deploying to %s on %s" "$env" "$deploy_server"
+
 if [[ $deploy = 1 ]]
 then
 
   if [[ $remote_build = 0 ]]
   then
-    printf "\n\033[0;36mExporting docker image for \033[1;35m%s\033[0;36m\033[0m\n\n" "$version"
+    log minor "Exporting docker image for %s" "$version"
 
     pass ssh/$(hostname)/$(whoami) \
      | sudo --stdin --prompt='Reading sudo password for %u@%H from stdin...' \
@@ -204,7 +239,7 @@ then
      | gzip \
      > $tmpdir/$filename
 
-    printf "\n\033[0;36mCopying docker file \033[1;35m%s\033[0;36m to \033[1;35m%s\033[0;36m...\033[0m\n\n" "$filename" "${deploy_user}@${deploy_server}:/tmp"
+    log minor "Copying docker file %s to %s@%s:%s..." "$filename" "${deploy_user}" "${deploy_server}" "/tmp"
     scp $tmpdir/$filename "${deploy_user}@${deploy_server}:/tmp"
   fi
 
@@ -216,7 +251,7 @@ then
   ssh ${build_user}@${build_server} "chmod +x $tmpdir/run_server.sh"
 
 
-  printf "\n\033[0;36mSyncing utilities\033[0m\n\n"
+  log minor "Syncing utilities"
   if [[ $remote_build = 1 ]]
   then
     rsync --info=flist2,misc0,stats0 -ivzz \
@@ -236,7 +271,7 @@ then
   fi
 
 
-  printf "\n\033[0;36mScheduling atjob for \033[1;35m%s\033[0;36m\033[0m\n\n" "$delay"
+  log minor "Scheduling atjob for %s" "$delay"
   jobfile=$(mktemp atjob.XXXXXXXX)
   jobfile_base=$(basename $jobfile)
 
@@ -262,7 +297,7 @@ then
     | ssh ${deploy_user}@${deploy_server} "sudo --stdin --prompt='Reading sudo password for %u@%H from stdin...' at -m -f /tmp/$jobfile_base $delay"
 fi
 
-printf "\n\033[0;36mCleaning up\033[0m\n\n"
+log minor "Cleaning up"
 
 if [[ $deploy = 1 ]]
 then
@@ -272,4 +307,4 @@ fi
 
 ssh ${build_user}@${build_server} "rm -r $tmpdir"
 
-printf "\n\n\033[0;35mFINISHED DEPLOYING TO \033[1;32m%s\033[0;35m...\033[0m\n\n" "$env"
+log major "Finished deploying to %s on %s" "$env" "$deploy_server"
