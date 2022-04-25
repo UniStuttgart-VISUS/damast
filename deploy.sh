@@ -7,9 +7,11 @@ function about() {
   cat 1>&2 <<EOF
 Usage: deploy.sh [-h] [-bnpr] [-d <timespec>] [-l login] [-H host] [-u <www_uid>] [-g <www_gid>]
 
-Build the client-side assets and bundle the server wheel file. Deploy that to
+Build the client-side assets and bundle the server Docker image. Deploy that to
 the server and restart the Flask server. By default, this deploys to the
-testing environment and restarts the systemd service immediately.
+testing environment and restarts the systemd service immediately. Additional
+flags allow to build the Docker image on the deploy server instead (less file
+transmission, faster), to not rebuild assets, or to not deploy the image.
 
   -h                Show this help and exit
   -p                Deploy to production environment instead
@@ -25,12 +27,17 @@ testing environment and restarts the systemd service immediately.
   -H host           Set the host to deploy to.
   -u uid            User ID of 'www' user on the target machine.
   -g gid            Group ID of 'www' group on the target machine.
+  -a                Ask for passwords, instead of using pass(1) with the
+                    following schema with the FQDN and login name of the
+                    respective host and user: pass ssh/<fqdn>/<login>
 EOF
 }
 
 # log messages
 log() {
   clr_reset=$(tput sgr0)
+
+  ask="\n\n"
 
   case "$1" in
     major)
@@ -41,14 +48,19 @@ log() {
       clr_main=$(tput sgr0; tput setaf 3)
       clr_important=$(tput setaf 2; tput bold)
       ;;
+    ask)
+      clr_main=$(tput sgr0; tput setaf 3)
+      clr_important=$(tput setaf 2; tput bold)
+      ask=" "  # no newline, answer on same line
+      ;;
     *)
-      1>&2 echo "Log messages must have major or minor level!"
+      1>&2 echo "Log messages must have major or minor level, or \"ask\"!"
       exit 1
       ;;
   esac
   shift
 
-  msg="\n$clr_main$1$clr_reset\n\n"
+  msg="\n$clr_main$1$clr_reset$ask"
 
   shift
   args=()
@@ -61,7 +73,6 @@ log() {
 }
 
 ## default values
-
 # environment
 env="TESTING"
 
@@ -98,10 +109,13 @@ build_user="$(whoami)"
 deploy_server="narcocorrido.visus.uni-stuttgart.de"
 deploy_user="max"
 
+# do not ask for passwords by default
+password_ask=0
+
 ## values passed via command-line arguments
 
 OPTIND=0
-while getopts hpnd:brl:H:u:g: opt
+while getopts hpnd:brl:H:u:g:a opt
 do
   case $opt in
     h)
@@ -147,6 +161,10 @@ do
       # set www group ID
       www_group_id="$OPTARG"
       ;;
+    a)
+      # ask for passwords
+      password_ask=1
+      ;;
     *)
       about
       exit 1
@@ -170,15 +188,54 @@ EOF
   exit 1
 fi
 
-# create a temporary directory for build files
-tmpdir=$(ssh ${build_user}@${build_server} mktemp -d)
-
 if [[ $deploy = 1 ]]
 then
   log major "DEPLOYING TO %s (building as %s@%s)..." "$env" "$build_user" "$build_server"
 else
   log major "BUILDING %s WITHOUT DEPLOY..." "$env"
 fi
+
+# collect required passwords
+log major "Collecting required passwords"
+
+if [[ $password_ask = 1 ]]
+then
+  stty -echo
+
+  if [[ $deploy = 1 ]]
+  then
+    log ask "Please enter the password for the deploy server user (%s@%s):" "$deploy_user" "$deploy_server"
+    read deploypassword
+  fi
+
+  if [[ $remote_build = 0 ]]
+  then
+    log ask "Please enter your local user password for Docker image build (%s@%s):" "$(whoami)" "$(hostname)"
+    read localpassword
+
+    buildpassword="$localpassword"
+  else
+    buildpassword="$deploypassword"
+  fi
+
+  stty echo
+else
+  if [[ $deploy = 1 ]]
+  then
+    deploypassword=$(pass ssh/$deploy_server/$deploy_user)
+  fi
+
+  if [[ $remote_build = 0 ]]
+  then
+    localpassword=$(pass ssh/$(hostname)/$(whoami))
+    buildpassword="$localpassword"
+  else
+    buildpassword="$deploypassword"
+  fi
+fi
+
+# create a temporary directory for build files
+tmpdir=$(ssh ${build_user}@${build_server} mktemp -d)
 
 # version: git tag, plus optionally a divergence, but only allow a certain set of characters
 version=$(echo -n $(git describe --tags) | tr -sc '[a-zA-Z0-9_.\-]' '-')
@@ -222,7 +279,7 @@ rsync --info=flist2,misc0,stats0 -iavzz \
 
 log minor "Building docker image"
 
-pass ssh/${build_server}/${build_user} \
+echo "$buildpassword" \
   | ssh ${build_user}@${build_server} "cd ${tmpdir} && \
       sudo --stdin --prompt='Reading sudo password for %u@%H from stdin...' \
         docker build \
@@ -244,7 +301,7 @@ then
   then
     log minor "Exporting docker image for %s" "$version"
 
-    pass ssh/$(hostname)/$(whoami) \
+    echo "$localpassword" \
      | sudo --stdin --prompt='Reading sudo password for %u@%H from stdin...' \
          docker save $imagename \
      | gzip \
@@ -308,7 +365,7 @@ then
   fi
 
   scp $jobfile ${deploy_user}@${deploy_server}:/tmp
-  echo $(pass ssh/${deploy_server}/${deploy_user}) \
+  echo "$deploypassword" \
     | ssh ${deploy_user}@${deploy_server} "sudo --stdin --prompt='Reading sudo password for %u@%H from stdin...' at -m -f /tmp/$jobfile_base $delay"
 fi
 
