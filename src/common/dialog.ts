@@ -158,3 +158,12 @@ export function accept_dialog(
   };
   return create_dialog<void>(d3.select('body'), create_fn);
 }
+
+declare class HTMLDialogElement {
+  open(): void;
+  showModal?(): void;
+};
+export function nativeDialogSupported(): boolean {
+  if (!('HTMLDialogElement' in window)) return false;
+  return HTMLDialogElement.prototype.showModal !== undefined;
+}
