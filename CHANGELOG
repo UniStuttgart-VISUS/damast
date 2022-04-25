@@ -1,12 +1,11 @@
                                 CHANGELOG
 
-
 2022-0x-xx                                                           v1.1.2
 
 Make deploy script more versatile and documented.
 
 
-2022-04-xx                                                           v1.1.1
+2022-04-07                                                           v1.1.1
 
 Remove necessity for Rust toolchain when building Damast. Fix a bug with
 loading a visualization state with a complex religion filter. Fix a bug
