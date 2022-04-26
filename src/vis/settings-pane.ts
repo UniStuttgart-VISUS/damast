@@ -107,9 +107,8 @@ export default class SettingsPane {
 
   private _resolver: (v: string) => void;
   private async onClickDescribeFilters() {
-    modal.showInfoboxFromURL('Currently Active Filters', () => new Promise<string>(resolve => {
-      this._resolver = resolve;
-    }));
+    const descriptionPromise = new Promise<string>(r => this._resolver = r);
+    modal.showInfoboxFromURL('Currently Active Filters', () => descriptionPromise);
     //this._describe_filter_modal.content.append('p')
     //  .classed('modal__content--loading', true)
     //  .html(`<i class="fa fa-pulse fa-3x fa-fw fa-spinner"></i>`);
@@ -125,7 +124,8 @@ export default class SettingsPane {
       },
       body: JSON.stringify(eventData.data)
     });
-    this._resolver(response);
+    console.log(this._resolver);
+    this._resolver?.(response);
   }
 
   private async onExportEvent(eventData: MessageData<any>) {

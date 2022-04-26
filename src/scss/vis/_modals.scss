@@ -4,7 +4,20 @@
 
 dialog {
   max-height: 50vh;
-  overflow-y: auto;
+
+  padding: 0;
+  border: 2px solid $clr-accent;
+  box-sizing: border-box;
+  font-size: 1rem;
+
+  display: grid;
+  grid-auto-rows: max-content 1fr;
+  grid-template-areas: "title"
+                       "content";
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
 
   h1, h2, h3, h4, h5, h6,
   p, ul, ol, article, section,
@@ -13,144 +26,108 @@ dialog {
   }
 }
 
-.modal {
-  position: relative;
-  z-index: 2000;
+// loading icon
+:is(.modal-standalone-body, .modal__foreground) i.fa.fa-spinner {
+  margin: 2em auto;
+  display: block;
+}
+
+.modal__title-pane {
+  background: $clr-accent;
+  color: $clr-bg;
+
+  grid-area: title;
+  display: grid;
+  grid-template-columns: auto max-content max-content;
+}
+
+.modal__title {
   font-size: 1rem;
+  margin: 2px;
 
-  &--vis {
-    max-width: 0px;
-    max-height: 0px;
+  &::before {
+    content: 'ⓘ';
+    padding-right: 0.2rem;
+  }
+}
+
+.modal__close-button,
+.modal__unpin-button {
+  cursor: pointer;
+  padding: 0px 5px;
+}
+
+.modal-open-link {
+  cursor: pointer;
+  padding: 0px 5px;
+
+  &::before {
+    content: '?';
+    font-size: 1.4ex;
+    vertical-align: middle;
+    font-weight: bold;
+    text-align: center;
+    display: inline-block;
+    width: 1.8ex;
+    height: 1.8ex;
+    border-radius: 1.2ex;
+    border: thin solid;
+    line-height: 1.8ex;
+  }
+}
+
+.modal__foreground {
+  background: $clr-bg;
+  color: $clr-accent;
+
+  grid-area: content;
+  overflow: auto;
+
+  padding: 1em;
+
+  font-size: 0.8rem;
+  font-weight: normal;
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
   }
 
-  &--hidden {
-    display: none;
+  h1 { font-size: 1.8em; }
+  h2 { font-size: 1.4em; }
+  h3 { font-size: 1.25em; }
+  h4 { font-size: 1.125em; }
+  h5 { font-size: 1em; }
+  h6 { font-size: 0.8em; }
+
+  & p + ol,
+  & p + ul {
+    margin-top: -0.8em;
   }
 
-  &__background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    background: rgba(0,0,0,0.5);
-    width: 100vw;
-    height: 100vh;
+  & dt {
+    font-weight: bold;
+    font-size: 0.9em;
+    margin-top: 0.3em;
   }
 
-  &__pane {
-    position: fixed;
-
-
-    border: 2px solid $clr-accent;
-    box-sizing: border-box;
-
-    display: grid;
-    grid-template-rows: max-content auto;
+  & dd {
+    font-size: 0.9em;
   }
-
-  &__title-pane {
-    background: $clr-accent;
-    color: $clr-bg;
-
-    display: grid;
-    grid-template-columns: auto max-content max-content;
-  }
-
-  &__title {
-    font-size: 1rem;
-    margin: 2px;
-
-    &::before {
-      content: 'ⓘ';
-      padding-right: 0.2rem;
-    }
-  }
-
-  &__close-button,
-  &__unpin-button {
-    cursor: pointer;
-    padding: 0px 5px;
-  }
-
-  &__close-button--top-right {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    padding: 0.5rem;
-    background: $clr-bg;
-    color: $clr-accent;
-  }
-
-  &-open-link {
-    cursor: pointer;
-    padding: 0px 5px;
-
-    &::before {
-      content: '?';
-      font-size: 1.4ex;
-      vertical-align: middle;
-      font-weight: bold;
-      text-align: center;
-      display: inline-block;
-      width: 1.8ex;
-      height: 1.8ex;
-      border-radius: 1.2ex;
-      border: thin solid;
-      line-height: 1.8ex;
-    }
-  }
-
-  &__foreground {
-    background: $clr-bg;
-    color: $clr-accent;
-
-    overflow: auto;
-
-    padding: 1em;
-
-    font-size: 0.8rem;
-    font-weight: normal;
-
-    h1, h2, h3, h4, h5, h6 {
-      font-weight: bold;
-    }
-
-    h1 { font-size: 1.8em; }
-    h2 { font-size: 1.4em; }
-    h3 { font-size: 1.25em; }
-    h4 { font-size: 1.125em; }
-    h5 { font-size: 1em; }
-    h6 { font-size: 0.8em; }
-
-    & p + ol,
-    & p + ul {
-      margin-top: -0.8em;
-    }
-
-    & dt {
-      font-weight: bold;
-      font-size: 0.9em;
-      margin-top: 0.3em;
-    }
-
-    & dd {
-      font-size: 0.9em;
-    }
 b
-    & pre {
-      padding: 0;
-    }
-
-    & p:first-child {
-      margin-top: 0;
-    }
+  & pre {
+    padding: 0;
   }
 
-  .modal__content--loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 200px;
+  & p:first-child {
+    margin-top: 0;
   }
+}
+
+.modal__content--loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
 }
 
 // Button to open
@@ -240,11 +217,5 @@ b
   max-width: 400px;
   min-height: calc(100vh - 4rem);
   background: $clr-bg;
-
-  // loading icon
-  i.fa.fa-spinner {
-    margin: 2em auto;
-    display: block;
-  }
 }
 
