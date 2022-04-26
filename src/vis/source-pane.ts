@@ -48,11 +48,7 @@ export default class SourcePane extends View<any, any> {
   }
 
   protected openModal() {
-    const info = modal.create_modal(
-      400, 300,
-      'Sources',
-      'source.html'
-    );
+    modal.showInfoboxFromURL('Sources', 'source.html');
   }
 
   async linkData(data: any) {

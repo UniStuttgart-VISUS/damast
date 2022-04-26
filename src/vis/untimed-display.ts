@@ -158,10 +158,6 @@ export default class Untimed extends View<any, any> {
   }
 
   protected openModal(): void {
-    const info = modal.create_modal(
-      400, 300,
-      'Untimed Data',
-      'untimed-data.html'
-    );
+    modal.showInfoboxFromURL('Untimed Data', 'untimed-data.html');
   }
 };
