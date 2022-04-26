@@ -2,7 +2,7 @@
 
 @forward '../common/target-highlight';
 
-dialog {
+dialog.infobox[open] {
   max-height: 50vh;
 
   padding: 0;

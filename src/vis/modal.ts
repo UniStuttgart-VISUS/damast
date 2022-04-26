@@ -39,7 +39,8 @@ export function showInfoboxFromURL(title_string: string,
   }
 
   const dialog: d3.Selection<HTMLDialogElement & _HTMLDialogElement, any, any, any> = d3.select('body')
-    .append('dialog');
+    .append('dialog')
+    .classed('infobox', true);
 
   dialog.on('click', e => {
     if (e.target === dialog.node()) close();
