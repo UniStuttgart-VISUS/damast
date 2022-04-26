@@ -1,5 +1,7 @@
 import { select, Selection } from 'd3-selection';
 
+import { nativeDialogSupported, HTMLDialogElement as HtDialog } from '../common/dialog';
+
 interface PopupOption<T> {
   key: T;
   description: string;
@@ -16,20 +18,36 @@ export default async function createPopup<T>(
   // TODO: (future, low prio) add dragging for title bar
 
   return new Promise<T>((resolve, reject) => {
+    let frame: d3.Selection<HTMLElement, any, any, any>;
+    let remove: () => void;
+
     // create popup
-    const bg = select(document.body).append('div')
-      .classed('modal', true);
-    const remove = () => bg.remove();
+    if (nativeDialogSupported()) {
+      frame = select(document.body)
+        .append('dialog')
+        .classed('annotator-popup', true);
+      (frame.node() as unknown as HtDialog).showModal();
+      remove = () => frame.remove();
+      frame.on('click', e => {
+        if (e.target === frame.node()) {
+          remove();
+          reject();
+        }
+      });
+    } else {
+      const bg = select(document.body).append('div')
+        .classed('modal', true);
+      remove = () => bg.remove();
 
-    bg.on('click', () => { remove(); reject(); });
+      bg.on('click', () => { remove(); reject(); });
+      frame = bg.append('div')
+    };
 
-    const frame = bg.append('div')
-      .classed('modal__frame', true)
+    frame.classed('modal__frame', true)
       .style('--position-x', `${position.x}px`)
       .style('--position-y', `${position.y}px`)
       .style('--width', `${width}px`)
-      .style('--offset-y', above ? `-100%` : `0`)
-      .on('click', evt => evt.stopPropagation());
+      .style('--offset-y', above ? `-100%` : `0`);
 
     const titlebar = frame.append('div')
       .classed('modal__titlebar', true);

@@ -172,7 +172,7 @@ export function accept_dialog(
   return create_dialog<void>(d3.select('body'), create_fn);
 }
 
-declare class HTMLDialogElement {
+export declare class HTMLDialogElement {
   open(): void;
   showModal?(): void;
 };
