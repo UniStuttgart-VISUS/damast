@@ -95,14 +95,9 @@ def file(path):
     return flask.current_app.serve_static_file(static, path)
 
 
-@app.route('/describe-filters', methods=['GET', 'POST'], role=['reporting', 'dev', 'admin', 'vis'])
-@rest_endpoint(['GET', 'POST'])
+@app.route('/describe-filters', methods=['POST'], role=['reporting', 'dev', 'admin', 'vis'])
+@rest_endpoint(['POST'])
 def describe_filters(cursor):
-    if flask.request.method == 'GET':
-        print(flask.current_app.auth.current_user().roles)
-        # return empty frame to display filters in, in a separate window
-        return '<html><body><h1>Foo bar</h1><div class="content"></div></body></html>'
-
     filter_json, err = init_post()
     if err is not None:
         return err

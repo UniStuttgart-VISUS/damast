@@ -12,10 +12,10 @@ export function showInfoboxFromURL(title_string: string,
   const openInNewWindow = () => {
     const url = (typeof content_url === 'string')
       ? `./info/${content_url}?title=${encodeURIComponent(title_string)}`
-      : '../reporting/describe-filters';  // ContentFunction implies it is the description window for filters
+      : `./info-standalone?title=${encodeURIComponent(title_string)}`;  // ContentFunction implies it is the description window for filters
     const win = window.open(url, title_string, `popup,height=480,width=640`);
 
-    const content = (typeof content_url === 'string') ? Promise.resolve('') : content_url();
+    const content = (typeof content_url === 'string') ? Promise.reject() : content_url();
     if (window.focus) win.focus();
 
     if (typeof content_url === 'function') {
@@ -25,9 +25,6 @@ export function showInfoboxFromURL(title_string: string,
           elem.innerHTML = c;
         });
       }, { once: true });
-      //  const root = win.document.createElement('html');
-      //  win.document.rootElement = root;
-      //  root.innerHTML = 'Hello';
     }
   };
 

@@ -23,14 +23,6 @@ dialog {
     max-height: 0px;
   }
 
-  &-standalone-body {
-    margin: 0 auto;
-    padding: 2rem;
-    max-width: 400px;
-    min-height: calc(100vh - 4rem);
-    background: $clr-bg;
-  }
-
   &--hidden {
     display: none;
   }
@@ -241,3 +233,18 @@ b
     }
   }
 }
+
+.modal-standalone-body {
+  margin: 0 auto;
+  padding: 2rem;
+  max-width: 400px;
+  min-height: calc(100vh - 4rem);
+  background: $clr-bg;
+
+  // loading icon
+  i.fa.fa-spinner {
+    margin: 2em auto;
+    display: block;
+  }
+}
+
