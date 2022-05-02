@@ -3,6 +3,8 @@ from typing import List
 import os
 import logging
 
+from .config import get_config
+
 
 @dataclass
 class User:
@@ -16,19 +18,13 @@ _allowed_visitor_roles = set(('user', 'readdb', 'annotator', 'geodb', 'pgadmin',
 _disallowed_visitor_roles = set(('writedb', 'dev', 'admin'))
 
 def default_visitor_roles():
+    conf = get_config()
+
     # get default roles for visitors
-    roles_str = os.environ.get('DAMAST_VISITOR_ROLES')
-    if roles_str is None:
+    roles_in = conf.visitor_roles
+    if roles_in is None:
         logging.getLogger('flask.error').info('Visitor handling is disabled.')
         return None
-
-    roles_in = filter(
-            lambda s: len(s) > 0,
-            map(
-                lambda r: r.strip(),
-                roles_str.split(',')
-                )
-            )
 
     roles = ['visitor']
     for role in roles_in:

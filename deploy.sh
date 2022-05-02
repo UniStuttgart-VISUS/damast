@@ -2,6 +2,77 @@
 
 set -euo pipefail
 
+# print help and exit
+function about() {
+  cat 1>&2 <<EOF
+Usage: deploy.sh [-h] [-bnpr] [-d <timespec>] [-l login] [-H host] [-u <www_uid>] [-g <www_gid>]
+
+Build the client-side assets and bundle the server Docker image. Deploy that to
+the server and restart the Flask server. By default, this deploys to the
+testing environment and restarts the systemd service immediately. Additional
+flags allow to build the Docker image on the deploy server instead (less file
+transmission, faster), to not rebuild assets, or to not deploy the image.
+
+  -h                Show this help and exit
+  -p                Deploy to production environment instead
+  -n                No not re-make assets, deploy as-is
+  -b                Build only: Only create Docker image, no not deploy
+  -r                Remote build: Build Docker image on remote host. This is
+                    faster, as the save and load steps are skipped and the tar
+                    file with an entire Linux distro does not have to be copied
+                    over, but introduces more load on the remote host.
+  -d timespec       Delay the installation and service restart until time. This
+                    uses at and recognizes timespecs as specified by at(1p).
+  -l login          Set login user on the deployment host.
+  -H host           Set the host to deploy to.
+  -u uid            User ID of 'www' user on the target machine.
+  -g gid            Group ID of 'www' group on the target machine.
+  -a                Ask for passwords, instead of using pass(1) with the
+                    following schema with the FQDN and login name of the
+                    respective host and user: pass ssh/<fqdn>/<login>
+EOF
+}
+
+# log messages
+log() {
+  clr_reset=$(tput sgr0)
+
+  ask="\n\n"
+
+  case "$1" in
+    major)
+      clr_main=$(tput sgr0; tput setaf 5)
+      clr_important=$(tput setaf 6; tput bold)
+      ;;
+    minor)
+      clr_main=$(tput sgr0; tput setaf 3)
+      clr_important=$(tput setaf 2; tput bold)
+      ;;
+    ask)
+      clr_main=$(tput sgr0; tput setaf 3)
+      clr_important=$(tput setaf 2; tput bold)
+      ask=" "  # no newline, answer on same line
+      ;;
+    *)
+      1>&2 echo "Log messages must have major or minor level, or \"ask\"!"
+      exit 1
+      ;;
+  esac
+  shift
+
+  msg="\n$clr_main$1$clr_reset$ask"
+
+  shift
+  args=()
+  for arg in "$@"
+  do
+    args+=("$clr_important$arg$clr_main")
+  done
+
+  printf "$msg" "${args[@]}"
+}
+
+## default values
 # environment
 env="TESTING"
 
@@ -38,35 +109,13 @@ build_user="$(whoami)"
 deploy_server="narcocorrido.visus.uni-stuttgart.de"
 deploy_user="max"
 
+# do not ask for passwords by default
+password_ask=0
 
-# print help and exit
-function about() {
-  cat 1>&2 <<EOF
-Usage: deploy.sh [-h] [-bnpr] [-d <timespec>] [-l login] [-H host] [-u <www_uid>] [-g <www_gid>]
-
-Build the client-side assets and bundle the server wheel file. Deploy that to
-the server and restart the Flask server. By default, this deploys to the
-testing environment and restarts the systemd service immediately.
-
-  -h                Show this help and exit
-  -p                Deploy to production environment instead
-  -n                No not re-make assets, deploy as-is
-  -b                Build only: Only create Docker image, no not deploy
-  -r                Remote build: Build Docker image on remote host. This is
-                    faster, as the save and load steps are skipped and the tar
-                    file with an entire Linux distro does not have to be copied
-                    over, but introduces more load on the remote host.
-  -d time_arg       Delay the installation and service restart until time. This
-                    uses at and recognizes timespecs as specified by at(1p).
-  -l login          Set login user on the deployment host.
-  -H host           Set the host to deploy to.
-  -u uid            User ID of 'www' user on the target machine.
-  -g gid            Group ID of 'www' group on the target machine.
-EOF
-}
+## values passed via command-line arguments
 
 OPTIND=0
-while getopts hpnd:brl:H:u:g: opt
+while getopts hpnd:brl:H:u:g:a opt
 do
   case $opt in
     h)
@@ -112,6 +161,10 @@ do
       # set www group ID
       www_group_id="$OPTARG"
       ;;
+    a)
+      # ask for passwords
+      password_ask=1
+      ;;
     *)
       about
       exit 1
@@ -119,13 +172,14 @@ do
   esac
 done
 
+# set this afterwards, so that it depends on deploy_user and deploy_server
 if [[ $remote_build = 1 ]]
 then
   build_user="$deploy_user"
   build_server="$deploy_server"
 fi
 
-
+# check that no-deploy flag is not used together with remote build
 if [[ $deploy = 0 && $remote_build = 1 ]]
 then
   cat 1>&2 << EOF
@@ -134,51 +188,98 @@ EOF
   exit 1
 fi
 
-tmpdir=$(ssh ${build_user}@${build_server} mktemp -d)
-
 if [[ $deploy = 1 ]]
 then
-  printf "\033[0;35mDEPLOYING TO \033[1;32m%s\033[0;35m (building as \033[1;36m%s\033[0;35m@\033[1;36m%s\033[0;35m)...\033[0m\n\n" "$env" "$build_user" "$build_server"
+  log major "DEPLOYING TO %s (building as %s@%s)..." "$env" "$build_user" "$build_server"
 else
-  printf "\033[0;35mBUILDING \033[1;32m%s\033[0;35m WITHOUT DEPLOY...\033[0m\n\n" "$env"
+  log major "BUILDING %s WITHOUT DEPLOY..." "$env"
 fi
 
-sleep 1
+# collect required passwords
+log major "Collecting required passwords"
 
+if [[ $password_ask = 1 ]]
+then
+  stty -echo
+
+  if [[ $deploy = 1 ]]
+  then
+    log ask "Please enter the password for the deploy server user (%s@%s):" "$deploy_user" "$deploy_server"
+    read deploypassword
+  fi
+
+  if [[ $remote_build = 0 ]]
+  then
+    log ask "Please enter your local user password for Docker image build (%s@%s):" "$(whoami)" "$(hostname)"
+    read localpassword
+
+    buildpassword="$localpassword"
+  else
+    buildpassword="$deploypassword"
+  fi
+
+  stty echo
+else
+  if [[ $deploy = 1 ]]
+  then
+    deploypassword=$(pass ssh/$deploy_server/$deploy_user)
+  fi
+
+  if [[ $remote_build = 0 ]]
+  then
+    localpassword=$(pass ssh/$(hostname)/$(whoami))
+    buildpassword="$localpassword"
+  else
+    buildpassword="$deploypassword"
+  fi
+fi
+
+# create a temporary directory for build files
+tmpdir=$(ssh ${build_user}@${build_server} mktemp -d)
+
+# version: git tag, plus optionally a divergence, but only allow a certain set of characters
 version=$(echo -n $(git describe --tags) | tr -sc '[a-zA-Z0-9_.\-]' '-')
+# name of Docker image, e.g.: damast:v1.6.2rc1-testing
 imagename="damast:$version-$(echo $env | tr '[:upper:]' '[:lower:]')"
 filename="$imagename.tgz"
 
 if [[ $remake = 1 ]]
 then
-  printf "\033[0;36mCleaning previous build artifacts\033[0m\n\n"
+  log major "Rebuilding targets for deploy"
+  log minor "Cleaning previous build artifacts"
   make clean
 
-  printf "\n\033[0;36mStarting clean minimized build\033[0m\n\n"
+  log minor "Starting clean minimized build"
   make prod
 else
+  # always ensure these are copied into the damast/ directory
   make CHANGELOG LICENSE
 fi
 
-printf "\n\033[0;36mSyncing assets for docker image\033[0m\n\n"
+log major "Building docker image for %s on %s@%s" "$version" "$build_user" "$build_server"
+log minor "Syncing assets for docker image"
 
+# create hash from damast/ file contents
 fs_hash=$(find damast -type f \
   | xargs sha1sum \
   | awk '{print $1}' \
   | sha1sum - \
   | awk '{print $1}')
+
+# use hash to ensure new files are copied into the Docker image
 cat util/docker/{base,prod}.in \
   | sed "s/@REBUILD_HASH@/$fs_hash/g" \
   | ssh ${build_user}@${build_server} "cat > $tmpdir/Dockerfile"
+
+# copy files to build server (can be local machine)
 rsync --info=flist2,misc0,stats0 -iavzz \
   damast \
   ${build_user}@${build_server}:$tmpdir/
 
 
+log minor "Building docker image"
 
-printf "\n\033[0;36mBuilding docker image for \033[1;35m%s\033[0;36m on \033[1;36m%s\033[0;35m@\033[1;36m%s\033[0;35m\033[0m\n\n" "$version" "$build_user" "$build_server"
-
-pass ssh/${build_server}/${build_user} \
+echo "$buildpassword" \
   | ssh ${build_user}@${build_server} "cd ${tmpdir} && \
       sudo --stdin --prompt='Reading sudo password for %u@%H from stdin...' \
         docker build \
@@ -191,32 +292,34 @@ pass ssh/${build_server}/${build_user} \
           ."
 
 
+log major "Deploying to %s on %s" "$env" "$deploy_server"
+
 if [[ $deploy = 1 ]]
 then
-
+  # local build: save docker image, copy it over
   if [[ $remote_build = 0 ]]
   then
-    printf "\n\033[0;36mExporting docker image for \033[1;35m%s\033[0;36m\033[0m\n\n" "$version"
+    log minor "Exporting docker image for %s" "$version"
 
-    pass ssh/$(hostname)/$(whoami) \
+    echo "$localpassword" \
      | sudo --stdin --prompt='Reading sudo password for %u@%H from stdin...' \
          docker save $imagename \
      | gzip \
      > $tmpdir/$filename
 
-    printf "\n\033[0;36mCopying docker file \033[1;35m%s\033[0;36m to \033[1;35m%s\033[0;36m...\033[0m\n\n" "$filename" "${deploy_user}@${deploy_server}:/tmp"
+    log minor "Copying docker file %s to %s@%s:%s..." "$filename" "${deploy_user}" "${deploy_server}" "/tmp"
     scp $tmpdir/$filename "${deploy_user}@${deploy_server}:/tmp"
   fi
 
 
-  # run_server.sh
+  # create run script, which needs the systemd service name and the image name
   sed "s/!!SYSTEMD_SERVICE_NAME!!/$service/" util/run_server.sh.in \
     | sed "s/!!DOCKER_IMAGE_NAME!!/$imagename/" \
     | ssh ${build_user}@${build_server} "cat > $tmpdir/run_server.sh"
   ssh ${build_user}@${build_server} "chmod +x $tmpdir/run_server.sh"
 
 
-  printf "\n\033[0;36mSyncing utilities\033[0m\n\n"
+  log minor "Syncing utilities"
   if [[ $remote_build = 1 ]]
   then
     rsync --info=flist2,misc0,stats0 -ivzz \
@@ -225,8 +328,11 @@ then
       util/list_reports.py \
       "${deploy_user}@${deploy_server}:$basedir"
 
+    # on remote build, copy run script to correct directory
     ssh ${deploy_user}@${deploy_server} "cp -v $tmpdir/run_server.sh $basedir"
   else
+    # on local build, also copy run script
+
     rsync --info=flist2,misc0,stats0 -ivzz \
       util/logstat.awk \
       util/sqlite3-user-file/user_management.py \
@@ -236,7 +342,7 @@ then
   fi
 
 
-  printf "\n\033[0;36mScheduling atjob for \033[1;35m%s\033[0;36m\033[0m\n\n" "$delay"
+  log minor "Scheduling atjob for %s" "$delay"
   jobfile=$(mktemp atjob.XXXXXXXX)
   jobfile_base=$(basename $jobfile)
 
@@ -245,24 +351,25 @@ then
     # image already on server, only restart (with new run_server.sh)
     cat >$jobfile <<- EOF
 		systemctl restart $service
-    echo Restarted systemd service $service with image $imagename.
+		echo Restarted systemd service $service with image $imagename.
 		EOF
 
   else
+    # load image, then restart
     cat >$jobfile <<- EOF
 		systemctl stop $service
 		docker load < /tmp/$filename && rm /tmp/$filename
 		systemctl start $service
-    echo Restarted systemd service $service with image $imagename.
+		echo Restarted systemd service $service with image $imagename.
 		EOF
   fi
 
   scp $jobfile ${deploy_user}@${deploy_server}:/tmp
-  echo $(pass ssh/${deploy_server}/${deploy_user}) \
+  echo "$deploypassword" \
     | ssh ${deploy_user}@${deploy_server} "sudo --stdin --prompt='Reading sudo password for %u@%H from stdin...' at -m -f /tmp/$jobfile_base $delay"
 fi
 
-printf "\n\033[0;36mCleaning up\033[0m\n\n"
+log minor "Cleaning up"
 
 if [[ $deploy = 1 ]]
 then
@@ -272,4 +379,4 @@ fi
 
 ssh ${build_user}@${build_server} "rm -r $tmpdir"
 
-printf "\n\n\033[0;35mFINISHED DEPLOYING TO \033[1;32m%s\033[0;35m...\033[0m\n\n" "$env"
+log major "Finished deploying to %s on %s" "$env" "$deploy_server"

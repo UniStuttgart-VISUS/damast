@@ -20,6 +20,14 @@ export function tupleIsActive(tuple: {time_span: YearRange}, filter: TimeFilter)
     || tuple.time_span.end >= filter[0] && tuple.time_span.start === null;
 }
 
+/**
+ *  Generate string key from religion or confidence id, and active/inactive.
+ *  This is because d3.stack only accepts strings as keys.
+ */
+export function stackKey(key: number | T.Confidence, active: boolean): string {
+  return `${key}${active ? "a" : "i"}`;
+}
+
 interface Geolocation {
   lat: number;
   lng: number;
@@ -198,11 +206,11 @@ export function timed_from_tuples(tuples: T.LocationData[],
     });
 
     // populate key_data from sorted ys
-    ys.forEach(({id, active}) => key_data.push(`${id}${active?'a':'i'}`));
+    ys.forEach(({id, active}) => key_data.push(stackKey(id, active)));
   } else {
-    [ 'certain', 'probable', 'contested', 'uncertain', 'false', null ].forEach(d => {
-      key_data.push(d + 'a');
-      key_data.push(d + 'i');
+    T.confidence_values.forEach(d => {
+      key_data.push(stackKey(d, true));
+      key_data.push(stackKey(d, false));
       const color = colors[d];
 
       ys.push({id:d, active:true, color});
@@ -224,13 +232,16 @@ export function timed_from_tuples(tuples: T.LocationData[],
     const keys = ((display_mode === T.DisplayMode.Religion)
       ? Array.from(Object.keys(religion_order))
           .sort((a,b) => religion_order[parseInt(a)] - religion_order[parseInt(b)])
+          .map(d => parseInt(d))
       : T.confidence_values.map(d => d))  // make copy
       .reverse();  // top-down
 
     let i = 1;
     keys.forEach(k => {
-      const sa = stack.find(d => d.key === `${k}a`);
-      const sb = stack.find(d => d.key === `${k}i`);
+      const ka = stackKey(k, true);
+      const kb = stackKey(k, false);
+      const sa = stack.find(d => d.key === ka);
+      const sb = stack.find(d => d.key === kb);
       let has_data = false;
 
       sa.forEach(x => {
@@ -299,41 +310,30 @@ function count_by_year(arr: T.LocationData[],
 
     if (display_mode === T.DisplayMode.Religion) {
       Array.from(Object.keys(religion_order)).forEach(id => {
-        year_counts[id+'a'] = 0;
-        year_counts[id+'i'] = 0;
+        const k = parseInt(id);
+        year_counts[stackKey(k, true)] = 0;
+        year_counts[stackKey(k, false)] = 0;
       });
 
       active.forEach(d => {
-        const key = d.religion_id + (d.active?'a':'i');
+        const key = stackKey(d.religion_id, d.active);
         year_counts[key] = year_counts[key] + 1;
       });
     } else {
-      [ 'certain', 'probable', 'contested', 'uncertain', 'false', null ].forEach(id => {
-        year_counts[id + 'a'] = 0;
-        year_counts[id + 'i'] = 0;
+      T.confidence_values.forEach(id => {
+        year_counts[stackKey(id, true)] = 0;
+        year_counts[stackKey(id, false)] = 0;
       });
 
       active.forEach(d => {
-        if (d.active) {
-          if (aspect_key === 'source_confidences') {
-            conf(d).forEach(c => {
-              const key = c + 'a';
-              year_counts[key] = year_counts[key] + 1;
-            });
-          } else {
-            const key = conf(d) + 'a';
+        if (aspect_key === 'source_confidences') {
+          conf(d).forEach(c => {
+            const key = stackKey(c, d.active);
             year_counts[key] = year_counts[key] + 1;
-          }
+          });
         } else {
-          if (aspect_key === 'source_confidences') {
-            conf(d).forEach(c => {
-              const key = c + 'i';
-              year_counts[key] = year_counts[key] + 1;
-            });
-          } else {
-            const key = conf(d) + 'i';
-            year_counts[key] = year_counts[key] + 1;
-          }
+          const key = stackKey(conf(d), d.active);
+          year_counts[key] = year_counts[key] + 1;
         }
       });
     }

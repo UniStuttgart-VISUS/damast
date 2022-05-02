@@ -96,7 +96,7 @@ def file(path):
 
 
 @app.route('/describe-filters', methods=['POST'], role=['reporting', 'dev', 'admin', 'vis'])
-@rest_endpoint
+@rest_endpoint(['POST'])
 def describe_filters(cursor):
     filter_json, err = init_post()
     if err is not None:

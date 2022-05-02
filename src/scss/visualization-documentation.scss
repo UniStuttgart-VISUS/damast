@@ -3,6 +3,7 @@
 @use 'common/mixins';
 
 @forward 'common/target-highlight';
+@forward 'common/collapsible-page-navigation';
 
 .content {
   @include mixins.baseFlexBlock();

@@ -4,12 +4,6 @@
 
 @forward 'common/target-highlight';
 
-body {
-  height: calc(100vh - 1rem);
-  display: grid;
-  grid-template-rows: max-content auto max-content;
-}
-
 .content {
   @include mixins.baseFlexBlock();
 

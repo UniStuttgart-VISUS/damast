@@ -152,11 +152,7 @@ export default class MapPane extends View<any, Set<number> | null> {
   }
 
   protected openModal(): void {
-    const info = modal.create_modal(
-      400, 300,
-      'Map View',
-      'map.html'
-    );
+    modal.showInfoboxFromURL('Map View', 'map.html');
   }
 
   private setMapStyle(layer_key: string): void {
