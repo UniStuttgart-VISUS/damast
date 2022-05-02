@@ -9,17 +9,17 @@
 
 <p>
   Card et al. formalized the so-called <dfn>data visualization pipeline</dfn> in 1998 (see <a href="https://infovis-wiki.net/wiki/Visualization_Pipeline">here</a> for reference).
-  This pipeline specifies the steps that data goes through, from its source representation to the point where it is presented to person using the visualization.
+  This pipeline specifies the steps that data goes through, from its source representation to the point where it is presented to the users using the visualization.
   The pipeline consists of four steps, in which certain operations are applied, transforming the data for the next step.
   After the last step, the data is present as pixels on a screen (or as ink on paper).
-  The pipeline allows for viewers to <em>interact</em> with and influence the process in each of the four steps, changing the end result in different ways.
+  The pipeline allows for viewers to <em>interact</em> with and influence the process during each of the four steps, changing the end result in different ways.
   In a first step, the data has been processed into a consistent, clean form, which is stored in the database.
   In general, user interaction only applies to the last three steps, and we will focus on these in what follows.
 </p>
 
 <p>
   In a second step, through <strong>data transformations,</strong> the <em>source data</em> is transformed into <em>data tables</em> (i.e., suitably structured data).
-  These transformations can include general data mapping, aggregation (such as counting or averaging), and filtering (e.g., include data after the year 1,000 CE only).
+  These transformations can include general data mapping, aggregation (such as counting or averaging), and filtering (e.g., include data after the year 1000 CE only).
   By <em>applying filters</em> in the visualization or changing, for example, the <em>display mode</em> in the settings (cf. {{ full_documentation_link('settings-display-mode', 'here') }}), viewers influence this second step of data transformation.
 </p>
 
@@ -150,7 +150,7 @@
 </p>
 
 <p>
-  Generally, one should be aware of how these filters work <em>between</em> as against <em>within</em> views.
+  Generally, one should be aware of how these filters work <em>between</em> as opposed to <em>within</em> views.
   <em>Between views,</em> the filters are applied in conjuction;
   that is, an evidence is shown only if it matches <em>all</em> filters.
   For example, if the map and timeline both have an active filter, evidence is only visualized if it is within the specified time span <em>and</em> within the specified geographical region.
@@ -253,7 +253,7 @@
 </p>
 
 <p>
-  A even more special case is the <strong>normalized</strong> stacked bar chart, where the width (or height) of the bars is constant across bars as well.
+  An even more special case is the <strong>normalized</strong> stacked bar chart, where the width (or height) of the bars is constant across bars as well.
   Hence, the width of individual segments encodes their <em>relative</em> proportion within the parent category.
   Normalized stacked bar charts appear in the {{ full_documentation_link('source', 'source view', true) }}, where they show the distribution of religious groups (or confidence levels) within each source.
 </p>
@@ -273,7 +273,7 @@
 <p>
   An <strong>indented tree</strong> is a visualization for hierarchies.
   Nodes of the hierarchy are represented as elements placed in individual rows, or columns.
-  To signify parent-child relationships, children are <em>indented</em> further that their parents.
+  To signify parent-child relationships, children are <em>indented</em> further than their parents.
   Indented trees are often used in file managers to show directory structures, or in mail programs to display e-mail threads.
   In <span class="small-caps">Damast</span>, an indented tree visualization is used to show the {{ full_documentation_link('religion-hierarchy', 'hierarchy of religious groups', true) }}.
 </p>
