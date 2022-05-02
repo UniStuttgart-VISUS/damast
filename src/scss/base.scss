@@ -18,9 +18,20 @@
 }
 
 body {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-areas: "header"
+                       "content"
+                       "footer";
+  grid-template-columns: 1fr;
+  grid-template-rows: max-content auto max-content;
+
+  margin: 0;
+  height: 100vh;
+  width: 100vw;
 }
+
+header { grid-area: header }
+footer { grid-area: footer }
 
 header,
 footer {
@@ -33,7 +44,8 @@ footer {
 // content
 
 .content {
-  min-height: 50vh;
+  grid-area: content;
+  overflow: auto;
 }
 
 .environment-label {

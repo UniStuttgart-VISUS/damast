@@ -10,8 +10,26 @@
 {% endblock %}
 
 {% block content %}
+<nav aria-hidden aria-label="extra scroll navigation" class="collapsible-page-navigation">
+  <input type="checkbox" class="show-hide-navigation" aria-hidden title="Show/hide page navigation" id="show-hide-page-navigation">
+  <label for="show-hide-page-navigation" class="show-hide-navigation"></label>
+  <ul>
+    <li><a href="#top-of-page">Back to Top</a></li>
+    <li><a href="#toc">Table of Contents</a></li>
+    <li><a href="#terminology">Terminology and Principles</a></li>
+    <li><a href="#settings-pane">Settings Pane</a></li>
+    <li><a href="#map">Map</a></li>
+    <li><a href="#location-list">Location List</a></li>
+    <li><a href="#religion-hierarchy">Religion Hierarchy</a></li>
+    <li><a href="#timeline">Timeline</a></li>
+    <li><a href="#untimed-data">Untimed Data</a></li>
+    <li><a href="#confidence">Confidence View</a></li>
+    <li><a href="#source">Source View</a></li>
+    <li><a href="#tags">Tag View</a></li>
+  </ul>
+</nav>
 
-<h1>Visualization Documentation</h1>
+<h1 id="top-of-page">Visualization Documentation</h1>
 
 <section>
   <p>

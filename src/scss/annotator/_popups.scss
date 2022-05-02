@@ -2,50 +2,65 @@
 @use '../vis/variables' as *;
 @use '../common/mixins';
 
-.modal {
+div.modal {
   position: fixed;
   z-index: 200;
   inset: 0;
-  background: rgba(black, 20%);
+}
 
-  &__frame {
-    position: fixed;
-    top: var(--position-y, 200px);
-    left: var(--position-x, 600px);
-    width: var(--width, 400px);
-    transform: translate(-50%, var(--offset-y, 0));
+div.modal .modal__frame,
+dialog.annotator-popup[open] {
+  position: fixed;
+  top: var(--position-y, 200px);
+  left: var(--position-x, 600px);
+  width: var(--width, 400px);
+  transform: translate(-50%, var(--offset-y, 0));
+}
 
-    box-sizing: border-box;
-    background: $clr-bg;
-    color: $clr-fg;
-    box-shadow: $box-shadow;
-    font-size: small;
+dialog.annotator-popup[open]::backdrop,
+div.modal {
+  background-color: rgba(black, 20%);
+}
 
-    display: grid;
-    grid-template-rows: max-content max-content auto;
-  }
+dialog.annotator-popup[open] {
+  margin: 1em;
+}
 
-  &__titlebar {
+.modal__frame {
+  box-sizing: border-box;
+  background: $clr-bg;
+  color: $clr-fg;
+  box-shadow: $box-shadow;
+  font-size: small;
+
+  display: grid;
+  grid-template-rows: max-content max-content auto;
+}
+
+
+div.modal,
+dialog.annotator-popup {
+  .modal__titlebar {
     display: flex;
     padding: 0.4ex;
     background: $clr-gray;
   }
 
-  &__title {
+  .modal__title {
     font-weight: 600;
     flex-grow: 1;
     padding-left: 1em;
   }
 
-  &__close-button {
+  .modal__close-button {
     flex-shrink: 1;
   }
 
-  &__description {
+  .modal__description {
     padding-inline: 1em;
   }
 
-  &__options {
+  .modal__options {
     padding: 1em;
     display: grid;
     gap: 1ex;
