@@ -2,8 +2,8 @@
 {% block title %}Home{% endblock %}
 {% block head %}
 {{ super() }}
-{# <link rel="stylesheet" href="{{ url_for('root-app.file', path='style.css') }}"> #}
-<link rel="stylesheet" href="{{ url_for('override.static', filename='home.css') }}">
+<link rel="stylesheet" href="{{ url_for('root-app.file', path='style.css') }}">
+{% include "override/background-image-url.html" ignore missing %}
 {% endblock %}
 {% block content %}
 <article>
@@ -11,24 +11,22 @@
     <h1><span class="small-caps">Damast</span></h1>
     <h2><span class="avoidwrap">A Research System</span> <span class="avoidwrap">to Analyze Multi-Religious Constellations</span> <span class="avoidwrap">in the Islamicate World</span></h2>
 
-    <div class="illustration">
-      <figure class="illustration">
-        <a href="{{ url_for('root-app.file', path='illustration-map1.png') }}">
-          <img
-            src="{{ url_for('root-app.file', path='illustration-map1.png') }}"
-            aria-describedby="fig-map-caption"
-            alt="Partial screenshot from the map"
-            title="Partial screenshot from the map"/>
-          </a>
-        <figcaption id="fig-map-caption">Partial screenshot of the map</figcaption>
-      </figure>
-    </div>
+    <figure class="illustration">
+      <a href="{{ url_for('root-app.file', path='illustration-map1.png') }}">
+        <img
+          src="{{ url_for('root-app.file', path='illustration-map1.png') }}"
+          aria-describedby="fig-map-caption"
+          alt="Partial screenshot from the map"
+          title="Partial screenshot from the map"/>
+        </a>
+      <figcaption id="fig-map-caption">Partial screenshot of the map</figcaption>
+    </figure>
 
-    <p class="main-navigation">
-          <a href="#about">About</a> |
-          <a href="#data">Data Used</a> |
+    <nav class="main-navigation">
+          <a href="#about">About</a>
+          <a href="#data">Data Used</a>
           <a href="#features">Features</a>
-    </p>
+    </nav>
 
     <p>
       <span class="small-caps">Damast</span> provides an <strong>interactive visualization</strong> to gain new insights into the multi‑religious constellations of the Middle East from the 7th to the 14th century.
@@ -64,7 +62,7 @@
   <section>
     <h2>About</h2>
 
-    <p class="go-to-top"><a href="#main-title"></a></p>
+    <a class="go-to-top" href="#main-title"></a>
 
     <p>
       <span class="small-caps">Damast</span> offers the visualization software developed and the data collected by the team members of the project <em>Dhimmis and Muslims – Analysing Multi-Religious Spaces in the Medieval Muslim World.</em>
@@ -93,8 +91,6 @@
       <a class="logo logo--md" href="https://www.geschichte.uni-frankfurt.de/87681539/dhimmis_and_muslims">
         <img src="https://upload.wikimedia.org/wikipedia/de/f/f0/Goethe-Logo.svg" alt="Logo Goethe University">
       </a>
-    </div>
-    <div class="logos">
       <a class="logo" href="https://portal.volkswagenstiftung.de/search/projectDetails.do?ref=93252">
         <img class="white" src="https://www.volkswagenstiftung.de/profiles/vwst/theme/volkswagen/images/logo.svg" alt="Logo VolkswagenStiftung">
       </a>
@@ -221,7 +217,7 @@
   <section >
     <h2>Data Used</h2>
 
-    <p class="go-to-top"><a href="#main-title"></a></p>
+    <a class="go-to-top" href="#main-title"></a>
 
     <figure class="illustration">
       <a href="{{ url_for('root-app.file', path='illustration-data.png') }}">
@@ -581,7 +577,7 @@
   <section>
     <h2>Features</h2>
 
-    <p class="go-to-top"><a href="#main-title"></a></p>
+    <a class="go-to-top" href="#main-title"></a>
 
     <figure class="illustration">
       <a href="{{ url_for('root-app.file', path='illustration-vis.png') }}">
@@ -608,7 +604,7 @@
     </p>
 
     <p>
-      Only a brief overview is presented, in what follows.
+      Only a brief overview is presented in what follows.
       In addition, we plan to provide video tutorials.
     </p>
 
