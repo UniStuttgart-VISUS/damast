@@ -113,11 +113,11 @@
   In an MCV visualization, each view shows a <em>different perspective</em> on the <em>same data;</em>
   that is, the view visualizes a specific aspect of the data.
   In <span class="small-caps">Damast</span>, one view visualizes the temporal aspect of the data (the timeline), another view the geospatial aspect (the map), and so on.
-  However, the same underlying data (evidences) is shown in each view.
+  However, the same underlying data (pieces of evidence) is shown in each view.
   Further, the views are <em>coordinated,</em> meaning that interaction with one of the views is reflected by changes in other views.
   {{ full_documentation_link('fig-full-vis-screenshot', 'This screenshot', true) }} provides an example:
   Filtering by time range in the timeline view also affects the data shown in the map view.
-  After filtering, only places with evidences from that time range are shown.
+  After filtering, only places with evidence from that time range are shown.
   For more details on the different interactions; see the sections on
   {{ full_documentation_link('terminology-filtering', 'filtering', true) }},
   {{ full_documentation_link('terminology-selection', 'selection', true) }}, and
@@ -137,8 +137,8 @@
 
 <p>
   An example for a filter in <span class="small-caps">Damast</span> is to select a time span from the timeline.
-  The filter then specifies the time span within which the evidences must lie to still be visualized.
-  Another example is to specify one or more sources that the evidences must be attributed to;
+  The filter then specifies the time span within which the evidence must lie to still be visualized.
+  Another example is to specify one or more sources that the evidence must be attributed to;
   in this case, the data visualized stems from these sources only.
 </p>
 
@@ -152,12 +152,12 @@
 <p>
   Generally, one should be aware of how these filters work <em>between</em> as opposed to <em>within</em> views.
   <em>Between views,</em> the filters are applied in conjuction;
-  that is, an evidence is shown only if it matches <em>all</em> filters.
+  that is, a piece of evidence is shown only if it matches <em>all</em> filters.
   For example, if the map and timeline both have an active filter, evidence is only visualized if it is within the specified time span <em>and</em> within the specified geographical region.
 </p>
 
 <p>
-  <em>Within views,</em> the filters are applied in disjunction; that is, an evidence matches the filter if it matches <em>any</em> of the criteria.
+  <em>Within views,</em> the filters are applied in disjunction; that is, a piece of evidence matches the filter if it matches <em>any</em> of the criteria.
   For example, if a religion filter with two religions is active, it matches evidence that has <em>either</em> one <em>or</em> the other religion.
   This behavior is logical, in that there can be no evidence that has <em>both</em> religions at the same time, or is attributed to two places at once.
 </p>
@@ -183,7 +183,7 @@
   <img src="{{ url_for('docs.vis.static', filename='brushing-linking.png') }}">
   <figcaption>
     Example for brushing and linking.
-    The evidence of two religious groups is visualized (top).
+    Evidence of two religious groups is visualized (top).
     After selecting the Church of the East (COE) in the religion view, evidence of COE is <em>brushed,</em> and the respective visual representations of that data are <em>linked</em> in all views (bottom).
     In the religion view, all other religions' representations are desaturated and darkened.
     In the map, all map glyphs for places or clusters of places not containing COE evidence are darkened and desaturated.

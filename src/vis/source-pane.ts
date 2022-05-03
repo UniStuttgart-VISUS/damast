@@ -226,7 +226,7 @@ export default class SourcePane extends View<any, any> {
 
           const active_count = d.stack.filter(e => e.active).reduce((a,b) => a + b.count, 0);
 
-          t.root.append('p').text(`${active_count} / ${d.data.length} evidences:`);
+          t.root.append('p').text(`${active_count} / ${d.data.length} pieces of evidence:`);
 
           const ul = t.root.append('ul');
           const ids = [], _ids = new Set();
@@ -249,7 +249,7 @@ export default class SourcePane extends View<any, any> {
             const active = matches.filter(e => e.active).reduce((a,b) => a + b.count, 0);
 
             ul.append('li')
-              .html(`${name} ${active} / ${total} evidences`);
+              .html(`${name} ${active} / ${total} pieces of evidence`);
           });
         });
         this.tooltipManager.move(e.clientX, e.clientY);

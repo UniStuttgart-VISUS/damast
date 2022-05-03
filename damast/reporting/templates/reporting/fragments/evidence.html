@@ -15,7 +15,7 @@
     {% else %}
       no
     {% endif %}
-    interpretation confidence
+    confidence of interpretation
     {%- if e.evidence.evidence_comment -%}
       {{ create_footnote('evidence_comment' ~ e.evidence.id) }}
     {%- endif -%}
@@ -82,7 +82,7 @@
     and is rated
     <em>{{ si.source_confidence }}</em>
     {%- else -%}
-    with no source confidence
+    with no confidence regarding the source
     {%- endif -%}
     {%- if si.comment -%}
       {% set footnotekey = 'evidence_' ~ e.id ~ '_source_instance_comment_' ~ si.id %}
@@ -104,7 +104,7 @@
       {% if si.source_confidence -%}
       <em>{{ si.source_confidence }}</em>
       {%- else -%}
-      no source confidence
+      no confidence regarding the source
       {%- endif -%}
       {%- if si.comment -%}
       {% set footnotekey = 'evidence_' ~ e.id ~ '_source_instance_comment_' ~ si.id %}
