@@ -6,8 +6,8 @@ The project was a collaboration between the Institute for Medieval History II of
 
 The objective of this joint project was to develop a novel visualization approach in order to gain new insights on the multi-religious landscapes of the Middle East under Muslim rule during the Middle Ages (7th to 14th century).
 In particular, information on multi-religious communities were researched and made available in a database accessible through interactive visualization as well as through a pilot web-based geo-temporal multi-view system to analyze and compare information from multiple sources.
-A publicly explorable version of the research will soon be available, and will be linked here.
-An export of the data collected in the project can be found in [the data repository of the University of Stuttgart (DaRUS)](https://doi.org/10.18419/darus-2318) (draft, not yet public).
+A publicly explorable version of the research is available at [Humboldt-Universität zu Berlin](https://damast.geschichte.hu-berlin.de/).
+An export of the data collected in the project can be found in [the data repository of the University of Stuttgart (DaRUS)](https://doi.org/10.18419/darus-2318).
 
 
 ## Database
