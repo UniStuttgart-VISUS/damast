@@ -467,7 +467,7 @@ export default class Timeline extends View<any, any> {
     const totalActive = d3.sum(vals.map(d => d.active));
 
     tooltipRoot.append('p')
-      .html(`<strong>${total}</strong> evidences (<strong>${totalActive}</strong> visible)${vals.length > 0 ? ':': ''}`);
+      .html(`<strong>${total}</strong> pieces of evidence (<strong>${totalActive}</strong> visible)${vals.length > 0 ? ':': ''}`);
 
     if (vals.length > 0) {
       const tx = tooltipRoot.append('table').classed('timeline-table', true);

@@ -227,7 +227,7 @@ export default class EvidenceEditor extends EventTarget {
 
     edit_section.append('label')
       .attr('for', 'interpretation_confidence')
-      .text('Interpretation confidence:');
+      .text('Confidence of Interpretation:');
     const s2 = edit_section.append('select')
       .attr('name', 'interpretation_confidence')
       .attr('id', 'interpretation_confidence');
