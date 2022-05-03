@@ -12,7 +12,7 @@
   <% else %>
     no
   <% endif %>
-  interpretation confidence
+  confidence of interpretation
   <%- if e.evidence.evidence_comment -%>
     \footnote{<< e.evidence.evidence_comment | texsafe >>}
   <%- endif -%>
@@ -77,7 +77,7 @@
     and is rated
     \emph{<< si.source_confidence >>}
     <%- else -%>
-    with no source confidence
+    with no confidence regarding the source
     <%- endif -%>
     <%- if si.comment -%>
     \footnote{<< si.comment | texsafe >>}
@@ -97,7 +97,7 @@
     and is rated
     \emph{<< si.source_confidence >>}
     <%- else -%>
-    with no source confidence
+    with no confidence regarding the source
     <%- endif -%>
     <%- if si.comment -%>
     \footnote{<< si.comment | texsafe >>}

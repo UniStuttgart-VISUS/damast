@@ -17,7 +17,7 @@
     {% endif %}
     at
     {{ p.geoloc | render_geoloc | safe }}
-    <em>({{ p.confidence or 'unknown location confidence' }})</em>
+    <em>({{ p.confidence or 'unknown confidence of location' }})</em>
     {%- if p.comment -%}
     : <em><q>{{ p.comment }}</q></em>
     {%- else -%}

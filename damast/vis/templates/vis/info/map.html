@@ -12,7 +12,7 @@
 
 
 <p>
-  The <strong><em>map</em></strong> visualizes the geographical aspect of the data, i.e., the evidences for the presence of religious groups at different locations.
+  The <strong><em>map</em></strong> visualizes the geographical aspect of the data, i.e., evidence for the presence of religious groups at different locations.
 </p>
 
 <h3>Content</h3>
@@ -20,7 +20,7 @@
 <h4>Map Glyphs</h4>
 
 <p>
-  Evidences are represented by so-called map glyphs.
+  Pieces of evidence are represented by so-called map glyphs.
   By default, these map glyphs are <strong>clustered</strong> (i.e., <strong>aggregated,</strong> or <q>summarized</q>).
 </p>
 
@@ -45,8 +45,8 @@
 </p>
 <p>
   When <em>hovering</em> over a glyph, it loses opacity and the aggregated locations are indicated on the map as small turquoise dots (maybe partially covered by the glyph).
-  While hovering, a tooltip is also shown, which provides information on the number of evidences, of religions, and of places related to the glyph.
-  As long as the glyph does not aggregate more than five places, the toponym, geographical coordinates, and more information on the evidences belonging to that place are provided for each place.
+  While hovering, a tooltip is also shown, which provides information on the number of pieces of evidence, of religions, and of places related to the glyph.
+  As long as the glyph does not aggregate more than five places, the toponym, geographical coordinates, and more information on the pieces of evidence belonging to that place are provided for each place.
   Even more details are provided if the glyph only represents one place.
 </p>
 
@@ -66,8 +66,8 @@
 <p>
   Generally, multiple religious groups belonging to the same general religious affiliation are aggregated to one circle.
   This circle then functions like a pie chart:
-  in <em>religion mode</em> (set by default), each piece of the pie chart represents a different religious group in its respective color and the piece's size shows the amount of evidences of that religious group relative to the overall evidences of its general religious affiliation.
-  In <em>confidence mode,</em> the division of the circle or pie chart is based on the evidences attributed with different levels of confidence and is colored accordingly.
+  in <em>religion mode</em> (set by default), each piece of the pie chart represents a different religious group in its respective color and the piece's size shows the amount of pieces of evidence of that religious group relative to the overall evidence of its general religious affiliation.
+  In <em>confidence mode,</em> the division of the circle or pie chart is based on the pieces of evidence attributed with different levels of confidence and is colored accordingly.
 </p>
 
 <p>
@@ -142,7 +142,7 @@
     <dt><em>Diversity Distribution</em></dt>
     <dd>shows an estimation of the religious diversity and is colored according to the same scale as the <em>diversity markers.</em></dd>
     <dt><em>Distribution</em></dt>
-    <dd>shows an estimation of the density of evidences.</dd>
+    <dd>shows an estimation of the density of pieces of evidence.</dd>
   </dl>
 <p>
   <em>Note:</em> The two layers for diversity (one displaying markers, the other displaying a heatmap) are <em>alternative</em> representations of the <em>same</em> data.
@@ -169,8 +169,8 @@
 </p>
 
 <p>
-  Furthermore, in <em>clustered</em> mode, the overall size of the map glyphs (i.e., the number of circles) does <em>not</em> directly correlate with the number of religions or evidences;
-  for instance, a map glyph with three circles does not necessarily represent more evidences than one with only two circles.
+  Furthermore, in <em>clustered</em> mode, the overall size of the map glyphs (i.e., the number of circles) does <em>not</em> directly correlate with the number of religions or pieces of evidence;
+  for instance, a map glyph with three circles does not necessarily represent more pieces of evidence than one with only two circles.
 </p>
 
 <h3>Interaction</h3>
@@ -188,9 +188,9 @@
   Map glyphs that are not linked will be displayed in less saturated colors.
   Linking persists when zooming, even if clustered glyphs split up or merge.
   Note, however, that a map glyph often represents more than one location.
-  In this case, <em>all</em> of the circles belonging to the glyph are highlighted, even if the linking only refers to part of the evidences.
-  For instance, a place from the <em>location list,</em> which only has evidences of the general religious affiliation <q>Christian</q>, may be selected.
-  If this place is aggregated with other places that additionally have, for instance, Islamic evidences, both the circle with the crescent as well as the one with the cross are highlighted.
+  In this case, <em>all</em> of the circles belonging to the glyph are highlighted, even if the linking only refers to part of the evidence.
+  For instance, a place from the <em>location list,</em> which only has pieces of evidence of the general religious affiliation <q>Christian</q>, may be selected.
+  If this place is aggregated with other places that additionally have, for instance, Islamic pieces of evidence, both the circle with the crescent as well as the one with the cross are highlighted.
 </p>
 
 <h4>Geographical Filtering</h4>
@@ -205,7 +205,7 @@
 {% endif %}
 
 <p>
-  Evidences can be filtered by geographical location.
+  Evidence can be filtered by geographical location.
   This is done by drawing the respective bounding shapes into the map.
   For this, the Leaflet plugin for <a href="https://geoman.io/leaflet-geoman">Geoman</a> is used.
   The respective tools to control the filters are available by clicking on the button with the <i class="fa fa-filter"></i> funnel in the upper left corner of the map, below the zoom buttons.

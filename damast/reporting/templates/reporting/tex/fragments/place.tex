@@ -11,7 +11,7 @@
 <% endif %>
 at
 << p.geoloc | render_geoloc >>
-\emph{(<< p.confidence or 'unknown location confidence' >>)}
+\emph{(<< p.confidence or 'unknown confidence of location' >>)}
 <%- if p.comment -%>
 : \emph{\enquote{<< p.comment | texsafe >>}}
 <%- else -%>

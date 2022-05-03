@@ -18,7 +18,7 @@ by \textbf{<< m.current_user | texsafe >>}
   \textbf{<< m.export_user | texsafe >>.}
   <% endif %>
   The filter matched
-  \textbf{<< m.evidence_count >>}~evidences
+  \textbf{<< m.evidence_count >>}~pieces of evidence
   in the visualization at the time of export.
 
 <% endmacro %>
@@ -27,12 +27,12 @@ by \textbf{<< m.current_user | texsafe >>}
 <% macro filter_description(d) %>
 <% if d.implicit | length == 0 and d.explicit | length == 0 %>
 
-The applied filters make \emph{no} restrictions on the displayed evidences.
+The applied filters make \emph{no} restrictions on the displayed pieces of evidence.
 
 <% else %>
 
-The applied filters make the following restrictions on evidences.
-Only evidence that matches \emph{all} of the criteria are considered valid under the filter and are shown:
+The applied filters make the following restrictions on pieces of evidence.
+Only evidence that matches \emph{all} of the criteria is considered valid under the filter and is shown:
 
 \begin{itemize}
   <% for fi in d.explicit %>
