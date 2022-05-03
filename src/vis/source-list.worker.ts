@@ -15,6 +15,7 @@ class SourceListWorker extends DataWorker<any> {
   private colors: {};
   private source_filter: SourceFilter;
   private religion_names: Map<number, string>;
+  private sort_mode: T.SourceViewSortMode;
 
   async handleMainEvent(data: MessageData<any>) {
     throw data;
@@ -32,6 +33,7 @@ class SourceListWorker extends DataWorker<any> {
       this.colors = data.data.colors;
       this.source_filter = data.data.source_filter;
       this.religion_names = data.data.religion_names;
+      this.sort_mode = data.data.sort_mode;
 
 
       const per_source = new Map<number, T.LocationData[]>(
@@ -51,10 +53,21 @@ class SourceListWorker extends DataWorker<any> {
           return d;
         });
 
-      source_data.sort((a,b) => {
-        if (a.data.length === b.data.length) return a.short.localeCompare(b.short);
-        return b.data.length - a.data.length;
-      });
+      const cmpName = (a, b) => a.short.localeCompare(b.short);
+      const cmpCount = (a, b) => b.data.length - a.data.length;
+      const createSort = (primary, secondary) => {
+        return (a, b) => {
+          const cmp = primary(a, b);
+          if (cmp !== 0) return cmp;
+          return secondary(a, b);
+        };
+      };
+
+      const sorter = (this.sort_mode === T.SourceViewSortMode.ByCountDescending)
+        ? createSort(cmpCount, cmpName)
+        : createSort(cmpName, cmpCount);
+
+      source_data.sort(sorter);
 
       await this.sendToMainThread({
         type: 'set-data',
@@ -64,6 +77,7 @@ class SourceListWorker extends DataWorker<any> {
           max_per_source,
           display_mode: this.display_mode,
           religion_names: this.religion_names,
+          sort_mode: this.sort_mode,
         }
       });
     } else {

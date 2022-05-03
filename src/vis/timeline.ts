@@ -1,9 +1,9 @@
 import * as d3 from 'd3';
 import * as R from 'ramda';
 import * as T from './datatypes';
-import {Dataset,ChangeScope,ChangeListener} from './dataset';
-import {PathInfoStack} from './timeline-data';
-import {ColorScales} from './colorscale';
+import { Dataset, ChangeScope, ChangeListener } from './dataset';
+import { PathInfoStack, stackKey } from './timeline-data';
+import { ColorScales } from './colorscale';
 import * as modal from './modal';
 import View from './view';
 import TooltipManager from './tooltip';
@@ -385,11 +385,7 @@ export default class Timeline extends View<any, any> {
   }
 
   protected openModal(): void {
-    modal.create_modal(
-      400, 300,
-      'Timeline',
-      'timeline.html'
-    );
+    modal.showInfoboxFromURL('Timeline', 'timeline.html');
   }
 
   private onMouseEnter(evt: MouseEvent) {
@@ -446,7 +442,7 @@ export default class Timeline extends View<any, any> {
     const items = new Map<string, { id: string | null, active: number, total: number }>();
     this.cachedPathData.ys.forEach((y, i) => {
       const poss = this.cachedPathData.paths[i][idx];
-      const count = poss[1] - poss[0];
+      const count = poss.data[stackKey(y.id, y.active)];
 
       let item;
       if (items.has(`${y.id}`)) item = items.get(`${y.id}`);
@@ -465,7 +461,7 @@ export default class Timeline extends View<any, any> {
     if (this.cachedDisplayMode === T.DisplayMode.Religion) {
       vals.sort((a,b) => b.active - a.active || b.total - a.total);
     } else {
-      vals.sort((a, b) => T.confidence_values.indexOf(a.id) - T.confidence_values.indexOf(b.id));
+      vals.sort((a, b) => T.confidence_values.indexOf(a.id as T.Confidence) - T.confidence_values.indexOf(b.id as T.Confidence));
     }
     const total = d3.sum(vals.map(d => d.total));
     const totalActive = d3.sum(vals.map(d => d.active));

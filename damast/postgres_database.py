@@ -10,6 +10,7 @@ import subprocess
 import sys
 import urllib.parse
 from postgres import Postgres
+from .config import get_config
 
 _databases = {
     'PRODUCTION': 'ocn',
@@ -17,17 +18,15 @@ _databases = {
         }
 
 def postgres_database():
-    pg_user = os.environ.get('PGUSER', 'api')
-    pg_host = os.environ.get('PGHOST', 'localhost')
-    pg_port = os.environ.get('PGPORT', '5432')
-    if os.environ.get('DAMAST_ENVIRONMENT') == 'PYTEST':
+    cfg = get_config()
+    pg_user = cfg.pguser
+    pg_host = cfg.pghost
+    pg_port = cfg.pgport
+    if cfg.environment == 'PYTEST':
         pg_db = os.environ.get('PGDATABASE', 'none')
     else:
-        pg_db = _databases.get(os.environ.get('DAMAST_ENVIRONMENT'))
-    pg_pass = os.environ.get('PGPASSWORD', None)
-
-    if pg_pass is None:
-        raise RuntimeError(F'No password is set for the PostgreSQL database user ({pg_user}). Pass the password via the PGPASSWORD environment variable.')
+        pg_db = _databases.get(cfg.environment)
+    pg_pass = cfg.pgpassword
 
     pg_url = F"postgres://{pg_user}:{urllib.parse.quote(pg_pass, safe='')}@{pg_host}:{pg_port}/{pg_db}"
 

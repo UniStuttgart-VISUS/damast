@@ -5,9 +5,11 @@ import traceback
 
 from .report_database import get_report_database, evict_report, ReportTuple
 from .eviction import get_eviction_params, does_evict
+from ..config import get_config
 
 def register_scheduler(sched):
-    if 'DAMAST_REPORT_EVICTION_DEFERRAL' in os.environ or 'DAMAST_REPORT_EVICTION_MAXSIZE' in os.environ:
+    conf = get_config()
+    if conf.report_eviction_deferral is not None or conf.report_eviction_maxsize is not None:
         logging.getLogger('flask.error').info('Registering report eviction job to run each day at 3AM.')
         sched.add_job(check_for_evictable, trigger='cron', hour='3', minute='0')
     else:

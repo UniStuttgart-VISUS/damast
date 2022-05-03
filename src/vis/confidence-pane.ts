@@ -203,10 +203,6 @@ export default class ConfidencePane extends View<any, any> {
   }
 
   protected openModal(): void {
-    const info = modal.create_modal(
-      400, 300,
-      'Confidence View',
-      'confidence.html'
-    );
+    modal.showInfoboxFromURL('Confidence View', 'confidence.html');
   }
 };

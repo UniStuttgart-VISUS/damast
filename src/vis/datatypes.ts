@@ -74,8 +74,8 @@ interface MapPlaceData_ {
 };
 export type MapPlaceData = MapPlaceData_ & Confidences;
 
-export const confidence_values = [ 'certain', 'probable', 'contested', 'uncertain', 'false', null ];
 export type Confidence = 'certain' | 'probable' | 'contested' | 'uncertain' | 'false' | null;
+export const confidence_values: Confidence[] = [ 'certain', 'probable', 'contested', 'uncertain', 'false', null ];
 
 export type ConfidenceType = 'time_confidence'
   | 'location_confidence'
@@ -113,6 +113,11 @@ export enum TimelineMode {
 export enum MapMode {
   Clustered,
   Cluttered,
+};
+
+export enum SourceViewSortMode {
+  ByCountDescending,
+  ByShortNameAscending,
 };
 
 export interface Point {

@@ -94,11 +94,7 @@ export default class TagsPane extends View<any, any> {
   }
 
   protected openModal() {
-    modal.create_modal(
-      400, 300,
-      'Evidence Tags',
-      'tags.html'
-    );
+    modal.showInfoboxFromURL('Evidence Tags', 'tags.html');
   }
 
   private initButtons(): void {

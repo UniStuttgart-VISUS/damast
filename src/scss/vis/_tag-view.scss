@@ -6,7 +6,11 @@ div.tags__body {
   $height: 30px;
 
   display: grid;
-  grid-template-columns: min-content 120px max-content minmax(80px, auto);
+
+  grid-template-columns: 1fr;
+  @supports ( grid-template-columns: subgrid ) {
+    grid-template-columns: min-content 120px max-content minmax(80px, auto);
+  }
   gap: 0.5ex;
   grid-auto-rows: 1fr;
   width: 100%;
@@ -17,11 +21,11 @@ div.tags__body {
     $svgpad: 4px;
 
     /* chrome fallback for subgrid */
-    display: contents;
+    grid-template-columns: min-content 120px 1fr 3fr;
+    grid-template-columns: subgrid;
 
     display: grid;
     grid-column: 1 / -1;
-    grid-template-columns: subgrid;
     height: $height;
 
     margin: 0.1em;
@@ -56,6 +60,7 @@ div.tags__body {
     &__count {
       grid-column: 3 / span 1;
       text-align: right;
+      font-variant-numeric: tabular-nums;
     }
 
     &__bar {

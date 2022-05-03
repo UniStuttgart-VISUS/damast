@@ -12,13 +12,6 @@ $swimline-width: 200px;
 $text-margins: 20px;
 $minimap-width: 16px;
 
-
-body {
-  height: calc(100vh - 1rem);
-  display: grid;
-  grid-template-rows: max-content auto max-content;
-}
-
 .content {
   padding: 1rem;
   display: grid;

@@ -82,14 +82,12 @@
     <ul>
       {% for e in external_uris %}
       <li>
-        <a href="{{ e.uri }}">
-          <span class="uri-short">{{ e.short }}</span>
-          in
-          <em>{{ e.name }}</em></a>
+        at <em>{{ e.name }}:</em>
+        <a href="{{ e.uri }}">{{ e.uri }}</a>
         {%- if e.comment -%}
-        : <em><q>{{ e.comment }}</q></em>
-        {%- else -%}
-        .
+        <br>
+        Comment:
+        <em><q>{{ e.comment }}</q></em>
         {%- endif -%}
       </li>
       {% endfor %}
@@ -178,10 +176,10 @@
     {% for sid, fnr in footnote_lut.items() %}
     <li class="source" id="source-{{ sid }}" data-footnote-number="[{{ fnr }}]">
       {{ sources[sid].name }}
-      <em>({{ sources[sid].source_type }})</em>
       {%- if source_pages[sid] -%}
-      <em>: p. {{ source_pages[sid] }}.</em>
-      {%- else -%}.{%- endif -%}
+      <em>: {{ source_pages[sid] }}.</em>
+      {%- else -%}.{% endif %}
+      <em>({{ sources[sid].source_type }})</em>
     </li>
     {% endfor %}
   </ol>

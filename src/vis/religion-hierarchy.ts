@@ -74,9 +74,13 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
     religions.forEach((d, i) => religionIndices.set(d.data.id, i))
 
     const depth = h.height;
-    const numCols = (filter === true || filter.type === 'simple')
+    const isSimpleFilter = ReligionFilter.isSimpleReligionFilter(filter) || (filter === true);
+    const numCols = isSimpleFilter
       ? 1
       : filter.filter.length;
+
+    // set toggle
+    this.filter_mode.node().checked = !isSimpleFilter;
 
     const parent = this.div.select('div.hierarchy');
     parent.style('--hierarchy-depth', depth)
@@ -397,11 +401,7 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
   }
 
   protected openModal(): void {
-    modal.create_modal(
-      400, 300,
-      'Hierarchy of Religious Denominations',
-      'religion-hierarchy.html'
-    );
+    modal.showInfoboxFromURL('Hierarchy of Religious Denominations', 'religion-hierarchy.html');
   }
 
   private onBrush(
