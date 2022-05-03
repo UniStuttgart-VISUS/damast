@@ -315,11 +315,7 @@ export default class LocationList extends View<any, any> {
   }
 
   protected openModal() {
-    const info = modal.create_modal(
-      400, 300,
-      'Location List',
-      'location-list.html'
-    );
+    modal.showInfoboxFromURL('Location List', 'location-list.html');
   }
 
   private start_tooltip_timer(datum: any, context: any) {

@@ -106,5 +106,3 @@ if (hash) {
 } else {
   dataLoader.postMessage({ type: 'load-data' });
 }
-
-

@@ -84,11 +84,7 @@ export default class SettingsPane {
   }
 
   private openModal() {
-    const info = modal.create_modal(
-      400, 300,
-      'Settings Pane',
-      'settings-pane.html'
-    );
+    modal.showInfoboxFromURL('Settings Pane', 'settings-pane.html');
   }
 
   private onClickResetLayout() {
@@ -109,15 +105,13 @@ export default class SettingsPane {
     this.data_worker.postMessage({type: 'generate-report', data: null});
   }
 
-  private _describe_filter_modal: modal.Modal | null = null;
+  private _resolver: (v: string) => void;
   private async onClickDescribeFilters() {
-    this._describe_filter_modal = modal.create_modal(
-      600, 400,
-      'Currently Active Filters',
-      null, false);
-    this._describe_filter_modal.content.append('p')
-      .classed('modal__content--loading', true)
-      .html(`<i class="fa fa-pulse fa-3x fa-fw fa-spinner"></i>`);
+    const descriptionPromise = new Promise<string>(r => this._resolver = r);
+    modal.showInfoboxFromURL('Currently Active Filters', () => descriptionPromise);
+    //this._describe_filter_modal.content.append('p')
+    //  .classed('modal__content--loading', true)
+    //  .html(`<i class="fa fa-pulse fa-3x fa-fw fa-spinner"></i>`);
 
     this.data_worker.postMessage({type: 'describe-filters', data: null});
   }
@@ -130,7 +124,8 @@ export default class SettingsPane {
       },
       body: JSON.stringify(eventData.data)
     });
-    this._describe_filter_modal?.content?.html(response);
+    console.log(this._resolver);
+    this._resolver?.(response);
   }
 
   private async onExportEvent(eventData: MessageData<any>) {

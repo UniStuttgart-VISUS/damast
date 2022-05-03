@@ -1,5 +1,12 @@
                                 CHANGELOG
 
+2022-05-03                                                           v1.1.2
+
+Make deploy script more versatile and documented. Use native HTML Dialog
+element for popups and infoboxes if it is supported. Update info texts and
+make them more understandable.
+
+
 2022-04-07                                                           v1.1.1
 
 Remove necessity for Rust toolchain when building Damast. Fix a bug with

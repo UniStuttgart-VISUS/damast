@@ -107,11 +107,6 @@ export async function saveCurrentFilter(filter: Set<number>, user: User) {
       .on('click', () => {})
       .attr('disabled', '');
 
-    const parent = sel.node().parentElement;
-    d3.select(parent).on('click', e => {
-      if (e.target === parent) reject(<void>undefined);
-    });
-
     const sv = await getSavedPlaceSets(user);
     sv.forEach((s, i) => {
       if (s.source === 'db' && !user.writedb) return;
@@ -210,11 +205,6 @@ export async function loadFilter(user: User): Promise<number[]> {
       .html('<i class="fa fa-reply fa--pad-right"></i>Cancel')
       .on('click', _ => reject(<void>undefined))
       .classed('button--cancel', true);
-
-    const parent = sel.node().parentElement;
-    d3.select(parent).on('click', e => {
-      if (e.target === parent) reject(<void>undefined);
-    });
 
     sv.forEach((s, i) => {
       const d = content.append('button')

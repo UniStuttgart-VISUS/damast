@@ -12,32 +12,32 @@ def verbalize(filters, cursor):
 
     verbs.append(_verbalize_confidence(filters['confidence'],
         'interpretation_confidence',
-        'The interpretation confidence of the evidence',
+        'The confidence of interpretation regarding the piece of evidence',
         cursor))
 
     verbs.append(_verbalize_confidence(filters['confidence'],
         'location_confidence',
-        'The location confidence of the evidence\'s location',
+        'The confidence regarding the location attributed to the piece of evidence',
         cursor))
 
     verbs.append(_verbalize_confidence(filters['confidence'],
         'place_attribution_confidence',
-        'The place attribution confidence of the evidence to its connected place',
+        'The confidence of place attribution regarding the piece of evidence',
         cursor))
 
     verbs.append(_verbalize_confidence(filters['confidence'],
         'religion_confidence',
-        'The religion confidence of the evidence',
+        'The confidence regarding the religion attributed to the piece of evidence',
         cursor))
 
     verbs.append(_verbalize_confidence(filters['confidence'],
         'time_confidence',
-        'The time confidence of <em>at least one</em> of the evidence\'s time instances',
+        'The time confidence of <em>at least one</em> of the time instances attributed to the piece of evidence',
         cursor))
 
     verbs.append(_verbalize_confidence(filters['confidence'],
         'source_confidences',
-        'The source confidence of <em>at least one</em> source the evidence was based upon',
+        'The confidence of <em>at least one</em> source upon which the piece of evidence was based',
         cursor))
 
     verbs.append(_verbalize_sources(filters['sources'], cursor))
@@ -54,7 +54,7 @@ def _verbalize_location(location_filter, cursor):
     fragment = 'data=data:application/json,' + urllib.parse.quote(geojson_tight, safe='')
     geojson_io_link = urllib.parse.urlunsplit(('https', 'geojson.io', '', '', fragment))
 
-    return F'''The evidence's place is either <em>unplaced</em> or located within the <a class="geojson-io-link" href="{ geojson_io_link }" target="_blank">following GeoJSON boundaries</a>:
+    return F'''The place of the piece of evidence is either <em>unplaced</em> or located within the <a class="geojson-io-link" href="{ geojson_io_link }" target="_blank">following GeoJSON boundaries</a>:
     <p class="geojson-code"><code>{ geojson_tight }</code></p>'''
 
 
@@ -71,17 +71,17 @@ def _verbalize_places(place_filter, cursor):
         return F'<span class="verbalization-restrictive-filter-warning">The place filter does not permit any values at all. The filter will therefore not match <em>any</em> evidence. This is probably an oversight.</span>'
 
     if len(placenames) == 1:
-        return F'The evidence must be placed in {placenames[0]}.'
+        return F'The piece of evidence must be placed in {placenames[0]}.'
     elif len(placenames) == 2:
-        return F'The evidence must be placed in either {placenames[0]} or {placenames[1]}.'
+        return F'The piece of evidence must be placed in either {placenames[0]} or {placenames[1]}.'
 
     rs = ', '.join(placenames[:-1])
     rz = placenames[-1]
 
     if len(placenames) < 50:
-        return F'The evidence must be placed in one of the following {len(placenames)} places: {rs}, or {rz}.'
+        return F'The piece of evidence must be placed in one of the following {len(placenames)} places: {rs}, or {rz}.'
 
-    return F'<details><summary>The evidence must be placed in one of the following {len(placenames)} places <em>(click to expand)</em>:</summary> {rs}, or {rz}.</details>'
+    return F'<details><summary>The piece of evidence must be placed in one of the following {len(placenames)} places <em>(click to expand)</em>:</summary> {rs}, or {rz}.</details>'
 
 
 def _verbalize_religion(religion_filter, cursor):
@@ -97,14 +97,14 @@ def _verbalize_religion(religion_filter, cursor):
         relnames = list(map(lambda x: F'<strong>{x.name}</strong>', cursor.fetchall()))
 
         if len(relnames) == 1:
-            return F'The evidence must reference the religious group {relnames[0]}.'
+            return F'The piece of evidence must reference the religious group {relnames[0]}.'
         elif len(relnames) == 2:
-            return F'The evidence must reference either of the religious groups {relnames[0]} or {relnames[1]}.'
+            return F'The piece of evidence must reference either of the religious groups {relnames[0]} or {relnames[1]}.'
 
         rs = ', '.join(relnames[:-1])
         rz = relnames[-1]
 
-        return F'The evidence must reference one of the following religious groups: {rs}, or {rz}.'
+        return F'The piece of evidence must reference one of the following religious groups: {rs}, or {rz}.'
 
 
     else:
@@ -114,7 +114,7 @@ def _verbalize_religion(religion_filter, cursor):
         if count == 0:
             return F'<span class="verbalization-restrictive-filter-warning">The religion filter does not permit any values at all. The filter will therefore not match <em>any</em> evidence. This is probably an oversight.</span>'
 
-        ret = 'The evidence must be attributed to a place where <em>at least</em> one of the following combinations of religious groups have, at some point, existed based on evidence in the database:<ul>'
+        ret = 'The piece of evidence must be attributed to a place where <em>at least</em> one of the following combinations of religious groups have, at some point, existed based on evidence in the database:<ul>'
         rets = []
 
         for rels in religion_filter['filter']:
@@ -152,7 +152,7 @@ def _verbalize_sources(source_filter, cursor):
 
     cursor.execute('SELECT name FROM source WHERE id = ANY(%(s)s);', s=source_filter)
     source_names = ''.join(map(lambda x: F'<li>{x.name}</li>', list(cursor.fetchall())))
-    return F'The evidence must be based upon at least one of the following sources: <ul>{source_names}</ul>'
+    return F'The piece of evidence must be based upon at least one of the following sources: <ul>{source_names}</ul>'
 
 
 _confs = ["certain","probable","contested","uncertain","false",None]
@@ -184,7 +184,7 @@ def _verbalize_time(time_filter, cursor):
         return None
 
     start, end = tuple(time_filter)
-    return F'The evidence must have at least one time instance that intersects with the <em>closed interval</em> <strong>{start}&ndash;{end}</strong>.'
+    return F'The piece of evidence must have at least one time instance that intersects with the <em>closed interval</em> <strong>{start}&ndash;{end}</strong>.'
 
 
 def _verbalize_tags(tag_filter, cursor):
@@ -194,7 +194,7 @@ def _verbalize_tags(tag_filter, cursor):
         if type(tag_filter) is list:
             tag_filter = tag_filter[0]
         tagname = cursor.one('SELECT tagname FROM tag WHERE id = %s;', (tag_filter,))
-        return F'The evidence must have the tag <strong>{tagname}</strong>.'
+        return F'The piece of evidence must have the tag <strong>{tagname}</strong>.'
     else:
         if len(tag_filter) == 0:
             return F'<span class="verbalization-restrictive-filter-warning">The tag filter does not permit any values at all. The filter will therefore not match <em>any</em> evidence. This is probably an oversight.</span>'
@@ -203,18 +203,18 @@ def _verbalize_tags(tag_filter, cursor):
         tags = list(cursor.fetchall())
         if len(tags) == 2:
             t1, t2 = tuple(tags)
-            return F'The evidence must have one or more of the tags <strong>{t1.tagname}</strong> or <strong>{t2.tagname}</strong>.'
+            return F'The piece of evidence must have one or more of the tags <strong>{t1.tagname}</strong> or <strong>{t2.tagname}</strong>.'
         tx = tags[:-1]
         ty = tags[-1]
         ts = ', '.join(map(lambda t: F'<strong>{t.tagname}</strong>', tx))
-        return F'The evidence must have one or more of the following tags: {ts}, or <strong>{ty.tagname}</strong>.'
+        return F'The piece of evidence must have one or more of the following tags: {ts}, or <strong>{ty.tagname}</strong>.'
 
 
 
 def get_filter_description(filters, cursor):
     return {
             'implicit': [
-                'The evidence must be <em>visible.</em>',
+                'The piece of evidence must be <em>visible.</em>',
                 'The place must be <em>visible.</em>',
                 'The place type must be <em>visible.</em>',
                 ],

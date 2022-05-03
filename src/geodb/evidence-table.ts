@@ -70,7 +70,7 @@ export default class EvidenceTable extends Table {
   protected getMainColumns(): Tabulator.ColumnDefinition[] {
     return [
         {
-          title: 'Interpretation confidence',
+          title: 'Confidence of interpretation',
           field: 'interpretation_confidence',
           headerSort: true,
           headerFilter: 'select',

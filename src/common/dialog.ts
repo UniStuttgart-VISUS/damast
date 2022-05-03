@@ -1,10 +1,10 @@
 import * as d3 from 'd3';
 
 type CallbackFn<T> = ((t: T) => void);
-type BodyCreateFn<T> = ((body: d3.Selection<HTMLDivElement, any, any, any>, resolve: CallbackFn<T>, reject: CallbackFn<void>) => void);
+type BodyCreateFn<T> = ((body: d3.Selection<HTMLElement, any, any, any>, resolve: CallbackFn<T>, reject: CallbackFn<void>) => void);
 
 class Dialog<T> {
-  private modal: d3.Selection<HTMLDivElement, any, any, any>;
+  private modal: d3.Selection<HTMLElement, any, any, any>;
 
   constructor(
     protected readonly parent: d3.Selection<d3.BaseType, any, any, any>,
@@ -17,13 +17,26 @@ class Dialog<T> {
   }
 
   build() {
-    this.modal = this.parent.append('div')
-      .classed('modal', true)
-      .classed('modal__background', true);
-    if (this.modal_data_role) this.modal.attr('data-role', this.modal_data_role);
-    const body = this.modal
-      .append('div')
-      .classed('modal__body', true);
+    let body: d3.Selection<HTMLElement, any, any, any>;
+
+    if (nativeDialogSupported()) {
+      body = this.modal = this.parent.append('dialog')
+        .classed('modal', true)
+        .classed('modal__body', true);
+      (this.modal.node() as unknown as HTMLDialogElement).showModal();
+    } else {
+      this.modal = this.parent.append('div')
+        .classed('modal', true)
+        .classed('modal__background', true);
+      if (this.modal_data_role) this.modal.attr('data-role', this.modal_data_role);
+      body = this.modal
+        .append('div')
+        .classed('modal__body', true);
+    }
+
+    this.modal.on('click', e => {
+      if (e.target === this.modal.node()) this.reject();
+    });
 
     this.body_build_fn(body, this.success.bind(this), this.reject.bind(this));
   }
@@ -157,4 +170,13 @@ export function accept_dialog(
     else conf.classed('button--confirm', true);
   };
   return create_dialog<void>(d3.select('body'), create_fn);
+}
+
+export declare class HTMLDialogElement {
+  open(): void;
+  showModal?(): void;
+};
+export function nativeDialogSupported(): boolean {
+  if (!('HTMLDialogElement' in window)) return false;
+  return HTMLDialogElement.prototype.showModal !== undefined;
 }

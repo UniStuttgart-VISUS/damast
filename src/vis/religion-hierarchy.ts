@@ -131,14 +131,14 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
           const active = c.filter(d => d.type === 0).reduce((a: number, d) => a + d.count, 0);
           if (ref.display_mode === T.DisplayMode.Religion) {
             t.root.append('p')
-              .text(`${active} / ${total} evidences`);
+              .text(`${active} / ${total} pieces of evidence`);
 
           } else {
             // add table
             const tb = t.root.append('table');
             const row = tb.append('tr');
             row.append('td').html(`<strong>Total:</strong>`);
-            row.append('td').html(`<strong>${active} / ${total} evidences</strong>`);
+            row.append('td').html(`<strong>${active} / ${total} pieces of evidence</strong>`);
 
             T.confidence_values.forEach(d => {
               const vals = c.filter(e => e.value === d);
@@ -149,7 +149,7 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
 
               const row = tb.append('tr');
               row.append('td').html(d === null ? `<em>no value:</em>` : `${d}:`);
-              row.append('td').text(`${active} / ${total} evidences`);
+              row.append('td').text(`${active} / ${total} pieces of evidence`);
             });
           }
         });
@@ -401,11 +401,7 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
   }
 
   protected openModal(): void {
-    modal.create_modal(
-      400, 300,
-      'Hierarchy of Religious Denominations',
-      'religion-hierarchy.html'
-    );
+    modal.showInfoboxFromURL('Hierarchy of Religious Denominations', 'religion-hierarchy.html');
   }
 
   private onBrush(

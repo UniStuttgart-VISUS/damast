@@ -1,6 +1,6 @@
 {
   "name": "damast",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
@@ -31,7 +31,7 @@
     "@types/ramda": "^0.27.40",
     "@types/tabulator-tables": "^4.8.0",
     "d3": "^6.3.0",
-    "dom-tree-annotator": "git+ssh://git@github.com:mfranke93/dom-tree-annotator.git#v0.1.0",
+    "dom-tree-annotator": "git+ssh://git@github.com:mfranke93/dom-tree-annotator.git#v0.1.1",
     "font-awesome": "^4.7.0",
     "golden-layout": "^1.5.9",
     "js-cookie": "^3.0.1",

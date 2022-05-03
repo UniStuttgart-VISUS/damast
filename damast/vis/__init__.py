@@ -25,10 +25,16 @@ def get_message():
 
 @app.route('/info/<path:path>', role=['vis', 'admin'])
 def get_info_dialog(path):
-    print(path)
+    return _render_standalone_info(F'vis/info/{path}')
+
+@app.route('/info-standalone', role=['vis', 'admin'])
+def get_empty_dialog():
+    return _render_standalone_info()
+
+def _render_standalone_info(content=None):
     return flask.render_template('vis/standalone-info.html',
             title=flask.request.args.get('title', default='[no title]', type=str),
-            content='vis/info/'+path,
+            content=content,
             info_css_file='../static/info.css')
 
 @app.route('/snippet/<path:path>', role=['vis', 'admin'])
