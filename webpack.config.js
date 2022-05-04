@@ -275,6 +275,7 @@ module.exports = function(env, argv) {
           {from: 'node_modules/font-awesome/css/font-awesome.min.css', to: 'public/font-awesome/css'},
           {from: 'node_modules/font-awesome/fonts', to: 'public/font-awesome/fonts'},
           {from: 'src/assets/huberlin-logo-white.svg', to: 'public/'},
+          {from: 'src/assets/home-page/', to: '.'},
         ],
       ],
 
