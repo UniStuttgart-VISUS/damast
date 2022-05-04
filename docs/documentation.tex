@@ -1,8 +1,11 @@
 \documentclass{scrreprt}
 
+\usepackage[hidelinks]{hyperref}
 \usepackage{graphicx}
 \usepackage[a4paper,top=1in,bottom=1in,right=0.6in,left=0.6in]{geometry}
 \usepackage{scrlayer-scrpage}
+\usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{cleveref}
 \usepackage{csquotes}
 \usepackage{booktabs}
@@ -26,6 +29,14 @@
 
 \begingroup\makeatletter\endlinechar=\m@ne\everyeof{\noexpand}
 \edef\x{\endgroup\def\noexpand\versionstring{\@@input|"git describe --tags" }}\x
+
+\makeatletter
+\newcommand{\customlabel}[2]{%
+  \protected@write \@auxout {}{\string \newlabel {#1}{{\thefigure#2}{\thepage}{#2}{\@currentHref}{}} }%
+  \hypertarget{#1}{\relax}
+  \protected@write \@auxout {}{\string \newlabel {#1@cref}{{[figure][\thefigure][]\thefigure#2}{[1][\thepage][]\thepage}}}
+}
+\makeatother
 
 \setcounter{secnumdepth}{3}
 

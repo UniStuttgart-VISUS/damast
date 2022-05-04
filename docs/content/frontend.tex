@@ -3,22 +3,13 @@
 \section{Home Page}
 
 
-\section{Visualization}
-
-This section provides documentation on the different parts of the \emph{visualization,} what they show, and how they can be interacted with.
-The first part of the documentation explains common terminology and principles from information visualization and interaction design that are used in the visualization, which is helpful for understanding the descriptions.
-Then, the individual \emph{views} and their respective functionalities are explained.
-These explanations can also be accessed individually from within the visualization by clicking on the
-\tikz\node[circle,draw,inner sep=0.1pt]{\scriptsize?};
-question mark icon in the upper right corner of each view.
-
-\subsection{Terminology}
+\section{Visualization Terminology}
 
 The explanations provided in the present documentation as well as in the info texts in the visualization use terminology and concepts from information visualization.
 We strove to make these texts as accessible as possible to a wider audience, but some basic understanding of the concepts used is still required.
 Here, we introduce the terms we used, and explain the visualization types.
 
-\subsubsection{Interactive Visualization}
+\subsection{Interactive Visualization}
 
 Card et al.~\cite{Card_1999} formalized the \emph{data visualization pipeline}\footnote{See \url{https://infovis-wiki.net/wiki/Visualization_Pipeline}} in 1999.
 This pipeline specifies the steps that data goes through, from its source representation to the point where it is presented to the users using the visualization.
@@ -46,7 +37,7 @@ In this step, the \textbf{view transformations,} the visual perspective on the d
 This is done via geometric transformations: translation, scaling, and rotation (although the latter is used less frequently).
 Viewer interaction concerning this step includes, for example, zooming and panning (see \cref{sec:terminology-zooming-panning}).
 
-\subsubsection{Zooming and Panning}
+\subsection{Zooming and Panning}
 \label{sec:terminology-zooming-panning}
 
 \emph{Zooming} and \emph{panning} are two types of interaction taking place in the image space of the visualization.
@@ -79,7 +70,7 @@ Examples for panning include:
     the timeline was panned by 50 years.
 \end{itemize}
 
-\subsubsection{Multiple Coordinated Views}
+\subsection{Multiple Coordinated Views}
 \label{sec:terminology-mcv}
 
 \begin{figure}[tb]
@@ -108,7 +99,7 @@ After filtering, only places with evidence from that time range are shown.
 For more details on the different interactions; see \cref{sec:terminology-filtering,sec:terminology-selection,sec:terminology-brushing-linking}.
 
 
-\subsubsection{Filtering}
+\subsection{Filtering}
 \label{sec:terminology-filtering}
 
 \textsc{Damast} is a \emph{top-down visualization,} meaning that initially, all data is shown, and users can then \emph{drill down} into that data to find smaller, more specific subsets of the data.
@@ -135,7 +126,7 @@ For example, if the map and timeline both have an active filter, evidence is onl
 For example, if a religion filter with two religions is active, it matches evidence that has \emph{either} one \emph{or} the other religion.
 This behavior is logical, in that there can be no evidence that has \emph{both} religions at the same time, or is attributed to two places at once.
 
-\subsubsection{Selection}
+\subsection{Selection}
 \label{sec:terminology-selection}
 
 \emph{Selection} is a user interaction with the data.
@@ -160,18 +151,6 @@ For the main purpose of selection, see \cref{sec:terminology-brushing-linking}.
   \label{fig:brushing-linking}
 \end{figure}
 
-%{% if show_figures %}
-%<figure id="fig-brushing-linking">
-%  <img src="{{ url_for('docs.vis.static', filename='brushing-linking.png') }}">
-%  <figcaption>
-%    Example for brushing and linking.
-%    Evidence of two religious groups is visualized (top).
-%    After selecting the Church of the East (COE) in the religion view, evidence of COE is \emph{brushed,} and the respective visual representations of that data are \emph{linked} in all views (bottom).
-%    In the religion view, all other religions' representations are desaturated and darkened.
-%    In the map, all map glyphs for places or clusters of places not containing COE evidence are darkened and desaturated.
-%  </figcaption>
-%</figure>
-%{% endif %}
 
 \emph{Brushing and linking} is a process used in interactive MCV visualizations to help users understand the connection between different views, or rather, between different aspects of the visualized data.
 First, the user selects (\cref{sec:terminology-selection}) some visual element in the visualization.
@@ -245,11 +224,1020 @@ The rectangle heights are usually fixed, and the vertical position can be used t
 Gantt charts are often used to visualize dependent periods in project planning.
 In \textsc{Damast}, Gantt charts are used in the \emph{qualitative mode} of the timeline (\cref{sec:timeline}).
 
-\subsection{Views}
+
+\section{Visualization}
+
+This section provides documentation on the different parts of the \emph{visualization,} what they show, and how they can be interacted with.
+The individual \emph{views} and their respective functionalities are explained.
+These explanations can also be accessed individually from within the visualization by clicking on the
+\tikz\node[circle,draw,inner sep=0.1pt]{\scriptsize?};
+question mark icon in the upper right corner of each view.
 
 
-\subsection{Reproducible States}
+\subsection{Settings Pane}
+\label{sec:settings-pane}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.3\textwidth]{../src/assets/visualization-documentation/settings.png}
+  \caption{
+    The settings pane.
+  }
+  \label{fig:settings}
+\end{figure}
+
+This pane shows different \textbf{settings} pertaining to the visualization.
+It also offers some \textbf{functionalities} to store or load these settings and to generate reports from the currently shown data.
+
+
+\subsubsection{Visualization Settings}
+\label{sec:settings-vis-settings}
+
+These are settings that directly affect the visualization.
+In particular, they control which data is shown and in which way.
+
+\subsubsection{Show filtered data}
+\label{sec:settings-all-data-only-active}
+
+This switch controls if data is visualized although it \textbf{does not match the currently applied filters.}
+If \emph{All data} is selected, non-matched data is shown in less saturated colors.
+Otherwise, it is not shown at all.
+
+
+\subsubsection{Display mode}
+\label{sec:settings-display-mode}
+
+This switch controls \textbf{which aspect of the data} is mapped to color.
+If \emph{Religion} is selected, religion is used for coloring, using the color scheme in the \emph{religion view.}.
+If \emph{Confidence} is selected, the level of confidence is used, using the color scheme in the \emph{confidence view.}
+The \emph{aspect of confidence} used for the visualization can be selected in the \emph{confidence view;}
+there, the currently used aspect is indicated with an eye symbol below the column.
+
+
+\subsubsection{Timeline mode}
+\label{sec:settings-timeline-mode}
+
+This switch controls whether the \emph{timeline} shows \textbf{a qualitative summary or quantitative information}.
+If \emph{Quantitative} is selected, the number of pieces of evidence of that type in that year is represented by the height of the area.
+The \emph{timeline} then looks like a \emph{stacked area chart.}
+If \emph{Qualitative} is selected, the \emph{timeline} only shows \emph{whether} there are pieces of evidence of that type each year.
+The \emph{timeline} then looks like a \emph{Gantt chart.}
+
+
+\subsubsection{Map mode}
+\label{sec:settings-map-mode}
+
+This switch controls whether map glyphs are \textbf{\emph{clustered} or \emph{unclustered.}}
+By default, glyphs are \emph{clustered:}
+zooming out will lead to religions attributed to different places being \emph{clustered} (\enquote{summarized}).
+(Note that for these clusters, all places are treated equally;
+for example, the distribution of religions of place A and place B is combined without taking into account any further aspects of A or B.)
+
+If glyphs are \emph{unclustered,} one small symbol per place and religion is shown.
+\emph{Note:} This mode may lead to overlap of symbols when zooming out even to a relative small scale and should, thus, be used with due caution when interpreting the results.
+
+
+\subsection{Generate Report}
+\label{sec:generate-report}
+
+With this feature, a detailed \textbf{text report} can be generated, which presents all data matched by the currently applied filters.
+The report will also contain information on the filter criteria that led to the selection of data.
+After clicking \emph{Generate report,} a new tab in the browser will open.
+A report can also be created by uploading a \emph{visualization state} that was saved and downloaded beforehand (\cref{sec:settings-persist-state}).
+
+\emph{Note:} It is not advised to create a report with very broad filter criteria, as it will become very long and thus difficult to handle.
+
+This section also has a button labeled \emph{Describe filters.}
+Clicking this button will open a small window (a so-called modal window) that describes the currently active filters in text form.
+This description is the same as the one at the top of a report.
+
+
+\subsection{Layout Settings}
+
+The \textbf{current layout} of the visualization; i.e., the arrangement of the views, can be saved.
+This feature is only available if the option \emph{All cookies} is accepted in the \emph{Cookie preferences} (accessible through the menu bar on top).
+The \emph{layout settings} will only persist for the currently used browser and computer (using \verb!localStorage!).
+You can also reset the layout to the initial state. Note that this will reload the page.
+
+\emph{Note:} Depending on your browser settings, cookies may be deleted after closing the browser, which leads to the loss of the saved \emph{layout settings.}
+
+
+\subsubsection{Persist State}
+\label{sec:settings-persist-state}
 \label{sec:vis-reproducible}
+
+With this feature, the current \textbf{overall state} of the visualization can be saved.
+In particular, this will save
+
+\begin{itemize}
+  \item the \emph{filters} that are currently applied,
+  \item the center point, zoom level, and visible layers of the \emph{map,} and
+  \item the \emph{visualization settings} (\cref{sec:settings-vis-settings}).
+\end{itemize}
+
+These settings are \emph{downloaded} as a file to the computer.
+Later, such a file can be \emph{uploaded} to restore the state.
+The file can also be shared to either present your results or to (re-)generate a report based on the filters.
+
+
+\subsection{Map}
+\label{sec:map}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[height=5cm]{../src/assets/visualization-documentation/map-1.png}%
+  \hfill%
+  \includegraphics[height=5cm]{../src/assets/visualization-documentation/map-2.png}
+  \caption{
+    The map pane in \emph{clustered} (left) and \emph{unclustered} (right) \emph{map mode.}
+  }
+  \customlabel{fig:map-1}{ left}
+  \customlabel{fig:map-2}{ right}
+\end{figure}
+
+The \textbf{\emph{map}} visualizes the geographical aspect of the data, i.e., evidence for the presence of religious groups at different locations.
+
+
+\subsubsection{Content}
+
+\paragraph{Map Glyphs.}
+Pieces of evidence are represented by so-called map glyphs.
+By default, these map glyphs are \textbf{clustered} (i.e., \textbf{aggregated,} or \enquote{summarized}).
+
+This aggregation depends on the data currently active and on the current zoom level of the map;
+that is, once the zoom level or filters are changed, the map is populated with glyphs according to the aggregation rules;
+simply \emph{panning} the map will not affect the map glyphs.
+More details are given below.
+
+This \emph{map mode} is called \emph{clustered.}
+It can be changed in the settings (\cref{sec:map-unclustered-mode,sec:settings-map-mode}).
+
+
+\subparagraph{Aggregation of Locations.}
+Locations are \emph{aggregated} to eliminate overlap, and so, by default, each map glyph represents \textbf{one or more} cities, depending on the zoom level.
+\emph{Note:} For this aggregation, all places are treated equally;
+that is, the distribution of religions of place A and place B is combined without taking into account any further aspects of A or B.
+
+When \emph{hovering} over a glyph, it loses opacity and the aggregated locations are indicated on the map as small turquoise dots (maybe partially covered by the glyph).
+While hovering, a tooltip is also shown, which provides information on the number of pieces of evidence, of religions, and of places related to the glyph.
+As long as the glyph does not aggregate more than five places, the toponym, geographical coordinates, and more information on the pieces of evidence belonging to that place are provided for each place.
+Even more details are provided if the glyph only represents one place.
+
+\subparagraph{Aggregation of Religions.}
+A map glyph consists of up to four circles, each representing a general religious affiliation with a distinct symbol and color:
+
+\begin{itemize}
+  \item Christianity: cross, red/orange
+  \item Islam: crescent, green
+  \item Judaism: Star of David, blue
+  \item Other: dot, varying colors
+\end{itemize}
+
+Generally, multiple religious groups belonging to the same general religious affiliation are aggregated to one circle.
+This circle then functions like a pie chart:
+in \emph{religion mode} (set by default), each piece of the pie chart represents a different religious group in its respective color and the piece's size shows the amount of pieces of evidence of that religious group relative to the overall evidence of its general religious affiliation.
+In \emph{confidence mode,} the division of the circle or pie chart is based on the pieces of evidence attributed with different levels of confidence and is colored accordingly.
+
+However, if, regarding \emph{all} map glyphs currently displayed, no more than four religous groups are to be represented, there can be more than one circle representing a general religious affiliation.
+For instance, if only COE (Church of the East), SYR (Syriac Orthodox Church), and SUN (Sunni Islam) are filtered using the \emph{religion view,} any given map glyph cannot have more than three circles.
+Accordingly, both COE and SYR will be represented by an individual circle with a cross and the respective color.
+Note that this aggregation may result from other filters or interactions with the map, not just filtering using the \emph{religion view,} as the map glyphs are dynamically altered based on many different criteria.
+
+Note that placement and aggregation of map glyphs depends on the data currently active as well as the zoom level---not, however, on the current center of the map.
+In other words, \enquote{all map glyphs \emph{currently displayed}} include map glyphs outside the current scope of the map that will appear when panning the map.
+
+If in at least one glyph currently displayed multiple religious groups are aggregated into one circle, this same aggregation will apply to \emph{all} other glyphs as well, even if, in sum, they have less than four circles and would not be aggregated.
+Otherwise, the perceived variety and distribution of religions would be skewed;
+for example, a location with only two Christian groups would be represented by a map glyph with two circles for Christianity, while a location with many Christian groups as well as other groups would be displayed with only one such circle.
+
+In \emph{only active} mode, data that has been filtered out disappears from the map.
+Note that this can lead to glyphs having less circles, if, for example, all Christian data of a glyph has been filtered out.
+In \emph{all data} mode, data that has been filtered out is indicated by less saturated colors.
+
+\paragraph{Unclustered Mode.}
+\label{sec:map-unclustered-mode}
+The aggregation or clustering of places can be turned off in the \emph{settings pane.}
+In this \emph{map mode,} called \emph{unclustered,} each location is represented by an individual glyph.
+Here, the glyphs consist of smaller circles, one for each religious group.
+These circles are arranged in a hexagonal pattern.
+Overlap can and will happen in this mode, even when zooming out to a relative small scale.
+\emph{Z}-ordering of the glyphs ensures that glyphs with fewer religious groups appear in front of larger glyphs with more religious groups.
+
+\emph{Note:} For both modes, the specific way of representing the data should be considered when interpreting the results.
+
+
+\paragraph{Layers.}
+The map provides multiple layers, which can be controlled from the layer control in the upper right corner.
+One of two \emph{base layers} is always selected and shown:
+by default, a layer based on a custom map from MapBox\footnote{\url{https://www.mapbox.com/about/maps}} is selected, which shows topological features but no geo-political borders (i.e., borders of modern nation states).
+As an alternative, a map provided by the Digital Atlas of the Roman Empire\footnote{\url{https://imperium.ahlfeldt.se/}} (DARE) can be selected as the base layer.
+
+In addition, one or more overlay layers can be shown:
+
+\begin{description}
+  \item[Markers]
+    consists of the clustered or unclustered map glyphs. It is shown by default.
+  \item[Diversity Markers]
+    displays all locations, without clustering, each colored according to its religious diversity (i.e., the number of distinct religions present in each place). The color scale Viridis\footnote{\url{https://github.com/d3/d3-scale-chromatic\#interpolateViridis}} is used, where low values are mapped to violet, and high values to yellow.
+  \item[Diversity Distribution]
+    shows an estimation of the religious diversity and is colored according to the same scale as the \emph{diversity markers.}
+  \item[Distribution]
+    shows an estimation of the density of pieces of evidence.
+\end{description}
+
+\emph{Note:} The two layers for diversity (one displaying markers, the other displaying a heatmap) are \emph{alternative} representations of the \emph{same} data.
+Thus, they should not be both displayed at the same time.
+Similarly, the two layers using markers (the default one displaying map glyphs and the one displaying markers of diversity) should not be shown together.
+
+
+\paragraph{What the Map is \emph{not} Showing.}
+\textsc{Damast} visualizes religious constellations in cities and towns of the Islamicate world with static Non-Muslim communities.
+The map does \emph{not} depict a representation of the population density in the medieval Middle East.
+In other words, an area with no or only few map glyphs is not necesarrily less populated than other areas.
+The map makes no claim to be complete, nor does it show the general distribution of religions in a given area.
+
+Empty areas on the map can have multiple reasons:
+
+\begin{itemize}
+  \item The area is outside the geographical scope of \textsc{Damast}, e.g., Europe.
+  \item No data for a city was collected.
+  \item No data on non-Muslim communities was available.
+\end{itemize}
+
+Furthermore, in \emph{clustered} mode, the overall size of the map glyphs (i.e., the number of circles) does \emph{not} directly correlate with the number of religions or pieces of evidence;
+for instance, a map glyph with three circles does not necessarily represent more pieces of evidence than one with only two circles.
+
+
+\subsubsection{Interaction}
+
+The map can be interactively zoomed and panned (i.e., the center of the map is moved).
+
+\paragraph{Selection.}
+Clicking on a map glyph will \emph{select} the represented places, \emph{brush} the represented data, and \emph{link} the respective data in the rest of the views.
+Likewise, brushing data in other views will link the respective places in the map.
+Also, selecting a place in the location list will pan the map to center on that place.
+Map glyphs that are not linked will be displayed in less saturated colors.
+Linking persists when zooming, even if clustered glyphs split up or merge.
+Note, however, that a map glyph often represents more than one location.
+In this case, \emph{all} of the circles belonging to the glyph are highlighted, even if the linking only refers to part of the evidence.
+For instance, a place from the \emph{location list,} which only has pieces of evidence of the general religious affiliation \enquote{Christian}, may be selected.
+If this place is aggregated with other places that additionally have, for instance, Islamic pieces of evidence, both the circle with the crescent as well as the one with the cross are highlighted.
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.5\textwidth]{../src/assets/visualization-documentation/map-3.png}
+  \caption{
+    The map pane with the Geoman editor open, and a polygon being edited.
+  }
+  \label{fig:map-3}
+\end{figure}
+
+\paragraph{Geographical Filtering.}
+Evidence can be filtered by geographical location.
+This is done by drawing the respective bounding shapes into the map.
+For this, the Leaflet plugin for Geoman\footnote{\url{https://geoman.io/leaflet-geoman}} is used.
+The respective tools to control the filters are available by clicking on the button with the funnel in the upper left corner of the map, below the zoom buttons.
+The button then expands to a set of controls, arranged in three blocks:
+the first block for adding elements, the second for editing them, and the third to apply, remove or revert the filters.
+These are described in detail below.
+Tooltips are shown when hovering over the individual buttons.
+
+The first block is for \emph{adding} new elements to the bounds:
+\begin{itemize}
+  \item A rectangular area can be added, by first clicking in the map to select one corner, then moving the mouse, and clicking again to select the opposite corner.
+  \item
+    The second option is to add a polygon.
+    Here, a new point is appended to the polygon each time you click in the map.
+    To complete the polygon, click on the first node.
+  \item
+    The last option is to add a circle.
+    Click once to select the center, move the mouse, then click again once the circle has the appropriate radius.
+    Note that the circle is converted to a GeoJSON polygon when saving.
+\end{itemize}
+
+The second block contains controls for \emph{editing} existing elements.
+It is possible to
+\begin{itemize}
+  \item move points on existing shapes,
+  \item move entire shapes,
+  \item cut (subtract) a polygon from an existing shape, and
+  \item remove entire shapes.
+\end{itemize}
+Note that polygons can only be moved or removed individually \emph{before} they have been applied as filters.
+
+The last block contains controls to \emph{apply} the created bounds to the dataset filter:
+
+\begin{itemize}
+  \item The trash can button removes all existing shapes.
+  \item The  undo button reverts the bounds back to the state of the currently active filter, i.e., the geographical filters applied last.
+    It then collapses the menu.
+  \item The save button applies the new bounds to the dataset filter, and then closes the editor.
+\end{itemize}
+
+
+\subsection{Location List}
+\label{sec:location-list}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.25\textwidth]{../src/assets/visualization-documentation/location-list-1.png}
+  \caption{
+    The location list.
+    The \emph{confidence of location} is indicated by a colored marker behind the place name.
+    Places that match the search term at the top are highlighted in orange if their primary name matches, or in yellow if an alternative name matches.
+    Names are shown in italics, darker, and desaturated if their level regarding confidence of location is not currently checked.
+  }
+  \label{fig:location-list-1}
+\end{figure}
+
+In this view, \textbf{all locations} in the data are listed, using their \emph{main toponym} as place name.
+Places can be searched, selected and filtered.
+
+
+\subsubsection{Contents}
+\label{sec:location-list-contents}
+
+The view consists of several sections:
+
+\begin{itemize}
+  \item a \emph{search} field;
+  \item a \emph{place filter;} and
+  \item the actual \emph{location list,} consisting of two lists, \emph{Placed} and \emph{Unplaced,} representing locations with and without geo-coordinates, respectively.
+\end{itemize}
+
+Detailed descriptions how to use the \emph{search} field and the \emph{place filter} are found below under \emph{\enquote{Interaction}} (\cref{sec:location-list-interaction}).
+In what follows, the two lists are described.
+
+\label{sec:location-list-unplaced}
+The list \emph{Placed} contains all locations for which a geographical position is known.
+The list \emph{Unplaced} contains all locations for which a geographical position is not (yet) known;
+in this case, the \emph{confidence of location} is attributed with \emph{no value} and colored accordingly.
+
+\emph{Note:} Missing data is normal during research and while entering data is still in progress.
+However, missing data can severely affect confidence in the visualization if not properly communicated.
+We have therefore chosen to make missing geographical locations and time information explicit in separate views of this interface (apart from the section \emph{Unplaced} in the \emph{location list,} see the untimed data view (\cref{sec:untimed-data}).
+This also allows for searches directed at data in need of improvement.
+
+The position of the two lists can be swapped by clicking on the swap button.
+The following is true for both lists:
+Each line in the lists represents one location.
+Locations are listed using their \emph{main toponym} as place name.
+Accordingly, looking through the lists with a specific place name in mind, if this place name is not the \emph{main toponym,} the location is not found and should be searched in the \emph{Search field.}
+There, \emph{alternative names} are considered as well (\cref{sec:location-list-search-toponyms}).
+
+The place names are sorted alphabetically, disregarding a prefix of apostrophes (e.g., for the letter \emph{'ain}) or Arabic definite articles;
+for instance, \enquote{Amid} comes before \enquote{'Amman}, and \enquote{Jubayl} comes before \enquote{al-Juma}.
+In \emph{only active} mode (\cref{sec:settings-all-data-only-active}), only places with pieces of evidence matching the current filters are listed.
+When \emph{hovering} over the line with the mouse, a \emph{tooltip} (\cref{fig:location-list-2}) with additional information is shown, that is:
+
+\begin{itemize}
+  \item place type,
+  \item geographical location (i.e., coordinates),
+  \item confidence of location,
+  \item alternative names,
+  \item external URIs referencing the same place.
+\end{itemize}
+
+Also, while hovering, a link symbol appears at the very end of the line (\cref{fig:location-list-2}).
+Clicking the symbol opens an overview for this place, the so-called \emph{place URI page} (\cref{sec:place-uri-page}).
+\emph{Note:} If the user has rights to edit the database, clicking the symbol leads to the respective entry of the location in the database instead.
+
+Behind the place name, the \emph{confidence of location} of each place is shown as a small, colored circle.
+The color scale is the same as in the \emph{confidence view.}
+In \emph{all data} mode (\cref{sec:settings-all-data-only-active}), when the filter set for \emph{confidence of location} does not match the place’s confidence of location, this confidence circle is not filled.
+Also, the name is displayed in italics, darker, and in less saturated colors in that case.
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.5\textwidth]{../src/assets/visualization-documentation/location-list-2.png}
+  \caption{
+    A tooltip in the location list, for the place Antioch.
+  }
+  \label{fig:location-list-2}
+\end{figure}
+
+
+\subsubsection{Interaction}
+\label{sec:location-list-interaction}
+
+\paragraph{Selection.}
+Individual locations can be selected by clicking on the respective line of the list.
+This will highlight the location, bring it to the top of the list and show a short vertical line to the left of the place name.
+Data related to the selected location will be \emph{linked} in all other views, while non-selected data will be displayed in less-saturated colors.
+
+\paragraph{Searching for Toponyms.}
+\label{sec:location-list-search-toponyms}
+It is possible to \textbf{search for a specific place using different toponyms} in the search field at the top.
+Non-Latin scripts can be used for searching, too.
+Typing a search query in that field will highlight the search results in bold orange and sort them to the top of the list.
+The search matches not only the \emph{main toponym} but also \emph{alternative names;}
+for example, \enquote{Edessa} will find the respective place under its \emph{main toponym} \enquote{al-Ruha}.
+Matches to \emph{alternative names} that do not match the \emph{main toponym} are sorted after \emph{main toponym} matches and highlighted in bold yellow.
+
+Apart from toponyms, \textbf{external URIs} can be entered in the \emph{search field.}
+For example, \verb!syriaca:10! or \verb!syriaca.org/place/10! finds Antioch.
+The search is partially case-sensitive:
+\verb!ask! finds both \enquote{Daskara} as well as \enquote{al-Askar Mukram}, while \verb!Ask! only finds \enquote{al-Askar Mukram}.
+The search field additionally supports JavaScript-style \textbf{regular expressions.}
+For example, searching for \verb!Bagh?dad! would find \enquote{Bagdad} as well as \enquote{Baghdad}, because \verb!h! followed by \verb!?! matches no \enquote{h} or exactly one \enquote{h}.
+For further reference, refer to the MDN documentation\footnote{\url{https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions}}.
+
+\paragraph{Filtering.}
+The expandable section \emph{Place Filter} at the top of the view allows to \textbf{filter evidence by place.}
+When expanded, a list of all places in the database is shown.
+If, however, something has been entered into the \emph{search field,} only places matching the search are listed.
+
+This list is used to include or exclude places from the so-called \emph{place set,}
+that is, the set of places currently active.
+For instance, if Baghdad is excluded from the \emph{place set,} all pieces of evidence attributed to Baghdad are filtered out.
+Keep in mind that, when \emph{all data} mode is active, pieces of evidence attributed to places excluded from the \emph{place set} are visible but displayed in less saturated colors.
+
+A place can be removed from the place set by clicking on the \emph{red minus} on its right, or added to the place set by clicking on the \emph{green plus.}
+Note that the selection is not applied until the \emph{Apply} button is clicked.
+This button is disabled if the selected filters are matching the data currently visualized.
+
+A symbol to the left of the place name indicates the current state of the place:
+
+\begin{itemize}
+  \item a turquoise check mark if the place is in the currently active \emph{place set;}
+  \item no mark if the place is not in the currently active \emph{place set;}
+  \item a grey cross if it will be excluded from a new \emph{place set} which has not been applied yet; and
+  \item a green check mark if it will be added to a \emph{new place} set which has not been applied yet.
+\end{itemize}
+
+\textbf{Place sets can be saved} using the \emph{Save} button under the list.
+For users with access to the database, this will store a place set in the database under the name entered by the user.
+For users without access to the database, the place set will only be saved to \verb!localStorage!.
+This feature is only available if the option \emph{all cookies} is accepted in the \emph{cookie preferences} (accessible through the menu bar on top).
+By clicking the \emph{Load} button, a saved \emph{place set} can be loaded back into the filter.
+\emph{Note:}: Depending on your browser settings, cookies may be deleted after closing the browser, which leads to the loss of the saved \emph{place sets.}
+
+\paragraph{Buttons Facilitating Creating \emph{Place Sets}.}
+Buttons in the top left corner help in editing the \emph{place set} on a larger scale:
+
+\begin{description}
+  \item[The revert button]
+    will \emph{revert} the changes to the \emph{place set;}
+    that is, the \emph{place set} will match the current filters. \\
+    \emph{Note:} Because of the functionalities detailed below, the \emph{place set} will \textbf{not} update from the database when other filters change;
+    it changes only with the initial load and loads of the visualization state (\cref{sec:settings-persist-state}).
+    Instead, resetting the \emph{place set} is left to the user, which allows to build up a place set incrementally as illustrated by the example below.
+
+  \item[The empty circle button]
+    will \emph{uncheck} all places;
+    that is, no place would be included in the intended \emph{place set} after application.
+  \item[The exchange button]
+    will \emph{invert} the current marks;
+    that is, all places that were marked are unmarked, and vice versa.
+  \item[The circle button with dot inside]
+    will \emph{check} all places;
+    that is, all places would be included in the intended \emph{place set} after application.
+  \item[The set union button]
+    will \emph{extend} the \emph{place set} (PS) by all places currently shown in the \emph{location list} (LL) (\cref{sec:location-list-contents}).
+    That is, all places that were in the \emph{place set} before are still there, and \emph{additionally} all places from the \emph{location list} are checked.
+    The result is the \emph{set union} of the previous \emph{place set} and the current \emph{location list:}
+
+    \[ \text{PS}_\text{new} = \text{PS}_\text{old} \cup \text{LL} \]
+  \item[The set intersection button]
+    will \emph{restrict} the \emph{place set} to contain only a subset of its current contents, namely those places that are \emph{also} in the \emph{location list.}
+    The result is the \emph{set intersection} of the \emph{place set} set and the current \emph{location list:}
+
+    \[ \text{PS}_\text{new} = \text{PS}_\text{old} \cap \text{LL} \]
+
+  \item[The set subtraction button]
+    will \emph{remove} all places currently in the \emph{location list} from the \emph{place set.}
+    The result is the \emph{set difference} of the previous \emph{place set} and the current \emph{location list:}
+
+    \[ \text{PS}_\text{new} = \text{PS}_\text{old} \setminus \text{LL} \]
+\end{description}
+
+These last three operations can be used to quickly create a complex \emph{place set} from a number of criteria.
+\emph{Note:} Since they use the contents of the \emph{location list,} they only make sense when the \emph{only active} visualization mode is active.
+
+To illustrate the possibilities provided by these operations, consider the following case:
+We want to explore all pieces of evidence of \emph{Christianity} in cities between 800 and 900, where there is evidence for \emph{Muslims} but \textbf{not} for \emph{Jews:}
+
+\begin{enumerate}
+  \item \emph{Clear} all filters (everything is visible).
+  \item \emph{Filter} by time range (800--900) in the time line.
+  \item \emph{Filter} by religion using the \emph{religion view,} choosing \emph{Islamic} groups only, then click \emph{Apply.}
+  \item
+    \emph{Restrict} the \emph{place set} to only those places currently displayed by clicking the \emph{set intersection} button.
+    The \emph{place set} now contains all places where there is evidence of Islam between 800 and 900.\\
+    \textbf{Important:} Do \emph{not yet} apply the \emph{place set.}
+    This would affect the other views.
+  \item \emph{Filter} by religion using the \emph{religion view,} choosing \emph{Jewish} groups only, then click \emph{Apply.}
+  \item
+    \emph{Remove} the shown places from the \emph{place set} by clicking the \emph{set subtraction} button.
+    The \emph{place set} now only shows places where there are pieces of evidence of Islam between 800 and 900, but \emph{not} of Judaism.
+  \item
+    \emph{Apply} the place filter by clicking on the \emph{Apply} button.
+    \emph{Note:} The map is blank;
+    this is normal as you have just filtered out all places with presence of Judaism while the \emph{religion view} is still set to show Judaism only.
+  \item \emph{Filter} by religion using the \emph{religion view,} choosing \emph{Christian} groups only, then click \emph{Apply.}
+\end{enumerate}
+
+
+\subsection{Religion Hierarchy}
+\label{sec:religion-hierarchy}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[height=9cm]{../src/assets/visualization-documentation/religion-hierarchy-1.png}%
+  \hspace{1cm}
+  \includegraphics[height=9cm]{../src/assets/visualization-documentation/religion-hierarchy-2.png}
+  \caption{\textbf{Left:}
+    The religion hierarchy in its default state.
+    At the top are the controls to revert the filter, the switch between simple and advanced filter mode, and the apply button.
+    The religions are visualized as an indented tree, and are filtered by enabling the respective checkbox.
+    \\
+    \textbf{Right:}
+    The religion hierarchy in advanced mode.
+    The filter limits pieces of evidence to those from places where two or more of the Syriac Orthodox Church (SYR), the Armenian Church (ARM), and the Church of the East (COE) are present.
+  }
+  \customlabel{fig:religion-hierarchy-1}{ left}
+  \customlabel{fig:religion-hierarchy-2}{ right}
+\end{figure}
+
+This view shows \textbf{all religious groups} contained in the database and allows for selecting and filtering the data according to religion.
+
+
+\subsubsection{Content}
+The list of religious groups is hierarchical and represented by a tree visualization:
+each religious group occupies a line, which is indented according to its rank in the hierarchy.
+In technical terms, the higher level is conceptualized as \emph{parent,} the respective lower levels as \emph{children.}
+
+Each line consists of an \emph{abbreviation} for the religious group, a \emph{node,} displayed as a bar, with the color associated with the group, and a checkbox used for filtering.
+Hovering with the mouse over the line displays a tooltip with the full name of the religious group and the number of pieces of evidence for the group based on the currently applied filters.
+
+The general religious affiliation (e.g., Christianity) is on the first level of the hierarchy.
+For other religions beside Christianity, Islam, and Judaism, we made the pragmatic choice to group them under the category \emph{Other.}
+
+The religious groups each have a distinct color.
+For Christianity (red), Islam (green), and Judaism (blue), religious groups belonging to these general religious affiliations have hues of the same color.
+However, the difference between colors is limited because of the number of religious groups.
+In \emph{confidence mode} (\cref{sec:settings-display-mode}), the bars of the groups are colored based on the average confidence of the represented data.
+
+\paragraph{Details Regarding Coloring and Saturation.}
+Depending on the options \emph{show filtered data} (\emph{all data} or \emph{only active}) as well as \emph{display mode} (\emph{religion} or \emph{confidence} mode) in the \emph{settings,} the coloring of the bars changes:
+
+\begin{enumerate}
+  \item \emph{Only active,} \emph{religion mode} \\
+    A bar has only one color.
+    If \emph{any} data related to a religious group is active, the bar has saturated colors;
+    if all data related to a religious group is filtered out, the bar is shown in a less saturated color.
+
+  \item \emph{All data,} \emph{religion mode} \\
+    A bar can be divided into two parts, a saturated and a less saturated part.
+    The less saturated part represents the relative amount of data currently filtered out.
+
+  \item \emph{Only active,} \emph{confidence mode} \\
+    A bar can be divided into several sections.
+    Each section represents the relative amount of data with a certain level of confidence.
+
+  \item \emph{All data,} \emph{confidence mode} \\
+    A bar can be divided into two general parts:
+    a saturated and a less saturated part, representing the data currently active or filtered out, respectively.
+    Each part can have several sections, which each represent the relative amount of data with a certain level of confidence.
+\end{enumerate}
+
+The \emph{aspect of confidence} used for the visualization can be selected in the \emph{confidence view.}
+There, the currently used aspect is indicated with an eye symbol below the column.
+
+
+\subsubsection{Interaction}
+
+\paragraph{Selection.}
+Clicking on a line will \emph{select} the religious group.
+This group will be highlighted, and other groups will be displayed in less saturated colors.
+The data represented by the selection will be \emph{brushed,} and is \emph{linked} to related data in all views.
+For instance, map glyphs in the \emph{map} representing pieces of evidence with the selected religion will be highlighted, other locations will be represented by less saturated colors.
+
+\paragraph{Filtering.}
+The checkbox of a religious group can be unchecked, which leads to filtering out this group throughout the entire visualization.
+Depending on whether \emph{only active} or \emph{all data} mode is selected in the \emph{settings,} data that has been filtered out is either hidden or displayed in less saturated colors.
+
+There are two basic modes for filtering by religion (more details further below):
+In \emph{Simple} mode, pieces of evidence matching \emph{any} of the checked religions are shown.
+In \emph{Advanced} mode, only pieces of evidence from places are shown, where checked \emph{combinations} of religions were present.
+Note that, in both modes, the selection is not applied until the \emph{Apply} button is clicked, which is enabled once there are changes to the filter.
+
+\subparagraph{Simple Mode.}
+In \emph{simple} mode, data is filtered simply according to the checked or unchecked religions.
+Initially, all religions are checked.
+To filter out a religion, it can be unchecked in the checkbox column.
+
+\subparagraph{Advanced Mode.}
+\label{sec:religion-view-advanced-mode}
+In \emph{advanced} mode, it is possible to filter not individual religions but different \emph{combinations} of religions.
+For instance, analysis may require to show places where two or more of the following three religious groups exist together: the Syriac Orthodox Church (SYR), the Armenian Church (ARM), and the Church of the East (COE)---but not those places where only one of the three is present.
+In this case, pieces of evidence are active if, for any combination, all religions of that combination are present at a place.
+
+Different from \emph{simple} mode, there are multiple columns of checkboxes.
+Each column represents a set of religious groups as described above.
+To \emph{control} the filters in \emph{advanced} mode, columns can be added by using the plus button above each column.
+Every column (except the last remaining one) can be deleted by pressing the delete button above the column.
+
+The following procedure creates a filter corresponding to the analysis described above (\cref{fig:religion-hierarchy-2}):
+
+\begin{itemize}
+  \item Switch to \emph{advanced} mode.
+  \item Create two additional columns by pressing the plus button.
+  \item In the first column, check SYR and ARM.
+  \item In the second column, check SYR and COE.
+  \item In the third column, check ARM and COE.
+  \item Click the \emph{Apply} button.
+\end{itemize}
+
+\emph{Note}: If only places should match the filter where \emph{all} of these three religious groups are present, only one column in \emph{advanced} mode is necessary with all three groups checked.
+This must be understood as \enquote{pieces of evidence with COE \textbf{and} ARM \textbf{and} SYR.}
+In turn, this differs from checking the three religious groups in \emph{simple} mode, which equals \enquote{pieces of evidence with COE \textbf{or} ARM \textbf{or} SYR.}
+
+\paragraph{Filter Controls.}
+A few additional utilities are available for managing the checkbox columns.
+The controls for adding (plus button) and removing (trash can button) are already described in the \cref{sec:religion-view-advanced-mode}.
+Importantly, columns can only be added in advanced mode, and the last remaining column cannot be removed.
+The additional controls in the view are:
+
+\begin{description}
+  \item[Revert filters]
+    This button is found in the top left corner of the view.
+    Clicking it reverts the filters back to the state that is currently shown in the visualization;
+    that is, all changes that are not \emph{applied} yet are discarded.
+  \item[Uncheck all boxes in this column]
+    This button is found at the top of each checkbox column.
+    Clicking it will uncheck all boxes in the column.
+  \item[Invert all boxes in this column]
+    This button is found at the top of each checkbox column.
+    Clicking it will invert all boxes in the column;
+    that is, boxes that were checked are unchecked, and vice versa.
+  \item[Check all boxes in this column]
+    This button is found at the top of each checkbox column.
+    Clicking it will check all boxes in the column.
+  \item[Toggle subtree]
+    This button is present to the \emph{left} of some of the checkboxes in each column;
+    namely regarding religions that have \emph{children} in the hierarchy.
+    Clicking the button will check or uncheck this religion and all its \emph{children} in the respective column.
+    Whether clicking checks or unchecks depends on whether the majority of checkboxes in the subtree are checked.
+\end{description}
+
+
+\subsection{Timeline}
+\label{sec:timeline}
+
+\begin{figure}[tb]%
+  \centering%
+  \includegraphics[width=0.8\textwidth]{../src/assets/visualization-documentation/timeline-1.png}\\\vspace{0.5cm}
+  \includegraphics[width=0.8\textwidth]{../src/assets/visualization-documentation/timeline-2.png}%
+
+  \caption{\textbf{Top:}
+    The timeline in qualitative mode, showing three religious groups.
+    A time range between 830 and 1090 is set as the filter.
+    \\
+    \textbf{Bottom:}
+    The timeline in qualitative mode.
+  }
+  \customlabel{fig:timeline-1}{ top}
+  \customlabel{fig:timeline-2}{ bottom}
+\end{figure}
+
+The \emph{Timeline} shows the distribution of the different religious groups \textbf{along the overall time period:} 600--1400 CE.
+In \emph{confidence mode,} the level of confidence is shown instead of religious groups (\cref{sec:confidence,sec:settings-pane}).
+
+
+\subsubsection{Content}
+
+The \emph{timeline} consists of two graphs:
+the \textbf{\emph{main timeline}} and a smaller \textbf{\emph{overview.}}
+The graphs are described in the following.
+
+Also, the view changes depending on the choice of \emph{show filtered data} in the \emph{settings} (\cref{sec:settings-pane}):
+in \emph{all data} mode, data that has been filtered out is indicated by less saturated colors.
+In \emph{only active} mode, data that has been filtered out is hidden from the visualization in all views, including the timeline.
+
+\paragraph{Main Timeline.}
+The \emph{main timeline} shows either a qualitative summary or quantitative information, depending on the \emph{timeline mode} selected in the \emph{settings pane.}
+If \emph{quantitative} is selected, the number of pieces of evidence of that type in that year is encoded into the height of the area as a \emph{stacked area chart.}
+If \emph{qualitative} is selected, the timeline only shows \emph{whether} there is evidence of that type each year.
+The colors used in the graph match the ones used in the \emph{religion view} or \emph{confidence view,} depending on the \emph{display mode} selected in the \emph{settings pane.}
+Importantly, the \emph{main timeline} can be used to filter the data according to time (\cref{sec:timeline-filtering}).
+
+
+\paragraph{Overview.}
+The smaller \textbf{overview} serves as a \emph{minimap} for the larger \emph{main timeline:}
+it always shows the entire time range contained in the database.
+By clicking and dragging in the \emph{overview,} a rectangle can be drawn which represents a time range.
+The \emph{main timeline} \emph{zooms} to this time range and shows data in greater detail.
+The overview represented by the lower graph does not change during this \emph{zooming} in the upper graph.
+Vice versa, if the data is filtered by clicking and dragging in the \emph{main timeline} (see \enquote{Filtering} (\cref{sec:timeline-filtering}), the selected range is indicated as a thick bar below the \emph{overview.}
+
+The rectangle representing the time range for zooming can be moved by clicking and dragging or altered by changing the width of the rectangle.
+Note the mouse cursor in form of a grabbing hand (or a four-headed arrow) when hovering over the rectangle or the double-headed arrow when hovering the left and right borders of the rectangle, respectively.
+Clicking anywhere in the \emph{overview} outside the rectangle will deactivate the zooming.
+
+\paragraph{Tooltips.}
+
+When \textbf{hovering} over any of the graphs, a tooltip with a summary of pieces of evidence for that year is displayed.
+If the \emph{main timeline} shows a smaller time range than the \emph{overview,} the year in the tooltip depends on whether the mouse cursor is on the \emph{main timeline} or the \emph{overview.}
+
+When \textbf{selecting} data in other views, through \emph{brushing and linking,} only the selected data shows in the timeline.
+\emph{Note:} Selecting data in the timeline itself is not possible.
+
+\subsubsection{Interaction}
+
+\paragraph{Filtering.}
+\label{sec:timeline-filtering}
+By \emph{clicking and dragging} in the \emph{main timeline,} a rectangle can be drawn which represents a time range.
+Data outside the time range is filtered out;
+accordingly, the area outside the rectangle is displayed in less saturated colors.
+The time range serves as a time filter for the data across all views.
+
+The rectangle representing the time range for filtering can be moved by clicking and dragging or altered by changing the width of the rectangle.
+Note the mouse cursor in form of a grabbing hand when hovering over the rectangle or the double-headed arrow when hovering the left and right borders of the rectangle, respectively.
+Clicking anywhere in the \emph{main timeline} resets the filter.
+
+
+\subsection{Untimed Data}
+\label{sec:untimed-data}
+
+Data with \textbf{missing temporal information} cannot be included in the timeline.
+Accordingly, this data is visualized in the \emph{untimed data view} as a stacked bar chart.
+
+\subsubsection{Content}
+
+The chart is divided by the four general religious affiliations along the x-axis.
+All pieces of evidence that have no temporal information and belong to one of these religious affiliations are stacked, with the number of pieces of evidence on the y-axis.
+The pieces of evidence are grouped and colored according to the religious group or the level of confidence, depending on the \emph{display mode} selected in the \emph{settings pane} (\cref{sec:settings-pane}).
+
+\emph{Note:} Missing data is normal during research and while entering data is still in progress.
+However, missing data can severely affect confidence in the visualization if not properly communicated.
+We have therefore chosen to make missing geographical locations and time information explicit in separate views of this interface (apart from \emph{untimed data,} see \emph{\enquote{unplaced data}} in the \emph{location list} (\cref{sec:location-list-unplaced})).
+This also allows for searches directed at data in need of improvement.
+
+
+\subsection{Confidence View}
+\label{sec:confidence}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.35\textwidth]{../src/assets/visualization-documentation/confidence.png}
+  \caption{
+    The confidence view.
+    Aspects of confidence are listed as columns, and confidence levels ordered into rows.
+    Checkboxes control which confidence levels should be shown for each aspect, and the number of pieces of evidence for each confidence level and aspect are given.
+  }
+  \label{fig:confidence}
+\end{figure}
+
+This view shows the different \textbf{levels of confidence} attributed to the different elements of a piece of evidence (i.e., place, religious group, time span, etc.).
+
+\subsubsection{Contents}
+
+The view consists of a table, in which each row represents one \textbf{level of confidence} and each column an \textbf{aspect of confidence.}
+
+For each cell in the table, a \textbf{checkbox} for filtering (\cref{sec:confidence-filtering}) is displayed as well as the \textbf{number of pieces of evidence} with the respective confidence and aspect.
+The rows are sorted by descending level of confidence.
+
+\paragraph{Levels of Confidence.}
+Generally, the confidence of any given information was categorized according to these 5 degrees:
+
+\begin{itemize}
+  \item \emph{certain} (blue),
+  \item \emph{probable,}
+  \item \emph{contested,}
+  \item \emph{uncertain,} and
+  \item \emph{false} (red).
+\end{itemize}
+
+In addition, a confidence can have \emph{no value} at all (green).
+
+\label{sec:confidence-note-no-place-confidence-value}
+\emph{Note:} The attribution with \emph{no value} is used while data is still being collected and usually does not appear in a published instance of this visualization.
+A notable exception are places, especially regions, with no geographical coordinates.
+In that case, no attribution of confidence except \emph{no value} is suitable.
+
+\paragraph{Aspects of Confidence.}
+Confidence is attributed to different aspects of the data:
+
+\begin{description}
+  \item[Timespan confidence]
+    signifies the confidence in the veracity of the timespan stored in a piece of evidence.
+    Pieces of evidence without a time attribute are assigned the confidence \emph{no value.}
+  \item[Confidence of location]
+    signifies the confidence in the geographical location of a place.
+    Some places, especially regions, have \emph{no value} (\cref{sec:confidence-note-no-place-confidence-value}).
+  \item[Confidence of place attribution]
+    signifies the confidence in assigning a location from the database to a toponym from a source.
+  \item[Confidence regarding the source]
+    signifies the confidence in the veracity and objectivity of the source itself regarding a piece of evidence.
+  \item[Confidence of interpretation]
+    signifies the confidence in the correct interpretation and recording of the source when entering a piece of evidence into the database.
+  \item[Confidence regarding religion]
+    signifies the confidence in the veracity of the presence of a particular religious group at a given time and place.
+\end{description}
+
+
+\subsubsection{Interaction}
+
+\paragraph{Filtering.}
+\label{sec:confidence-filtering}
+For each aspect of confidence and each confidence level, a checkbox is shown in the respective cell.
+Unchecking a checkbox will filter out pieces of evidence with this confidence level for that aspect of confidence.
+This allows for a very fine-grained control over what data to visualize.
+
+Note that the selection is not applied until the \emph{Apply} button is clicked.
+This button is disabled if the selected filters are matching the data currently visualized.
+
+The filters work in \emph{logical conjunction} across different aspects of confidence;
+that is, having filters in place for multiple aspects of confidence will only show pieces of evidence that match \emph{all} filters.
+
+Four additional buttons in the top left corner make filtering more convenient:
+
+\begin{enumerate}
+  \item Uncheck all checkboxes.
+  \item
+    Invert all checkboxes.
+    Checked boxes are unchecked, unchecked boxes are checked.
+  \item Check all checkboxes.
+  \item
+    Revert the selection of checkboxes to the default.
+    By default, \emph{all} confidence levels are selected for confidence of location, and only \emph{certain} and \emph{probable} for the other confidence aspects.
+\end{enumerate}
+
+In addition, entire \emph{rows} or \emph{columns} of checkboxes can be set to either checked or unchecked by clicking the \emph{row header} (the confidence levels) or the \emph{column header} (the aspects of confidence).
+Here, the new value for the new row (or column) is the inverse of what the majority of values (3 or more) was before;
+for example, if 4 checkboxes were checked and 2 unchecked for the \emph{uncertain} row, clicking on the row header would \emph{uncheck} all checkboxes in the row.
+
+\paragraph{Visualized Aspect of Confidence.}
+By clicking on the eye in the bottom row of each column, the aspect of confidence that is visualized in \emph{Confidence} mode (\cref{sec:settings-display-mode}) can be selected.
+The currently selected aspect is indicated by a colored eye.
+By default, \emph{confidence regarding religion} is used.
+
+
+\subsection{Source View}
+\label{sec:source}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.4\textwidth]{../src/assets/visualization-documentation/source.png}
+  \caption{
+    The source view.
+  }
+  \label{fig:source}
+\end{figure}
+
+This view shows the \textbf{sources} from which the pieces of evidence (i.e., sets of data concerning a place, religious group, time span, and the respective confidences) were gathered.
+
+\subsubsection{Contents}
+
+The view consists of a table, in which each row represents one source.
+The rows are sorted by descending number of pieces of evidence.
+Note that a piece of evidence can stem from more than one source;
+therefore, the sum total of all references to sources can be larger than the sum total of pieces of evidence.
+In what follows, the respective columns of one given row are described.
+
+\paragraph{Checkboxes.}
+The first column contains a \emph{checkbox} that toggles the visibility of evidence from a source.
+Keep in mind that a piece of evidence can stem from more than one source:
+as long as \emph{any} source associated with a piece of evidence is checked in this view, the piece of evidence will be active.
+
+
+\paragraph{Short Names.}
+The second column shows the \textbf{short name} of the source, generally an abbreviation.
+The full name of the source with bibliographical details is available via a tooltip;
+that is, when hovering over the name with the mouse.
+
+
+\paragraph{Religion/Confidence Segmentation Visualization.}
+The third column visualizes the segmentation of the pieces of evidence on the religions or on the levels of confidence, depending on the chosen \emph{display mode} (\cref{sec:settings-display-mode});
+in \emph{confidence mode,} instead of religion, the currently selected aspect of confidence is used).
+The visualization used is a normalized stacked bar chart.
+Because the total width of the bars is the same regardless of the amount of pieces of evidence, the width of each segment signifies the number of pieces of evidence with that religion or confidence level \emph{in relation to} the total evidence count for that source.
+
+
+\paragraph{Evidence Count Visualization.}
+The fourth column visualizes the count of pieces of evidence for each source.
+This column uses the same scaling in all rows:
+the longer the bar, the more pieces of evidence stem from the respective source.
+This effectively creates a vertical histogram across the rows.
+
+\subsubsection{Interaction}
+
+\paragraph{Selection.}
+Clicking on a row will \emph{select} the source, \emph{brush} the represented data, and \emph{link} related data in all views.
+For instance, locations in the \emph{map} with pieces of evidence from the selected source will be highlighted, other locations will be represented by less saturated colors.
+Clicking on the same row again will reset the selection.
+Selecting a different row, or an element in a different view, will replace the selection;
+that is, only one source can be selected at a time.
+
+\paragraph{Filtering.}
+A source can be filtered out from the visualized data in all views by (un-)checking the respective checkbox.
+Note that the new filter is not applied until the \emph{Apply} button is clicked.
+This button is disabled if the selected filters are matching the data currently visualized.
+
+Checking multiple (or all) sources works as a \emph{logical disjunction:}
+a piece of evidence is matched if it stems from \emph{any} of the checked sources.
+
+The source filter works together with filters from other views in \emph{logical conjunction;}
+for instance, if only source X and religion Y are set active in the respective views, only pieces of evidence with source X \emph{and} religion Y are matched.
+
+Three additional buttons in the top left corner make filtering more convenient:
+
+\begin{enumerate}
+  \item Uncheck all checkboxes.
+  \item
+    Invert all checkboxes.
+    Checked boxes are unchecked, unchecked boxes are checked.
+  \item Check all checkboxes.
+\end{enumerate}
+
+\paragraph{Sorting.}
+The order of the shown sources can be changed using the sorting options switch in the center of the header of the view.
+The two options are:
+
+\begin{enumerate}
+  \item Sort the sources first alphabetically, in ascending order, by their short name, which is shown in the second column of the list.
+  \item Sort the sources first in descending order by the number of visible pieces of evidence derived from them.
+\end{enumerate}
+
+For both sorting modes, the other sorting criterion is considered as secondary criterion.
+More specifically, if the sources are ordered by count, and two sources have the same count, the source that would come first alphabetically is listed first of the two.
+
+
+\subsection{Tag View}
+\label{sec:tags}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.4\textwidth]{../src/assets/visualization-documentation/tags.png}
+  \caption{
+    The tags view.
+    Three tags were selected.
+  }
+  \label{fig:tags}
+\end{figure}
+
+This view shows \textbf{tags} which are associated with pieces of evidence (i.e., sets of data concerning a place, religious group, time span, and the respective confidences).
+Tags were implemented to include additional information and to make further distinctions possible.
+For instance, the tag \emph{Bishopric} is attributed to pieces of evidence referring to bishoprics as distinguished from \emph{metropolitan sees.}
+This way, the visualized data can be filtered according to additional criteria.
+Note that, by default, all tags are \emph{deselected.}
+This means that no filters based on tags are active ((\cref{sec:tags-interaction}).
+
+
+\subsubsection{Contents}
+
+The view consists of a table, in which each row represents one tag.
+The rows are sorted by descending number of pieces of evidence.
+In what follows, the respective columns of one given row are described.
+
+\begin{description}
+  \item[Checkboxes]
+    The first column contains a \emph{checkbox} used for filtering.
+
+  \item[Tag Names]
+    The second column shows the name of the tag.
+    Generally, the name should be self-explanatory.
+    Further information is displayed when hovering with the mouse.
+
+  \item[Evidence Count Visualization]
+    The third column visualizes the count of pieces of evidence for each source.
+    The less saturated part of the bar represents pieces of evidence that are not active (i.e., do not match the current filters).
+\end{description}
+
+\subsubsection{Interaction}
+\label{sec:tags-interaction}
+
+\paragraph{Selection.}
+Clicking on a row will \emph{select} the tag, \emph{brush} the represented data, and \emph{link} related data in all views.
+For instance, locations in the \emph{map} with pieces of evidence with the selected tag will be highlighted, other locations will be represented by less saturated colors.
+Clicking on the same row again will reset the selection.
+Selecting a different row, or an element in a different view, will replace the selection.
+Only one tag at a time can be selected.
+
+\paragraph{Filtering.}
+The visualized data can be filtered according to one tag or multiple tags in all views by (un-)checking the appropriate checkbox or checkboxes.
+Keep in mind that a piece of evidence can have no tag, one tag, or multiple tags.
+If, for instance, it has no tag, its visibility is not affected by the checkboxes.
+If, on the other hand, it has multiple tags, its visibility is only affected by (un-)checking all respective checkboxes.
+Note that the selection is not applied until the \emph{Apply} button is clicked.
+
+Checking multiple (or all) tags works as a \emph{logical disjunction:}
+a piece of evidence is matched if it is assigned \emph{any} of the checked tags.
+The tag filter works together with filters from other views in \emph{logical conjunction:}
+for instance, if only tag X and religion Y are selected in the respective views, only pieces of evidence with tag X \emph{and} religion Y are matched.
+
+Two additional buttons in the top left corner make filtering more convenient:
+
+\begin{enumerate}
+  \item
+    Uncheck all checkboxes;
+    that is, remove all filters based on tags.
+    Note that this is not applied until the \emph{Apply} button is clicked.
+
+  \item Revert all checkboxes to represent the state of filters applied last.
+\end{enumerate}
+
 
 \section{GeoDB-Editor}
 
@@ -1064,7 +2052,8 @@ The deletion will be reflected at once in the document area, where the respectiv
 After deletion, the evidence editor is closed.
 
 
-\section{Place URI List}
+\section{Place URI Page}
+\label{sec:place-uri-page}
 
 
 \section{Reporting}
