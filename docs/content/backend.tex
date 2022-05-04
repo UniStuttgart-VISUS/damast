@@ -219,12 +219,19 @@ The access log saves the IP address and user name of the user requesting a resou
 \section{User Authentication}
 \label{sec:user-authentication}
 
-\todo[inline]{todo}
+Users log in using the \verb!login! blueprint.
+On successful login, a JWT token is returned as a cookie, encrypted with the server secret.
+This cookie must be passed with every subsequent HTTP request.
+Hence, at least the \emph{necessary cookies} must be allowed by users to be able to log in.
 
-\subsection{Visitors}
+\paragraph*{Visitors.}
 \label{sec:visitors}
+A special \emph{visitor role} can be enabled by setting the \verb!DAMAST_VISITOR_ROLES! variable (see~\cref{tab:configuration-variables}).
+If set, this contains a comma-separated list of roles (see~\cref{sec:roles}) that visitors are assigned.
+These cannot contain \verb!writedb!, \verb!dev!, \verb!admin!, or any roles that do not exist.
+If this is enabled, the functionalities allowed to users with the respective roles will also be available to visitors \emph{without logging in.}
+For example, setting \verb!DAMAST_VISITOR_ROLES! to \verb!readdb,user,vis! means that visitors can see the start page, the visual analysis component and the data, as well as some utility pages.
 
-\todo[inline]{todo}
 
 \section{Flask Blueprints}
 
