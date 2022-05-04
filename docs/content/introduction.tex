@@ -1,3 +1,22 @@
 \chapter{Introduction}
+\label{chapter:introduction}
 
-\todo[inline]{todo}
+Damast is a comprehensive visual analysis system for the collection, analysis, and export of historical data regarding peaceful coexistence of religious groups.
+Damast was developed for the digital humanities project \enquote{Dhimmis \& Muslims --- Analysing Multireligious Spaces in the Medieval Muslim World}.
+The project was funded by the VolkswagenFoundation within the scope of the \enquote{Mixed Methods} initiative.
+The project was a collaboration between the Institute for Medieval History II of the Goethe University in Frankfurt/Main, Germany, and the Institute for Visualization and Interactive Systems at the University of Stuttgart, and took place there from 2018 to 2021.
+
+The objective of this joint project was to develop a novel visualization approach in order to gain new insights on the multi-religious landscapes of the Middle East under Muslim rule during the Middle Ages (7th to 14th century).
+In particular, information on multi-religious communities were researched and made available in a database accessible through interactive visualization as well as through a pilot web-based geo-temporal multi-view system to analyze and compare information from multiple sources.
+A publicly explorable version\footnote{\url{https://damast.geschichte.hu-berlin.de/}} of the research is available at Humboldt-Universität zu Berlin.
+An export of the data collected in the project can be found in the data repository of the University of Stuttgart (DaRUS)~\cite{darus}.
+
+Damast consists of a Flask server backend, which also communicates with a PostgreSQL database, as well as a web-based frontend.
+The frontend consists of multiple pages with various functions, including:
+an interactive visual analysis component, a table-based database editing interface, a document-based annotation interface for data entry, and various smaller utilities.
+Damast also supports generating textual reports based on subsets of the historical data.
+
+The rest of this document is structured as follows:
+The structure and contents of the main PostgreSQL database, as well as the user and report databases, are discussed in \cref{chapter:database};
+the structure and functionalities of the server backend are discussed in \cref{chapter:backend}; and
+the various front-end facilities are discussed in \cref{chapter:frontend}.
