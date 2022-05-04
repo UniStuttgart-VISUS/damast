@@ -35,8 +35,12 @@ This directory should be mounted to a directory on the host, and contains runtim
 The directory (\verb!/data!) in \cref{fig:structure}) must be readable and writable to the \verb!www! user in the container.
 To facilitate the mapping of the volume and the access rights, this \verb!www! user should also exist on the host system, and the host directory should have the appropriate rights.
 The user ID and group ID of that user on the host system must then be passed to Docker when building the Docker image, using the \verb!USER_ID! and \verb!GROUP_ID! environment variables.
+
 The deploy script (\verb!deploy.sh!) in the repository provides more details on how to create the image.
 The repository also contains the components for the \verb!Dockerfile!, the server run script, the \verb!systemd! service file, and a sample nginx configuration.
+For development, a variant of the Docker image can also be built that mounts the local \verb!damast/! directory into the Docker image.
+This way, the local source files and assets can be used while the dependencies pinned in the Docker image are available.
+This Docker image can be built using the \verb!host.sh! script in the repository with the \verb!-b! flag.
 
 
 \subsection{Runtime Configuration}
@@ -62,35 +66,142 @@ Configuration values can also be passed via a JSON file, the path to which (in t
 \begin{longtable}{ll}
   \caption{Configuration options for Damast.}
   \label{tab:configuration-variables} \\
-  \toprule
+  \toprule[1pt]
   \parbox[t][][t]{7cm}{%
+    \bfseries
     Environment variable \\
     JSON key \\
     Default value \vspace{4pt}
-    } & \parbox[t][][t]{9.5cm}{Description} \\
-    \midrule
-    \configentry{DAMAST\_CONFIG}{-}{}{JSON file to load configuration from. All other configuration values in this table can be passed via this file as key-value entries in the root object, where the key is the \enquote{JSON key} column of this table.} \\\midrule
-    \configentry{DAMAST\_ENVIRONMENT}{environment}{}{Server environment (\texttt{PRODUCTION}, \texttt{TESTING}, or \texttt{PYTEST}). This decides with which PostgreSQL database to connect (\texttt{ocn}, \texttt{testing}, and \texttt{pytest} (on Docker container) respectively. This is usually set via the Docker image.} \\\midrule
-    \configentry{DAMAST\_VERSION}{version}{}{Software version. This is usually set via the Docker image.} \\\midrule
-    \configentry{DAMAST\_USER\_FILE}{user\_file}{/data/users.db}{Path to SQLite3 file with users, passwords, roles.} \\\midrule
-    \configentry{DAMAST\_REPORT\_FILE}{report\_file}{/data/reports.db}{File to which reports are stored during generation.} \\\midrule
-    \configentry{DAMAST\_SECRET\_FILE}{secret\_file}{}{File with JWT and app secret keys. These are randomly generated if not passed, but that is impractical for testing with hot reload (user sessions do not persist). For a production server, this should be empty.} \\\midrule
-    \configentry{DAMAST\_PROXYCOUNT}{proxycount}{1}{How many reverse proxies the server is behind. This is necessary for proper HTTP redirection and cookie paths.} \\\midrule
-    \configentry{DAMAST\_PROXYPREFIX}{proxyprefix}{/}{Reverse proxy prefix.} \\\midrule
-    \configentry{DAMAST\_OVERRIDE\_PATH}{override\_path}{}{A directory path under which a \texttt{template/} and \texttt{static/} directory can be placed. Templates within the \texttt{template/} directory will be prioritized over the internal ones. This can be used to provide a different template for a certain page, such as the impressum.} \\\midrule
-    \configentry{DAMAST\_VISITOR\_ROLES}{visitor\_roles}{}{If not empty, contains a comma-separated list of roles a visitor (not logged-in) to the site will receive, which in turn governs which pages will be available without user account. If the variable does not exist, visitors will only see public pages.} \\\midrule
-    \configentry{DAMAST\_MAP\_STYLES}{map\_styles}{}{If not empty, a relative filename (under \texttt{/data}) on the Docker filesystem to a JSON with map styles. These will be used in the Leaflet map. If not provided, the default styles will be used.} \\\midrule
-    \configentry{DAMAST\_REPORT\_EVICTION\_DEFERRAL}{report\_eviction\_deferral}{}{If not empty, the number of days of not being accessed before a reports' contents (HTML, PDF, map) are \emph{evicted.} Evicted reports can always be regenerated from their state and filter JSON. Eviction happens to save space and improve performance on systems where many reports are anticipated. \emph{This should not be activated on systems with changing databases!}} \\\midrule
-    \configentry{DAMAST\_REPORT\_EVICTION\_MAXSIZE}{report\_eviction\_maxsize}{}{If not empty, the file size in megabytes (MB) of report contents (HTML, PDF, map) above which reports will be evicted. If this is set and the sum of content sizes in the report database \emph{after deferral eviction} is above this number, additional reports are evicted until the sum of sizes is lower than this number. Reports are evicted in ascending order of last access date (the least-recently accessed first). The same rules as above apply.} \\\midrule
-    \configentry{DAMAST\_ANNOTATION\_SUGGESTION\_REBUILD}{annotation\_suggestion\_rebuild}{}{If not empty, the number of days between annotation suggestion rebuilds. In that case, the suggestions are recreated over night every X days. If empty, the annotation suggestions are never recreated, which might be favorable on a system with a static database.} \\\midrule
-    \configentry{FLASK\_ACCESS\_LOG}{access\_log}{/data/access\_log}{Path to \texttt{access\_log} (for logging).} \\\midrule
-    \configentry{FLASK\_ERROR\_LOG}{error\_log}{/data/error\_log}{Path to \texttt{error\_log} (for logging).} \\\midrule
-    \configentry{DAMAST\_PORT}{port}{8000}{Port at which \texttt{gunicorn} serves the content.\\ \textbf{Note:} This is set via the Dockerfile, and also only used in the Dockerfile.} \\\midrule
-    \configentry{PGHOST}{pghost}{localhost}{PostgreSQL hostname.} \\\midrule
-    \configentry{PGPASSWORD}{pgpassword}{}{PostgreSQL password. This is important to set and depends on how the database is set up.} \\\midrule
-    \configentry{PGPORT}{pgport}{5432}{PostgreSQL port} \\\midrule
-    \configentry{PGUSER}{pguser}{api}{PostgreSQL user} \\
-    \bottomrule
+    } & \parbox[t][][t]{9.5cm}{\bfseries Description} \\
+    \midrule[1pt]
+    \endhead
+    \configentry%
+      {DAMAST\_CONFIG}%
+      {-}%
+      {}%
+      {JSON file to load configuration from. All other configuration values in this table can be passed via this file as key-value entries in the root object, where the key is the \enquote{JSON key} column of this table.}
+      \\ \midrule
+    \configentry%
+      {DAMAST\_ENVIRONMENT}%
+      {environment}%
+      {}%
+      {Server environment (\texttt{PRODUCTION}, \texttt{TESTING}, or \texttt{PYTEST}). This decides with which PostgreSQL database to connect (\texttt{ocn}, \texttt{testing}, and \texttt{pytest} (on Docker container) respectively. This is usually set via the Docker image.}
+      \\\midrule
+    \configentry%
+      {DAMAST\_VERSION}%
+      {version}%
+      {}%
+      {Software version. This is usually set via the Docker image.}
+      \\\midrule
+    \configentry%
+      {DAMAST\_USER\_FILE}%
+      {user\_file}%
+      {/data/users.db}%
+      {Path to SQLite3 file with users, passwords, roles.}
+      \\\midrule
+    \configentry%
+      {DAMAST\_REPORT\_FILE}%
+      {report\_file}%
+      {/data/reports.db}%
+      {File to which reports are stored during generation.}
+      \\\midrule
+    \configentry%
+      {DAMAST\_SECRET\_FILE}%
+      {secret\_file}%
+      {}%
+      {File with JWT and app secret keys. These are randomly generated if not passed, but that is impractical for testing with hot reload (user sessions do not persist). For a production server, this should be empty.}
+      \\\midrule
+    \configentry%
+      {DAMAST\_PROXYCOUNT}%
+      {proxycount}%
+      {1}%
+      {How many reverse proxies the server is behind. This is necessary for proper HTTP redirection and cookie paths.}
+      \\\midrule
+    \configentry%
+      {DAMAST\_PROXYPREFIX}%
+      {proxyprefix}%
+      {/}%
+      {Reverse proxy prefix.}
+      \\\midrule
+    \configentry%
+      {DAMAST\_OVERRIDE\_PATH}%
+      {override\_path}%
+      {}%
+      {A directory path under which a \texttt{template/} and \texttt{static/} directory can be placed. Templates within the \texttt{template/} directory will be prioritized over the internal ones. This can be used to provide a different template for a certain page, such as the impressum.}
+      \\\midrule
+    \configentry%
+      {DAMAST\_VISITOR\_ROLES}%
+      {visitor\_roles}%
+      {}%
+      {If not empty, contains a comma-separated list of roles a visitor (not logged-in) to the site will receive, which in turn governs which pages will be available without user account. If the variable does not exist, visitors will only see public pages.}
+      \\\midrule
+    \configentry%
+      {DAMAST\_MAP\_STYLES}%
+      {map\_styles}%
+      {}%
+      {If not empty, a relative filename (under \texttt{/data}) on the Docker filesystem to a JSON with map styles. These will be used in the Leaflet map. If not provided, the default styles will be used.}
+      \\\midrule
+    \configentry%
+      {DAMAST\_REPORT\_EVICTION\_DEFERRAL}%
+      {report\_eviction\_deferral}%
+      {}%
+      {If not empty, the number of days of not being accessed before a reports' contents (HTML, PDF, map) are \emph{evicted.} Evicted reports can always be regenerated from their state and filter JSON. Eviction happens to save space and improve performance on systems where many reports are anticipated. \emph{This should not be activated on systems with changing databases!}}
+      \\\midrule
+    \configentry%
+      {DAMAST\_REPORT\_EVICTION\_MAXSIZE}%
+      {report\_eviction\_maxsize}%
+      {}%
+      {If not empty, the file size in megabytes (MB) of report contents (HTML, PDF, map) above which reports will be evicted. If this is set and the sum of content sizes in the report database \emph{after deferral eviction} is above this number, additional reports are evicted until the sum of sizes is lower than this number. Reports are evicted in ascending order of last access date (the least-recently accessed first). The same rules as above apply.}
+      \\\midrule
+    \configentry%
+      {DAMAST\_ANNOTATION\_SUGGESTION\_REBUILD}%
+      {annotation\_suggestion\_rebuild}%
+      {}%
+      {If not empty, the number of days between annotation suggestion rebuilds. In that case, the suggestions are recreated over night every X days. If empty, the annotation suggestions are never recreated, which might be favorable on a system with a static database.}
+      \\\midrule
+    \configentry%
+      {FLASK\_ACCESS\_LOG}%
+      {access\_log}%
+      {/data/access\_log}%
+      {Path to \texttt{access\_log} (for logging).}
+      \\\midrule
+    \configentry%
+      {FLASK\_ERROR\_LOG}%
+      {error\_log}%
+      {/data/error\_log}%
+      {Path to \texttt{error\_log} (for logging).}
+      \\\midrule
+    \configentry%
+      {DAMAST\_PORT}%
+      {port}%
+      {8000}%
+      {Port at which \texttt{gunicorn} serves the content.\\ \textbf{Note:} This is set via the Dockerfile, and also only used in the Dockerfile.}
+      \\\midrule
+    \configentry%
+      {PGHOST}%
+      {pghost}%
+      {localhost}%
+      {PostgreSQL hostname.}
+      \\\midrule
+    \configentry%
+      {PGPASSWORD}%
+      {pgpassword}%
+      {}%
+      {PostgreSQL password. This is important to set and depends on how the database is set up.}
+      \\\midrule
+    \configentry%
+      {PGPORT}%
+      {pgport}%
+      {5432}%
+      {PostgreSQL port}
+      \\\midrule
+    \configentry%
+      {PGUSER}%
+      {pguser}%
+      {api}%
+      {PostgreSQL user}
+      \\
+    \bottomrule[1pt]
 \end{longtable}
 }
 
