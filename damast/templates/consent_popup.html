@@ -2,7 +2,7 @@
 
 {%- macro consent_popup() -%}
   {%- if cookie_preference is none -%}
-    <div class="cookies cookies__bg">
+    <div class="cookies dialog cookies__bg">
       {{ consent() }}
     </div>
   {%- endif %}
