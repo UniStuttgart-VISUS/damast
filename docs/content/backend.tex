@@ -372,6 +372,7 @@ Some blueprints, like the REST API (\cref{sec:rest-api}), are hierarchically spl
 \end{figure}
 
 \subsection{Templates}
+\label{sec:templates}
 
 HTML pages are created by Flask from Jinja2 templates\footnote{\url{https://palletsprojects.com/p/jinja/}}.
 Most page templates inherit from a \emph{base template,} which has a header with navigation and user management, a main page area, and a footer with additional links and a copyright statement.
@@ -393,6 +394,7 @@ For details on how to inherit from the base template, refer to the base template
 Adding static files while the server is running should work without problems, but templates are not hot-loaded in production systems, so the server needs to be restarted if the templates change.
 
 \paragraph*{Overriding the Start Page Background Image}
+\label{par:overriding-start-page-bg-image}
 The background image intended for the default start page cannot be put in the repository.
 Hence, to use it, or a custom background image visible behind the content, the following instructions must be followed:
 The background image can be added as an override static file, or referenced via an external URL.
