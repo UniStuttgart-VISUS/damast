@@ -224,6 +224,11 @@ On successful login, a JWT token is returned as a cookie, encrypted with the ser
 This cookie must be passed with every subsequent HTTP request.
 Hence, at least the \emph{necessary cookies} must be allowed by users to be able to log in.
 
+\paragraph*{Role-based access.}
+Access to all pages is restricted based on roles, not users.
+To be able to successfully make an HTTP request to a certain endpoint, the user's roles and the role's allowed for the endpoint-HTTP verb pairing must overlap.
+For the REST API (\cref{sec:rest-api}), the endpoints also distinguish between reading access (with the \verb!readdb! role, via \verb!GET! requests), and writing access (with the \verb!writedb! role, for \verb!PUT!, \verb!PATCH!, and \verb!DELETE! requests).
+
 \paragraph*{Visitors.}
 \label{sec:visitors}
 A special \emph{visitor role} can be enabled by setting the \verb!DAMAST_VISITOR_ROLES! variable (see~\cref{tab:configuration-variables}).
@@ -234,15 +239,199 @@ For example, setting \verb!DAMAST_VISITOR_ROLES! to \verb!readdb,user,vis! means
 
 
 \section{Flask Blueprints}
+\label{sec:blueprints}
 
-\todo[inline]{todo}
+The different functionalities are split up into separate Flask blueprints.
+Some blueprints, like the REST API (\cref{sec:rest-api}), are hierarchically split up into sub-blueprints (see~\cref{fig:blueprints}).
 
-\subsection{Overriding Blueprints and Static Files}
+\begin{figure}[tb]
+  \centering
+  \begin{tikzpicture}
+    \node (left) {%
+      \begin{forest}
+        for tree={
+          font=\small\ttfamily,
+          grow'=0,
+          child anchor=west,
+          parent anchor=south,
+          anchor=west,
+          calign=first,
+          inner sep=2pt,
+          s sep=4pt,
+          edge path={
+            \noexpand\path [draw, \forestoption{edge}]
+            (!u.south west) +(7.5pt,0) |- (.child anchor)\forestoption{edge label};
+          },
+          before typesetting nodes={
+            if n=1
+            {insert before={[,phantom]}}
+            {}
+          },
+          fit=band,
+          before computing xy={l=15pt},
+        }
+        [\textit{Blueprints}
+          [annotator]
+          [annotator-recogito]
+          [base]
+          [compress-response]
+          [docs
+            [annotator]
+            [api-description]
+            [changelog]
+            [index]
+            [license]
+            [schema]
+            [user-log]
+          ]
+          [vis]
+          [geodb\_editor
+            [map-styles]
+          ]
+          [login]
+          [override]
+          [reporting
+            [filters]
+          ]
+          [uri-namespace]
+          [root-app]
+          [uri
+            [place
+              [map-styles]
+            ]
+          ]
+          [vis
+            [map-styles]
+          ]
+        ]
+      \end{forest}%
+    };
+
+    \node[anchor=north west,xshift=1cm] at (left.north east) {%
+      \begin{forest}
+        for tree={
+          font=\small\ttfamily,
+          grow'=0,
+          child anchor=west,
+          parent anchor=south,
+          anchor=west,
+          calign=first,
+          inner sep=2pt,
+          s sep=4pt,
+          edge path={
+            \noexpand\path [draw, \forestoption{edge}]
+            (!u.south west) +(7.5pt,0) |- (.child anchor)\forestoption{edge label};
+          },
+          before typesetting nodes={
+            if n=1
+            {insert before={[,phantom]}}
+            {}
+          },
+          fit=band,
+          before computing xy={l=15pt},
+        }
+        [\textit{Blueprints}
+          [rest-api
+            [annotation]
+            [annotation-suggestion]
+            [confidence]
+            [document]
+            [dump]
+            [evidence]
+            [language]
+            [person]
+            [person-instance]
+            [person-list]
+            [person-type]
+            [place
+              [uri-list]
+            ]
+            [place-instance]
+            [place-set
+              [uri-list]
+            ]
+            [religion]
+            [religion-instance]
+            [source]
+            [tags]
+            [time]
+            [uri
+              [external-database]
+              [external-person-uri]
+              [external-place-uri]
+              [person-uri-list]
+            ]
+          ]
+        ]
+      \end{forest}%
+    };
+  \end{tikzpicture}
+
+  \caption{Hierarchical list of blueprints in Damast.}
+  \label{fig:blueprints}
+\end{figure}
+
+\subsection{Templates}
+
+HTML pages are created by Flask from Jinja2 templates\footnote{\url{https://palletsprojects.com/p/jinja/}}.
+Most page templates inherit from a \emph{base template,} which has a header with navigation and user management, a main page area, and a footer with additional links and a copyright statement.
+The visual analysis component does not inherit from the base template, but instead defines a more compact layout without a footer.
+
+
+\subsection{Overriding Templates and Static Files}
 \label{sec:override-blueprints}
 
-\todo[inline]{todo}
+When running the server, it might be necessary to override some pages;
+for example, one might want a different home page, or a different impressum.
+The server uses the \verb!DAMAST_OVERRIDE_PATH! environment variable to load such overrides.
+If it is set, the Flask server creates an extra blueprint, and the directory \verb!${DAMAST_OVERRIDE_PATH}/templates/! is added to the Jinja2 template search path with precedence.
+Further, the files in the \verb!${DAMAST_OVERRIDE_PATH}/static/! directory will be served without requiring any authentication under the URL \verb!${DAMAST_PROXYPREFIX}/override/static/<file path>! (use \verb!url_for('override.static', filename='<file path>')! in templates).
+
+Keep in mind that all contents of the static directory will be served without user authentication.
+For details on which paths templates must be put under for proper override, refer to the \verb!template/! directories of the blueprints in the repository.
+For details on how to inherit from the base template, refer to the base template and other, inheriting templates.
+Adding static files while the server is running should work without problems, but templates are not hot-loaded in production systems, so the server needs to be restarted if the templates change.
+
+\paragraph*{Overriding the Start Page Background Image}
+The background image intended for the default start page cannot be put in the repository.
+Hence, to use it, or a custom background image visible behind the content, the following instructions must be followed:
+The background image can be added as an override static file, or referenced via an external URL.
+For the first variant, suppose the image is stored in the override folder in \verb!static/bg.jpg!.
+The contents shown in \cref{lst:bg-image-override} must then be placed in the override folder in \verb!templates/override/background-image-url.html!:
+Alternatively, for an external URL, the contents of the \verb!url()! statement would be the URL of the image (e.g., \verb!url(https://example.org/bg.jpg)!).
+
+\begin{lstfloat}
+  \centering
+  \caption{The contents of \texttt{templates/override/background-image-url.html} when providing a custom background image.}
+  \label{lst:bg-image-override}
+
+  \lstset{%
+    basicstyle={\scriptsize\ttfamily},
+    language=html5,
+    showspaces=false,
+    showstringspaces=false,
+    keywordstyle=\color{blue}\bfseries,
+    ndkeywordstyle=\color{green!40!black}\bfseries,
+    stringstyle=\color{brown!80!black},
+  }
+  \begin{lstlisting}
+  <style>
+    :root {
+      --home-bg-image: url({{ url_for('override.static', filename='bg.jpg') }});
+    }
+  </style>
+  \end{lstlisting}
+\end{lstfloat}
+
 
 \section{REST API}
 \label{sec:rest-api}
 
-\todo[inline]{todo}
+The REST API provides access to the data in the PostgreSQL database.
+The API uses JSON as the main data format for communication, and provides CRUD\footnote{Create, read, update, delete.} functionality using the HTTP verbs \verb!PUT!, \verb!GET!, \verb!PATCH!, and \verb!DELETE!.
+Access to the REST API endpoints differentiates between read-only and read-write access, which are controlled by the \verb!readdb! and \verb!writedb! user roles (\cref{sec:roles}).
+
+The API endpoints are generally conservative in the input they accept, and provide feedback on what is wrong in the HTTP response via the status code and response body.
+The endpoints are documented in the respective Python function docstrings.
+The \verb!docs.api-description! blueprint (\cref{sec:blueprints}) collects all endpoints and renders a list with the path, parameters, allowed methods, and docstrings.
+This list is also attached in \cref{appendix:rest-api-endpoints}.

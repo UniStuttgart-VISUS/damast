@@ -1,0 +1,1737 @@
+\chapter{REST API Endpoint Documentation}
+\label{appendix:rest-api-endpoints}
+
+{\large\noindent\verb!/rest/annotation-suggestion/<int:as_id>!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{DELETE}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Delete an annotation suggestion.
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/annotation/<int:annotation_id>!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{DELETE}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PATCH}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PUT}};}
+\nopagebreak[4]
+{\small\begin{verbatim}CRUD endpoint to get document metadata for a document.
+
+[all]       @param annotation_id        ID of annotation
+
+
+GET         @returns                    application/json
+
+Get the annotation data for annotation `annotation_id`. Example payload:
+
+    {
+        "id": 1,
+        "document_id": 3,
+        "span": "(422,431)",
+        "comment": "comment content"
+    }
+
+
+PUT         @returns                    application/json
+
+Create a new annotation. Returns the created annotation tuple's ID. Example payload:
+
+    {
+        "document_id": 4,
+        "span": "[0, 10]",
+        "comment": "foo bar"
+    }
+
+
+PATCH       @returns                    205 Reset Content; empty body
+
+Modify an existing annotation. Example payload:
+
+    {
+        "comment": "new comment"
+    }
+
+
+DELETE      @returns                    application/json
+
+Delete an annotation, and its connected instance. This will fail if the
+instance is still in use by an evidence tuple. Returns the deleted
+annotation's and instance's IDs.
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/annotator-evidence-list!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}This endpoint returns a list of `evidence_id`, `document_id` tuples for all
+evidence that was created using the annotator; i.e., all evidence whose
+instances are connected to annotations.
+
+Example return value excerpt:
+
+  [[8122, 1], [8125, 1], [8145, 2], ...]
+
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/confidence-values!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get a list of all confidence values.
+
+@returns        application/json
+
+Example return value:
+
+  ['false', 'uncertain', 'contested', 'probable', 'certain']
+
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/document/<int:document_id>!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}CRUD endpoint to get document content for a document.
+
+GET       @param document_id            ID of document
+          @returns                      document.content_type
+
+This endpoint gets the actual document data for the document with ID
+`document_id`. Because those documents can be quite large, this endpoint
+supports the `Range` HTTP header, but only in the following forms:
+
+    For `text/plain` type documents: `Range: bytes=[n]-[m]`
+    For `text/html` type documents: `Range: content-characters=[n]-[m]`
+
+where `[n]` and `[m]` are both optional numbers. A range
+header with more than one range is not supported at the moment. The return
+code of the request is either 200 or 206 for successful requests, 416, 400
+or 404 for unsuccessful requests.
+
+SIDENOTE: The `<unit>=-<suffix-length>` variant of the `Range` header is
+currently not supported correctly, but instead is interpreted as
+`<unit>=0-<suffix-length>`.
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/document/<int:document_id>/annotation-list!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}REST endpoint to get a list of annotations associated with a document.
+
+This is a slice of the `annotation_overview` VIEW. It contains all the data
+from the `annotation` table, alongside the connected instance IDs and
+evidence ID. The `span` property is an array with the first and last
+inclusive index of the annotation. As an instance can be part of multiple
+evidence tuples (i.e., an annotation can be in multiple groups), the
+`evidence_ids` is an array.
+
+Example return value for `/rest/document/1/annotation-list`:
+
+  [
+    {
+      "id": 1,
+      "document_id": 1,
+      "span": [ 0, 4 ],
+      "comment": "test comment",
+      "place_instance_id": null,
+      "person_instance_id": 1623,
+      "religion_instance_id": null,
+      "time_group_id": null,
+      "evidence_ids": [ 3611 ]
+    },
+    ...
+  ]
+
+
+This endpoint can also be requested as in LD-JSON format. In this case, it
+is assumed to be required for the Recogito tool. NOTE that to properly show
+the annotations in Recogito, the `{ mode: 'pre' }` configuration value must
+be set, as the DOM annotator we use internally respects all white-space in
+the document without collapsing it.
+
+Example return value excerpt for
+
+  GET /rest/document/7/annotation-list
+  Accept: application/ld+json
+
+  [
+    {
+      "@context": "http://www.w3.org/ns/anno.jsonld",
+      "body": [
+        {
+          "purpose": "tagging",
+          "type": "TextualBody",
+          "value": "Religion"
+        },
+        {
+          "purpose": "tagging",
+          "type": "TextualBody",
+          "value": "Christianity"
+        }
+      ],
+      "id": "#31847",
+      "target": {
+        "selector": [
+          {
+            "end": 479,
+            "start": 474,
+            "type": "TextPositionSelector"
+          },
+          {
+            "exact": "Amen.",
+            "type": "TextQuoteSelector"
+          }
+        ]
+      },
+      "type": "Annotation"
+    },
+    ...
+    {
+      "@context": "http://www.w3.org/ns/anno.jsonld",
+      "body": [
+        {
+          "purpose": "tagging",
+          "type": "TextualBody",
+          "value": "religion"
+        }
+      ],
+      "id": "#5843_religion",
+      "motivation": "linking",
+      "target": [
+        {
+          "id": "#31826"
+        },
+        {
+          "id": "#31840"
+        }
+      ],
+      "type": "Annotation"
+    },
+    ...
+  ]
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/document/<int:document_id>/annotation-suggestion-list!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}REST endpoint to get a list of annotation suggestions associated with a document.
+
+
+@returns application/json
+
+
+Exemplary return value except:
+
+  [
+     {
+       "document_id": 3,
+       "entity_id": 772,
+       "id": 830681,
+       "source": [
+         "name"
+       ],
+       "span": [
+         1372645,
+         1372657
+       ],
+       "type": "place"
+     },
+     ...
+  ]
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/document/<int:document_id>/evidence-list!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get a list of evidence tuples based on a document.
+
+@param              document_id     ID of document
+@returns            application/json
+
+An evidence tuple is based on a document if any of its instances'
+annotations is located in that document.
+
+Example return value excerpt:
+
+  [
+    {
+        "comment": "Bischof nachgewiesen",
+        "id": 1632,
+        "interpretation_confidence": null,
+        "person_instance_id": null,
+        "place_instance_id": 1632,
+        "religion_instance_id": 1632,
+        "time_group_id": 1632,
+        "visible": true
+    },
+    ...
+  ]
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/document/<int:document_id>/metadata!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}CRUD endpoint to get document metadata for a document.
+
+
+GET       @param document_id            ID of document
+          @returns                      application/json
+
+
+Example return value for `/document/3/metadata`:
+
+  {
+    "comment": "Michael Rabo, Chronography",
+    "content_length": 2926379,
+    "content_type": "text/html;charset=UTF-8",
+    "default_source_confidence": null,
+    "document_version": 1,
+    "id": 3,
+    "source_id": 67,
+    "source_name": "Michael der Syrer; Moosa, Matti (2014): The Syriac ...",
+    "source_type": "Primary source"
+  }
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/document/list!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}GET a list of all documents.
+
+
+Example return value excerpt:
+
+    [
+      {
+        "comment": "Michael Rabo, Chronography",
+        "content_length": 3012062,
+        "content_type": "text/html;charset=UTF-8",
+        "default_source_confidence": null,
+        "document_version": 1,
+        "id": 3,
+        "source_id": 67,
+        "source_name": "Michael der Syrer; Moosa, Matti (2014): The Syriac ...",
+        "source_type": "Primary source"
+      },
+      ...
+    ]
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/dump/!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get a database dump of the PostgreSQL database.
+
+@returns application/sql
+
+This dumps the database and returns the SQL. If the user requesting it is
+an administrator, the entire database is dumped, including the user and
+provenance tables.
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/evidence-list!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get a list of compact evidence tuples from the view `place_religion_overview`.
+
+@returns            application/json
+
+This replaces the `/PlaceReligion` API endpoint of the old servlet
+implementation. Returns a JSON array of objects with a place ID, evidence
+tuple ID, religion ID, and a time span. Only evidences with
+`evidence.visible`, `place.visible` and `place_type.visible` are listed!
+
+Example return value excerpt:
+
+  [
+    {
+      "place_id": 1,
+      "religion_id": 4,
+      "time_span": {
+        "end": 1200,
+        "start": 800
+      },
+      "tuple_id": 1,
+      "source_ids": [12]
+    },
+    ...
+  ]
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/evidence/<int:evidence_id>!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{DELETE}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PATCH}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PUT}};}
+\nopagebreak[4]
+{\small\begin{verbatim}CRUD endpoint to manipulate evidence tuples.
+
+[all]     @param evidence_id      ID of evidence tuple, 0 or `None` for PUT
+
+C/PUT     @payload                application/json
+          @returns                application/json
+
+Create a new evidence tuple. `place_instance_id` and `religion_instance_id`
+are required fields, the rest (`person_instance_id`, `time_group_id`,
+`comment`, `interpretation_confidence`, `visible`) is optional. Returns the
+IDs for the created evidence.
+
+Exemplary payload for `PUT /evidence`:
+
+  {
+    "place_instance_id": 202,
+    "religion_instance_id": 7,
+    "person_instance_id": 12,
+    "time_group_id": 4,
+    "interpretation_confidence": "probable",
+    "visible": true,
+    "comment": "evidence comment: test"
+  }
+
+
+R/GET     @returns                application/json
+
+Get one evidence tuple, specified by `evidence_id`. Request takes no
+payload and returns a JSON object with data from a bunch of tables
+(`place`, `religion`, `time_span`, `source_instance`, `source`, and
+intermediary tables).
+
+Exemplary reply for `GET /evidence/64`:
+
+  {
+      "evidence_id": 64,
+      "interpretation_confidence": null,
+      "location_confidence": null,
+      "place_attribution_confidence": null,
+      "place_comment": "",
+      "place_geoloc": null,
+      "place_id": 46,
+      "place_instance_comment": null,
+      "place_name": "Beth Sayda",
+      "religion_confidence": null,
+      "religion_id": 4,
+      "religion_instance_comment": null,
+      "religion_name": "Syriac Orthodox Church",
+      "sources": [
+          {
+              "source_id": 1,
+              "source_instance_comment": "",
+              "source_name": "OCN = Fiey, [...]",
+              "source_page": "179"
+          },
+          {
+              "source_id": 2,
+              "source_instance_comment": "Levenq, G. (1935). : s. v. Bêth Saida. [...],
+              "source_name": "DHGE = Aubert, [...],
+              "source_page": "8, 1239-1240"
+          }
+      ],
+      "time_group_id": 64,
+      "time_spans": [
+          {
+              "comment": null,
+              "confidence": null,
+              "end": 1277,
+              "start": 1261
+          }
+      ]
+  }
+
+
+U/PATCH   @payload                application/json
+          @returns                application/json
+
+Update one or more of the fields `comment`, `interpretation_confidence`,
+`visible`, `person_instance_id`, or `time_group_id`. The
+`religion_instance_id` and `place_instance_id` CANNOT be updated for an
+existing evidence tuple.
+
+Exemplary payload for `PATCH /evidence/12345`:
+
+  {
+    "visible": false,
+    "comment": "updated comment...",
+    "person_instance_id": 1234
+  }
+
+
+D/DELETE  @param                  cascade=0|1
+          @returns                application/json
+
+Delete evidence. If the `cascade` parameter is 1, also delete all related
+entities. Write `user_action` log, return a JSON with all deleted IDs.
+
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/evidence/<int:evidence_id>/source-instances!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get all source instance entries for evidence `evidence_id`.
+
+@param evidence_id            ID of evidence tuple
+@returns                      application/json
+
+Exemplary return value for `GET /evidence/3662/source-instances`:
+
+  [
+    {
+      "comment": "new comment",
+      "evidence_id": 3662,
+      "id": 4702,
+      "source_id": 3,
+      "source_page": null,
+      "confidence": "contested"
+    },
+    {
+      "comment": "new comment 2",
+      "evidence_id": 3662,
+      "id": 4703,
+      "source_id": 1,
+      "source_page": "test",
+      "confidence": "probable"
+    }
+  ]
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/evidence/<int:evidence_id>/tags!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PUT}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get or set tag set for evidence.
+
+@param              evidence_id     ID of evidence
+
+GET
+
+    Get list of tag IDs as array.
+
+    @returns            application/json
+
+    Return value example for `GET /rest/evidence/1/tags`:
+
+      [1,4,6]
+
+
+PUT
+
+    Replace list of tag IDs. Takes a JSON array as payload.
+
+    @returns            nothing
+
+    Payload value example for `PUT /rest/evidence/1/tags`:
+
+      [1,2]
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/find-alternative-names!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{POST}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Retrieve `place.id` where the alternative name matches the `regex`.
+
+@payload                application/json
+  @param `regex`        ECMA-Script regular expression
+  @param `ignore_case`  If `true`, regex is case-insensitive
+
+@returns                application/json
+
+As alternative names are not loaded initially, this API endpoint is used to
+retrieve places' `id` for text search in the location list, where an
+alternative name matches the search term `regex`. This API endpoint then
+returns a JSON array of `place.id` for matching places.
+
+Example response for case-insensitive serarch of "ko[a-g]":
+
+  > POST /rest/find-alternative-names HTTP/1.1
+  > Content-Type: application/json
+  >
+  > {
+  >   "ignore_case": true,
+  >   "regex": "ko[a-g]"
+  > }
+  >
+  ---
+  < HTTP/1.1 200 OK
+  < Content-Type: application/json
+  <
+  < [
+  <   236,
+  <   694,
+  <   493
+  < ]
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/languages-list!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get a list of all religions.
+
+@returns        application/json
+
+This returns a JSON array of objects with `id` and `name` from table
+`language`. This API endpoint replaces `/LanguagesList` in the old servlet
+implementation.
+
+Example return value excerpt:
+
+  [
+    {
+      "id": 1,
+      "name": "Arabic - DMG"
+    },
+    {
+      "id": 2,
+      "name": "Arabic - AS"
+    },
+    ...
+  ]
+
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/person-instance/<int:person_instance_id>!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{DELETE}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PATCH}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PUT}};}
+\nopagebreak[4]
+{\small\begin{verbatim}CRUD endpoint to manipulate person instances.
+
+[all]     @param person_instance_id      ID of person instance, 0 or `None` for PUT
+
+C/PUT     @payload                application/json
+          @returns                application/json
+
+Create a new person instance. `person_id` is a required field.
+`confidence`, `comment`, and `annotation_id` are optional. Returns the ID
+for the created person instance.
+
+Exemplary payload for `PUT /person-instance/0`:
+
+  {
+    "person_id": 12,
+    "confidence": "certain",
+    "comment": "foo bar"
+  }
+
+
+R/GET     @returns                application/json
+
+Get one person instance.
+
+Exemplary reply for `GET /person-instance/64`:
+
+  {
+      "id": 64,
+      "confidence": "certain",
+      "comment": "baz",
+      "annotation_id": null
+  }
+
+
+U/PATCH   @payload                application/json
+          @returns                application/json
+
+Update one or more of the fields `person_id`, `comment`, `confidence`, or
+`annotation_id`.
+
+Exemplary payload for `PATCH /person-instance/12345`:
+
+  {
+    "comment": "updated comment...",
+  }
+
+
+D/DELETE  @returns                application/json
+
+Delete person instance. Write `user_action` log, return a JSON with all
+deleted IDs.
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/person-list!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get content of table `person` as a list of dicts.
+
+@return     application/json
+
+Example return value excerpt:
+
+    [
+      {
+        "comment": null,
+        "id": 23,
+        "name": "John bar Hebraye of Tarsus (appr. 667)",
+        "person_type": 2,
+        "time_range": ""
+      },
+      ...
+    ]
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/person-type-list!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get a list of all person types.
+
+@returns        application/json
+
+This returns a JSON array of objects with `id`, and `type` from table
+`person_type`.
+
+Example return value excerpt:
+
+  [
+    {
+      "id": 1,
+      "type": "Bishop"
+    },
+    ...
+  ]
+
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/person/<int:person_id>!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{DELETE}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PATCH}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PUT}};}
+\nopagebreak[4]
+{\small\begin{verbatim}CRUD endpoint to manipulate person tuples.
+
+[all]     @param person_id        ID of person tuple, 0 or `None` for PUT
+
+C/PUT     @payload                application/json
+          @returns                application/json
+
+Create a new person tuple. `name` is a required field, the rest is optional.
+Returns the ID for the created entity. Fails if a person with that name
+already exists.
+
+Exemplary payload for `PUT /person/0`:
+
+  {
+    "name": "Testperson",
+    "comment": "Test comment",
+    "time_range": "6th century",
+    "person_type": 2
+  }
+
+
+R/GET     @returns                application/json
+
+Get person data for the person with ID `person_id`.
+
+@param person_id     Integer, `id` in table `person`
+@returns            application/json
+
+This returns the data from table `person` as a single JSON object.
+
+Example return value:
+
+  {
+    "id": 12,
+    "name": "Testperson",
+    "comment": "Test comment",
+    "time_range": "6th century",
+    "person_type": 2
+  }
+
+
+U/PATCH   @payload                application/json
+          @returns                application/json
+
+Update one or more of the fields 'comment', 'name', 'time_range',
+'person_type', or 'name'.
+
+Exemplary payload for `PATCH /person/12345`:
+
+  {
+    "comment": "updated comment...",
+    "name": "updated name"
+  }
+
+
+D/DELETE  @returns                application/json
+
+Delete a person if there are no conflicts. Otherwise, fail. Returns the ID
+of the deleted tuple.
+
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/place-instance/<int:place_instance_id>!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{DELETE}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PATCH}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PUT}};}
+\nopagebreak[4]
+{\small\begin{verbatim}CRUD endpoint to manipulate place instances.
+
+[all]     @param place_instance_id      ID of place instance, 0 or `None` for PUT
+
+C/PUT     @payload                application/json
+          @returns                application/json
+
+Create a new place instance. `place_id` is a required field.
+`confidence`, `comment`, and `annotation_id` are optional. Returns the ID
+for the created place instance.
+
+Exemplary payload for `PUT /place-instance/0`:
+
+  {
+    "place_id": 12,
+    "confidence": "certain",
+    "comment": "foo bar"
+  }
+
+
+R/GET     @returns                application/json
+
+Get one place instance.
+
+Exemplary reply for `GET /place-instance/64`:
+
+  {
+      "id": 64,
+      "confidence": "certain",
+      "comment": "baz",
+      "annotation_id": null
+  }
+
+
+U/PATCH   @payload                application/json
+          @returns                application/json
+
+Update one or more of the fields `place_id`, `comment`, `confidence`, or
+`annotation_id`.
+
+Exemplary payload for `PATCH /place-instance/12345`:
+
+  {
+    "comment": "updated comment...",
+  }
+
+
+D/DELETE  @returns                application/json
+
+Delete place instance. Write `user_action` log, return a JSON with all
+deleted IDs.
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/place-list!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get a list of places.
+
+@arg        filter  An array of arrays specifying an advanced filter
+@returns            application/json
+
+This returns all tuples from the view `place_overview` as a JSON array of
+objects. The overview contains geographical location, place ID, location
+confidence, place name, and place type name.
+If `filter` is specified, the resulting values are restricted.
+
+Example return value excerpt:
+
+    [
+      {
+        "geoloc": {
+          "lat": 36.335,
+          "lng": 43.11889
+        },
+        "id": 1,
+        "location_confidence": null,
+        "name": "Mosul",
+        "place_type": "Settlement"
+      },
+      ...
+    ]
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/place-list-detailed!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get a list of places, with more details.
+
+@returns            application/json
+
+Example return value excerpt:
+
+    [
+      {
+        "external_uris": [
+          "IndAnat:37356",
+          "https://nisanyanmap.com/?yer=37356",
+          "syriaca:285",
+          "https://syriaca.org/place/285",
+          "EI2:SIM_0749",
+          "http://dx.doi.org/10.1163/1573-3912_islam_SIM_0749",
+          "EI1:SIM_0872",
+          "http://dx.doi.org/10.1163/2214-871X_ei1_SIM_0872",
+          "EI3:COM_23768",
+          "http://dx.doi.org/10.1163/1573-3912_ei3_COM_23768"
+        ],
+        "name_vars": [
+          "Arzun, Arzon",
+          "Arzūn, Arzōn",
+          "...",
+          "Arzan",
+          "..."
+        ],
+        "place_comment": "There are two Arzan. [...]",
+        "place_id": 36,
+        "place_name": "Arzan"
+      },
+      ...
+    ]
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/place-set!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{POST}};}
+\nopagebreak[4]
+{\small\begin{verbatim}REST endpoint for place sets. Place sets are used as a filtering
+possibility in the visualization, and are stored in the database to be
+shared between users.
+
+GET         Returns a JSON list of all place sets in the database.
+POST        Accepts ONE JSON place set as a payload. Depending on whether
+            the UUID exists in the database already, the entry is either
+            overwritten, or a new entry is created.
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/place-type-list!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get a list of all place types.
+
+@returns        application/json
+
+This returns a JSON array of objects with `id`, `type`, and `visible` from
+table `place_type`. This API endpoint replaces `/PlaceTypeList` in the old
+servlet implementation.
+
+Example return value excerpt:
+
+  [
+    {
+      "id": 1,
+      "type": "Unknown",
+      "visible": true
+    },
+    ...
+  ]
+
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/place/<int:place_id>!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{DELETE}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PATCH}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PUT}};}
+\nopagebreak[4]
+{\small\begin{verbatim}CRUD endpoint to manipulate place tuples.
+
+[all]     @param place_id         ID of place tuple, 0 or `None` for PUT
+
+C/PUT     @payload                application/json
+          @returns                application/json
+
+Create a new place tuple. `name` is a required field, the rest is optional.
+Returns the ID for the created entity. Fails if a place with that name
+already exists.
+
+Exemplary payload for `PUT /place/0`:
+
+  {
+    "name": "Testplace",
+    "comment": "Test comment",
+    "geoloc": "(48.2,9.6)",
+    "confidence": "contested",
+    "visible": true,
+    "place_type_id": 2
+  }
+
+
+R/GET     @returns                application/json
+
+Get place data for the place with ID `place_id`.
+
+@param place_id     Integer, `id` in table `place`
+@returns            application/json
+
+This returns the data from table `place` as a single JSON object.
+
+Example return value (2020-01-09) of `GET /place/12`:
+
+    {
+        "comment": "Gesch\u00e4tzt nach Iraq and the Persian Gulf [...]",
+        "confidence": null,
+        "geoloc": "(33.542,44.3726)",
+        "geonames": "...",
+        "google": "...",
+        "id": 12,
+        "name": "al-Baradan",
+        "place_type_id": 3,
+        "syriaca": null,
+        "visible": true
+    }
+
+
+
+U/PATCH   @payload                application/json
+          @returns                application/json
+
+Update one or more of the fields 'comment', 'confidence', 'visible',
+'place_type_id', 'geoloc', or 'name'.
+
+Exemplary payload for `PATCH /place/12345`:
+
+  {
+    "visible": false,
+    "comment": "updated comment..."
+  }
+
+
+D/DELETE  @returns                application/json
+
+Delete a place if there are no conflicts. Otherwise, fail. Returns the ID
+of the deleted tuple.
+
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/place/<int:place_id>/alternative-name/<int:name_id>!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{DELETE}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PATCH}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PUT}};}
+\nopagebreak[4]
+{\small\begin{verbatim}CRUD endpoint to manipulate alternative names.
+
+[all]     @param place_id         ID of place tuple
+[all]     @param name_id          ID of name_var tuple, 0 or `None` for PUT
+
+C/PUT     @payload                application/json
+          @returns                application/json
+
+Create new alternative name. `name` and `language_id` are required
+
+Exemplary payload for `PUT /place/1234/alternative-name/0`:
+
+  {
+    "name": "Testplace",
+    "language_id": 2
+  }
+
+
+R/GET     @returns                application/json
+
+Get alternative name tuple.
+
+Example return value of `GET /place/1234/alternative-name/5678`:
+
+    {
+      "id": 5678,
+      "place_id": 1234,
+      "name": "Dummy test name",
+      "language_id": 12
+    }
+
+
+U/PATCH   @payload                application/json
+          @returns                application/json
+
+Update one or more of the fields 'name' and 'language_id'.
+
+Exemplary payload for `PATCH /place/alternative-name/5678`:
+
+  {
+    "name": "New name",
+    "language_id": 13
+  }
+
+
+D/DELETE  @returns                application/json
+
+Delete an alternative name tuple. Returns the ID of the deleted tuple.
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/place/<int:place_id>/alternative-name/all!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get a list of all alternative names for place with ID `place_id`.
+
+@returns                          application/json
+
+Exemplary return value for `GET /place/1234/alternative-name/all`:
+
+  [
+    {
+      "id": 5678,
+      "place_id": 1234,
+      "name": "Dummy test name",
+      "language_id": 12
+    },
+    {
+      "id": 5679,
+      "place_id": 1234,
+      "name": "Dummy test name 2",
+      "language_id": 4
+    },
+    ...
+  ]
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/place/<int:place_id>/details!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Retrieve more details for the place with ID `place_id`.
+
+@param `place_id`   `id` in table `place`
+@returns            application/json
+
+This API endpoint is aimed at the location list of the visualization, where
+tooltips show more details for a place on hover. This information is not
+loaded from the server initially for efficiency reasons. Instead, it is
+queried when the tooltip is created.
+As of now (2020-01-10), the call returns a JSON object containing the place
+ID, the `comment` field from table `place`, and an array of alternative
+names for the place together with the respective language name. This will
+exclude alternative names that are not main forms.
+
+Example return value excerpt for `GET /place/14/details`:
+
+  {
+    "alternative_names": [
+      {
+        "language": "Arabic - AS",
+        "name": "\u062d\u0644\u0628"
+      },
+      {
+        "language": "Arabic - DMG",
+        "name": "\u1e24alab"
+      },
+      {
+        "language": "Syriac - SS",
+        "name": "\u071a\u0720\u0712 "
+      },
+      ...
+    ],
+    "comment": "[dummy] Comments are strings or null",
+    "place_id": 14,
+    "external_uris": [
+      "Syriaca:3055",
+      ...
+    ],
+  }
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/place/<int:place_id>/evidence!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Retrieve religion evidence for the place with ID `place_id`.
+
+@param `place_id`   `id` in table `place`
+@returns            application/json
+
+This replaces the `/Religions` endpoint in the old servlet implementation.
+
+Returns a list of evidences, with comments and confidences, time spans, and
+sources.
+
+Example return value excerpt for `GET /place/12/evidence`:
+
+  {
+    "place_id": 12,
+    "evidence": [
+      {
+        "evidence_id": 17,
+        "interpretation_confidence": null,
+        "place_attribution_confidence": null,
+        "place_id": 12,
+        "place_instance_comment": null,
+        "religion_confidence": null,
+        "religion_id": 5,
+        "religion_instance_comment": null,
+        "religion_name": "Church of the East",
+        "sources": [
+          {
+            "source_id": 8,
+            "source_instance_comment": "Neuer Eintrag",
+            "source_name": "AKg = Jedin, Hubert; Martin, Jochen (Hg.) (1987): [...]",
+            "source_page": "26"
+          }
+        ],
+        "time_spans": [
+          {
+            "comment": null,
+            "confidence": null,
+            "end": 1200,
+            "start": 800
+          }
+        ]
+      },
+      ...
+    ]
+  }
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/place/<int:place_id>/evidence-ids!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get all evidence tuple IDs for the place with ID `place_id`.
+
+@returns application/json
+
+Example return value exerpt for `/place/12/evidence-ids`:
+
+  [
+    1,
+    5,
+    12,
+    191,
+    ...
+  ]
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/place/<int:place_id>/external-uri-list!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get a list of external URIs for a place.
+
+@param   place_id   ID of place
+@returns            application/json
+
+Example return value excerpt for `GET /rest/place/12/external-uri-list`:
+
+    [
+      {
+        "id": 1,
+        "place_id": 12,
+        "uri_namespace_id": 1,
+        "uri_fragment": "27223",
+        "comment": null
+      }
+      ...
+    ]
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/place/<int:place_id>/external-uri-list!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get a list of external URIs for a place.
+
+@param   place_id   ID of place
+@returns            application/json
+
+Example return value excerpt for `GET /rest/place/12/external-uri-list`:
+
+    [
+      {
+        "id": 1,
+        "place_id": 12,
+        "uri_namespace_id": 1,
+        "uri_fragment": "27223",
+        "comment": null
+      }
+      ...
+    ]
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/place/all!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get content of table `place` as a list of dicts.
+
+@return     application/json
+
+Example return value excerpt:
+
+    [
+      {
+        "comment": "Unknown place",
+        "confidence": null,
+        "geoloc": null,
+        "id": 448,
+        "name": "Dirigh",
+        "place_type_id": 4,
+        "visible": true
+      },
+      ...
+    ]
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/places!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get a list of places and their IDs.
+
+@returns            application/json
+
+This returns a list of place names and IDs.
+
+Example return value excerpt:
+
+    [
+      {
+        "id": 1,
+        "name": "Mosul",
+      },
+      ...
+    ]
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/religion-instance/<int:religion_instance_id>!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{DELETE}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PATCH}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PUT}};}
+\nopagebreak[4]
+{\small\begin{verbatim}CRUD endpoint to manipulate religion instances.
+
+[all]     @param religion_instance_id      ID of religion instance, 0 or `None` for PUT
+
+C/PUT     @payload                application/json
+          @returns                application/json
+
+Create a new religion instance. `religion_id` is a required field.
+`confidence`, `comment`, and `annotation_id` are optional. Returns the ID
+for the created religion instance.
+
+Exemplary payload for `PUT /religion-instance/0`:
+
+  {
+    "religion_id": 12,
+    "confidence": "certain",
+    "comment": "foo bar"
+  }
+
+
+R/GET     @returns                application/json
+
+Get one religion instance.
+
+Exemplary reply for `GET /religion-instance/64`:
+
+  {
+      "id": 64,
+      "confidence": "certain",
+      "comment": "baz",
+      "annotation_id": null
+  }
+
+
+U/PATCH   @payload                application/json
+          @returns                application/json
+
+Update one or more of the fields `religion_id`, `comment`, `confidence`, or
+`annotation_id`.
+
+Exemplary payload for `PATCH /religion-instance/12345`:
+
+  {
+    "comment": "updated comment...",
+  }
+
+
+D/DELETE  @returns                application/json
+
+Delete religion instance. Write `user_action` log, return a JSON with all
+deleted IDs.
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/religion-list!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get a list of religion names and IDs.
+
+@returns            application/json
+
+Example return value excerpt:
+
+    [
+      {
+        "id": 1,
+        "name": "Christianity",
+        "parent_id": null
+      },
+      {
+        "id": 5,
+        "name": "Church of the East",
+        "parent_id": 1
+      },
+      ...
+    ]
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/religions!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get a hierarchy of religions.
+
+@returns            application/json
+
+This utilizes the `parent_id` attribute in the table `religion` to build a
+list of trees. The return value is an array of JSON objects. Each root node
+is a main religion, and one of its attributes is `children`, holding an
+array of children, which may again hold children, and so on.
+
+Each node of each tree has the following, exemplary (2020-01-09) structure:
+
+    {
+        "abbreviation": "MARO",
+        "children": [ ... ],
+        "color": "hsl(10, 80%, 50%)",
+        "id": 3,
+        "name": "Maronite Church",
+        "parent_id": 98
+    }
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/source-instance/<int:source_instance_id>!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{DELETE}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PATCH}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PUT}};}
+\nopagebreak[4]
+{\small\begin{verbatim}CRUD endpoint to manipulate source instance entries.
+
+[all]     @param source_instance_id     ID of tuple, ignored for PUT (use 0)
+
+C/PUT     @payload                      application/json
+          @returns                      application/json
+
+Create a new source instance tuple. `source_id` is required in the payload,
+`source_page` and `comment` are optional. Returns the `id` of the created
+tuple on success.
+
+Exemplary payload for `PUT /source-instance/0`:
+
+  {
+    "comment": "new instance via PUT, 2",
+    "source_id": 3,
+    "source_page": "1--2",
+    "source_confidence": "contested",
+    "evidence_id": 12
+  }
+
+
+
+R/GET     @returns                      application/json
+
+Get one source instance tuple.
+
+Exemplary return value for `GET /source-instance/4702`:
+
+  {
+    "comment": "new comment",
+    "evidence_id": 3662,
+    "id": 4702,
+    "source_id": 3,
+    "source_page": null,
+    "source_confidence": "contested"
+  }
+
+
+U/PATCH   @payload                application/json
+          @returns                application/json
+
+Update one or more of the fields `comment` or `source_page`. All other fields or
+connected entities must be modified via their respective endpoints.
+
+Exemplary payload for `PATCH /source-instance/567`:
+
+  {
+    "comment": "updated comment...",
+    "source_page": "6--7"
+  }
+
+D/DELETE  @returns                application/json
+
+Delete all related entities, write `user_action` log, return a JSON with all deleted IDs.
+
+Exemplary return valye for `DELETE /source-instance/5678`:
+
+  {
+    "deleted": {
+      "source_instance": 5678
+    }
+  }
+
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/sources-list!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get a list of all sources.
+
+@returns        application/json
+
+This returns a JSON array of objects with `id` and `name` from table
+`source`. This API endpoint replaces `/SourcesList` in the old servlet
+implementation.
+
+Example return value excerpt:
+
+  [
+    {
+      "id": 32,
+      "name": "Bar Ebroyo / Wilmshurst",
+      "short": "Bar Ebroyo / Wilmshurst",
+      "default_confidence": "probable"
+    },
+    {
+      "id": 1,
+      "name": "Fiey, Jean Maurice (1993): Pour un Oriens [...]",
+      "short": "OCN",
+      "default_confidence": "certain"
+    },
+    ...
+  ]
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/tag-list!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get a list of tags.
+
+@returns            application/json
+
+Example return value excerpt:
+
+  [
+    {
+      "id": 1,
+      "tagname": "bishopric",
+      "comment": "test comment"
+    },
+    ...
+  ]
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/tag-sets!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get the set of evidence IDs for each tag.
+
+@returns            application/json
+
+Example return value excerpt:
+
+  [
+    {
+      "tag_id": 1,
+      "evidence_ids": [1,2,3,6,37]
+    },
+    {
+      "tag_id": 2,
+      "evidence_ids": [1,3]
+    },
+    ...
+  ]
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/time-group/<int:time_group_id>!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{DELETE}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PATCH}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PUT}};}
+\nopagebreak[4]
+{\small\begin{verbatim}CRUD endpoint to manipulate time_group entries.
+
+[all]     @param time_span_id           ID of tuple, ignored for PUT (use 0)
+
+C/PUT     @payload                      application/json
+          @returns                      application/json
+
+Create a new group tuple. Optionally takes a valid `annotation_id`.
+Returns the `id` of the created tuple on success.
+
+Exemplary payload for `PUT /time-group/0`:
+
+  {
+    "annotation_id": 412
+  }
+
+
+
+R/GET     @returns                      application/json
+
+Get one time_group tuple.
+
+Exemplary return value for `GET /time-group/3658`:
+
+  {
+    "annotation_id": null,
+    "time_group_id": 3658,
+    "time_spans": [
+      {
+        "comment": null,
+        "confidence": null,
+        "end": 988,
+        "start": 985,
+        "time_instance_id": 3658
+      }
+    ]
+  }
+
+
+
+U/PATCH   @payload                application/json
+          @returns                204 NO CONTENT
+
+Update the `annotation_id` field to a valid value, or `null`.
+
+Exemplary payload for `PATCH /time-group/789`:
+
+  {
+    "annotation_id": 456
+  }
+
+
+D/DELETE  @returns                application/json
+
+Delete all related entities, write `user_action` log, return a JSON with all deleted IDs.
+
+Exemplary return value for `DELETE /time-group/5678`:
+
+  {
+    "deleted": {
+      "annotation": 4211,
+      "time_group": 5678,
+      "time_instance": [
+        19221,
+        19222,
+        32115
+      ]
+  }
+
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/time-group/<int:time_group_id>/time-instance/<int:time_instance_id>!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{DELETE}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PATCH}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PUT}};}
+\nopagebreak[4]
+{\small\begin{verbatim}CRUD endpoint to manipulate time_instance entries. The `time_group_id` and
+`time_instance.time_group_id` must match.
+
+[all]     @param time_group_id          ID of time_group tuple
+          @param time_instance_id       ID of time_instance tuple, ignored for PUT
+
+
+C/PUT     @payload                      application/json
+          @returns                      application/json
+
+Create a new timespan tuple. Optionally takes start, end, comment and
+confidence. Returns the ID of the created tuple.
+
+Exemplary payload for `PUT /time-group/2/time-instance/0`:
+
+  {
+    "start": 1200,
+    "end": 1300,
+    "comment": "New comment",
+    "confidence": "contested"
+  }
+
+
+
+R/GET     @returns                      application/json
+
+Get one time_instance tuple.
+
+Exemplary return value for `GET /time-group/3659/time-instance/3670`:
+
+  {
+    "comment": "new comment",
+    "confidence": "probable",
+    "end": 1299,
+    "id": 3669,
+    "start": null,
+    "time_group_id": 3659
+  }
+
+
+
+U/PATCH   @payload                application/json
+          @returns                204 NO CONTENT
+
+Update the start, end, confidence, or comment fields.
+
+Exemplary payload for `PATCH /time-group/789/time-instance/1000`:
+
+  {
+    "start": 1238,
+    "comment": "Start year now confirmed",
+    "confidence": "probable"
+  }
+
+
+D/DELETE  @returns                application/json
+
+Delete tuple, write `user_action` log, return a JSON with deleted ID.
+
+Exemplary return value for `DELETE /time-group/5678/time-instance/1234`:
+
+  {
+    "deleted": {
+      "time_instance": 1234
+    }
+  }
+
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/uri/external-database-list!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get a list of external databases registered.
+
+@returns            application/json
+
+This returns a list of all external_database tuples in the database as an array.
+
+Example return value excerpt:
+
+    [
+      {
+        "id": 1,
+        "name": "Foo: the foo database",
+        "short_name": "Foo",
+        "url": "http://foo.bar/",
+        "comment": null
+      },
+      ...
+    ]
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/uri/external-person-uri-list!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get a list of external person URIs.
+
+@returns            application/json
+
+Example return value excerpt for `GET /rest/uri/external-person-uri-list`:
+
+    [
+      {
+        "id": 1,
+        "person_id": 12,
+        "uri_namespace_id": 1,
+        "uri_fragment": "27223",
+        "comment": null
+      }
+      ...
+    ]
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/uri/external-person-uri/<int:uri_id>!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{DELETE}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PATCH}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PUT}};}
+\nopagebreak[4]
+{\small\begin{verbatim}CRUD endpoint to manipulate external person URIs.
+
+[all]     @param uri_id           ID of tuple, 0 or `None` for PUT
+
+C/PUT     @payload                application/json
+          @returns                application/json
+
+Create a new person URI tuple.
+
+Required fields: `person_id`, `uri_namespace_id`, `uri_fragment`.
+Optional fields: `comment`.
+
+Returns the ID for the created entity.
+
+Exemplary payload for `PUT /uri/external-person-uri/0`:
+
+  {
+    "person_id": 12,
+    "uri_namespace_id": 1,
+    "uri_fragment": "1234",
+    "comment": "comment"
+  }
+
+
+R/GET     @returns                application/json
+
+Get data for the person URI.
+
+@returns            application/json
+
+Example return value of `GET /uri/external-person-uri/1`:
+
+  {
+    "id": 1,
+    "person_id": 12,
+    "uri_namespace_id": 1,
+    "uri_fragment": "1234",
+    "comment": "comment"
+  }
+
+
+U/PATCH   @payload                application/json
+          @returns                205 RESET CONTENT
+
+Update one or more of the fields `person_id`, `uri_namespace_id`,
+`uri_fragment`, or `comment`.
+
+Exemplary payload for `PATCH /uri/external-person-uri/12345`:
+
+  {
+    "uri_fragment": "1236",
+    "comment": "updated comment..."
+  }
+
+
+D/DELETE  @returns                application/json
+
+Delete the tuple and return the ID of the deleted tuple.
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/uri/external-place-uri/<int:uri_id>!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{DELETE}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PATCH}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{PUT}};}
+\nopagebreak[4]
+{\small\begin{verbatim}CRUD endpoint to manipulate external place URIs.
+
+[all]     @param uri_id           ID of tuple, 0 or `None` for PUT
+
+C/PUT     @payload                application/json
+          @returns                application/json
+
+Create a new place URI tuple.
+
+Required fields: `place_id`, `uri_namespace_id`, `uri_fragment`.
+Optional fields: `comment`.
+
+Returns the ID for the created entity.
+
+Exemplary payload for `PUT /uri/external-place-uri/0`:
+
+  {
+    "place_id": 12,
+    "uri_namespace_id": 1,
+    "uri_fragment": "1234",
+    "comment": "comment"
+  }
+
+
+R/GET     @returns                application/json
+
+Get data for the place URI.
+
+@returns            application/json
+
+Example return value of `GET /uri/external-place-uri/1`:
+
+  {
+    "id": 1,
+    "place_id": 12,
+    "uri_namespace_id": 1,
+    "uri_fragment": "1234",
+    "comment": "comment"
+  }
+
+
+U/PATCH   @payload                application/json
+          @returns                205 RESET CONTENT
+
+Update one or more of the fields `place_id`, `uri_namespace_id`,
+`uri_fragment`, or `comment`.
+
+Exemplary payload for `PATCH /uri/external-place-uri/12345`:
+
+  {
+    "uri_fragment": "1236",
+    "comment": "updated comment..."
+  }
+
+
+D/DELETE  @returns                application/json
+
+Delete the tuple and return the ID of the deleted tuple.
+\end{verbatim}}
+\pagebreak[2]{\large\noindent\verb!/rest/uri/uri-namespace-list!\hfill{}\tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{GET}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{HEAD}}; \tikz\node[inner sep=2pt,rounded corners=2pt,draw]{\small\texttt{OPTIONS}};}
+\nopagebreak[4]
+{\small\begin{verbatim}Get a list of URI namespaces registered.
+
+@returns            application/json
+
+This returns a list of all uri_namespace tuples in the database as an array.
+
+Example return value excerpt:
+
+    [
+      {
+        "id": 1,
+        "external_database_id", 1,
+        "uri_pattern": "https://first.db/place/%s",
+        "short_name": "first:%s",
+        "comment": null
+      }
+      ...
+    ]
+\end{verbatim}}
+\pagebreak[2]

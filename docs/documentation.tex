@@ -27,6 +27,7 @@
 \usetikzlibrary{arrows.meta}
 \usetikzlibrary{positioning}
 \usetikzlibrary{calc}
+\usepackage{forest}
 
 \addbibresource{bibliography.bib}
 
@@ -40,8 +41,6 @@
   \protected@write \@auxout {}{\string \newlabel {#1@cref}{{[figure][\thefigure][]\thefigure#2}{[1][\thepage][]\thepage}}}
 }
 \makeatother
-
-\setcounter{secnumdepth}{3}
 
 \lstdefinelanguage{html5}{
   language=html,
@@ -66,6 +65,12 @@
 \floatname{lstfloat}{Listing}
 \def\lstfloatautorefname{Listing}
 \crefalias{lstfloat}{listing}
+
+\setcounter{secnumdepth}{3}
+\counterwithout{footnote}{chapter}
+\counterwithout{figure}{chapter}
+\counterwithout{table}{chapter}
+\counterwithout{lstfloat}{chapter}
 
 \begin{document}
 
@@ -101,5 +106,8 @@ Germany }}
 \input{content/frontend}
 
 \printbibliography
+
+\appendix
+\input{content/rest-api-endpoints}
 
 \end{document}
