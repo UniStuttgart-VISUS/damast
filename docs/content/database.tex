@@ -322,9 +322,9 @@ The report contents themselves are stored in four fields.
 These fields are of the datatype \verb!BLOB!, meaning SQLite3 stores them as a bytestring.
 Each of the fields' contents is GZIP-compressed.
 The \verb!filter! field contains the filter and additional metadata that were used for the report generation.
-The format of this is a subset of the visualization state (see~\cref{sec:vis-reproducible}) used for report generation (see~\cref{sec:reporting-filter}).
+The format of this is a subset of the visualization state (see~\cref{sec:vis-reproducible}) used for report generation (see~\cref{sec:report-generation}).
 The content of the HTML report (see~\cref{sec:report-html}) is stored in the \verb!content! field.
-The content of the PDF report, which is produced using \LaTeX{} during report generation (see~\cref{sec:report-latex}), is stored in the \verb!pdf_report! field.
+The content of the PDF report, which is produced using \LaTeX{} during report generation (see~\cref{sec:report-pdf}), is stored in the \verb!pdf_report! field.
 A PDF version of the map shown both in the HTML and PDF reports is stored separately in the \verb!pdf_map! field so it can be included in other documents more easily.
 
 

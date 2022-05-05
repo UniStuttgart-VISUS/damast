@@ -18,8 +18,6 @@
 \usepackage{float}
 \usepackage{metalogo}
 
-\usepackage[textsize=footnotesize,textwidth=0.5in]{todonotes}
-
 \usepackage{pgf}
 \usepackage{pgfmath}
 \usepackage{tikz}
@@ -31,8 +29,7 @@
 
 \addbibresource{bibliography.bib}
 
-\begingroup\makeatletter\endlinechar=\m@ne\everyeof{\noexpand}
-\edef\x{\endgroup\def\noexpand\versionstring{\@@input|"git describe --tags" }}\x
+\def\versionstring{v1.1.3}
 
 \makeatletter
 \newcommand{\customlabel}[2]{%

@@ -16,5 +16,3 @@ This directory contains the code for creating a PDF describing the server infras
 ## [`documentation.tex`](./documentation.tex)
 
 The source file for generating the documentation PDF.
-See the [`Makefile`](./Makefile) for build instructions.
-In future, a built PDF documentation will be checked into the repository, but as of now, the documentation is incomplete and work in progress.
