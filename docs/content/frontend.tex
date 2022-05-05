@@ -1235,7 +1235,77 @@ Two additional buttons in the top left corner make filtering more convenient:
 
 \section{GeoDB-Editor}
 
-\todo[inline]{todo}
+The GeoDB-Editor is a tabular data entry interface for data entry into the PostgreSQL database.
+Not all, but the most commonly edited tables, are represented here.
+The GeoDB-Editor is split into two pages, one for place-related tables, one for person-related tables.
+
+\begin{figure}[tb]
+  \centering
+  \begin{forest}
+    for tree={
+      font=\small\ttfamily,
+      grow'=0,
+      child anchor=west,
+      parent anchor=south,
+      anchor=west,
+      calign=first,
+      inner sep=2pt,
+      s sep=4pt,
+      edge path={
+        \noexpand\path [draw, \forestoption{edge}]
+        (!u.south west) +(7.5pt,0) |- (.child anchor)\forestoption{edge label};
+      },
+      before typesetting nodes={
+        if n=1
+        {insert before={[,phantom]}}
+        {}
+      },
+      fit=band,
+      before computing xy={l=15pt},
+    }
+    [\textit{2 Pages}
+      [place
+        [name\_var]
+        [external\_place\_uri]
+        [evidence
+          [time\_instance]
+          [source\_instance]
+        ]
+      ]
+      [person
+       [external\_person\_uri]
+      ]
+    ]
+  \end{forest}
+
+  \caption{Hierarchical dependence of table editors in the GeoDB-Editor.}
+  \label{fig:geodb-tables}
+\end{figure}
+
+The tables are hierarchically connected as shown in \cref{fig:geodb-tables}:
+A row in each table can be \emph{selected,} which is indicated by a hand symbol at the start of the row.
+All tables hierarchically dependent on that table will then show entries for that selected row.
+For example, selecting place $P$ in the place table will only show external place URIs, alternative names, and evidences for $P$.
+Selecting the first evidence $E$ in that table then shows the time instances and source instances for $E$ in the respective tables.
+For the evidence table, a \verb!place_instance! entry implicitly exists that links the evidence to the place, and columns from the \verb!place_instance!, \verb!religion_instance!, and \verb!person_instance! tables are shown directly in the evidence table.
+
+Columns with text type can be edited as text.
+Columns that reference foreign keys (e.g., religions in the evidence table) or enums (e.g., levels of confidence) will show a drop-down menu instead.
+Changes in a row are indicated by a light green background.
+Clicking the save (floppy disk) icon at the end of the row persists the changes to the database.
+Clicking the revert (left-pointing curved arrow) icon at the end of the row reverts the row contents to the database state.
+Clicking the delete (trash can) icon at the end of the row deletes the row from the database.
+
+The column order can be changed by drag and drop in the column header.
+Here, some columns also allow to filter, and to sort.
+At the top of each table, the columns shown can be toggled individually.
+The currently visible rows can also be downloaded as CSV, and the table filters cleared.
+
+A last button at the top allows to create a new entry.
+If the table is dependent, the respective foreign key references are implicitly added.
+The new row will appear at the top of the table, have a yellow background, and have the word \enquote{NEW} in the ID column.
+The delete button at the end is also replaced by a cancel button (striked-through circle), and the save button by an upload button (cloud with arrow pointing upwards).
+For deletion, reverting changes, and switching entry when there are changes in depending tables, a confimation dialog is shown first.
 
 \section{Annotator}
 \label{sec:annotator}
