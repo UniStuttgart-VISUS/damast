@@ -4,7 +4,8 @@
 
 Incorporated the new home page design and contents. Fix an issue where
 Ghostery popup blocker would hide the cookie dialog, but not the
-background.
+background. Fix an issue where the cookie dialog would not work properly in
+the visualization. Add an extensive documentation PDF.
 
 
 2022-05-03                                                           v1.1.2

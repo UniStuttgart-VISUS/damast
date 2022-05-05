@@ -16,6 +16,59 @@ app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 @app.route('/person-instance/<int:person_instance_id>', methods=['GET', 'PUT', 'PATCH', 'DELETE'], role='user')
 @rest_endpoint
 def modify_person_instance(cursor, person_instance_id):
+    '''
+    CRUD endpoint to manipulate person instances.
+
+    [all]     @param person_instance_id      ID of person instance, 0 or `None` for PUT
+
+    C/PUT     @payload                application/json
+              @returns                application/json
+
+    Create a new person instance. `person_id` is a required field.
+    `confidence`, `comment`, and `annotation_id` are optional. Returns the ID
+    for the created person instance.
+
+    Exemplary payload for `PUT /person-instance/0`:
+
+      {
+        "person_id": 12,
+        "confidence": "certain",
+        "comment": "foo bar"
+      }
+
+
+    R/GET     @returns                application/json
+
+    Get one person instance.
+
+    Exemplary reply for `GET /person-instance/64`:
+
+      {
+          "id": 64,
+          "confidence": "certain",
+          "comment": "baz",
+          "annotation_id": null
+      }
+
+
+    U/PATCH   @payload                application/json
+              @returns                application/json
+
+    Update one or more of the fields `person_id`, `comment`, `confidence`, or
+    `annotation_id`.
+
+    Exemplary payload for `PATCH /person-instance/12345`:
+
+      {
+        "comment": "updated comment...",
+      }
+
+
+    D/DELETE  @returns                application/json
+
+    Delete person instance. Write `user_action` log, return a JSON with all
+    deleted IDs.
+    '''
     if flask.request.method == 'PUT':
         return put_person_instance(cursor)
     else:

@@ -1,8 +1,0 @@
-*.aux
-*.fdb_latexmk
-*.fls
-*.log
-*.pdf
-*.fls
-/schema.sql
-

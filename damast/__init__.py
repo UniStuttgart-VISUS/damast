@@ -33,6 +33,5 @@ def create_app():
         from . import uri
         uri.app.register(app, url_prefix='/')
 
-
     return app
 
