@@ -15,6 +15,59 @@ app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 @app.route('/place-instance/<int:place_instance_id>', methods=['GET', 'PUT', 'PATCH', 'DELETE'], role='user')
 @rest_endpoint
 def modify_place_instance(cursor, place_instance_id):
+    '''
+    CRUD endpoint to manipulate place instances.
+
+    [all]     @param place_instance_id      ID of place instance, 0 or `None` for PUT
+
+    C/PUT     @payload                application/json
+              @returns                application/json
+
+    Create a new place instance. `place_id` is a required field.
+    `confidence`, `comment`, and `annotation_id` are optional. Returns the ID
+    for the created place instance.
+
+    Exemplary payload for `PUT /place-instance/0`:
+
+      {
+        "place_id": 12,
+        "confidence": "certain",
+        "comment": "foo bar"
+      }
+
+
+    R/GET     @returns                application/json
+
+    Get one place instance.
+
+    Exemplary reply for `GET /place-instance/64`:
+
+      {
+          "id": 64,
+          "confidence": "certain",
+          "comment": "baz",
+          "annotation_id": null
+      }
+
+
+    U/PATCH   @payload                application/json
+              @returns                application/json
+
+    Update one or more of the fields `place_id`, `comment`, `confidence`, or
+    `annotation_id`.
+
+    Exemplary payload for `PATCH /place-instance/12345`:
+
+      {
+        "comment": "updated comment...",
+      }
+
+
+    D/DELETE  @returns                application/json
+
+    Delete place instance. Write `user_action` log, return a JSON with all
+    deleted IDs.
+    '''
     if flask.request.method == 'PUT':
         return put_place_instance(cursor)
     else:

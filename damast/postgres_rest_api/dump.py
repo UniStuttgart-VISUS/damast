@@ -11,6 +11,15 @@ app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 
 @app.route('/', role='user')
 def dump():
+    '''
+    Get a database dump of the PostgreSQL database.
+
+    @returns application/sql
+
+    This dumps the database and returns the SQL. If the user requesting it is
+    an administrator, the entire database is dumped, including the user and
+    provenance tables.
+    '''
     if flask.current_app.auth.current_user().visitor:
         raise werkzeug.exceptions.Unauthorized()
 

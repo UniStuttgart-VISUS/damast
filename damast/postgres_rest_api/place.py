@@ -25,6 +25,21 @@ def place_data_all(c):
     Get content of table `place` as a list of dicts.
 
     @return     application/json
+
+    Example return value excerpt:
+
+        [
+          {
+            "comment": "Unknown place",
+            "confidence": null,
+            "geoloc": null,
+            "id": 448,
+            "name": "Dirigh",
+            "place_type_id": 4,
+            "visible": true
+          },
+          ...
+        ]
     '''
     c.execute('select * from place;')
 
@@ -323,7 +338,19 @@ where
 @rest_endpoint
 def get_place_evidence_ids(c, place_id):
     '''
-    Get all evidence tuple IDs form place with ID `place_id`.
+    Get all evidence tuple IDs for the place with ID `place_id`.
+
+    @returns application/json
+
+    Example return value exerpt for `/place/12/evidence-ids`:
+
+      [
+        1,
+        5,
+        12,
+        191,
+        ...
+      ]
     '''
     # check if place exists
     count = c.one('select count(*) from place where id = %(place_id)s;', place_id=place_id)
@@ -771,6 +798,36 @@ def get_place_list_detailed(c):
     Get a list of places, with more details.
 
     @returns            application/json
+
+    Example return value excerpt:
+
+        [
+          {
+            "external_uris": [
+              "IndAnat:37356",
+              "https://nisanyanmap.com/?yer=37356",
+              "syriaca:285",
+              "https://syriaca.org/place/285",
+              "EI2:SIM_0749",
+              "http://dx.doi.org/10.1163/1573-3912_islam_SIM_0749",
+              "EI1:SIM_0872",
+              "http://dx.doi.org/10.1163/2214-871X_ei1_SIM_0872",
+              "EI3:COM_23768",
+              "http://dx.doi.org/10.1163/1573-3912_ei3_COM_23768"
+            ],
+            "name_vars": [
+              "Arzun, Arzon",
+              "Arz\u016bn, Arz\u014dn",
+              "\u0627\u0631\u0632\u0646",
+              "Arzan",
+              "\u0710\u072a\u0719\u0718\u0722"
+            ],
+            "place_comment": "There are two Arzan. [...]",
+            "place_id": 36,
+            "place_name": "Arzan"
+          },
+          ...
+        ]
     '''
     c.execute('''SELECT
     P.id AS place_id,
