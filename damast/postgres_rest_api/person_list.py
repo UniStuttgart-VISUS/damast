@@ -15,6 +15,19 @@ def person_list(cursor):
     Get content of table `person` as a list of dicts.
 
     @return     application/json
+
+    Example return value excerpt:
+
+        [
+          {
+            "comment": null,
+            "id": 23,
+            "name": "John bar Hebraye of Tarsus (appr. 667)",
+            "person_type": 2,
+            "time_range": ""
+          },
+          ...
+        ]
     '''
     cursor.execute('select * from person;')
 

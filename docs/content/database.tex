@@ -1,0 +1,343 @@
+\chapter{Database}
+\label{chapter:database}
+
+The main database is a PostgreSQL 10 database.
+Additionally, the PostGIS plugin is installed into the database.
+An easy way to obtain a base database system into which the schema can just be imported is to use the \verb!postgis/postgis:10-3.1! Docker image.
+
+
+\section{Table Structure}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{postgres/layout.pdf}
+  \caption{%
+    Schematic structure of the PostgreSQL database.
+    The tables are represented by boxes, which in turn are grouped by function.
+    Relationships between tables are indicated by arrows.
+    }
+  \label{fig:db-structure}
+\end{figure}
+
+\Cref{fig:db-structure} shows the schematic structure of the PostgreSQL database.
+Tables are represented as boxes consisting of three parts, with the table name in the first part, the primary key (if it exists) in the second part, and the remaining columns in the third part.
+Foreign key references are indicated by
+\tikz{\path [use as bounding box] (0,0) -- (7mm,2mm); \draw [{Diamond[open]}-{Latex}] (0cm,1mm) -- (0.7cm,1mm);}
+arrows with a diamond at the starting point.
+Weak references are indicated with
+\tikz{\path [use as bounding box] (0,0) -- (7mm,2mm); \draw [{Circle[open]}-{Latex}] (0cm,1mm) -- (0.7cm,1mm);}
+open circles at the starting point, and one-to-many references\footnote{
+  This type of one-to-many references are realized with PostgreSQL arrays, and are weak references.
+  Strong one-to-many references in relational databases are handled via intermediary tables, which is done, for example, with the \texttt{tag\_evidence} or \texttt{time\_group} table (although the latter, and all instance tables, serve additional purposes).
+}
+\tikz{\path [use as bounding box] (0,0) -- (7mm,2mm); \draw [{Rays[n=6,length=1.6mm,width=1.6mm]}-Latex] (0cm,1mm) -- (0.7cm,1mm);}
+are indicated with six rays at the starting point.
+The tables are grouped by function.
+The individual groups and tables are described in more detail in \cref{sec:data-tables,sec:provenance-tables}.
+
+
+\subsection{Data Tables}
+\label{sec:data-tables}
+
+\begin{table}[htb]
+  \centering
+  \caption{Confidence values.}
+  \label{table:confidence-values}
+  \begin{tabular}{@{}rl@{}}
+    \toprule
+    Value & Comment \\
+    \midrule
+    \verb!false! & We know the information is not true. \\
+    \verb!uncertain! & We are mostly convinced that the information is not true. \\
+    \verb!contested! & We are unsure whether the information is true. \\
+    \verb!probable! & We are mostly convinced that the information is true. \\
+    \verb!certain! & We are as sure as one can be with historical information that the information is true. \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[htb]
+  \centering
+  \caption{Aspects of confidence.}
+  \label{table:confidence-aspects}
+  \begin{tabular}{@{}llp{8.5cm}@{}}
+    \toprule
+    Aspect & Table & Description \\
+    \midrule
+    Religion confidence & \verb!religion_instance! & How confident are we that this is the correct religion for the evidence? \\
+    Person confidence & \verb!person_instance! & How confident are we that this is the correct person for the evidence? \\
+    Location confidence & \verb!place! & How confident are we about the geographical location of this place? \\
+    Place attribution confidence & \verb!place_instance! & How confident are we that this is the correct place for the evidence? \\
+    Time confidence & \verb!time_instance! & How confident are we that this is the correct time span for the evidence? \\
+    Interpretation confidence & \verb!evidence! & How confident are we in the general interpretation of this evidence? \\
+    Source confidence & \verb!source_instance! & How confident are we that the information about the evidence we extracted from that source is correct? \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Data types.}
+Most data columns have standard PostgreSQL data types such as \verb!text!, \verb!integer!, or \verb!boolean!.
+Time and text ranges are stored as the PostgreSQL \verb!int4range! type, and geographical locations are stored in the PostgreSQL \verb!point! type.
+To qualify the historical data, most tables also have a \emph{confidence} column, which contains a \verb!NULL!-able confidence value.
+These are stored as an \verb!enum!, the contents of which are explained in \cref{table:confidence-values}.
+For more details on our choice of levels of confidence and the confidence data model, please refer to our 2019 publication\footfullcite{Franke_2019}.
+The aspects of confidence, and where they are stored, are explained in \cref{table:confidence-aspects}.
+To accommodate for unstructured metadata and notes, most tables also have a \verb!NULL!-able \verb!comment! column.
+
+
+\paragraph{Base data.}
+Places, or cities, are stored in the \verb!place! table.
+This contains the primary name for that place, its geographical location, if known, and a boolean flag indicating whether the place should be included in the visualization.
+A place also has a place type (stored in the \verb!place_type! table).
+Place types also have a visibility flag, which affects the visibility of all places with that type in the visualization.
+Alternative names for places are stored as entries in the \verb!name_var! table.
+An alternative name has a primary name, an optional transcription of the name (for example, if the name is in Arabic script), and optionally one or more simplified forms that can be used for full-text search.
+For an alternative name, we also store which language (stored in the \verb!language! table) it is a name in, and whether it is a main form of the name that should be displayed to visitors.
+Persons are stored in the \verb!person! table.
+They have a type (stored in the \verb!person_type! table).
+We also store a time range for persons, which is a free-text field.
+The name combined with the time range must be unique;
+for instance, there can be multiple persons with the name \emph{\enquote{Marcus},} but each must have a different time range; which could, for example, consist of a year range, or a qualifier such as \enquote{the Third.}
+Finally, religions are stored in the \verb!religion! table, with their name, abbreviation, and color used in the visualization.
+Religions are hierarchical, so a religion can optionally reference a parent religion.
+
+
+\paragraph{External URIs.}
+Part of the data collection effort was put into aligning our base data entities with those of other databases for historical data, such as Syriaca.org, the Digital Atlas of the Roman Empire (DARE), or Pleiades.
+Such external databases are stored in the \verb!external_database! table with a long and short name, a URL, and a comment.
+Namespaces for URIs in those databases are then stored in the \verb!uri_namespace! table, with a reference to the external database entry, a name, and a comment.
+The URI namespace entry further contains a \emph{URI pattern,} which is a \verb!printf(3)!-style string with one \verb!%s! placeholder.
+External URI references for places and persons are then stored in the \verb!external_place_uri! and \verb!external_person_uri! tables.
+These reference the respective base datum and the URI namespace the URI is based on, and contain a comment.
+They further contain a \emph{URI fragment}, which is the part of the URI that is represented by the placeholder in the URI namespace entry.
+For example, the place \emph{Edessa} on Syriaca.org\footnote{\url{http://syriaca.org/place/78}} could be represented by a URI namespace with the URI pattern \verb!http://syriaca.org/place/%s! and a external place URI entry with the URI fragment \verb!78!.
+The structuring of these tables means that
+\begin{enumerate*}[label=(\arabic*)]
+  \item an external database can have more than one URI namespace,
+  \item only storing the fragment in the URI references reduces data entry errors, and
+  \item it is easier to update all URIs of a database in case it moves hosts\footnote{%
+      This happened with DARE in 2019, when the old site at \url{http://dare.ht.lu.se} was deactivated and moved to \url{https://dh.gu.se/dare/}.
+      The new site, however, was not as functional.
+      The creator Johan Åhlfeldt then re-hosted everything at \url{https://imperium.ahlfeldt.se}, but all already-entered URIs had to be updated.
+      }.
+\end{enumerate*}
+
+
+\paragraph{Documents and annotations.}
+Historical sources are stored in the \verb!source! table with a long and short version of their name, where the long version is a proper citation.
+A source also has a source type, which is a reference to an entry in the \verb!source_type! table, as well as a default interpretation confidence value, which is suggested for new source instances (see paragraph \enquote{Evidence} on p.~\pageref{par:evidence}).
+Digital versions of sources can be stored in the \verb!document! table.
+A document references its source, has a version number, a comment, content type and content length fields, and the content itself, which is a byte array.
+Documents can be annotated, and these annotations are then stored in the \verb!annotation! table with a reference to the document, the start and end position of the annotation as an \verb!int4range! range, and a comment.
+Annotations are used in evidence parts (see paragraph \enquote{Evidence part data} on p.~\pageref{par:evidence-part-data}), and based on data already in the database, new annotations are suggested (see also~\cref{sec:annotator}).
+These are stored in the \verb!annotation_suggestion! table with some metadata, alongside a \emph{weak reference} to the base datum (place, person, or religion) they refer to.
+The weak reference consists of an ID and a type string, which can be one of \verb!'place'!, \verb!'person'!, or \verb!'religion'!.
+Because recalculating the suggestions is expensive, intermediate hashes that only change if there might be new suggestion results are stored for each document in the \verb!annotation_suggestion_document_state! table, and the annotation suggestions are only recalculated if the calculated hashes do not match the stored ones.
+
+
+\paragraph{Evidence part data.}\label{par:evidence-part-data}
+For each piece of historical evidence, \emph{instances} of the base data are created.
+An instance contains a reference to the respective datum, a confidence value, and a comment.
+Additionally, it may contain a reference to an annotation.
+Instances for places, persons, and religions are stored in the \verb!place_instance!, \verb!person_instance!, and \verb!religion_instance! tables, respectively.
+Time spans are grouped via the \verb!time_group! table, which consists of only an ID column, and an optional reference to an annotation.
+Individual time spans are stored in the \verb!time_instance! table, with a confidence value, a comment, and a reference to the time group.
+The time span itself is stored as an \verb!int4range!; that is, time is stored in years.
+
+
+\paragraph{Evidence.}\label{par:evidence}
+Pieces of historical evidence are stored in the \verb!evidence! table.
+Evidence consists of a time group, a place instance, a religion instance, and optionally a person instance.
+Instances may be part of multiple evidences, which is a typical use case with the annotation system (see~\cref{sec:annotator}), but are often connected to only one evidence.
+Each evidence tuple also has a visibility flag, as well as a confidence value and a comment.
+Evidence tuples can be \emph{tagged} with zero to many tags to categorize them.
+Tags are stored in the \verb!tag! table, with a short name and a comment.
+Evidence is attributed to tags via entries in the \verb!tag_evidence! table.
+Evidence can also be attributed to zero to many sources via the \verb!source_instance! table.
+Each source instance references a source and an evidence and also contains a free-text page reference in the source, the interpretation confidence value for that evidence, and a comment.
+
+
+
+\subsection{Provenance}
+\label{sec:provenance-tables}
+
+For provenance, data edits relating to evidence tuples are recorded in the \verb!user_action! table.
+This stores a reference to the evidence and the type of action (a reference to an entry in the \verb!action_type! table, but typically one of \textsc{Create}, \textsc{Update}, or \textsc{Delete}), alongside a timestamp, a short description of the action, and the old data entry value before the change, if it exists.
+Further, the user that did the change is recorded, which is a reference to an entry in the \verb!users! table.
+This table needs to contain an entry for each user that can log in to the front-end and has the \verb!writedb! role (see also~\cref{sec:user-authentication}).
+
+
+\section{Roles}
+\label{sec:roles}
+
+Each user has a set of roles they are part of.
+Individual Flask endpoints in turn are set to allow a certain set of roles.
+A user is then allowed to use an endpoint if these two sets of roles overlap.
+
+There is a basic \verb!user! role that gives access to basic functionality behind the login, but just being part of that role is not enough if the endpoint wants a more specific role.
+Further, there is a \verb!dev! role for endpoints that are important for developing, but not for users, such as the REST API documentation.
+Finally, there is an \verb!admin! role, which should provide access to \emph{all} endpoints.
+
+For the REST API, there is the distinction between users without REST API access, those that can read, and those that can read and write.
+For this, there are two roles, \verb!readdb! and \verb!writedb!, and a user has either none, only \verb!readdb!, or \verb!readdb! and \verb!writedb!.
+\verb!writedb! provides access to changing endpoints in the REST API, which will modify database state, while \verb!readdb!  allows to query, but not modify.
+In the backend, this is controlled mainly by differentiating HTTP verbs: \verb!GET! requests\footnote{%
+  \texttt{HEAD} requests, which are handled similarly to \texttt{GET} requests by most servers, are also read-only.
+} are read-only, \verb!PATCH!, \verb!PUT! and \verb!DELETE! are writing\footnote{%
+  The default behavior is to distinguish the HTTP verbs that way.
+  However, the method decorator that provides the database cursor and distinguishes between read-only access and writing access (see \texttt{rest\_endpoint} in \texttt{damast/postgres\_rest\_api/decorators.py}) can take an optional argument controlling which verbs are considered read-only.
+  This is used for the \texttt{/rest/find-alternative-names} endpoint, which requires a payload and therefore is a \texttt{POST} request, but can be used with only the \texttt{readdb} role.
+}.
+Read-only users are also passed a read-only cursor to the endpoint code.
+
+For different functionalities of the site, there are more specific roles, where users can just be part of one or a few:
+
+\begin{description}
+  \item[\texttt{annotator}]
+    This role grants the user access to the annotator.
+    The user however requires at least the \verb!readdb! role to be able to see the annotator interface, populated with data, properly, as the annotations and documents are loaded via the REST API.
+    If the user has the \verb!writedb! role as well, they can annotate and modify annotations and evidences.
+  \item[\texttt{geodb}]
+    This role grants the user access to the GeoDB-Editor.
+    Similarly to the annotator, the \verb!readdb! role is required as well to see the contents of the tables, and the \verb!writedb! role is required to make changes.
+  \item[\texttt{pgadmin}]
+    This role is historical from when the pgAdmin4 server was still reverse-proxied behind the Damast server.
+    Now (if there is one on the host system at all), the pgAdmin4 server is reverse-proxied by the web-facing reverse proxy server (e.g., NGINX, see~\cref{fig:structure}).
+    If the user has the \verb!pgadmin! role, a link to \verb!${DAMAST_PROXYPREFIX}/pgadmin/! is shown in the header.
+  \item[\texttt{reporting}]
+    This role grants the user access to the reporting functionality.
+    Because report generation requires database access, the \verb!readdb! role is needed as well.
+    In the report list, users with the \verb!reporting! role can only see the reports they generated themselves\footnote{%
+      The exception here being visitors with the \texttt{reporting} role.
+      Those cannot see the report list, but only have access to a report they know the UUID of.
+    }.
+    Administrators (\verb!admin! role) can see all reports.
+  \item[\texttt{vis}]
+    This role grants the user access to the visualization.
+    To populate the visualization with the data from the database, the \verb!readdb! role is required as well.
+  \item[\texttt{visitor}]
+    This role is given to visitors alongside those in \verb!${DAMAST_VISITOR_ROLES}!, if visitor handling is enabled.
+    There is not yet any use for that role, but it could be used in future to grant visitors access to an endpoint even if they do not have any of the other roles required for it.
+\end{description}
+
+
+\section{Other Databases}
+
+Beside the main PostgreSQL database, two other databases exist for configuration and storage purposes.
+These are SQLite3 database files that are placed in the configuration directory (see~\cref{sec:runtime-configuration}).
+The first is the user database, the second stores reports and their metadata.
+
+
+\subsection{User Database}
+\label{sec:user-database}
+
+\begin{lstfloat}
+  \centering
+  \caption{The database schema of the SQLite3 user database.}
+  \label{lst:userdb}
+
+  \lstset{%
+    basicstyle={\scriptsize\ttfamily},
+    language=SQL,
+    showspaces=false,
+    showstringspaces=false,
+    keywordstyle=\color{blue}\bfseries,
+    ndkeywordstyle=\color{green!40!black}\bfseries,
+    stringstyle=\color{brown!80!black},
+    ndkeywords={TEXT,DATE,DATETIME,BLOB,INTEGER},
+  }
+  \begin{lstlisting}
+CREATE TABLE users (
+  id          TEXT PRIMARY KEY NOT NULL CHECK(id <> 'visitor'),
+  password    TEXT NOT NULL,
+  expires     DATE DEFAULT NULL,
+  roles       TEXT NOT NULL DEFAULT '',
+  comment     TEXT DEFAULT NULL
+);
+  \end{lstlisting}
+\end{lstfloat}
+
+The SQLite3 user database (see~\cref{lst:userdb}) contains only one table, \verb!users!.
+The file is stored in the runtime configuration directory (see~\cref{sec:runtime-configuration}), and its location can be configured using the \verb!DAMAST_USER_FILE! environment variable (\verb!/data/users.db! by default).
+
+Each user is listed here as a separate record, with their user name as the unique \verb!id! field.
+Passwords are stored as \verb!htpasswd(1)! hashes.
+The backend supports SHA256 (\verb!$5$!), SHA512 (\verb!$6$!) and Blowfish \verb!bcrypt! (\verb!$2b$! and \verb!$2y$!) hashes, but \verb!bcrypt! is preferred.
+The user's roles are stored in the \verb!roles! field as comma-separated text (for example, \verb!'user,readdb,vis'!).
+Optionally, each user can have a \verb!comment!.
+
+Account expiry is handled by the \verb!expires! field, where a \verb!YYYY-mm-dd! date string is stored.
+This uses an extension to SQLite3 for the \verb!DATE! column format.
+If the field is empty, the user does not expire.
+If it is filled, the user cannot login from the specified day on, \emph{inclusively.}
+
+
+\subsection{Report Database}
+\label{sec:report-database}
+
+\begin{lstfloat}
+  \centering
+  \caption{The database schema of the SQLite3 report database.}
+  \label{lst:reportdb}
+
+  \lstset{%
+    basicstyle={\scriptsize\ttfamily},
+    language=SQL,
+    showspaces=false,
+    showstringspaces=false,
+    keywordstyle=\color{blue}\bfseries,
+    ndkeywordstyle=\color{green!40!black}\bfseries,
+    stringstyle=\color{brown!80!black},
+    ndkeywords={TEXT,DATE,DATETIME,BLOB,INTEGER},
+  }
+  \begin{lstlisting}
+CREATE TABLE reports (
+  uuid TEXT NOT NULL PRIMARY KEY,
+  user TEXT NOT NULL,
+  started DATETIME NOT NULL,
+  completed DATETIME DEFAULT NULL,
+  report_state TEXT NOT NULL DEFAULT 'started',
+  server_version TEXT NOT NULL,
+  filter BLOB DEFAULT NULL,
+  content BLOB DEFAULT NULL,
+  pdf_map BLOB DEFAULT NULL,
+  pdf_report BLOB DEFAULT NULL,
+  evidence_count INTEGER NOT NULL DEFAULT 0
+);
+  \end{lstlisting}
+\end{lstfloat}
+
+This SQLite3 database (see~\cref{lst:reportdb}) contains the reports and their metadata (see~\cref{sec:reporting}).
+The file is stored in the runtime configuration directory (see~\cref{sec:runtime-configuration}), and its location can be configured using the \verb!DAMAST_REPORT_FILE! environment variable (\verb!/data/reports.db! by default).
+
+The UUID of the report is used as a primary key.
+Regarding metadata, the user provisioning the report, the start time, the (possibly empty) end time, the and server version are stored.
+For the completed report, the number of evidences contained are also stored in the \verb!evidence_count! field.
+
+The state of the report is stored in the \verb!report_state! field.
+When the report has been provisioned and generation is still under way, this is \verb!'started'!.
+If an error occurs during report generation, the value is \verb!'failed'!, otherwise it is \verb!'completed'!.
+
+The report contents themselves are stored in four fields.
+These fields are of the datatype \verb!BLOB!, meaning SQLite3 stores them as a bytestring.
+Each of the fields' contents is GZIP-compressed.
+The \verb!filter! field contains the filter and additional metadata that were used for the report generation.
+The format of this is a subset of the visualization state (see~\cref{sec:vis-reproducible}) used for report generation (see~\cref{sec:report-generation}).
+The content of the HTML report (see~\cref{sec:report-html}) is stored in the \verb!content! field.
+The content of the PDF report, which is produced using \LaTeX{} during report generation (see~\cref{sec:report-pdf}), is stored in the \verb!pdf_report! field.
+A PDF version of the map shown both in the HTML and PDF reports is stored separately in the \verb!pdf_map! field so it can be included in other documents more easily.
+
+
+\section{Backups}
+
+Backups need to be arranged for from outside of the host system.
+The extent of backups depends on how the Damast system is used:
+If only the visualization and reporting functionalities are used, and no data entry is performed, it is not necessary to back up the PostgreSQL database, except for its initial state.
+If data entry is done, regular backups are advised.
+For the PostgreSQL database, \verb!pg_dump(1)! can be used for regular, full dumps of the database, or \verb!pg_rewind(1)! for duplication to a secondary database instance.
+
+If user management is used (as opposed to mainly having visitors without login), backups of the user SQLite3 database (\cref{sec:user-database}) are also advisable, otherwise password changes are lost on data loss.
+Similarly, the report SQLite3 database (\cref{sec:report-database}) should be backed up if persistent reports are wanted.
+For the SQLite3 database, any type of backup can be used that can handle either file system backups or text dumps from databases.
+The other contents of the runtime configuration directory (\cref{sec:runtime-configuration}) need not be regularly backed up.
+However, it is advisable to keep an initial backup of the configuration.

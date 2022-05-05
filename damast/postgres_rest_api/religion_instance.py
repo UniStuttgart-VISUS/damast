@@ -15,6 +15,59 @@ app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 @app.route('/religion-instance/<int:religion_instance_id>', methods=['GET', 'PUT', 'PATCH', 'DELETE'], role='user')
 @rest_endpoint
 def modify_religion_instance(cursor, religion_instance_id):
+    '''
+    CRUD endpoint to manipulate religion instances.
+
+    [all]     @param religion_instance_id      ID of religion instance, 0 or `None` for PUT
+
+    C/PUT     @payload                application/json
+              @returns                application/json
+
+    Create a new religion instance. `religion_id` is a required field.
+    `confidence`, `comment`, and `annotation_id` are optional. Returns the ID
+    for the created religion instance.
+
+    Exemplary payload for `PUT /religion-instance/0`:
+
+      {
+        "religion_id": 12,
+        "confidence": "certain",
+        "comment": "foo bar"
+      }
+
+
+    R/GET     @returns                application/json
+
+    Get one religion instance.
+
+    Exemplary reply for `GET /religion-instance/64`:
+
+      {
+          "id": 64,
+          "confidence": "certain",
+          "comment": "baz",
+          "annotation_id": null
+      }
+
+
+    U/PATCH   @payload                application/json
+              @returns                application/json
+
+    Update one or more of the fields `religion_id`, `comment`, `confidence`, or
+    `annotation_id`.
+
+    Exemplary payload for `PATCH /religion-instance/12345`:
+
+      {
+        "comment": "updated comment...",
+      }
+
+
+    D/DELETE  @returns                application/json
+
+    Delete religion instance. Write `user_action` log, return a JSON with all
+    deleted IDs.
+    '''
     if flask.request.method == 'PUT':
         return put_religion_instance(cursor)
     else:

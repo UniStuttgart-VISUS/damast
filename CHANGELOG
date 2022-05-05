@@ -1,5 +1,13 @@
                                 CHANGELOG
 
+2022-05-05                                                           v1.1.3
+
+Incorporated the new home page design and contents. Fix an issue where
+Ghostery popup blocker would hide the cookie dialog, but not the
+background. Fix an issue where the cookie dialog would not work properly in
+the visualization. Add an extensive documentation PDF.
+
+
 2022-05-03                                                           v1.1.2
 
 Make deploy script more versatile and documented. Use native HTML Dialog

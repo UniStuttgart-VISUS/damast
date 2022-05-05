@@ -53,6 +53,22 @@ def get_religion_list(c):
     Get a list of religion names and IDs.
 
     @returns            application/json
+
+    Example return value excerpt:
+
+        [
+          {
+            "id": 1,
+            "name": "Christianity",
+            "parent_id": null
+          },
+          {
+            "id": 5,
+            "name": "Church of the East",
+            "parent_id": 1
+          },
+          ...
+        ]
     '''
     c.execute('select id, name, parent_id from religion')
     return flask.jsonify(list(map(lambda x: x._asdict(), c.fetchall())))

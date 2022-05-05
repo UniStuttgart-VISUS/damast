@@ -1,0 +1,4 @@
+// fixes that the GoldenLayout views could be resized through the cookie dialog background
+body > .cookies.dialog {
+  z-index: 21;
+}

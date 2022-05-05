@@ -1,0 +1,443 @@
+\chapter{Backend Structure}
+\label{chapter:backend}
+
+The server backend consists of a PostgreSQL database, discussed in \cref{chapter:database}, and a Flask server.
+The rest of this chapter specifies the host system requirements, and the configuration and maintenance of the Flask server.
+
+\section{Server Host Specifications}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{structure/structure.pdf}
+  \caption{%
+    Backend system structure:
+    The Flask server runs in a Docker container, and a single directory from the host system is exposed to the container as a volume.
+    This directory contains configuration and logging files.
+    The PostgreSQL database can be anywhere, but usually runs on the same host as a Docker image.
+    If the Flask server does not manage its own SSL certificates, an nginx server handles incoming HTTP and HTTPS requests as a reverse proxy.
+  }
+  \label{fig:structure}
+\end{figure}
+
+In the usual setup, the PostgreSQL database runs on the same host as the Damast server.
+The host machine should therefore have resources to accommodate both, ideally at least two CPU cores, 8GB of RAM, and 200GB of hard drive space.
+The Damast server is deployed as a Docker image to encapsulate and pin down the dependencies.
+Hence, the host server should have Docker installed, and the Docker daemon running.
+It should be noted that the PostgreSQL server can also be easily set up using Docker, see \cref{chapter:database}.
+The Damast server does not handle SSL encryption, so it is sensible to put a reverse proxy in front of the server which handles SSL, for example nginx.
+
+\subsection{Infrastructure}
+
+\Cref{fig:structure} shows the structure of the backend on the host server.
+Here, running the PostgreSQL server in a Docker container as well is assumed.
+The Damast docker container expects an internal \verb!/data! directory to exist, and to be readable and writable to the \verb!www! user in the container.
+This directory should be mounted to a directory on the host, and contains runtime configuration (\cref{sec:runtime-configuration}), server logs (\cref{sec:logging}), override blueprints (\cref{sec:override-blueprints}), and the user (\cref{sec:user-database}) and report (\cref{sec:report-database}) databases.
+The directory (\verb!/data!) in \cref{fig:structure}) must be readable and writable to the \verb!www! user in the container.
+To facilitate the mapping of the volume and the access rights, this \verb!www! user should also exist on the host system, and the host directory should have the appropriate rights.
+The user ID and group ID of that user on the host system must then be passed to Docker when building the Docker image, using the \verb!USER_ID! and \verb!GROUP_ID! environment variables.
+
+The deploy script (\verb!deploy.sh!) in the repository provides more details on how to create the image.
+The repository also contains the components for the \verb!Dockerfile!, the server run script, the \verb!systemd! service file, and a sample nginx configuration.
+For development, a variant of the Docker image can also be built that mounts the local \verb!damast/! directory into the Docker image.
+This way, the local source files and assets can be used while the dependencies pinned in the Docker image are available.
+This Docker image can be built using the \verb!host.sh! script in the repository with the \verb!-b! flag.
+
+
+\subsection{Runtime Configuration}
+\label{sec:runtime-configuration}
+
+Many aspects of the Damast behavior can be configured.
+Configuration is possible either via environment variables, some of which are already baked into the Docker image.
+These can be supplemented or overwritten by passing values to Docker either with the \verb!--env! flag, or by passing a path to an environment variable file with the \verb!--env-file! argument.
+The sample run script in the repository assumes that a file \verb!docker.env! is present in the runtime configuration directory.
+Configuration values can also be passed via a JSON file, the path to which (in the Damast Docker container) is passed to Damast with the \verb!DAMAST_CONFIG! environment variable.
+\Cref{tab:configuration-variables} lists the configuration options, their environment variables and JSON keys, as well as their default value and description.
+
+\newcommand\configentry[4]{%
+    \parbox[t][][t]{7cm}{%
+      \texttt{#1} \\
+      \ifthenelse{\equal{#2}{}}{---}{\texttt{#2}} \\
+      \ifthenelse{\equal{#3}{}}{\emph{no value}}{\texttt{#3}} \vspace{4pt}%
+      } & \parbox[t][][t]{9.5cm}{%
+        #4 \vspace{4pt}%
+      }}
+
+\afterpage{%
+\begin{longtable}{ll}
+  \caption{Configuration options for Damast.}
+  \label{tab:configuration-variables} \\
+  \toprule[1pt]
+  \endfirsthead
+  \multicolumn{2}{c}%
+  {\tablename\ \thetable\ -- \emph{continued from page \protect{\pageref{tab:configuration-variables}}}} \\
+  \toprule[1pt]
+  \parbox[t][][t]{7cm}{%
+    \bfseries
+    Environment variable \\
+    JSON key \\
+    Default value \vspace{4pt}
+    } & \parbox[t][][t]{9.5cm}{\bfseries Description} \\
+    \midrule[1pt]
+    \endhead
+    \configentry%
+      {DAMAST\_CONFIG}%
+      {-}%
+      {}%
+      {JSON file to load configuration from. All other configuration values in this table can be passed via this file as key-value entries in the root object, where the key is the \enquote{JSON key} column of this table.}
+      \\ \midrule
+    \configentry%
+      {DAMAST\_ENVIRONMENT}%
+      {environment}%
+      {}%
+      {Server environment (\texttt{PRODUCTION}, \texttt{TESTING}, or \texttt{PYTEST}). This decides with which PostgreSQL database to connect (\texttt{ocn}, \texttt{testing}, and \texttt{pytest} (on Docker container) respectively. This is usually set via the Docker image.}
+      \\\midrule
+    \configentry%
+      {DAMAST\_VERSION}%
+      {version}%
+      {}%
+      {Software version. This is usually set via the Docker image.}
+      \\\midrule
+    \configentry%
+      {DAMAST\_USER\_FILE}%
+      {user\_file}%
+      {/data/users.db}%
+      {Path to SQLite3 file with users, passwords, roles.}
+      \\\midrule
+    \configentry%
+      {DAMAST\_REPORT\_FILE}%
+      {report\_file}%
+      {/data/reports.db}%
+      {File to which reports are stored during generation.}
+      \\\midrule
+    \configentry%
+      {DAMAST\_SECRET\_FILE}%
+      {secret\_file}%
+      {}%
+      {File with JWT and app secret keys. These are randomly generated if not passed, but that is impractical for testing with hot reload (user sessions do not persist). For a production server, this should be empty.}
+      \\\midrule
+    \configentry%
+      {DAMAST\_PROXYCOUNT}%
+      {proxycount}%
+      {1}%
+      {How many reverse proxies the server is behind. This is necessary for proper HTTP redirection and cookie paths.}
+      \\\midrule
+    \configentry%
+      {DAMAST\_PROXYPREFIX}%
+      {proxyprefix}%
+      {/}%
+      {Reverse proxy prefix.}
+      \\\midrule
+    \configentry%
+      {DAMAST\_OVERRIDE\_PATH}%
+      {override\_path}%
+      {}%
+      {A directory path under which a \texttt{template/} and \texttt{static/} directory can be placed. Templates within the \texttt{template/} directory will be prioritized over the internal ones. This can be used to provide a different template for a certain page, such as the impressum.}
+      \\\midrule
+    \configentry%
+      {DAMAST\_VISITOR\_ROLES}%
+      {visitor\_roles}%
+      {}%
+      {If not empty, contains a comma-separated list of roles a visitor (not logged-in) to the site will receive, which in turn governs which pages will be available without user account. If the variable does not exist, visitors will only see public pages.}
+      \\\midrule
+    \configentry%
+      {DAMAST\_MAP\_STYLES}%
+      {map\_styles}%
+      {}%
+      {If not empty, a relative filename (under \texttt{/data}) on the Docker filesystem to a JSON with map styles. These will be used in the Leaflet map. If not provided, the default styles will be used.}
+      \\\midrule
+    \configentry%
+      {DAMAST\_REPORT\_EVICTION\_DEFERRAL}%
+      {report\_eviction\_deferral}%
+      {}%
+      {If not empty, the number of days of not being accessed before a reports' contents (HTML, PDF, map) are \emph{evicted.} Evicted reports can always be regenerated from their state and filter JSON. Eviction happens to save space and improve performance on systems where many reports are anticipated. \emph{This should not be activated on systems with changing databases!}}
+      \\\midrule
+    \configentry%
+      {DAMAST\_REPORT\_EVICTION\_MAXSIZE}%
+      {report\_eviction\_maxsize}%
+      {}%
+      {If not empty, the file size in megabytes (MB) of report contents (HTML, PDF, map) above which reports will be evicted. If this is set and the sum of content sizes in the report database \emph{after deferral eviction} is above this number, additional reports are evicted until the sum of sizes is lower than this number. Reports are evicted in ascending order of last access date (the least-recently accessed first). The same rules as above apply.}
+      \\\midrule
+    \configentry%
+      {DAMAST\_ANNOTATION\_SUGGESTION\_REBUILD}%
+      {annotation\_suggestion\_rebuild}%
+      {}%
+      {If not empty, the number of days between annotation suggestion rebuilds. In that case, the suggestions are recreated over night every X days. If empty, the annotation suggestions are never recreated, which might be favorable on a system with a static database.}
+      \\\midrule
+    \configentry%
+      {FLASK\_ACCESS\_LOG}%
+      {access\_log}%
+      {/data/access\_log}%
+      {Path to \texttt{access\_log} (for logging).}
+      \\\midrule
+    \configentry%
+      {FLASK\_ERROR\_LOG}%
+      {error\_log}%
+      {/data/error\_log}%
+      {Path to \texttt{error\_log} (for logging).}
+      \\\midrule
+    \configentry%
+      {DAMAST\_PORT}%
+      {port}%
+      {8000}%
+      {Port at which \texttt{gunicorn} serves the content.\\ \textbf{Note:} This is set via the Dockerfile, and also only used in the Dockerfile.}
+      \\\midrule
+    \configentry%
+      {PGHOST}%
+      {pghost}%
+      {localhost}%
+      {PostgreSQL hostname.}
+      \\\midrule
+    \configentry%
+      {PGPASSWORD}%
+      {pgpassword}%
+      {}%
+      {PostgreSQL password. This is important to set and depends on how the database is set up.}
+      \\\midrule
+    \configentry%
+      {PGPORT}%
+      {pgport}%
+      {5432}%
+      {PostgreSQL port}
+      \\\midrule
+    \configentry%
+      {PGUSER}%
+      {pguser}%
+      {api}%
+      {PostgreSQL user}
+      \\
+    \bottomrule[1pt]
+\end{longtable}
+}
+
+\subsection{Logging}
+\label{sec:logging}
+
+HTTP access to the Flask server is logged to an access log file (\verb!/data/access_log! by default, see \cref{tab:configuration-variables}).
+Server errors and miscellaneous information is logged to an error log file (\verb!/data/error_log! by default).
+Exceptions in the server are also logged here alongside a UUID, and the UUID is displayed in the HTTP response.
+This avoids revealing internal functionalities on errors while still allowing to reconstruct errors from an issue with the UUID or a screenshot of the response.
+Logfiles are rotated daily, and old files (with a \verb!.YYYY-mm-dd! suffix) kept for ten days.
+The access log saves the IP address and user name of the user requesting a resource, and also logs the blueprints handling the response.
+
+
+\section{User Authentication}
+\label{sec:user-authentication}
+
+Users log in using the \verb!login! blueprint.
+On successful login, a JWT token is returned as a cookie, encrypted with the server secret.
+This cookie must be passed with every subsequent HTTP request.
+Hence, at least the \emph{necessary cookies} must be allowed by users to be able to log in.
+
+\paragraph*{Role-based access.}
+Access to all pages is restricted based on roles, not users.
+To be able to successfully make an HTTP request to a certain endpoint, the user's roles and the role's allowed for the endpoint-HTTP verb pairing must overlap.
+For the REST API (\cref{sec:rest-api}), the endpoints also distinguish between reading access (with the \verb!readdb! role, via \verb!GET! requests), and writing access (with the \verb!writedb! role, for \verb!PUT!, \verb!PATCH!, and \verb!DELETE! requests).
+
+\paragraph*{Visitors.}
+\label{sec:visitors}
+A special \emph{visitor role} can be enabled by setting the \verb!DAMAST_VISITOR_ROLES! variable (see~\cref{tab:configuration-variables}).
+If set, this contains a comma-separated list of roles (see~\cref{sec:roles}) that visitors are assigned.
+These cannot contain \verb!writedb!, \verb!dev!, \verb!admin!, or any roles that do not exist.
+If this is enabled, the functionalities allowed to users with the respective roles will also be available to visitors \emph{without logging in.}
+For example, setting \verb!DAMAST_VISITOR_ROLES! to \verb!readdb,user,vis! means that visitors can see the start page, the visual analysis component and the data, as well as some utility pages.
+
+
+\section{Flask Blueprints}
+\label{sec:blueprints}
+
+The different functionalities are split up into separate Flask blueprints.
+Some blueprints, like the REST API (\cref{sec:rest-api}), are hierarchically split up into sub-blueprints (see~\cref{fig:blueprints}).
+
+\begin{figure}[tb]
+  \centering
+  \begin{tikzpicture}
+    \node (left) {%
+      \begin{forest}
+        for tree={
+          font=\small\ttfamily,
+          grow'=0,
+          child anchor=west,
+          parent anchor=south,
+          anchor=west,
+          calign=first,
+          inner sep=2pt,
+          s sep=4pt,
+          edge path={
+            \noexpand\path [draw, \forestoption{edge}]
+            (!u.south west) +(7.5pt,0) |- (.child anchor)\forestoption{edge label};
+          },
+          before typesetting nodes={
+            if n=1
+            {insert before={[,phantom]}}
+            {}
+          },
+          fit=band,
+          before computing xy={l=15pt},
+        }
+        [\textit{Blueprints}
+          [annotator]
+          [annotator-recogito]
+          [base]
+          [compress-response]
+          [docs
+            [annotator]
+            [api-description]
+            [changelog]
+            [index]
+            [license]
+            [schema]
+            [user-log]
+          ]
+          [vis]
+          [geodb\_editor
+            [map-styles]
+          ]
+          [login]
+          [override]
+          [reporting
+            [filters]
+          ]
+          [uri-namespace]
+          [root-app]
+          [uri
+            [place
+              [map-styles]
+            ]
+          ]
+          [vis
+            [map-styles]
+          ]
+        ]
+      \end{forest}%
+    };
+
+    \node[anchor=north west,xshift=1cm] at (left.north east) {%
+      \begin{forest}
+        for tree={
+          font=\small\ttfamily,
+          grow'=0,
+          child anchor=west,
+          parent anchor=south,
+          anchor=west,
+          calign=first,
+          inner sep=2pt,
+          s sep=4pt,
+          edge path={
+            \noexpand\path [draw, \forestoption{edge}]
+            (!u.south west) +(7.5pt,0) |- (.child anchor)\forestoption{edge label};
+          },
+          before typesetting nodes={
+            if n=1
+            {insert before={[,phantom]}}
+            {}
+          },
+          fit=band,
+          before computing xy={l=15pt},
+        }
+        [\textit{Blueprints}
+          [rest-api
+            [annotation]
+            [annotation-suggestion]
+            [confidence]
+            [document]
+            [dump]
+            [evidence]
+            [language]
+            [person]
+            [person-instance]
+            [person-list]
+            [person-type]
+            [place
+              [uri-list]
+            ]
+            [place-instance]
+            [place-set
+              [uri-list]
+            ]
+            [religion]
+            [religion-instance]
+            [source]
+            [tags]
+            [time]
+            [uri
+              [external-database]
+              [external-person-uri]
+              [external-place-uri]
+              [person-uri-list]
+            ]
+          ]
+        ]
+      \end{forest}%
+    };
+  \end{tikzpicture}
+
+  \caption{Hierarchical list of blueprints in Damast.}
+  \label{fig:blueprints}
+\end{figure}
+
+\subsection{Templates}
+\label{sec:templates}
+
+HTML pages are created by Flask from Jinja2 templates\footnote{\url{https://palletsprojects.com/p/jinja/}}.
+Most page templates inherit from a \emph{base template,} which has a header with navigation and user management, a main page area, and a footer with additional links and a copyright statement.
+The visual analysis component does not inherit from the base template, but instead defines a more compact layout without a footer.
+
+
+\subsection{Overriding Templates and Static Files}
+\label{sec:override-blueprints}
+
+When running the server, it might be necessary to override some pages;
+for example, one might want a different home page, or a different impressum.
+The server uses the \verb!DAMAST_OVERRIDE_PATH! environment variable to load such overrides.
+If it is set, the Flask server creates an extra blueprint, and the directory \verb!${DAMAST_OVERRIDE_PATH}/templates/! is added to the Jinja2 template search path with precedence.
+Further, the files in the \verb!${DAMAST_OVERRIDE_PATH}/static/! directory will be served without requiring any authentication under the URL \verb!${DAMAST_PROXYPREFIX}/override/static/<file path>! (use \verb!url_for('override.static', filename='<file path>')! in templates).
+
+Keep in mind that all contents of the static directory will be served without user authentication.
+For details on which paths templates must be put under for proper override, refer to the \verb!template/! directories of the blueprints in the repository.
+For details on how to inherit from the base template, refer to the base template and other, inheriting templates.
+Adding static files while the server is running should work without problems, but templates are not hot-loaded in production systems, so the server needs to be restarted if the templates change.
+
+\paragraph*{Overriding the Start Page Background Image}
+\label{par:overriding-start-page-bg-image}
+The background image intended for the default start page cannot be put in the repository.
+Hence, to use it, or a custom background image visible behind the content, the following instructions must be followed:
+The background image can be added as an override static file, or referenced via an external URL.
+For the first variant, suppose the image is stored in the override folder in \verb!static/bg.jpg!.
+The contents shown in \cref{lst:bg-image-override} must then be placed in the override folder in \verb!templates/override/background-image-url.html!:
+Alternatively, for an external URL, the contents of the \verb!url()! statement would be the URL of the image (e.g., \verb!url(https://example.org/bg.jpg)!).
+
+\begin{lstfloat}
+  \centering
+  \caption{The contents of \texttt{templates/override/background-image-url.html} when providing a custom background image.}
+  \label{lst:bg-image-override}
+
+  \lstset{%
+    basicstyle={\scriptsize\ttfamily},
+    language=html5,
+    showspaces=false,
+    showstringspaces=false,
+    keywordstyle=\color{blue}\bfseries,
+    ndkeywordstyle=\color{green!40!black}\bfseries,
+    stringstyle=\color{brown!80!black},
+  }
+  \begin{lstlisting}
+  <style>
+    :root {
+      --home-bg-image: url({{ url_for('override.static', filename='bg.jpg') }});
+    }
+  </style>
+  \end{lstlisting}
+\end{lstfloat}
+
+
+\section{REST API}
+\label{sec:rest-api}
+
+The REST API provides access to the data in the PostgreSQL database.
+The API uses JSON as the main data format for communication, and provides CRUD\footnote{Create, read, update, delete.} functionality using the HTTP verbs \verb!PUT!, \verb!GET!, \verb!PATCH!, and \verb!DELETE!.
+Access to the REST API endpoints differentiates between read-only and read-write access, which are controlled by the \verb!readdb! and \verb!writedb! user roles (\cref{sec:roles}).
+
+The API endpoints are generally conservative in the input they accept, and provide feedback on what is wrong in the HTTP response via the status code and response body.
+The endpoints are documented in the respective Python function docstrings.
+The \verb!docs.api-description! blueprint (\cref{sec:blueprints}) collects all endpoints and renders a list with the path, parameters, allowed methods, and docstrings.
+This list is also attached in \cref{appendix:rest-api-endpoints}.

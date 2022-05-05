@@ -29,6 +29,29 @@ def delete_annotation_suggestion(cursor, as_id):
 def document_annotation_suggestion_list(cursor, document_id):
     '''
     REST endpoint to get a list of annotation suggestions associated with a document.
+
+
+    @returns application/json
+
+
+    Exemplary return value except:
+
+      [
+         {
+           "document_id": 3,
+           "entity_id": 772,
+           "id": 830681,
+           "source": [
+             "name"
+           ],
+           "span": [
+             1372645,
+             1372657
+           ],
+           "type": "place"
+         },
+         ...
+      ]
     '''
     if 0 == cursor.one('SELECT COUNT(*) FROM document WHERE id = %s;', (document_id,)):
         raise werkzeug.exceptions.NotFound(F'No document with ID {document_id}.')

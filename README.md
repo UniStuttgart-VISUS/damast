@@ -195,3 +195,20 @@ Keep in mind that all contents of the static directory will be served without us
 For details on which paths templates must be put under for proper override, refer to the `template/` directories of the blueprints in the repository.
 For details on how to inherit from the base template, refer to the [base template](./damast/templates/base.html) and other, inheriting templates.
 Adding static files while the server is running should work without problems, but templates are not hot-loaded in production systems, so the server needs to be restarted if the templates change.
+
+##### Overriding the Start Page Background Image
+
+To use the default start page, but provide a custom background image visible behind the content, the following instructions must be followed:
+The background image can be added as an override static file, or referenced via an external URL.
+For the first variant, suppose the image is stored in the override folder in `static/bg.jpg`.
+The following contents must then be placed in the override folder in `templates/override/background-image-url.html`:
+
+``` html
+<style>
+  :root {
+    --home-bg-image: url({{ url_for('override.static', filename='bg.jpg') }});
+  }
+</style>
+```
+
+Alternatively, for an external URL, the contents of the `url()` statement would be the URL of the image (e.g., `url(https://example.org/bg.jpg)`).

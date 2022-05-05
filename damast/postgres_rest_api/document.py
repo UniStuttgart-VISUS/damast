@@ -15,6 +15,24 @@ app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 def document_list(cursor):
     '''
     GET a list of all documents.
+
+
+    Example return value excerpt:
+
+        [
+          {
+            "comment": "Michael Rabo, Chronography",
+            "content_length": 3012062,
+            "content_type": "text/html;charset=UTF-8",
+            "default_source_confidence": null,
+            "document_version": 1,
+            "id": 3,
+            "source_id": 67,
+            "source_name": "Michael der Syrer; Moosa, Matti (2014): The Syriac ...",
+            "source_type": "Primary source"
+          },
+          ...
+        ]
     '''
     cursor.execute('''SELECT
         D.id,
@@ -43,9 +61,24 @@ def document_metadata(cursor, document_id):
     '''
     CRUD endpoint to get document metadata for a document.
 
+
     GET       @param document_id            ID of document
               @returns                      application/json
 
+
+    Example return value for `/document/3/metadata`:
+
+      {
+        "comment": "Michael Rabo, Chronography",
+        "content_length": 2926379,
+        "content_type": "text/html;charset=UTF-8",
+        "default_source_confidence": null,
+        "document_version": 1,
+        "id": 3,
+        "source_id": 67,
+        "source_name": "Michael der Syrer; Moosa, Matti (2014): The Syriac ...",
+        "source_type": "Primary source"
+      }
     '''
     content = cursor.one('''SELECT
         D.id,
