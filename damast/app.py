@@ -435,6 +435,13 @@ class FlaskApp(flask.Flask):
             # webpack does eval in test mode
             scriptsrc += " 'unsafe-eval'"
 
+        elif flask.request.blueprint == 'vis':
+            # WebAssembly.instantiateStreaming requires this, at least in Chromium
+            #  https://bugs.chromium.org/p/v8/issues/detail?id=7041
+            #  https://bugs.chromium.org/p/chromium/issues/detail?id=915648
+            scriptsrc += " 'wasm-eval'"
+            scriptsrc += " 'wasm-unsafe-eval'"
+
         csps.append(F'script-src {scriptsrc}')
 
         return '; '.join(csps)
