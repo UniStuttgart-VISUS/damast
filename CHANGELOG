@@ -1,5 +1,12 @@
                                 CHANGELOG
 
+2022-05-12                                            1.1.3+hotfix-wasm-csp
+
+Add a CSP that fixes the WASM clustering code not being loaded in newer
+Windows Chromium builds (Edge and Chrome, >=101), and thus the map glyphs
+never appearing in the visualization.
+
+
 2022-05-05                                                           v1.1.3
 
 Incorporated the new home page design and contents. Fix an issue where
