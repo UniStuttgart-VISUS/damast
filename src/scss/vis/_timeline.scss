@@ -22,3 +22,23 @@
   }
 }
 
+tr.highlighted-row {
+  --clr-accent: #ffc63f;
+  color: var(--clr-accent);
+
+  td:first-of-type {
+    position: relative;
+
+    &::before {
+      display: block;
+      position: absolute;
+      content: '';
+      width: 0.7em;
+      height: 0.7em;
+      left: -1em;
+      top: 0.25em;
+      border-radius: 50%;
+      background-color: var(--clr-accent);
+    }
+  }
+}
