@@ -43,7 +43,8 @@
   <em>Note:</em> For this aggregation, all places are treated equally;
   that is, the distribution of religions of place A and place B is combined without taking into account any further aspects of A or B.
 </p>
-<p>
+
+<p id="map-glyph-hovering-tooltip">
   When <em>hovering</em> over a glyph, it loses opacity and the aggregated locations are indicated on the map as small turquoise dots (maybe partially covered by the glyph).
   While hovering, a tooltip is also shown, which provides information on the number of pieces of evidence, of religions, and of places related to the glyph.
   As long as the glyph does not aggregate more than five places, the toponym, geographical coordinates, and more information on the pieces of evidence belonging to that place are provided for each place.
@@ -179,6 +180,7 @@
   The map can be interactively zoomed and panned (i.e., the center of the map is moved).
 </p>
 
+<article id="map-glyph-selection">
 <h4>Selection</h4>
 
 <p>
@@ -191,6 +193,19 @@
   In this case, <em>all</em> of the circles belonging to the glyph are highlighted, even if the linking only refers to part of the evidence.
   For instance, a place from the <em>location list,</em> which only has pieces of evidence of the general religious affiliation <q>Christian</q>, may be selected.
   If this place is aggregated with other places that additionally have, for instance, Islamic pieces of evidence, both the circle with the crescent as well as the one with the cross are highlighted.
+</p>
+</article>
+
+<h4>Link to Place URI Page</h4>
+
+<p>
+  When hovering over a map glyph, more information is shown in a tooltip (cf. {{ full_documentation_link('map-glyph-hovering-tooltip', 'here', true) }}).
+  Normal selection (cf. {{ full_documentation_link('map-glyph-selection', 'above', true) }}) will <em>link</em> the places represented by the glyph in the {{ full_documentation_link('location-list', 'location list view') }}.
+  From there, the place URI page of each place can be opened for more information.
+  It is also possible to go to the place URI pages directly from the map:
+  Holding the shift key down and left-clicking a glyph will directly open the place's URI page if the glyph represents only one place.
+  If it represents more than one place, a dialog window opens on top of the visualization with a list of the place names.
+  Each of the names functions as a link to the respective place URI page.
 </p>
 
 <h4>Geographical Filtering</h4>

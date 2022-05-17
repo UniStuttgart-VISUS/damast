@@ -1,0 +1,11 @@
+{# vim: set filetype=htmldjango #}
+<ul>
+  {% for place in places %}
+  <li>
+    <a href="{{ url_for('uri.place.get_place', place_id=place.id) }}" target="_blank">{{ place.name }}</a>
+    {% if place.type != 'Unknown' %}
+    <em>({{ place.type }})</em>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>
