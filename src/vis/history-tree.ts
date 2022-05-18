@@ -1,4 +1,5 @@
 import EventTarget, { defineEventAttribute } from 'event-target-shim-es5';
+import { v4 as uuid } from 'uuid';
 
 const emptyState = Symbol('empty interaction state');
 
@@ -14,12 +15,6 @@ interface HistoryTreeEntry {
 
   state: VisualizationState;
 };
-
-// XXX replace by library
-let _idx = 1;
-function uuid(): string {
-  return `${_idx++}`;
-}
 
 export default class HistoryTree extends EventTarget {
   private readonly root: HistoryTreeEntry;
