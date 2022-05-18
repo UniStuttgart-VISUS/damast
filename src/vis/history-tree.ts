@@ -46,7 +46,7 @@ export default class HistoryTree extends EventTarget {
   }
 
   private notifyChanged(): void {
-    this.dispatchEvent(new CustomEvent('change', { detail: this.current.state }));
+    this.dispatchEvent(new CustomEvent('change', { detail: { state: this.current.state, uuid: this.current.uuid } }));
   }
 
   // this is so that ES5 build works with EventTarget shim

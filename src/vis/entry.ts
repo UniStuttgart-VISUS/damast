@@ -110,11 +110,16 @@ if (hash) {
 
 import HistoryTree from './history-tree';
 const h = new HistoryTree('a');
+let uuid = '';
+h.addEventListener('change', (c: CustomEvent<{ uuid: string }>) => {
+  uuid = c.detail.uuid
+  console.log(c, uuid);
+}, { once: true });
 h.pushState('b', 'foo');
 h.pushState('c', 'bar');
 h.back();
 h.forward();
 h.back();
 h.pushState('d', 'baz');
-h.goToEntry('2');
+h.goToEntry(uuid);
 
