@@ -106,3 +106,15 @@ if (hash) {
 } else {
   dataLoader.postMessage({ type: 'load-data' });
 }
+
+
+import HistoryTree from './history-tree';
+const h = new HistoryTree('a');
+h.pushState('b', 'foo');
+h.pushState('c', 'bar');
+h.back();
+h.forward();
+h.back();
+h.pushState('d', 'baz');
+h.goToEntry('2');
+

@@ -32,6 +32,8 @@
     "@types/tabulator-tables": "^4.8.0",
     "d3": "^6.3.0",
     "dom-tree-annotator": "git+ssh://git@github.com:mfranke93/dom-tree-annotator.git#v0.1.1",
+    "event-target-shim": "^6.0.2",
+    "event-target-shim-es5": "^2.0.0",
     "font-awesome": "^4.7.0",
     "golden-layout": "^1.5.9",
     "js-cookie": "^3.0.1",

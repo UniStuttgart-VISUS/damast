@@ -1,6 +1,6 @@
+import EventTarget, { defineEventAttribute } from 'event-target-shim-es5';
 
-
-const emptyState = new Symbol('empty interaction state');
+const emptyState = Symbol('empty interaction state');
 
 type VisualizationState = any;  // XXX move from dataset.ts later
 interface HistoryTreeEntry {
@@ -16,13 +16,13 @@ interface HistoryTreeEntry {
 };
 
 // XXX replace by library
-_idx = 1;
+let _idx = 1;
 function uuid(): string {
   return `${_idx++}`;
 }
 
 export default class HistoryTree extends EventTarget {
-  readonly private root: HistoryTreeEntry;
+  private readonly root: HistoryTreeEntry;
   private current: HistoryTreeEntry;
   private byUuid: Map<string, HistoryTreeEntry>;
   private backStack: HistoryTreeEntry[] = [];
@@ -53,6 +53,10 @@ export default class HistoryTree extends EventTarget {
   private notifyChanged(): void {
     this.dispatchEvent(new CustomEvent('change', { detail: this.current.state }));
   }
+
+  // this is so that ES5 build works with EventTarget shim
+  declare addEventListener: typeof Element.prototype.addEventListener;
+  declare dispatchEvent: typeof Element.prototype.dispatchEvent;
 
   /**
    * Add a new state, which will be a child of the current state.
@@ -85,7 +89,7 @@ export default class HistoryTree extends EventTarget {
     if (this.isRootState()) throw new Error('already at the root state');
 
     this.backStack.push(this.current);
-    this.current = this.current.parent;
+    this.current = this.current.parent as HistoryTreeEntry;
     this.notifyChanged();
   }
 
@@ -124,13 +128,17 @@ export default class HistoryTree extends EventTarget {
   }
 
   private debugPrint(): void {
-    function handle(node: HistoryTreeEntry) {
-      console.log(node.uuid, node.description, node === this.current ? '[current]' : '');
-      console.group();
-      node.children?.forEach(handle);
-      console.groupEnd();
+    const ref = this;
+    let lines = [];
+    function handle(node: HistoryTreeEntry, indent) {
+      lines.push(`${new Array(indent).fill(' ').join('')}${node.uuid} ${node.description} ${node === ref.current ? '[current]' : ''}`);
+      node.children?.forEach(c => handle(c, indent+2));
     }
 
-    handle(this.root);
+    handle(this.root, 0);
+
+    console.log(lines.join('\n'));
   }
 }
+
+defineEventAttribute(HistoryTree.prototype, 'change');
