@@ -80,33 +80,7 @@ export default class SettingsPane {
       if (e.data?.type === 'generate-report') await this.onGenerateReportEvent(e.data);
       if (e.data?.type === 'set-settings-data') await this.onSettingsEvent(e.data);
       if (e.data?.type === 'describe-filters') await this.onFilterDescription(e.data);
-      if (e.data?.type === 'notify-history-tree-changed') this.handleHistoryChanges(e.data);
     });
-
-    // history stuff
-    d3.select('button#vis-history-back')
-      .attr('disabled', '')
-      .on('click', () => {
-        this.data_worker.postMessage({ type: 'history-back', data: null });
-        d3.select('button#vis-history-back').attr('disabled', '');
-        d3.select('button#vis-history-forward').attr('disabled', '');
-      });
-    d3.select('button#vis-history-forward')
-      .attr('disabled', '')
-      .on('click', () => {
-        this.data_worker.postMessage({ type: 'history-forward', data: null });
-        d3.select('button#vis-history-back').attr('disabled', '');
-        d3.select('button#vis-history-forward').attr('disabled', '');
-      });
-  }
-
-  private handleHistoryChanges(eventData: any) {
-    const { canBack, canForward } = eventData.data;
-
-    d3.select('button#vis-history-back')
-      .attr('disabled', canBack ? null : '');
-    d3.select('button#vis-history-forward')
-      .attr('disabled', canForward ? null : '');
   }
 
   private openModal() {

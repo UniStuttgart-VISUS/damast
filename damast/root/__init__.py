@@ -40,6 +40,7 @@ def whoami():
             readdb=('readdb' in u.roles or 'admin' in u.roles),
             writedb=('writedb' in u.roles or 'admin' in u.roles),
             geodb=('geodb' in u.roles or 'admin' in u.roles),
+            dev=('dev' in u.roles),
             visitor=u.visitor,
             )
 

@@ -15,6 +15,13 @@ interface HistoryTreeEntry<T> {
   state: T;
 };
 
+export interface JsonHistoryTree {
+  uuid: string;
+  children: JsonHistoryTree[];
+  created: string;  // JSON cannot contain dates
+  description: string;
+};
+
 export default class HistoryTree<T> extends EventTarget {
   private readonly root: HistoryTreeEntry<T>;
   private current: HistoryTreeEntry<T>;
@@ -86,8 +93,6 @@ export default class HistoryTree<T> extends EventTarget {
     this.backStack.push(this.current);
     this.current = this.current.parent as HistoryTreeEntry<T>;
 
-    console.log('[back]', 'current:', this.current.uuid, 'backStack:', this.backStack.map(d => d.uuid));
-
     this.notifyChanged();
   }
 
@@ -98,7 +103,6 @@ export default class HistoryTree<T> extends EventTarget {
     if (!this.canForward()) throw new Error('no back action to reverse');
 
     this.current = this.backStack.pop();
-    console.log('[forward]', 'current:', this.current.uuid, 'backStack:', this.backStack.map(d => d.uuid));
     this.notifyChanged();
   }
 
@@ -112,6 +116,10 @@ export default class HistoryTree<T> extends EventTarget {
 
   canForward(): boolean {
     return this.backStack.length > 0;
+  }
+
+  fireChange() {
+    this.notifyChanged();
   }
 
   /**
@@ -153,6 +161,17 @@ export default class HistoryTree<T> extends EventTarget {
 
   getCurrentState(): T {
     return this.current.state;
+  }
+
+  getJson(): JsonHistoryTree {
+    const transform = function(node: HistoryTreeEntry<T>): JsonHistoryTree {
+      const children = node.children.map(transform);
+      const created = node.created.toISOString();
+
+      return { uuid: node.uuid, description: node.description, created, children };
+    };
+
+    return transform(this.root);
   }
 }
 

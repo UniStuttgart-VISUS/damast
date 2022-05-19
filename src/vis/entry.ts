@@ -15,6 +15,7 @@ import SettingsPane from './settings-pane';
 import * as modal from './modal';
 import View from './view';
 import {Message} from './message';
+import { HistoryControls } from './history-controls';
 import {createView} from './goldenlayout-util';
 import {getConfig, storeConfig} from './default-layout';
 
@@ -77,6 +78,8 @@ createView(TagsWorker, TagsPane, 'tags', dataLoader, messageReceivers, workerLis
 import MessageWorker from 'worker-loader?filename=[name].js!./message.worker';
 createView(MessageWorker, Message, 'message', dataLoader, messageReceivers, workerListener);
 
+import HistoryWorker from 'worker-loader?filename=[name].js!./history.worker';
+createView(HistoryWorker, HistoryControls, 'history', dataLoader, messageReceivers, workerListener);
 
 layout.registerComponent('settings', (container, _) => {
   const view = new SettingsPane(dataLoader, container, layout);

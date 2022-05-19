@@ -16,6 +16,7 @@ export type MessageDataType =
   | 'set-timeline-port'
   | 'set-tags-port'
   | 'set-message-port'
+  | 'set-history-port'
   | 'set-zoom-level'
   | 'forward-to-data'
   | 'set-filter' | 'clear-filter'

@@ -15,6 +15,7 @@ class FetchWorker extends DataWorker<any> {
   private timelinePort: MessagePort;
   private mapPort: MessagePort;
   private tagsPort: MessagePort;
+  private historyPort: MessagePort;
 
   private data: Dataset;
 
@@ -56,7 +57,9 @@ class FetchWorker extends DataWorker<any> {
       this.tagsPort.onmessage = async (evt) => await this.handleTagsMessage(evt.data);
     } else if (data.type === 'set-message-port') {
       this.messagePort = data.data;
-      //this.messagePort.onmessage = async (evt) => await this.handleReligionMessage(evt.data);
+    } else if (data.type === 'set-history-port') {
+      this.historyPort = data.data;
+      this.historyPort.onmessage = async (evt) => await this.handleHistoryMessage(evt.data);
     } else if (data.type === 'set-show-only-active') {
       this.data.suspendEvents();
 
@@ -95,10 +98,6 @@ class FetchWorker extends DataWorker<any> {
     } else if (data.type === 'generate-report' || data.type === 'describe-filters') {
       const { filters, metadata } = this.data.getState();
       this.sendToMainThread({ type: data.type, data: { filters, metadata } });
-    } else if (data.type === 'history-back') {
-      await this.data.historyBack();
-    } else if (data.type === 'history-forward') {
-      await this.data.historyForward();
     } else {
       throw data.type;
     }
@@ -125,12 +124,17 @@ class FetchWorker extends DataWorker<any> {
     const [ _dataset, _filter ] = await Promise.all([ getDataset(), filterJson ]);
     this.data = _dataset;
     this.data.historyTree.addEventListener('change', () => {
-      this.sendToMainThread({ type: 'notify-history-tree-changed', data: {
-        canBack: this.data.historyTree.canBack(),
-        canForward: this.data.historyTree.canForward(),
-        // TODO: send actual state change
-      }});
+      this.historyPort?.postMessage({
+        type: 'notify-history-tree-changed',
+        target: 'history',
+        data: {
+          canBack: this.data.historyTree.canBack(),
+          canForward: this.data.historyTree.canForward(),
+          tree: this.data.historyTree.getJson(),
+        },
+      });
     });
+    this.data.historyTree.fireChange();
 
     // apply the filter from the report UUID, if present
     if (_filter !== null) await this.data.setState(_filter);
@@ -325,6 +329,18 @@ class FetchWorker extends DataWorker<any> {
       this.sendMessage(data.data);
     } else if (data.type === 'set-filter') {
       this.data.setTagsFilter(data.data);
+    } else {
+      throw data.type;
+    }
+  }
+
+  private async handleHistoryMessage(data: MessageData<any>) {
+    if (data.type === 'history-back') {
+      await this.data.historyBack();
+    } else if (data.type === 'history-forward') {
+      await this.data.historyForward();
+    } else if (data.type === 'history-go-to-state') {
+      console.error(data);
     } else {
       throw data.type;
     }
