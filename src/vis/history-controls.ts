@@ -14,6 +14,8 @@ export class HistoryControls extends View<Data, any> {
   private readonly forwardButton: Selection<HTMLButtonElement, any, any, any>;
   private readonly showGraphButton: Selection<HTMLButtonElement, any, any, any>;
 
+  private cachedHistoryTree: JsonHistoryTree | undefined;
+
   constructor(
     worker: Worker,
     container, any
@@ -48,6 +50,7 @@ export class HistoryControls extends View<Data, any> {
     console.log('HistoryControls::setData', data);
 
     const { canBack, canForward, tree } = data;
+    this.cachedHistoryTree = tree;
 
     this.backButton.attr('disabled', canBack ? null : '');
     this.forwardButton.attr('disabled', canForward ? null : '');
