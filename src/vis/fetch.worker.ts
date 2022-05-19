@@ -28,7 +28,7 @@ class FetchWorker extends DataWorker<any> {
   async handleMainEvent(data: MessageData<any>) {
     if (data.type === 'load-data') {
       await this.reloadData(data);
-      this.data.resumeEvents();
+      this.data.resumeEvents('load-state');
       await this.handleDatasetChange(null);
     } else if (data.type === 'set-religion-port') {
       this.religionPort = data.data;
@@ -90,7 +90,7 @@ class FetchWorker extends DataWorker<any> {
       this.sendToMainThread({ type: 'export-visualization-state', data: filters });
     } else if (data.type === 'import-visualization-state') {
       const filters = data.data;
-      const result = await this.data.setState(filters);
+      const result = await this.data.setState(filters, true);
       this.mapPort?.postMessage({type: 'set-map-state', data: this.data.getMapState()});
       this.sendToMainThread({ type: 'import-visualization-state', data: result });
     } else if (data.type === 'generate-report' || data.type === 'describe-filters') {

@@ -134,6 +134,18 @@ export default class HistoryTree extends EventTarget {
 
     console.log(lines.join('\n'));
   }
+
+  /**
+   * Add a new entry at the root level.
+   */
+  pushStateToRoot(
+    state: VisualizationState,
+    description: string,
+    comment?: string
+  ): void {
+    this.current = this.root;
+    this.pushState(state, description, comment);
+  }
 }
 
 defineEventAttribute(HistoryTree.prototype, 'change');
