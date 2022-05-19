@@ -88,6 +88,7 @@ export interface FilterJson {
 
 export type VisualizationState = Partial<_VisualizationState> & FilterJson;
 export type CompleteVisualizationState = _VisualizationState & FilterJson;
+export type RawVisualizationState = _VisualizationState & Pick<FilterJson, 'filters'>;
 
 export class Dataset {
   private _hierarchy: d3hier.HierarchyNode<T.OwnHierarchyNode>;
@@ -173,7 +174,7 @@ export class Dataset {
   private _user: T.User = { user: null, readdb: false, writedb: false, geodb: false, visitor: true }
   private _server_version: string;
 
-  private historyTree: HistoryTree;
+  readonly historyTree: HistoryTree<RawVisualizationState>;
 
   constructor() {
     this._symbol_lookup = new Map<number, string>();
@@ -186,7 +187,7 @@ export class Dataset {
     this._symbol_lookup.set(97, '#others');
 
     this._brush = new brush.Brush(this);
-    this.historyTree = new HistoryTree(this.getRawVisualizationState());
+    this.historyTree = new HistoryTree<RawVisualizationState>(this.getRawVisualizationState());
   }
 
   async loadData(): Promise<void> {
@@ -399,6 +400,42 @@ export class Dataset {
 
       this.notifyListeners(new Set([changeScope]));
     }
+  }
+
+  /* HISTORY STUFF */
+  async historyBack() {
+    if (!this.historyTree.canBack()) {
+      console.error('cannot go back in history');
+      return;
+    }
+
+    this.historyTree.back();
+    await this.applyCurrentHistoryState();
+  }
+
+  async historyForward() {
+    if (!this.historyTree.canForward()) {
+      console.error('cannot go forward in history');
+      return;
+    }
+
+    this.historyTree.forward();
+    await this.applyCurrentHistoryState();
+  }
+
+  private async applyCurrentHistoryState() {
+    const state: CompleteVisualizationState = {
+      ...this.historyTree.getCurrentState(),
+      metadata: {
+        version: this._server_version,
+        createdBy: this._user.user,
+        createdAt: new Date().toISOString(),
+        source: 'visualization',
+        evidenceCount: 0,
+      },
+    };
+
+    await this.setState(state);
   }
 
 
@@ -979,7 +1016,7 @@ export class Dataset {
     return this._user;
   }
 
-  private getRawVisualizationState(): _VisualizationState & { filters: ExportableFilters } {
+  private getRawVisualizationState(): RawVisualizationState {
     return {
       ["show-filtered"]: this._brush_only_active,
       ["display-mode"]: (this._display_mode === T.DisplayMode.Religion) ? 'religion' : 'confidence',
@@ -1078,7 +1115,7 @@ export class Dataset {
       this._queuedStateChangeDescriptions.push('');
     }
 
-    if (isLoad) this._firstMapMoveAfterStateLoad = true;
+    this._firstMapMoveAfterStateLoad = true;
     this.resumeEvents(isLoad ? 'load-state' : 'set-state');
 
     return retval;
@@ -1086,6 +1123,10 @@ export class Dataset {
 
   // avoid adding a change event because the map sends a move event after load anyways
   private _firstMapMoveAfterStateLoad: boolean = false;
+  disableFirstMapStateEvent() {
+    this._firstMapMoveAfterStateLoad = true;
+  }
+
   setMapState(map_state: T.MapState) {
     this._map_state = map_state;
 

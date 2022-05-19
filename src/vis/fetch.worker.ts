@@ -91,11 +91,14 @@ class FetchWorker extends DataWorker<any> {
     } else if (data.type === 'import-visualization-state') {
       const filters = data.data;
       const result = await this.data.setState(filters, true);
-      this.mapPort?.postMessage({type: 'set-map-state', data: this.data.getMapState()});
       this.sendToMainThread({ type: 'import-visualization-state', data: result });
     } else if (data.type === 'generate-report' || data.type === 'describe-filters') {
       const { filters, metadata } = this.data.getState();
       this.sendToMainThread({ type: data.type, data: { filters, metadata } });
+    } else if (data.type === 'history-back') {
+      await this.data.historyBack();
+    } else if (data.type === 'history-forward') {
+      await this.data.historyForward();
     } else {
       throw data.type;
     }
@@ -121,6 +124,14 @@ class FetchWorker extends DataWorker<any> {
 
     const [ _dataset, _filter ] = await Promise.all([ getDataset(), filterJson ]);
     this.data = _dataset;
+    this.data.disableFirstMapStateEvent();
+    this.data.historyTree.addEventListener('change', () => {
+      this.sendToMainThread({ type: 'notify-history-tree-changed', data: {
+        canBack: this.data.historyTree.canBack(),
+        canForward: this.data.historyTree.canForward(),
+        // TODO: send actual state change
+      }});
+    });
 
     // apply the filter from the report UUID, if present
     if (_filter !== null) await this.data.setState(_filter);
@@ -390,6 +401,8 @@ class FetchWorker extends DataWorker<any> {
   }
 
   private async sendMapData(data, religion_order) {
+    this.mapPort?.postMessage({type: 'set-map-state', data: this.data.getMapState()});
+
     const parent_religions = {};
     this.data.ultimate_parent.forEach((v, k) => parent_religions[k] = v);
 

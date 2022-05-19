@@ -2,14 +2,18 @@
 
 header {
   font-size: 0.7rem;
-}
 
-header button.link {
-  font-size: inherit;
-}
+  button.link {
+    font-size: inherit;
+  }
 
-header .messages {
-  margin-right: 1rem;
+  .messages {
+    margin-right: 1rem;
+  }
+
+  .history-buttons {
+    margin-inline: 1rem;
+  }
 }
 
 div.messages {

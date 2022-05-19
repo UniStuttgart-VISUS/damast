@@ -30,6 +30,12 @@ export type MessageDataType =
   | 'generate-report'
   | 'describe-filters'
   | 'set-source-sort-mode'
+
+  // history stuff
+  | 'notify-history-tree-changed'
+  | 'history-back'
+  | 'history-forward'
+  | 'history-go-to-state'
   ;
 
 export interface MessageData<T> {

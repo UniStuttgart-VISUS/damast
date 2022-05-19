@@ -46,6 +46,22 @@
           </li>
         </ul>
       </nav>
+      <span id="vis-history-buttons" class="history-buttons">
+        <button
+            class="button"
+            id="vis-history-back"
+            title="Undo last interaction"
+            disabled>
+          <i class="fa fa-fw fa-lg fa-undo"></i>
+        </button>
+        <button
+            class="button"
+            id="vis-history-forward"
+            title="Redo last undone interaction"
+            disabled>
+          <i class="fa fa-fw fa-lg fa-repeat"></i>
+        </button>
+      </span>
       <span id="messages" class="messages"></span>
       {%- from 'user_bar.html' import user_bar -%}
       {{ user_bar(user, button_class='button--small') }}
