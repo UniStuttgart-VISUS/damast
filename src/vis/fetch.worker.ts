@@ -124,7 +124,6 @@ class FetchWorker extends DataWorker<any> {
 
     const [ _dataset, _filter ] = await Promise.all([ getDataset(), filterJson ]);
     this.data = _dataset;
-    this.data.disableFirstMapStateEvent();
     this.data.historyTree.addEventListener('change', () => {
       this.sendToMainThread({ type: 'notify-history-tree-changed', data: {
         canBack: this.data.historyTree.canBack(),

@@ -45,6 +45,8 @@ export default class MapPane extends View<any, Set<number> | null> {
   private readonly tooltipManager = new TooltipManager(500);
   private setupState: Promise<void>;
 
+  private readonly onmoveend = () => this.transmitMapStateToData();
+
   constructor(worker: Worker, container: GoldenLayout.Container) {
     super(worker, container, 'map');
 
@@ -58,7 +60,16 @@ export default class MapPane extends View<any, Set<number> | null> {
 
     container.on('resize', this.onresize.bind(this));
     this.worker.addEventListener('message', ({data}: {data: MessageData<any>}) => {
-      if (data.type === 'set-map-state') this.setMapState(data.data);
+      if (data.type === 'set-map-state') {
+        // set from outside, so no need to transmit back mapmove
+        // map.setView will also fire moveend once, so ignore the first one emitted
+        this.map.off('moveend', this.onmoveend);
+        this.map.once('moveend', () => {
+          this.map.on('moveend', this.onmoveend);
+        });
+
+        this.setMapState(data.data);
+      }
     });
   }
 
@@ -217,7 +228,7 @@ export default class MapPane extends View<any, Set<number> | null> {
     this.map.on('resize', this.onresize.bind(this));
     this.map.on('move', this.onmove.bind(this));
     this.map.on('click', this.onclick.bind(this));
-    this.map.on('moveend', () => this.transmitMapStateToData());
+    this.map.on('moveend', this.onmoveend);
     this.map.on('baselayerchange', (x: {layer}) => {
       this.setMapStyle(x.layer.options.id)
 

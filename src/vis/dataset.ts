@@ -1115,16 +1115,9 @@ export class Dataset {
       this._queuedStateChangeDescriptions.push('');
     }
 
-    this._firstMapMoveAfterStateLoad = true;
     this.resumeEvents(isLoad ? 'load-state' : 'set-state');
 
     return retval;
-  }
-
-  // avoid adding a change event because the map sends a move event after load anyways
-  private _firstMapMoveAfterStateLoad: boolean = false;
-  disableFirstMapStateEvent() {
-    this._firstMapMoveAfterStateLoad = true;
   }
 
   setMapState(map_state: T.MapState) {
@@ -1133,11 +1126,7 @@ export class Dataset {
     if (this._is_paused) {
       this._queuedStateChangeDescriptions.push('moved map');
     } else {
-      if (this._firstMapMoveAfterStateLoad) {
-        this._firstMapMoveAfterStateLoad = false;
-      } else {
-        this.historyTree.pushState(this.getRawVisualizationState(), 'moved map');
-      }
+      this.historyTree.pushState(this.getRawVisualizationState(), 'moved map');
     }
   }
 
