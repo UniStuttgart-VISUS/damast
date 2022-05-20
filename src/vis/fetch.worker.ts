@@ -123,7 +123,7 @@ class FetchWorker extends DataWorker<any> {
 
     const [ _dataset, _filter ] = await Promise.all([ getDataset(), filterJson ]);
     this.data = _dataset;
-    this.data.historyTree.addEventListener('change', () => {
+    this.data.historyTree.addEventListener('change', (e: CustomEvent<{ uuid: string }>) => {
       this.historyPort?.postMessage({
         type: 'notify-history-tree-changed',
         target: 'history',
@@ -131,6 +131,7 @@ class FetchWorker extends DataWorker<any> {
           canBack: this.data.historyTree.canBack(),
           canForward: this.data.historyTree.canForward(),
           tree: this.data.historyTree.getJson(),
+          currentStateUuid: e.detail.uuid,
         },
       });
     });

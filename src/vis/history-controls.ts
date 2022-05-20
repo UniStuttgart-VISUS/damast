@@ -2,7 +2,7 @@ import { select } from 'd3-selection';
 import type { Selection } from 'd3-selection';
 import { hierarchy } from 'd3-hierarchy';
 import type { HierarchyNode } from 'd3-hierarchy';
-import { scaleBand } from 'd3-scale';
+import { scaleBand, scaleLinear } from 'd3-scale';
 import { range } from 'd3-array';
 import View from './view';
 import type { JsonHistoryTree } from './history-tree';
@@ -12,6 +12,7 @@ export interface Data {
   canBack: boolean;
   canForward: boolean;
   tree: any;
+  currentStateUuid: string;
 };
 
 interface IndentedTreeProps {
@@ -28,6 +29,7 @@ export class HistoryControls extends View<Data, never> {
   private dialog: Selection<HTMLDialogElement, any, any, any> = select<HTMLDialogElement, any>('.dummy');
 
   private cachedHistoryTree: JsonHistoryTree | undefined;
+  private cachedCurrentStateUuid: string = '';
 
   constructor(
     worker: Worker,
@@ -76,6 +78,7 @@ export class HistoryControls extends View<Data, never> {
 
     const { canBack, canForward, tree } = data;
     this.cachedHistoryTree = tree;
+    this.cachedCurrentStateUuid = data.currentStateUuid;
 
     this.backButton.attr('disabled', canBack ? null : '');
     this.forwardButton.attr('disabled', canForward ? null : '');
@@ -135,40 +138,87 @@ export class HistoryControls extends View<Data, never> {
     const hierarchyHeight = layoutTree(hier);
     const hierarchyDepth = hier.height + 1;
     const nodeHeight = 50;
+    const nodePadding = 20;
+    const nodeRadius = nodeHeight/2;
     const svgWidth = 600;
-    const svgHeight = hierarchyHeight * nodeHeight;
+    const svgHeight = hierarchyHeight * nodeHeight + (hierarchyHeight - 1) * nodePadding;
+    const nodeWidth = (svgWidth - (hierarchyDepth - 1) * nodePadding) / hierarchyDepth;
 
     const svg = foreground.selectAll('svg')
       .data([null])
       .join('svg')
-        .attr('width', svgWidth)
-        .attr('height', svgHeight)
+        .attr('width', svgWidth + 4)
+        .attr('height', svgHeight + 4)
+        .attr('viewBox', `-2 -2 ${svgWidth + 4} ${svgHeight + 4}`)
         .style('margin', '1em');
 
-    const scaleX = scaleBand<number>()
-      .paddingOuter(0)
-      .paddingInner(0.2)
-      .domain(range(hierarchyDepth))
+    const scaleX = scaleLinear()
+      .domain([0, hierarchyDepth])
       .range([0, svgWidth]);
-    const scaleY = scaleBand<number>()
-      .paddingOuter(0)
-      .paddingInner(0.2)
-      .domain(range(hierarchyHeight))
+    const scaleY = scaleLinear()
+      .domain([0, hierarchyHeight])
       .range([0, svgHeight]);
 
-    const nodeWidth = 0;
-    svg.selectAll<SVGRectElement, IndentedHierarchyNode>('rect')
-      .data(hier.descendants(), d => d.data.uuid)
-      .join('rect')
-        .attr('x', d => scaleX(d.indent ?? 0))
-        .attr('y', d => scaleY(d.row ?? 0))
-        .attr('width', scaleX.bandwidth())
-        .attr('height', scaleY.bandwidth())
-        .attr('fill', 'hotpink')
-        .selectAll('title')
-        .data(d => [d])
-        .join('title')
-        .text(d => d.data.uuid);
+    // collect nodes
+    const nodeData = hier.descendants().map(d => {
+      const x0 = scaleX(d.indent ?? 0);
+      const width = nodeWidth;
+      const x1 = x0 + nodeWidth;
+      const y0 = scaleY(d.row ?? 0);
+      const height = nodeHeight;
+      const y1 = y0 + height;
+      const uuid = d.data.uuid;
+      const isCurrent = uuid === this.cachedCurrentStateUuid;
+      const data = d.data;
+
+      return {
+        x0, x1,
+        y0, y1,
+        width, height,
+        isCurrent,
+        uuid,
+        data,
+      };
+    });
+    const nodeLut = new Map<string, typeof nodeData[0]>();
+    nodeData.forEach(d => nodeLut.set(d.uuid, d));
+
+    // collect links
+    const linkData = hier.links().map(({ source, target }) => {
+      const src = nodeLut.get(source.data.uuid);
+      const tgt = nodeLut.get(target.data.uuid);
+      const x0 = src.x0 + 2 * nodeRadius;
+      const y0 = src.y0 + nodeRadius;
+      const x1 = tgt.x0;
+      const y1 = tgt.y0 + nodeRadius;
+      if (source.row === target.row) return `M${x0} ${y0}H${x1}`;
+
+      const x05 = (x0 + x1) / 2;
+      const x2 = x05 - 5;
+      const x3 = x05 + 5;
+      const y2 = y0 + 5;
+      const y3 = y1 - 5;
+
+      return `M${x0} ${y0}H${x2}A5 5 0 0 1 ${x05} ${y2}V${y3}A5 5 90 0 0 ${x3} ${y1}H${x1}`;
+    });
+
+    svg.selectAll('path')
+      .data(linkData)
+      .join('path')
+        .attr('stroke', 'hotpink')
+        .attr('stroke-width', 2)
+        .attr('fill', 'none')
+        .attr('d', d => d);
+
+    svg.selectAll<SVGRectElement, typeof nodeData[0]>('circle')
+      .data(nodeData)
+      .join('circle')
+        .attr('cx', d => d.x0 + nodeRadius)
+        .attr('cy', d => d.y0 + nodeRadius)
+        .attr('r', nodeRadius)
+        .attr('stroke', 'hotpink')
+        .attr('stroke-width', 2)
+        .attr('fill', d => d.isCurrent ? 'hotpink' : 'none');
   }
 };
 
