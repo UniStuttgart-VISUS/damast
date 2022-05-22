@@ -135,6 +135,25 @@ export class HistoryControls extends View<Data, never> {
       .join('div')
         .classed('modal__foreground', true);
 
+    // controls
+    const controlOptions: [string, string, string, Function][] = [
+      ['Clear', 'trash', 'Clear entire history and go to initial state', () => console.log('clear')],
+      ['Prune', 'ellipsis-h', 'Prune other branches from history tree', () => console.log('prune')],
+      ['Prune and condense', 'circle fa-sm', 'Prune other branches from history tree, and condense the current history branch to one state change', () => console.log('prune and condense')],
+    ];
+    const controls = foreground.selectAll<HTMLDivElement, any>('.history-tree-controls')
+      .data([null])
+      .join('div')
+        .classed('history-tree-controls', true)
+      .selectAll<HTMLButtonElement, typeof controlOptions[0]>('button')
+      .data(controlOptions)
+      .join('button')
+        .classed('button', true)
+        .html(d => `<i class="fa fa-fw fa-lg fa-${d[1]}"></i> ${d[0]}`)
+        .attr('title', d => d[2])
+        .on('click', (_, d) => d[3]());
+
+
     // actual stuff
     const hier: IndentedHierarchyNode = hierarchy<JsonHistoryTree>(this.cachedHistoryTree);
     const hierarchyHeight = layoutTree(hier);

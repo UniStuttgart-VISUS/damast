@@ -37,5 +37,14 @@ dialog[data-dialog-role="history tree"] {
         position: absolute;
       }
     }
+
+    .history-tree-controls {
+      display: flex;
+      gap: 1ch;
+
+      margin-block-end: 1em;
+      padding-block-end: 1ex;
+      border-block-end: 1px solid $clr-gray;
+    }
   }
 }
