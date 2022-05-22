@@ -423,6 +423,11 @@ export class Dataset {
     await this.applyCurrentHistoryState();
   }
 
+  async historyGoToState(uuid: string) {
+    this.historyTree.goToEntry(uuid);
+    await this.applyCurrentHistoryState();
+  }
+
   private async applyCurrentHistoryState() {
     const state: CompleteVisualizationState = {
       ...this.historyTree.getCurrentState(),

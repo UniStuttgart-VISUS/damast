@@ -14,6 +14,8 @@ export default class TooltipManager {
   private y: number = 0;
   private tooltipCallback: TooltipCallback = _ => {};
 
+  parentNode: HTMLElement = document.body;
+
   constructor(
     readonly delay: number = 1000,
   ) {
@@ -25,7 +27,7 @@ export default class TooltipManager {
     this.tooltipCallback = creationCallback;
 
     this.timeout_id = setTimeout(() => {
-      this.tooltip = new Tooltip();
+      this.tooltip = new Tooltip(this.parentNode);
       this.tooltip.move({ x: this.x, y: this.y });
 
       this.tooltip.show();
@@ -66,8 +68,8 @@ class Tooltip {
   private _oldpos: Point = {x: -1000, y: -1000};
   private readonly _threshold = Math.pow(5, 2); // 5px
 
-  constructor() {
-    this._root = select<HTMLBodyElement, any>('body')
+  constructor(private parentNode: HTMLElement) {
+    this._root = select<HTMLElement, any>(this.parentNode)
       .append('div')
       .classed('tooltip', true)
       .attr('data-state', 'hidden');
@@ -83,8 +85,8 @@ class Tooltip {
     if (dist_sq < this._threshold) return;
     this._oldpos = p;
 
-    const w = document.documentElement.clientWidth;
-    const h = document.documentElement.clientHeight;
+    const w = this.parentNode.clientWidth;
+    const h = this.parentNode.clientHeight;
 
     const pos: any = {};
 

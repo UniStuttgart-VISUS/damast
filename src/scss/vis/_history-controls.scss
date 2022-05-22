@@ -1,0 +1,41 @@
+@use '../common/colors' as *;
+@use 'variables' as *;
+@use 'filters' as filters;
+
+header .history-buttons {
+  margin-inline: 1rem;
+}
+
+dialog[data-dialog-role="history tree"] {
+  min-width: 600px;
+  max-width: min(960px, 65%);
+
+  // for tooltips
+  overflow: visible;
+
+  .modal__foreground {
+    overflow: auto;
+
+    svg {
+      margin-inline: auto;
+      padding-inline: 2ch;
+
+      --clr-accent: #{$clr-accent};
+      --clr-fg: #{$clr-fg};
+
+      .node-label {
+        font-size: xx-small;
+        color: var(--clr-accent);
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        user-select: none;
+
+        top: 0;
+        left: 0;
+        position: absolute;
+      }
+    }
+  }
+}

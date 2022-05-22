@@ -341,7 +341,7 @@ class FetchWorker extends DataWorker<any> {
     } else if (data.type === 'history-forward') {
       await this.data.historyForward();
     } else if (data.type === 'history-go-to-state') {
-      console.error(data);
+      await this.data.historyGoToState(data.data);
     } else {
       throw data.type;
     }
