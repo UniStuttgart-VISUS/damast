@@ -90,6 +90,7 @@ export type VisualizationState = Partial<_VisualizationState> & FilterJson;
 export type CompleteVisualizationState = _VisualizationState & FilterJson;
 export type RawVisualizationState = _VisualizationState & Pick<FilterJson, 'filters'>;
 
+
 export class Dataset {
   private _hierarchy: d3hier.HierarchyNode<T.OwnHierarchyNode>;
   private _hierarchy_depth: number = 0;
@@ -174,7 +175,7 @@ export class Dataset {
   private _user: T.User = { user: null, readdb: false, writedb: false, geodb: false, dev: false, visitor: true }
   private _server_version: string;
 
-  private _historyTree?: HistoryTree<RawVisualizationState>;
+  private _historyTree?: HistoryTree<CompleteVisualizationState>;
 
   constructor() {
     this._symbol_lookup = new Map<number, string>();
@@ -205,7 +206,7 @@ export class Dataset {
     this.updateBrushingLinkingLookupTables();
     await this.purgeUnusedLocations();
 
-    if (!this._user.visitor) this._historyTree = new HistoryTree<RawVisualizationState>(this.getRawVisualizationState());
+    if (!this._user.visitor) this._historyTree = new HistoryTree<CompleteVisualizationState>(this.getState());
   }
 
   get historyTree(): typeof this._historyTree {
@@ -373,7 +374,7 @@ export class Dataset {
     }
 
     if (this._queuedStateChangeDescriptions.length) {
-      const newState = this.getRawVisualizationState();
+      const newState = this.getState();
       const description = this._queuedStateChangeDescriptions.join('; ');
       this._queuedStateChangeDescriptions = [];
       if (resumeSource === 'resume') {
@@ -400,7 +401,7 @@ export class Dataset {
       this.updatePlacesActive();
       this.updateBrushingLinkingLookupTables();
 
-      const newState = this.getRawVisualizationState();
+      const newState = this.getState();
       this.historyTree?.pushState(newState, changeDescription);
 
       this.notifyListeners(new Set([changeScope]));
@@ -461,16 +462,7 @@ export class Dataset {
   private async applyCurrentHistoryState() {
     if (!this.historyTree) return;
 
-    const state: CompleteVisualizationState = {
-      ...this.historyTree.getCurrentState(),
-      metadata: {
-        version: this._server_version,
-        createdBy: this._user.user,
-        createdAt: new Date().toISOString(),
-        source: 'visualization',
-        evidenceCount: 0,
-      },
-    };
+    const state: CompleteVisualizationState = this.historyTree.getCurrentState();
 
     await this.setState(state);
   }
@@ -1163,7 +1155,7 @@ export class Dataset {
     if (this._is_paused) {
       this._queuedStateChangeDescriptions.push('moved map');
     } else {
-      this.historyTree?.pushState(this.getRawVisualizationState(), 'moved map');
+      this.historyTree?.pushState(this.getState(), 'moved map');
     }
   }
 

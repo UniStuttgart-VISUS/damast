@@ -1,6 +1,8 @@
 import EventTarget, { defineEventAttribute } from 'event-target-shim-es5';
 import { v4 as uuid } from 'uuid';
 
+import type { FilterJson, VisualizationState, CompleteVisualizationState } from './dataset';
+
 const emptyState = Symbol('empty interaction state');
 
 interface HistoryTreeEntry<T> {
@@ -20,9 +22,11 @@ export interface JsonHistoryTree {
   children: JsonHistoryTree[];
   created: string;  // JSON cannot contain dates
   description: string;
+
+  state: CompleteVisualizationState;
 };
 
-export default class HistoryTree<T> extends EventTarget {
+export default class HistoryTree<T extends CompleteVisualizationState> extends EventTarget {
   private readonly root: HistoryTreeEntry<T>;
   private current: HistoryTreeEntry<T>;
   private byUuid: Map<string, HistoryTreeEntry<T>>;
@@ -224,8 +228,9 @@ export default class HistoryTree<T> extends EventTarget {
     const transform = function(node: HistoryTreeEntry<T>): JsonHistoryTree {
       const children = node.children.map(transform);
       const created = node.created.toISOString();
+      const state = JSON.parse(JSON.stringify(node.state));
 
-      return { uuid: node.uuid, description: node.description, created, children };
+      return { uuid: node.uuid, description: node.description, created, children, state };
     };
 
     return transform(this.root);

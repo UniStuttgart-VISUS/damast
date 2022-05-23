@@ -4,6 +4,7 @@ import { hierarchy } from 'd3-hierarchy';
 import type { HierarchyNode } from 'd3-hierarchy';
 import { scaleBand, scaleLinear } from 'd3-scale';
 import { range } from 'd3-array';
+import { text } from 'd3-fetch';
 import View from './view';
 import type { JsonHistoryTree } from './history-tree';
 import { nativeDialogSupported, HTMLDialogElement as HTMLDialogElementShim } from '../common/dialog';
@@ -34,6 +35,8 @@ export class HistoryControls extends View<Data, never> {
 
   private cachedHistoryTree: JsonHistoryTree | undefined;
   private cachedCurrentStateUuid: string = '';
+
+  private readonly stateDescriptionCache = new Map<string, string>();
 
   private readonly tooltipManager = new TooltipManager(500);
 
@@ -307,10 +310,24 @@ export class HistoryControls extends View<Data, never> {
   }
 
   private onMouseEnter(evt: MouseEvent, d: { data: JsonHistoryTree, isCurrent: boolean }) {
-    this.tooltipManager.create(f => {
+    const response: Promise<string> = this.stateDescriptionCache.has(d.data.uuid)
+      ? Promise.resolve(this.stateDescriptionCache.get(d.data.uuid))
+      : text(`../reporting/describe-filters`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(d.data.state)
+      }).then(t => {
+        this.stateDescriptionCache.set(d.data.uuid, t);
+        return t;
+      });
+    this.tooltipManager.create(async f => {
       f.root.html(`<h1>${d.data.description}</h1>
         <p>${new Date(d.data.created).toLocaleString()}</p>
         ${ d.isCurrent ? '' : '<p>Click to restore state.</p>' }`);
+
+      response.then(v => f.root.html(`${f.root.html()}<hr />${v}`));
     });
 
     const { top, left } = this.dialog?.node()?.getBoundingClientRect() ?? { top: 0, left: 0 };
