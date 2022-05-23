@@ -123,19 +123,19 @@ class FetchWorker extends DataWorker<any> {
 
     const [ _dataset, _filter ] = await Promise.all([ getDataset(), filterJson ]);
     this.data = _dataset;
-    this.data.historyTree.addEventListener('change', (e: CustomEvent<{ uuid: string }>) => {
+    this.data.historyTree?.addEventListener('change', (e: CustomEvent<{ uuid: string }>) => {
       this.historyPort?.postMessage({
         type: 'notify-history-tree-changed',
         target: 'history',
         data: {
-          canBack: this.data.historyTree.canBack(),
-          canForward: this.data.historyTree.canForward(),
-          tree: this.data.historyTree.getJson(),
+          canBack: this.data.historyTree?.canBack(),
+          canForward: this.data.historyTree?.canForward(),
+          tree: this.data.historyTree?.getJson(),
           currentStateUuid: e.detail.uuid,
         },
       });
     });
-    this.data.historyTree.fireChange();
+    this.data.historyTree?.fireChange();
 
     // apply the filter from the report UUID, if present
     if (_filter !== null) await this.data.setState(_filter);
@@ -336,6 +336,8 @@ class FetchWorker extends DataWorker<any> {
   }
 
   private async handleHistoryMessage(data: MessageData<any>) {
+    if (this.data.historyTree === undefined) return;
+
     if (data.type === 'history-back') {
       await this.data.historyBack();
     } else if (data.type === 'history-forward') {
