@@ -8,6 +8,8 @@ import View from './view';
 import type { JsonHistoryTree } from './history-tree';
 import { nativeDialogSupported, HTMLDialogElement as HTMLDialogElementShim } from '../common/dialog';
 import TooltipManager from './tooltip';
+import type { TreeButtonData } from './history-control-tree-buttons';
+import { buttonOptions } from './history-control-tree-buttons';
 
 export interface Data {
   canBack: boolean;
@@ -136,22 +138,18 @@ export class HistoryControls extends View<Data, never> {
         .classed('modal__foreground', true);
 
     // controls
-    const controlOptions: [string, string, string, Function][] = [
-      ['Clear', 'trash', 'Clear entire history and go to initial state', () => console.log('clear')],
-      ['Prune', 'ellipsis-h', 'Prune other branches from history tree', () => console.log('prune')],
-      ['Prune and condense', 'circle fa-sm', 'Prune other branches from history tree, and condense the current history branch to one state change', () => console.log('prune and condense')],
-    ];
     const controls = foreground.selectAll<HTMLDivElement, any>('.history-tree-controls')
       .data([null])
       .join('div')
         .classed('history-tree-controls', true)
-      .selectAll<HTMLButtonElement, typeof controlOptions[0]>('button')
-      .data(controlOptions)
+      .selectAll<HTMLButtonElement, TreeButtonData>('button')
+      .data(buttonOptions)
       .join('button')
         .classed('button', true)
-        .html(d => `<i class="fa fa-fw fa-lg fa-${d[1]}"></i> ${d[0]}`)
+        .classed('button--svgicon', true)
+        .html(d => `${d[1]} ${d[0]}`)
         .attr('title', d => d[2])
-        .on('click', (_, d) => d[3]());
+        .on('click', (_, d) => d[3]((tp, data) => console.log(tp, data)));
 
 
     // actual stuff
@@ -166,9 +164,10 @@ export class HistoryControls extends View<Data, never> {
     const svgWidth = nodeWidth * hierarchyDepth + nodePadding * (hierarchyDepth - 1);
     const svgHeight = hierarchyHeight * nodeHeight + (hierarchyHeight - 1) * nodePadding;
 
-    const svg = foreground.selectAll('svg')
+    const svg = foreground.selectAll('svg#history-tree')
       .data([null])
       .join('svg')
+        .attr('id', 'history-tree')
         .attr('width', svgWidth + 4)
         .attr('height', svgHeight + 4)
         .attr('viewBox', `-2 -2 ${svgWidth + 4} ${svgHeight + 4}`);

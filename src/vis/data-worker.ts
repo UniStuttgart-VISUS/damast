@@ -37,6 +37,9 @@ export type MessageDataType =
   | 'history-back'
   | 'history-forward'
   | 'history-go-to-state'
+  | 'history-reset'
+  | 'history-prune'
+  | 'history-prune-condense'
   ;
 
 export interface MessageData<T> {
