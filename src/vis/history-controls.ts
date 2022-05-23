@@ -58,7 +58,7 @@ export class HistoryControls extends View<Data, never> {
         this.forwardButton.attr('disabled', '');
       });
     this.showGraphButton = span.select<HTMLButtonElement>('button#vis-history-show-graph')
-      .attr('disabled', nativeDialogSupported() ? null : '')
+      .attr('disabled', '')
       .each(function() {
         const s = select(this);
         const supported = nativeDialogSupported();
@@ -76,14 +76,13 @@ export class HistoryControls extends View<Data, never> {
   protected openModal() {}
 
   async setData(data: Data) {
-    console.log('HistoryControls::setData', data);
-
     const { canBack, canForward, tree } = data;
     this.cachedHistoryTree = tree;
     this.cachedCurrentStateUuid = data.currentStateUuid;
 
     this.backButton.attr('disabled', canBack ? null : '');
     this.forwardButton.attr('disabled', canForward ? null : '');
+    this.showGraphButton.attr('disabled', nativeDialogSupported() ? null : '');
     this.updateDialog();
   }
 
@@ -149,7 +148,7 @@ export class HistoryControls extends View<Data, never> {
         .classed('button--svgicon', true)
         .html(d => `${d[1]} ${d[0]}`)
         .attr('title', d => d[2])
-        .on('click', (_, d) => d[3]((tp, data) => console.log(tp, data)));
+        .on('click', (_, d) => d[3]((tp, data) => this.worker.postMessage({ type: tp, data })));
 
 
     // actual stuff
@@ -159,7 +158,7 @@ export class HistoryControls extends View<Data, never> {
     const nodeHeight = 24;
     const nodePadding = 20;
     const nodeRadius = nodeHeight/2;
-    const nodeLabelWidth = 100;
+    const nodeLabelWidth = 60;
     const nodeWidth = nodeHeight + nodeLabelWidth;
     const svgWidth = nodeWidth * hierarchyDepth + nodePadding * (hierarchyDepth - 1);
     const svgHeight = hierarchyHeight * nodeHeight + (hierarchyHeight - 1) * nodePadding;

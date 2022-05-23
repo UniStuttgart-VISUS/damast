@@ -428,6 +428,19 @@ export class Dataset {
     await this.applyCurrentHistoryState();
   }
 
+  async historyReset() {
+    this.historyTree.reset();
+    await this.applyCurrentHistoryState();
+  }
+
+  async historyPrune() {
+    this.historyTree.prune();
+  }
+
+  async historyPruneCondense() {
+    this.historyTree.pruneCondense();
+  }
+
   private async applyCurrentHistoryState() {
     const state: CompleteVisualizationState = {
       ...this.historyTree.getCurrentState(),

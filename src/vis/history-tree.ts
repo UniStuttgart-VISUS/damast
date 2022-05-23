@@ -45,10 +45,6 @@ export default class HistoryTree<T> extends EventTarget {
 
     this.byUuid = new Map<string, HistoryTreeEntry<T>>();
     this.byUuid.set(this.root.uuid, this.root);
-
-    // for debugging
-    this.addEventListener('change', () => this.debugPrint());
-    this.debugPrint();
   }
 
   private notifyChanged(): void {
@@ -157,6 +153,67 @@ export default class HistoryTree<T> extends EventTarget {
   ): void {
     this.current = this.root;
     this.pushState(state, description, comment);
+  }
+
+  private rebuildUuidLookup() {
+    this.byUuid = new Map<string, HistoryTreeEntry<T>>();
+    const visitor = (node: HistoryTreeEntry<T>) => {
+      this.byUuid.set(node.uuid, node);
+      node.children.forEach(visitor);
+    };
+    visitor(this.root);
+  }
+
+  /**
+   * Reset the history (back to root state).
+   */
+  reset() {
+    this.current = this.root;
+    this.root.children = [];
+
+    this.rebuildUuidLookup();
+    this.backStack.splice(0, this.backStack.length);
+    this.notifyChanged();
+  }
+
+  /**
+   * Remove all states not in the path from root to the current state.
+   */
+  prune() {
+    // backtrack
+    const keep = new Set<string>();
+    const visitor = (node: HistoryTreeEntry<T>) => {
+      keep.add(node.uuid);
+      if (node.parent !== emptyState) visitor(node.parent);
+    };
+    visitor(this.current);
+
+    const visitor2 = (node: HistoryTreeEntry<T>) => {
+      node.children = node.children.filter(d => keep.has(d.uuid));
+      node.children.forEach(visitor2);
+    };
+    visitor2(this.root);
+
+    this.rebuildUuidLookup();
+    this.backStack.splice(0, this.backStack.length);
+    this.notifyChanged();
+  }
+
+  /**
+   * Remove all states not in the path from root to the current state, and make
+   * the current child a direct child of the root state.
+   */
+  pruneCondense() {
+    if (this.current === this.root) return this.reset();
+
+    this.root.children = [this.current];
+    this.current.parent = this.root;
+    this.current.children = [];
+    this.current.description = 'multiple condensed changes';
+
+    this.rebuildUuidLookup();
+    this.backStack.splice(0, this.backStack.length);
+    this.notifyChanged();
   }
 
   getCurrentState(): T {

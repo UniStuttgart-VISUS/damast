@@ -342,6 +342,12 @@ class FetchWorker extends DataWorker<any> {
       await this.data.historyForward();
     } else if (data.type === 'history-go-to-state') {
       await this.data.historyGoToState(data.data);
+    } else if (data.type === 'history-reset') {
+      await this.data.historyReset();
+    } else if (data.type === 'history-prune') {
+      await this.data.historyPrune();
+    } else if (data.type === 'history-prune-condense') {
+      await this.data.historyPruneCondense();
     } else {
       throw data.type;
     }
