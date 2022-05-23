@@ -15,13 +15,13 @@ app = AuthenticatedBlueprintPreparator('place', __name__, template_folder='templ
 app.register_blueprint(map_styles)
 
 
-@app.route('/', role='user')
+@app.route('/', role=['user', 'visitor'])
 @rest_endpoint  # used to ensure the user has `readdb` role
 def root(cursor):
     return flask.render_template('uri/place-search.html')
 
 
-@app.route('/<int:place_id>', role='user')
+@app.route('/<int:place_id>', role=['user', 'visitor'])
 @rest_endpoint
 def get_place(cursor, place_id):
     acceptable = [

@@ -6,7 +6,7 @@ name = 'language'
 app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 
 
-@app.route('/languages-list', role='user')
+@app.route('/languages-list', role=['user', 'visitor'])
 @rest_endpoint
 def get_languages_list(c):
     '''

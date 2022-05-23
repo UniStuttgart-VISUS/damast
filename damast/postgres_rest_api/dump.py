@@ -9,7 +9,7 @@ from ..config import get_config
 name = 'dump'
 app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 
-@app.route('/', role='user')
+@app.route('/', role=['user', 'visitor'])
 def dump():
     '''
     Get a database dump of the PostgreSQL database.

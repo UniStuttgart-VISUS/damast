@@ -12,7 +12,7 @@ name = 'person'
 
 app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None, url_prefix='/person')
 
-@app.route('/<int:person_id>', methods=['GET', 'PUT', 'PATCH', 'DELETE'], role='user')
+@app.route('/<int:person_id>', methods=['GET', 'PUT', 'PATCH', 'DELETE'], role=['user', 'visitor'])
 @rest_endpoint
 def person_data(c, person_id):
     '''

@@ -10,7 +10,7 @@ name = 'annotation'
 app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 
 
-@app.route('/annotation/<int:annotation_id>', methods=['GET', 'PUT', 'PATCH', 'DELETE'], role='user')
+@app.route('/annotation/<int:annotation_id>', methods=['GET', 'PUT', 'PATCH', 'DELETE'], role=['user', 'visitor'])
 @rest_endpoint
 def annotation(cursor, annotation_id):
     '''
@@ -175,7 +175,7 @@ def patch_annotation(cursor, olddata, annotation_id):
     return '', 205
 
 
-@app.route('/document/<int:document_id>/annotation-list', methods=['GET'], role='user')
+@app.route('/document/<int:document_id>/annotation-list', methods=['GET'], role=['user', 'visitor'])
 @rest_endpoint
 def document_annotation_list(cursor, document_id):
     '''

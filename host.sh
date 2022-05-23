@@ -30,7 +30,7 @@ run() {
         --env DAMAST_SECRET_FILE=/data/secrets.json \
         --env DAMAST_VERSION="$version" \
         --env DAMAST_OVERRIDE_PATH="/data/override" \
-        --env DAMAST_VISITOR_ROLES="user,readdb,vis,reporting" \
+        --env DAMAST_VISITOR_ROLES="readdb,vis,reporting" \
         --env DAMAST_MAP_STYLES="map-styles.json" \
         --env DAMAST_REPORT_EVICTION_DEFERRAL=1 \
         $imagename
