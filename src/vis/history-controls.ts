@@ -10,6 +10,7 @@ import { nativeDialogSupported, HTMLDialogElement as HTMLDialogElementShim } fro
 import TooltipManager from './tooltip';
 import type { TreeButtonData } from './history-control-tree-buttons';
 import { buttonOptions } from './history-control-tree-buttons';
+import * as modal from './modal';
 
 export interface Data {
   canBack: boolean;
@@ -70,10 +71,22 @@ export class HistoryControls extends View<Data, never> {
         }
       })
       .on('click', () => this.openDialog());
+
+    const infoButton = span.selectAll('button[data-role="open infobox"]')
+      .data([null])
+      .join('button')
+        .attr('data-role', 'open infobox')
+        .classed('button', true)
+        .classed('button--link', true)
+        .classed('button--medium', true)
+        .html(`<i class="fa fa-fw fa-question-circle-o"></i>`)
+        .on('click', () => this.openModal());
   }
 
   async linkData(_: never) {}
-  protected openModal() {}
+  protected openModal() {
+    modal.showInfoboxFromURL('History Tree', 'history-tree.html');
+  }
 
   async setData(data: Data) {
     const { canBack, canForward, tree } = data;
@@ -119,7 +132,7 @@ export class HistoryControls extends View<Data, never> {
       .data([null])
       .join('h1')
         .classed('modal__title', true)
-        .text('History Graph');
+        .text('History Tree');
 
     title.selectAll('.modal__close-button')
       .data([null])

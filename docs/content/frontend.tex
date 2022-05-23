@@ -334,6 +334,43 @@ Later, such a file can be \emph{uploaded} to restore the state.
 The file can also be shared to either present your results or to (re-)generate a report based on the filters.
 
 
+\subsection{History Tree}
+\label{sec:history-tree}
+
+These controls located in the header bar of the page control the \emph{interaction history} of the visualization.
+This allows users to undo, or redo, interactions.
+Each applied filter counts as an interaction, as do mode changes in the settings pane (\cref{sec:settings-pane}), and moving or zooming the map.
+
+\paragraph{Buttons}
+The control bar itself has three buttons:
+The \emph{undo button} reverts the last interaction (i.e., goes up one level in the history tree).
+The \emph{redo button} re-applies the last undone interaction (i.e., goes down one level in the history tree).
+It is disabled if there are no recent undone actions.
+The last button opens the \emph{history tree} in a modal window.
+
+\paragraph{History Tree Window}
+The history tree window shows the interaction tree as a \emph{node-link diagram.}
+Each state is represented by a circle, next to which the age of the state is written.
+Child states are connected to their parent by a link, which is straight for the first child, and makes a step for subsequent children.
+Children are placed to the right of their parent.
+The current state's node is filled.
+Clicking on a node will put the visualization in the respective state.
+Hovering over a node will give additional information in a tooltip.
+Three additional buttons in the history tree window allow to manage the visualization:
+
+\begin{description}
+  \item [Clear:]
+    This will remove all states but the initial state from the tree, and revert the visualization to the initial state.
+  \item [Prune:]
+    This will prune all states from the history tree that are not the current state, or direct ancestors thereof.
+    The result is a linear history from the initial state to the current state.
+  \item [Prune and condense:]
+    This will prune all states from the history tree but the initial state and the current state.
+    The current state is then the direct child of the initial state, and no other states exist.
+    If the current state is the initial state, the result will be the same as if clicking \textbf{Clear.}
+\end{description}
+
+
 \subsection{Map}
 \label{sec:map}
 
