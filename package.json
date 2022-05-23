@@ -30,8 +30,11 @@
     "@types/lodash": "^4.14.162",
     "@types/ramda": "^0.27.40",
     "@types/tabulator-tables": "^4.8.0",
+    "@types/uuid": "^8.3.4",
     "d3": "^6.3.0",
     "dom-tree-annotator": "git+ssh://git@github.com:mfranke93/dom-tree-annotator.git#v0.1.1",
+    "event-target-shim": "^6.0.2",
+    "event-target-shim-es5": "^2.0.0",
     "font-awesome": "^4.7.0",
     "golden-layout": "^1.5.9",
     "js-cookie": "^3.0.1",
@@ -43,6 +46,7 @@
     "ramda": "^0.27.1",
     "tabulator-tables": "^4.8.2",
     "tslib": "^2.3.0",
+    "uuid": "^8.3.2",
     "wasm-clustering": "git+ssh://git@github.com:mfranke93/wasm-clustering.git#v0.2.0"
   },
   "devDependencies": {

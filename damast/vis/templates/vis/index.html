@@ -46,6 +46,8 @@
           </li>
         </ul>
       </nav>
+      {%- from 'history_buttons.html' import history_buttons with context -%}
+      {{ history_buttons() }}
       <span id="messages" class="messages"></span>
       {%- from 'user_bar.html' import user_bar -%}
       {{ user_bar(user, button_class='button--small') }}

@@ -13,7 +13,7 @@ name = 'person-instance'
 app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 
 
-@app.route('/person-instance/<int:person_instance_id>', methods=['GET', 'PUT', 'PATCH', 'DELETE'], role='user')
+@app.route('/person-instance/<int:person_instance_id>', methods=['GET', 'PUT', 'PATCH', 'DELETE'], role=['user', 'visitor'])
 @rest_endpoint
 def modify_person_instance(cursor, person_instance_id):
     '''

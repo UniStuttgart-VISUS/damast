@@ -7,12 +7,12 @@ auth = flask.current_app.config['auth']
 
 app = AuthenticatedBlueprintPreparator('root-app', __name__, template_folder='templates')
 
-@app.route('/', role='user')
+@app.route('/', role=['user', 'visitor'])
 def root():
     language = flask.request.args.get('lang', 'en')
     return flask.render_template('root/index.html', language=language)
 
-@app.route('/<path:path>', role='user')
+@app.route('/<path:path>', role=['user', 'visitor'])
 def file(path):
     return flask.current_app.serve_static_file(__path__[0] + '/static', path)
 
@@ -40,6 +40,7 @@ def whoami():
             readdb=('readdb' in u.roles or 'admin' in u.roles),
             writedb=('writedb' in u.roles or 'admin' in u.roles),
             geodb=('geodb' in u.roles or 'admin' in u.roles),
+            dev=('dev' in u.roles),
             visitor=u.visitor,
             )
 

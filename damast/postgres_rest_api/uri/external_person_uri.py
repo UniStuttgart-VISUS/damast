@@ -11,7 +11,7 @@ name = 'external-person-uri'
 app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 
 
-@app.route('/external-person-uri/<int:uri_id>', methods=['PUT', 'PATCH', 'GET', 'DELETE'], role='user')
+@app.route('/external-person-uri/<int:uri_id>', methods=['PUT', 'PATCH', 'GET', 'DELETE'], role=['user', 'visitor'])
 @rest_endpoint
 def modify_person(c, uri_id):
     '''

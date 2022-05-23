@@ -6,7 +6,7 @@ name = 'confidence'
 app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 
 
-@app.route('/confidence-values', role='user')
+@app.route('/confidence-values', role=['user', 'visitor'])
 @rest_endpoint
 def get_confidence_list(c):
     '''

@@ -15,6 +15,7 @@ class FetchWorker extends DataWorker<any> {
   private timelinePort: MessagePort;
   private mapPort: MessagePort;
   private tagsPort: MessagePort;
+  private historyPort: MessagePort;
 
   private data: Dataset;
 
@@ -28,7 +29,7 @@ class FetchWorker extends DataWorker<any> {
   async handleMainEvent(data: MessageData<any>) {
     if (data.type === 'load-data') {
       await this.reloadData(data);
-      this.data.resumeEvents();
+      this.data.resumeEvents('load-state');
       await this.handleDatasetChange(null);
     } else if (data.type === 'set-religion-port') {
       this.religionPort = data.data;
@@ -56,7 +57,9 @@ class FetchWorker extends DataWorker<any> {
       this.tagsPort.onmessage = async (evt) => await this.handleTagsMessage(evt.data);
     } else if (data.type === 'set-message-port') {
       this.messagePort = data.data;
-      //this.messagePort.onmessage = async (evt) => await this.handleReligionMessage(evt.data);
+    } else if (data.type === 'set-history-port') {
+      this.historyPort = data.data;
+      this.historyPort.onmessage = async (evt) => await this.handleHistoryMessage(evt.data);
     } else if (data.type === 'set-show-only-active') {
       this.data.suspendEvents();
 
@@ -90,8 +93,7 @@ class FetchWorker extends DataWorker<any> {
       this.sendToMainThread({ type: 'export-visualization-state', data: filters });
     } else if (data.type === 'import-visualization-state') {
       const filters = data.data;
-      const result = await this.data.setState(filters);
-      this.mapPort?.postMessage({type: 'set-map-state', data: this.data.getMapState()});
+      const result = await this.data.setState(filters, true);
       this.sendToMainThread({ type: 'import-visualization-state', data: result });
     } else if (data.type === 'generate-report' || data.type === 'describe-filters') {
       const { filters, metadata } = this.data.getState();
@@ -121,6 +123,19 @@ class FetchWorker extends DataWorker<any> {
 
     const [ _dataset, _filter ] = await Promise.all([ getDataset(), filterJson ]);
     this.data = _dataset;
+    this.data.historyTree?.addEventListener('change', (e: CustomEvent<{ uuid: string }>) => {
+      this.historyPort?.postMessage({
+        type: 'notify-history-tree-changed',
+        target: 'history',
+        data: {
+          canBack: this.data.historyTree?.canBack(),
+          canForward: this.data.historyTree?.canForward(),
+          tree: this.data.historyTree?.getJson(),
+          currentStateUuid: e.detail.uuid,
+        },
+      });
+    });
+    this.data.historyTree?.fireChange();
 
     // apply the filter from the report UUID, if present
     if (_filter !== null) await this.data.setState(_filter);
@@ -320,6 +335,26 @@ class FetchWorker extends DataWorker<any> {
     }
   }
 
+  private async handleHistoryMessage(data: MessageData<any>) {
+    if (this.data.historyTree === undefined) return;
+
+    if (data.type === 'history-back') {
+      await this.data.historyBack();
+    } else if (data.type === 'history-forward') {
+      await this.data.historyForward();
+    } else if (data.type === 'history-go-to-state') {
+      await this.data.historyGoToState(data.data);
+    } else if (data.type === 'history-reset') {
+      await this.data.historyReset();
+    } else if (data.type === 'history-prune') {
+      await this.data.historyPrune();
+    } else if (data.type === 'history-prune-condense') {
+      await this.data.historyPruneCondense();
+    } else {
+      throw data.type;
+    }
+  }
+
   private async sendReligionData(place_data) {
     this.religionPort?.postMessage({
       type: 'set-data',
@@ -390,6 +425,8 @@ class FetchWorker extends DataWorker<any> {
   }
 
   private async sendMapData(data, religion_order) {
+    this.mapPort?.postMessage({type: 'set-map-state', data: this.data.getMapState()});
+
     const parent_religions = {};
     this.data.ultimate_parent.forEach((v, k) => parent_religions[k] = v);
 

@@ -12,7 +12,7 @@ name = 'place-instance'
 app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 
 
-@app.route('/place-instance/<int:place_instance_id>', methods=['GET', 'PUT', 'PATCH', 'DELETE'], role='user')
+@app.route('/place-instance/<int:place_instance_id>', methods=['GET', 'PUT', 'PATCH', 'DELETE'], role=['user', 'visitor'])
 @rest_endpoint
 def modify_place_instance(cursor, place_instance_id):
     '''

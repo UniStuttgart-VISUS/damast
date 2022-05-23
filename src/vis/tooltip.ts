@@ -14,6 +14,8 @@ export default class TooltipManager {
   private y: number = 0;
   private tooltipCallback: TooltipCallback = _ => {};
 
+  parentNode: HTMLElement = document.body;
+
   constructor(
     readonly delay: number = 1000,
   ) {
@@ -25,7 +27,7 @@ export default class TooltipManager {
     this.tooltipCallback = creationCallback;
 
     this.timeout_id = setTimeout(() => {
-      this.tooltip = new Tooltip();
+      this.tooltip = new Tooltip(this.parentNode);
       this.tooltip.move({ x: this.x, y: this.y });
 
       this.tooltip.show();
@@ -66,11 +68,16 @@ class Tooltip {
   private _oldpos: Point = {x: -1000, y: -1000};
   private readonly _threshold = Math.pow(5, 2); // 5px
 
-  constructor() {
-    this._root = select<HTMLBodyElement, any>('body')
+  private obs: ResizeObserver;
+
+  constructor(private parentNode: HTMLElement) {
+    this._root = select<HTMLElement, any>(this.parentNode)
       .append('div')
       .classed('tooltip', true)
       .attr('data-state', 'hidden');
+
+    this.obs = new ResizeObserver(() => this.checkBoxSizeOutsideWindow());
+    this.obs.observe(this._root.node());
   }
 
   get root(): Selection<HTMLDivElement, any, any, any> {
@@ -83,8 +90,11 @@ class Tooltip {
     if (dist_sq < this._threshold) return;
     this._oldpos = p;
 
-    const w = document.documentElement.clientWidth;
-    const h = document.documentElement.clientHeight;
+    const w = document.body.clientWidth;
+    const h = document.body.clientHeight;
+    const { top, left } = this.parentNode.getBoundingClientRect();
+    p.x += left;
+    p.y += top;
 
     const pos: any = {};
 
@@ -112,9 +122,23 @@ class Tooltip {
       const v = (pos[k] !== null) ? `${pos[k]}px` : null;
       this._root.style(k, v);
     }
+    this.checkBoxSizeOutsideWindow();
+  }
+
+  private checkBoxSizeOutsideWindow() {
+    const { top, bottom } = this._root.node().getBoundingClientRect();
+    const h = document.body.clientHeight;
+
+    if (bottom > h) {
+      this._root.style('top', null).style('bottom', 0);
+    }
+    if (top < 0) {
+      this._root.style('top', 0).style('bottom', null);
+    }
   }
 
   clear() {
+    this.obs.unobserve(this._root.node());
     this._root.remove();
   }
 

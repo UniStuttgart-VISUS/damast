@@ -12,7 +12,7 @@ name = 'tags'
 app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 
 
-@app.route('/tag-list', role='user')
+@app.route('/tag-list', role=['user', 'visitor'])
 @rest_endpoint
 def get_tag_list(c):
     '''
@@ -35,7 +35,7 @@ def get_tag_list(c):
     return flask.jsonify(list(map(lambda x: x._asdict(), c.fetchall())))
 
 
-@app.route('/tag-sets', role='user')
+@app.route('/tag-sets', role=['user', 'visitor'])
 @rest_endpoint
 def get_tag_sets(c):
     '''
@@ -72,7 +72,7 @@ FROM tag T;''')
     return flask.jsonify(list(map(lambda x: x._asdict(), c.fetchall())))
 
 
-@app.route('/evidence/<int:evidence_id>/tags', role='user', methods=['GET', 'PUT'])
+@app.route('/evidence/<int:evidence_id>/tags', role=['user', 'visitor'], methods=['GET', 'PUT'])
 @rest_endpoint
 def modify_tags_for_evidence(c, evidence_id):
     '''

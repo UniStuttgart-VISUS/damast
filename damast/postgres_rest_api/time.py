@@ -30,7 +30,7 @@ def time_group_data(cursor, time_group_id):
     return response
 
 
-@app.route('/time-group/<int:time_group_id>', methods=['GET', 'PUT', 'DELETE', 'PATCH'], role='user')
+@app.route('/time-group/<int:time_group_id>', methods=['GET', 'PUT', 'DELETE', 'PATCH'], role=['user', 'visitor'])
 @rest_endpoint
 def time_group(c, time_group_id):
     '''
@@ -184,7 +184,7 @@ def patch_time_group(c, time_group_id):
     return '', 204
 
 
-@app.route('/time-group/<int:time_group_id>/time-instance/<int:time_instance_id>', methods=['GET', 'PUT', 'DELETE', 'PATCH'], role='user')
+@app.route('/time-group/<int:time_group_id>/time-instance/<int:time_instance_id>', methods=['GET', 'PUT', 'DELETE', 'PATCH'], role=['user', 'visitor'])
 @rest_endpoint
 def time_instance(c, time_group_id, time_instance_id):
     '''

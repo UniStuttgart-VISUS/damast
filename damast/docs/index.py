@@ -8,7 +8,7 @@ from ..authenticated_blueprint_preparator import AuthenticatedBlueprintPreparato
 name = 'index'
 app = AuthenticatedBlueprintPreparator(name, __name__, template_folder='templates')
 
-@app.route('/', role=['user','dev'])
+@app.route('/', role=['user', 'visitor','dev'])
 def root():
     # find database schema pdf, if exists
     schema_pdf = os.path.join(app.blueprint.root_path, 'assets/database_schema.pdf.br')
@@ -18,6 +18,6 @@ def root():
 
     return flask.render_template('docs/index.html', **params)
 
-@app.route('/index/static/<path:filename>', role=['user', 'dev'])
+@app.route('/index/static/<path:filename>', role=['user', 'visitor', 'dev'])
 def static(filename):
     return flask.current_app.serve_static_file(app.blueprint.root_path + '/static/index', filename)

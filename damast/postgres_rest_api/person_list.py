@@ -8,7 +8,7 @@ name = 'person-list'
 app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 
 
-@app.route('/person-list', role='user')
+@app.route('/person-list', role=['user', 'visitor'])
 @rest_endpoint
 def person_list(cursor):
     '''

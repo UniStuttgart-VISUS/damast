@@ -164,5 +164,6 @@ export interface User {
   readdb: boolean;
   writedb: boolean;
   geodb: boolean;
+  dev: boolean;
   visitor: boolean;
 };

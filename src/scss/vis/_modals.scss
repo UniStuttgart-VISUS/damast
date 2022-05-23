@@ -147,7 +147,7 @@ b
 
 /* TOOLTIPS */
 .tooltip {
-  position: absolute;
+  position: fixed;
   z-index: 20000;
 
   box-sizing: border-box;

@@ -10,7 +10,7 @@ name = 'document'
 app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 
 
-@app.route('/document/list', methods=['GET'], role='user')
+@app.route('/document/list', methods=['GET'], role=['user', 'visitor'])
 @rest_endpoint
 def document_list(cursor):
     '''
@@ -55,7 +55,7 @@ def document_list(cursor):
     return flask.jsonify(content)
 
 
-@app.route('/document/<int:document_id>/metadata', methods=['GET'], role='user')
+@app.route('/document/<int:document_id>/metadata', methods=['GET'], role=['user', 'visitor'])
 @rest_endpoint
 def document_metadata(cursor, document_id):
     '''
@@ -106,7 +106,7 @@ def document_metadata(cursor, document_id):
 
 _bytes_spec = re.compile('(bytes|document-characters)=(?P<start>\\d*)-(?P<end>\\d*)')
 _characters_spec = re.compile('document-characters=(?P<start>\\d*)-(?P<end>\\d*)')
-@app.route('/document/<int:document_id>', methods=['GET'], role='user')
+@app.route('/document/<int:document_id>', methods=['GET'], role=['user', 'visitor'])
 @rest_endpoint
 def document(cursor, document_id):
     '''

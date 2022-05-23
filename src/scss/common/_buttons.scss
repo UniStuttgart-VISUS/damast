@@ -88,6 +88,31 @@
     --clr-secondary: transparent;
   }
 
+  &#{&}--link {
+    --clr-primary: #{$clr-fg};
+    --clr-secondary: transparent;
+    border: none;
+    padding: 0;
+
+    transition: color 200ms ease;
+
+    &:active:not(:disabled) {
+      animation: pulse 700ms forwards;
+
+      color: var(--clr-primary);
+      background: var(--clr-secondary);
+      border-color: var(--clr-secondary);
+    }
+
+    &:focus {
+      --clr-primary: #{$clr-fg};
+    }
+
+    &:hover {
+      --clr-primary: white;
+    }
+  }
+
   // forbidden button: cursor, do not grey out if disabled
   &#{&}--forbidden {
     &:disabled {
@@ -100,6 +125,25 @@
   // Content is SVG, align to text baseline
   &#{&}--svgicon {
     display: flex;
+    align-items: center;
+    gap: 1ex;
+
+    svg {
+      height: 1em;
+      // width derived from viewBox
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    font-weight: normal;
+    color: initial;
+  }
+
+  50% {
+    font-weight: bolder;
+    color: $clr-accent;
   }
 }
 

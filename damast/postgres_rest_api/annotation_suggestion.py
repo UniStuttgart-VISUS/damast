@@ -10,7 +10,7 @@ name = 'annotation-suggestion'
 app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 
 
-@app.route('/annotation-suggestion/<int:as_id>', methods=['DELETE'], role='user')
+@app.route('/annotation-suggestion/<int:as_id>', methods=['DELETE'], role=['user', 'visitor'])
 @rest_endpoint
 def delete_annotation_suggestion(cursor, as_id):
     '''
@@ -24,7 +24,7 @@ def delete_annotation_suggestion(cursor, as_id):
     return flask.jsonify(dict(annotation_suggestion=del_id)), 200
 
 
-@app.route('/document/<int:document_id>/annotation-suggestion-list', methods=['GET'], role='user')
+@app.route('/document/<int:document_id>/annotation-suggestion-list', methods=['GET'], role=['user', 'visitor'])
 @rest_endpoint
 def document_annotation_suggestion_list(cursor, document_id):
     '''

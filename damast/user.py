@@ -14,8 +14,8 @@ class User:
     visitor: bool = False
 
 
-_allowed_visitor_roles = set(('user', 'readdb', 'annotator', 'geodb', 'pgadmin', 'reporting', 'vis'))
-_disallowed_visitor_roles = set(('writedb', 'dev', 'admin'))
+_allowed_visitor_roles = set(('readdb', 'annotator', 'geodb', 'pgadmin', 'reporting', 'vis'))
+_disallowed_visitor_roles = set(('user', 'writedb', 'dev', 'admin'))
 
 def default_visitor_roles():
     conf = get_config()

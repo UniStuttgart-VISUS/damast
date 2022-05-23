@@ -11,7 +11,7 @@ name = 'external-place-uri'
 app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 
 
-@app.route('/external-place-uri/<int:uri_id>', methods=['PUT', 'PATCH', 'GET', 'DELETE'], role='user')
+@app.route('/external-place-uri/<int:uri_id>', methods=['PUT', 'PATCH', 'GET', 'DELETE'], role=['user', 'visitor'])
 @rest_endpoint
 def modify_place_uri(c, uri_id):
     '''
