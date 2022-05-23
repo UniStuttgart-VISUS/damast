@@ -1,5 +1,6 @@
 import flask
 import os
+import re
 import subprocess
 import werkzeug.exceptions
 from datetime import date
@@ -9,7 +10,7 @@ from ..authenticated_blueprint_preparator import AuthenticatedBlueprintPreparato
 from ..postgres_rest_api.decorators import rest_endpoint
 from ..postgres_rest_api.util import parse_geoloc
 from ..map_styles import app as map_styles
-from ..reporting.place_sort import sort_alternative_placenames
+from ..reporting.place_sort import sort_alternative_placenames, sort_placenames
 
 app = AuthenticatedBlueprintPreparator('place', __name__, template_folder='templates')
 app.register_blueprint(map_styles)
@@ -19,6 +20,31 @@ app.register_blueprint(map_styles)
 @rest_endpoint  # used to ensure the user has `readdb` role
 def root(cursor):
     return flask.render_template('uri/place-search.html')
+
+_place_id_list_pattern = re.compile('^(\d+(,\d+)*)?$')
+
+@app.route('/uri/link-list', role='user')
+@rest_endpoint
+def get_link_list(cursor):
+    pids = flask.request.args.get('place_ids', '')
+    if not _place_id_list_pattern.fullmatch(pids):
+        raise werkzeug.exceptions.BadRequest('place_ids argument must be comma-separated list of integers')
+
+    place_ids = list(map(int, pids.split(',')))
+    query = cursor.mogrify('''
+        SELECT
+            P.id,
+            P.name,
+            PT.type
+        FROM place P
+        JOIN place_type PT ON P.place_type_id = PT.id
+        WHERE P.id = ANY(%s);
+    ''', (place_ids,))
+    cursor.execute(query)
+    places = list(map(lambda x: x._asdict(), cursor.fetchall()))
+    places = sort_placenames(places, keyfn=lambda p: p['name'])
+
+    return flask.render_template('uri/place-link-list.html', places=places)
 
 
 @app.route('/<int:place_id>', role=['user', 'visitor'])

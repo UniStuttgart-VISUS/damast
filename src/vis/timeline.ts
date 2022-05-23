@@ -16,6 +16,8 @@ const brush_height = 50;
 const marginLeft = 40;
 const marginBottom = 20;
 
+const NO_TOOLTIP_ITEM_HIGHLIGHTED = Symbol();
+
 export default class Timeline extends View<any, any> {
   private svg: d3.Selection<SVGSVGElement, any, any, any>;
 
@@ -407,6 +409,7 @@ export default class Timeline extends View<any, any> {
   }
 
   private cachedYear: number = NaN;
+  private cachedHighlightedId: string | typeof NO_TOOLTIP_ITEM_HIGHLIGHTED = NO_TOOLTIP_ITEM_HIGHLIGHTED;
   private cachedContent: string = '';
   private updateTooltipContent(evt: MouseEvent, tooltipRoot: d3.Selection<HTMLElement, any, any, any>) {
     // get SVG x position
@@ -429,7 +432,28 @@ export default class Timeline extends View<any, any> {
         : this.x.invert(x)
     );
 
-    if (year === this.cachedYear) {
+    // index in path data
+    const idx = year - this.cachedPathData.span_x[0];
+
+    // find Y position in stack
+    const posY = this.y.invert(y);
+    // find ID closest to Y position in stack
+    const closestCandidates = [];
+    this.cachedPathData.ys.forEach((y, i) => {
+      const [y0, y1] = this.cachedPathData.paths[i][idx];
+
+      const distance = (posY >= y0 && posY < y1)
+        ? 0
+        : Math.min(Math.abs(y0 - posY), Math.abs(y1 - posY));
+
+      closestCandidates.push({ id: y.id, distance, empty: y0 === y1 });
+    });
+    const closestCandidate = closestCandidates.sort((a, b) => a.distance - b.distance)[0];
+    const highlightedId = (closestCandidate.empty || closestCandidate.distance > 5)
+      ? NO_TOOLTIP_ITEM_HIGHLIGHTED
+      : closestCandidate.id;
+
+    if (year === this.cachedYear && highlightedId === this.cachedHighlightedId) {
       tooltipRoot.html(this.cachedContent);
       return;
     }
@@ -438,7 +462,6 @@ export default class Timeline extends View<any, any> {
     tooltipRoot.append('h1').text(`Year ${year}`);
 
     // reverse-engineer d3-stack results
-    const idx = year - this.cachedPathData.span_x[0];
     const items = new Map<string, { id: string | null, active: number, total: number }>();
     this.cachedPathData.ys.forEach((y, i) => {
       const poss = this.cachedPathData.paths[i][idx];
@@ -482,7 +505,8 @@ export default class Timeline extends View<any, any> {
           ? this.religionNames.get(parseInt(d.id))
           : (d.id === null) ? `<em>no value</em>` : d.id;
 
-        const r = t.append('tr');
+        const r = t.append('tr')
+          .classed('highlighted-row', d.id === highlightedId);
         r.append('td')
           .html(description);
         r.append('td')
@@ -494,5 +518,6 @@ export default class Timeline extends View<any, any> {
 
     this.cachedContent = tooltipRoot.html();
     this.cachedYear = year;
+    this.cachedHighlightedId = highlightedId;
   }
 };
