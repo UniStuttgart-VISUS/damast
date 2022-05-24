@@ -14,14 +14,14 @@ h1 {
   font-size: 2rem;
 }
 
-p,
-form {
-  width: clamp(40ch, 80%, 65ch);
+section {
+  width: clamp(45ch, 80%, 70ch);
   margin-inline: auto;
 }
 
 form {
   max-width: 50ch;
+  margin-inline: auto;
   display: grid;
   gap: 1em;
   grid-template-rows: 1fr 1fr;

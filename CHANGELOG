@@ -4,7 +4,8 @@
 
 Highlight hovered religion or confidence level in the timeline tooltip. Add
 a way to go to the place URI pages directly from the map. Add history tree
-to visualization (beta testers only).
+to visualization (beta testers only). Add form to navigate to reports by
+UUID.
 
 
 2022-05-12                                            1.1.3+hotfix-wasm-csp

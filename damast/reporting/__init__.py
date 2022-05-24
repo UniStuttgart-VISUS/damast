@@ -90,6 +90,19 @@ def create_report():
     return _start_report(filter_json)
 
 
+@app.route('/redirect-to-report-from-uuid', role=['reporting', 'dev', 'admin'], methods=['GET'])
+def report_by_uuid():
+    report_id = flask.request.args.get('uuid', '')
+
+    # check if valid UUID
+    try:
+        u = uuid.UUID(report_id)
+        return flask.redirect(flask.url_for('reporting.get_report', report_id=str(u)))
+
+    except ValueError:
+        raise werkzeug.exceptions.BadRequest('Request must have a uuid parameter that is a valid UUID.')
+
+
 @app.route('/static/<path:path>', role=['reporting', 'dev', 'admin'])
 def file(path):
     return flask.current_app.serve_static_file(static, path)
