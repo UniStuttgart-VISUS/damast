@@ -3,51 +3,41 @@ import { v4 as uuid } from 'uuid';
 
 import type { FilterJson, VisualizationState, CompleteVisualizationState } from './dataset';
 
-const emptyState = Symbol('empty interaction state');
-
-interface HistoryTreeEntry<T> {
-  uuid: string;
-  parent: HistoryTreeEntry<T> | typeof emptyState;
-  children: HistoryTreeEntry<T>[];
-
-  created: Date;
-  description: string;
-  comment?: string;
-
-  state: T;
-};
-
 export interface JsonHistoryTree {
   uuid: string;
   children: JsonHistoryTree[];
+
   created: string;  // JSON cannot contain dates
   description: string;
+  comment?: string;
 
   state: CompleteVisualizationState;
 };
 
-export default class HistoryTree<T extends CompleteVisualizationState> extends EventTarget {
-  private readonly root: HistoryTreeEntry<T>;
-  private current: HistoryTreeEntry<T>;
-  private byUuid: Map<string, HistoryTreeEntry<T>>;
-  private backStack: HistoryTreeEntry<T>[] = [];
+export default class HistoryTree extends EventTarget {
+  private readonly root: JsonHistoryTree;
+  private current: JsonHistoryTree;
+  private byUuid: Map<string, JsonHistoryTree>;
+  private backStack: JsonHistoryTree[] = [];
+
+  // removes GC issue: store reference to parent separately
+  private readonly parentMap = new WeakMap<JsonHistoryTree, JsonHistoryTree>();
 
   constructor(
-    initialState: T,
+    initialState: CompleteVisualizationState,
   ) {
     super();
 
     this.root = {
       uuid: uuid(),
-      parent: emptyState,
       children: [],
-      created: new Date(),
+      created: new Date().toISOString(),
       description: "Initial state",
       state: initialState,
     };
     this.current = this.root;
 
-    this.byUuid = new Map<string, HistoryTreeEntry<T>>();
+    this.byUuid = new Map<string, JsonHistoryTree>();
     this.byUuid.set(this.root.uuid, this.root);
   }
 
@@ -59,25 +49,38 @@ export default class HistoryTree<T extends CompleteVisualizationState> extends E
   declare addEventListener: typeof Element.prototype.addEventListener;
   declare dispatchEvent: typeof Element.prototype.dispatchEvent;
 
-  /**
-   * Add a new state, which will be a child of the current state.
-   */
-  pushState(
-    state: T,
+  private getParent(node: JsonHistoryTree): JsonHistoryTree | null {
+    if (this.parentMap.has(node)) return this.parentMap.get(node);
+    return null;
+  }
+
+  private newState(
+    state: CompleteVisualizationState,
     description: string,
     comment?: string
-  ): void {
-    const newEntry = {
+  ): JsonHistoryTree {
+    return {
       uuid: uuid(),
-      parent: this.current,
       children: [],
-      created: new Date(),
+      created: new Date().toISOString(),
       description,
       comment,
       state,
     };
+  }
+
+  /**
+   * Add a new state, which will be a child of the current state.
+   */
+  pushState(
+    state: CompleteVisualizationState,
+    description: string,
+    comment?: string
+  ): void {
+    const newEntry = this.newState(state, description, comment);
 
     this.byUuid.set(newEntry.uuid, newEntry);
+    this.parentMap.set(newEntry, this.current);
     this.current.children.push(newEntry);
     this.current = newEntry;
     this.backStack.splice(0, this.backStack.length);
@@ -91,7 +94,7 @@ export default class HistoryTree<T extends CompleteVisualizationState> extends E
     if (this.isRootState()) throw new Error('already at the root state');
 
     this.backStack.push(this.current);
-    this.current = this.current.parent as HistoryTreeEntry<T>;
+    this.current = this.getParent(this.current) as JsonHistoryTree;
 
     this.notifyChanged();
   }
@@ -137,7 +140,7 @@ export default class HistoryTree<T extends CompleteVisualizationState> extends E
   private debugPrint(): void {
     const ref = this;
     let lines = [];
-    function handle(node: HistoryTreeEntry<T>, indent) {
+    function handle(node: JsonHistoryTree, indent: number) {
       lines.push(`${new Array(indent).fill(' ').join('')}${node.uuid} ${node.description} ${node === ref.current ? '[current]' : ''}`);
       node.children?.forEach(c => handle(c, indent+2));
     }
@@ -151,7 +154,7 @@ export default class HistoryTree<T extends CompleteVisualizationState> extends E
    * Add a new entry at the root level.
    */
   pushStateToRoot(
-    state: T,
+    state: CompleteVisualizationState,
     description: string,
     comment?: string
   ): void {
@@ -160,8 +163,8 @@ export default class HistoryTree<T extends CompleteVisualizationState> extends E
   }
 
   private rebuildUuidLookup() {
-    this.byUuid = new Map<string, HistoryTreeEntry<T>>();
-    const visitor = (node: HistoryTreeEntry<T>) => {
+    this.byUuid = new Map<string, JsonHistoryTree>();
+    const visitor = (node: JsonHistoryTree) => {
       this.byUuid.set(node.uuid, node);
       node.children.forEach(visitor);
     };
@@ -186,13 +189,14 @@ export default class HistoryTree<T extends CompleteVisualizationState> extends E
   prune() {
     // backtrack
     const keep = new Set<string>();
-    const visitor = (node: HistoryTreeEntry<T>) => {
+    const visitor = (node: JsonHistoryTree) => {
       keep.add(node.uuid);
-      if (node.parent !== emptyState) visitor(node.parent);
+      const parent = this.getParent(node);
+      if (parent !== null) visitor(parent);
     };
     visitor(this.current);
 
-    const visitor2 = (node: HistoryTreeEntry<T>) => {
+    const visitor2 = (node: JsonHistoryTree) => {
       node.children = node.children.filter(d => keep.has(d.uuid));
       node.children.forEach(visitor2);
     };
@@ -211,7 +215,7 @@ export default class HistoryTree<T extends CompleteVisualizationState> extends E
     if (this.current === this.root) return this.reset();
 
     this.root.children = [this.current];
-    this.current.parent = this.root;
+    this.parentMap.set(this.current, this.root);
     this.current.children = [];
     this.current.description = 'multiple condensed changes';
 
@@ -220,20 +224,12 @@ export default class HistoryTree<T extends CompleteVisualizationState> extends E
     this.notifyChanged();
   }
 
-  getCurrentState(): T {
+  getCurrentState(): CompleteVisualizationState {
     return this.current.state;
   }
 
   getJson(): JsonHistoryTree {
-    const transform = function(node: HistoryTreeEntry<T>): JsonHistoryTree {
-      const children = node.children.map(transform);
-      const created = node.created.toISOString();
-      const state = JSON.parse(JSON.stringify(node.state));
-
-      return { uuid: node.uuid, description: node.description, created, children, state };
-    };
-
-    return transform(this.root);
+    return JSON.parse(JSON.stringify(this.root));
   }
 }
 

@@ -175,7 +175,7 @@ export class Dataset {
   private _user: T.User = { user: null, readdb: false, writedb: false, geodb: false, dev: false, visitor: true }
   private _server_version: string;
 
-  private _historyTree?: HistoryTree<CompleteVisualizationState>;
+  private _historyTree?: HistoryTree;
 
   constructor() {
     this._symbol_lookup = new Map<number, string>();
@@ -206,7 +206,7 @@ export class Dataset {
     this.updateBrushingLinkingLookupTables();
     await this.purgeUnusedLocations();
 
-    if (!this._user.visitor) this._historyTree = new HistoryTree<CompleteVisualizationState>(this.getState());
+    if (!this._user.visitor) this._historyTree = new HistoryTree(this.getState());
   }
 
   get historyTree(): typeof this._historyTree {
