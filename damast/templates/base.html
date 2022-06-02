@@ -21,7 +21,7 @@
     {% block header %}
     {%- from 'header_links.html' import link_list -%}
     {{ link_list(user) }}
-    {%- from 'user_bar.html' import user_bar -%}
+    {%- from 'user_bar.html' import user_bar with context -%}
     {{ user_bar(user) }}
     {% endblock %}
   </header>

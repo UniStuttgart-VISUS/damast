@@ -380,6 +380,11 @@ class FlaskApp(flask.Flask):
 
             today = datetime.datetime.now().astimezone().strftime('%B %_d, %Y')
 
+            this_url = flask.url_for(flask.request.endpoint,
+                    **(flask.request.view_args if flask.request.view_args else dict()))
+            if flask.request.args:
+                this_url += F'?{werkzeug.urls.url_encode(flask.request.args)}'
+
             return dict(
                     # inject user into every template
                     user=self.auth.current_user(),
@@ -389,6 +394,7 @@ class FlaskApp(flask.Flask):
                     environment='TESTING' if is_testing else 'PRODUCTION',
                     cookie_path=self.cookiepath,
                     today=today,
+                    this_url=this_url,
                     )
 
 
@@ -414,7 +420,6 @@ class FlaskApp(flask.Flask):
 
             response.add_etag()
             return response.make_conditional(flask.request)
-
 
         # do conditional compression
         self.register_blueprint(compress)

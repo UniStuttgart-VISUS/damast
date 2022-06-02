@@ -7,14 +7,25 @@
     <i class="fa fa-pencil fa--pad-right"></i>
     Change password
   </button>
-  <form id="logout-form" class="inline hidden" action="{{ url_for('login.logout', _method='POST', next=url_for(request.endpoint, **(request.view_args if request.view_args else dict()))) }}" method="POST" enctype="application/x-www-form-urlencoded"></form>
+  <form id="logout-form"
+        class="inline hidden"
+        action="{{ url_for('login.logout', _method='POST', next=this_url) }}"
+        method="POST"
+        enctype="application/x-www-form-urlencoded">
+  </form>
   <button class="button button--red {{ button_class }}" type="submit" form="logout-form">
     <i class="fa fa-sign-out fa--pad-right"></i>
     Log out
   </button>
   {%- else -%}
   Not logged in.
-  <form id="login-form" class="inline hidden" action="{{ url_for('login.login', next=url_for(request.endpoint, **(request.view_args if request.view_args else dict())), _method='GET') }}" method="GET"></form>
+  <form id="login-form"
+        class="inline hidden"
+        action="{{ url_for('login.login', _method='GET') }}"
+        method="GET"
+        enctype="application/x-www-form-urlencoded">
+      <input type="hidden" name="next" value="{{ this_url }}" />
+  </form>
   <button class="button button--blue {{ button_class }}" type="submit" form="login-form">
     <i class="fa fa-sign-in fa--pad-right"></i>
     Login
