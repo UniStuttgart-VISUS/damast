@@ -219,3 +219,8 @@ b
   background: $clr-bg;
 }
 
+.modal__foreground .vertical-fill-buttons {
+  display: grid;
+  grid-auto-flow: row;
+  gap: 1ex;
+}

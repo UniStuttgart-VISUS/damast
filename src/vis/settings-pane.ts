@@ -109,9 +109,6 @@ export default class SettingsPane {
   private async onClickDescribeFilters() {
     const descriptionPromise = new Promise<string>(r => this._resolver = r);
     modal.showInfoboxFromURL('Currently Active Filters', () => descriptionPromise);
-    //this._describe_filter_modal.content.append('p')
-    //  .classed('modal__content--loading', true)
-    //  .html(`<i class="fa fa-pulse fa-3x fa-fw fa-spinner"></i>`);
 
     this.data_worker.postMessage({type: 'describe-filters', data: null});
   }
