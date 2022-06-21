@@ -4,6 +4,7 @@
 
 dialog.infobox[open] {
   max-height: 50vh;
+  max-width: 800px;
 
   padding: 0;
   border: 2px solid $clr-accent;
@@ -21,7 +22,7 @@ dialog.infobox[open] {
 
   h1, h2, h3, h4, h5, h6,
   p, ul, ol, article, section,
-  dl, blockquote {
+  dl, blockquote, label {
     max-width: 65ch;
   }
 }
@@ -219,8 +220,32 @@ b
   background: $clr-bg;
 }
 
-.modal__foreground .vertical-fill-buttons {
-  display: grid;
-  grid-auto-flow: row;
-  gap: 1ex;
+.modal__foreground {
+  form > * {
+    display: block;
+  }
+
+  form {
+    display: grid;
+    grid-auto-flow: row;
+  }
+
+  form > label {
+    text-align: start;
+    margin-top: 1em;
+  }
+
+  .vertical-fill-buttons,
+  .horizontal-fill-buttons {
+    display: grid;
+    grid-auto-flow: row;
+    gap: 1ex;
+  }
+
+  .horizontal-fill-buttons {
+    margin-top: 1em;
+
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+  }
 }

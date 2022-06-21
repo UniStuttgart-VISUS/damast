@@ -72,9 +72,22 @@ async function showAskDialog(): Promise<boolean> {
       });
     sel.querySelector(':scope button#yes')
       .addEventListener('click', () => {
-        // TODO
-        close();
-        resolve(false);
+        sel.innerHTML = require('html-loader!./html/questionnaire.template.html').default;
+        const form: HTMLFormElement = sel.querySelector(':scope form');
+        const version = document.querySelector('meta[name="software-version"]')?.getAttribute('content') ?? '<unknown>';
+        const timestamp = new Date().toISOString();
+        form.querySelector('input[name="version"]')?.setAttribute('value', version);
+        form.querySelector('input[name="time"]')?.setAttribute('value', timestamp);
+
+        if (sel.parentElement.tagName === 'DIALOG') {
+          sel.parentElement.addEventListener('close', console.log);
+          form.addEventListener('submit', (e) => {
+            setTimeout(() => {
+              close();
+              resolve(true);
+            }, 0);
+          });
+        }
       });
   });
 }

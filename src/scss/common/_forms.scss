@@ -23,6 +23,8 @@ input[type="file"] {
 
 input[type="number"],
 input[type="text"],
+input[type="email"],
+textarea,
 select {
   --border-color: #{$clr-gray};
   --border-width: 1px;
@@ -36,7 +38,7 @@ select {
   font-weight: inherit;
   color: inherit;
 
-  background: $clr-bg;
+  background: $clr-bg-root;
   color: $clr-fg;
 
   &:focus-visible,
@@ -54,6 +56,12 @@ select {
     --border-color: #{$clr-gray};
     color: $clr-gray;
   }
+}
+
+fieldset {
+  border: 1px solid $clr-gray;
+  border-radius: 3px;
+  margin: 1ex 1em;
 }
 
 input:is([type="number"], [type="text"]) {
