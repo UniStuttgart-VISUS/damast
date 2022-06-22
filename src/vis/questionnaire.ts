@@ -1,22 +1,17 @@
 import { getConsentCookie } from '../common/cookies';
 import { showInfoboxFromURL } from './modal';
+import {
+  localStorageKeyUsageTime,
+  localStorageKeyQuestionnaire,
+  QuestionnaireState
+} from '../common/questionnaire';
 
-const localStorageKeyUsageTime = 'damast-questionnaire.cumulative-usage';
-const localStorageKeyQuestionnaire = 'damast-questionnaire.questionnaire';
 const checkInterval = 5000;  // XXX
 const triggerTimeMs = 15000;//1_800_000  // 30min
 
-enum QuestionnaireState {
-  NotYet = 'not yet',
-  DoNotWant = 'do not want',
-  Done = 'done',
-};
-
 export function initQuestionnaire() {
-  localStorage.setItem(localStorageKeyUsageTime, '0'); // XXX
-
   const consentCookie = getConsentCookie();
-  if (consentCookie !== 'all') return;
+  if (consentCookie === null) return;
 
   const now = Date.now();
   setTimeout(async () => regularCheck(now), checkInterval);
@@ -30,7 +25,6 @@ async function regularCheck(lastTime: number) {
   localStorage.setItem(localStorageKeyUsageTime, totalTime.toString());
 
   const questionnaireState: QuestionnaireState = (localStorage.getItem(localStorageKeyQuestionnaire) ?? QuestionnaireState.NotYet) as QuestionnaireState;
-  console.log(questionnaireState);
 
   if (questionnaireState === QuestionnaireState.DoNotWant) return;
   if (questionnaireState === QuestionnaireState.Done) return;
@@ -46,7 +40,7 @@ async function regularCheck(lastTime: number) {
 }
 
 async function showAskDialog(): Promise<boolean> {
-  return new Promise<boolean>(async (resolve, reject) => {
+  return new Promise<boolean>(async (resolve, _reject) => {
     const descriptionPromise = Promise.resolve('');
     const { content, close } = showInfoboxFromURL(
       'Fill out questionnaire',
@@ -72,22 +66,9 @@ async function showAskDialog(): Promise<boolean> {
       });
     sel.querySelector(':scope button#yes')
       .addEventListener('click', () => {
-        sel.innerHTML = require('html-loader!./html/questionnaire.template.html').default;
-        const form: HTMLFormElement = sel.querySelector(':scope form');
-        const version = document.querySelector('meta[name="software-version"]')?.getAttribute('content') ?? '<unknown>';
-        const timestamp = new Date().toISOString();
-        form.querySelector('input[name="version"]')?.setAttribute('value', version);
-        form.querySelector('input[name="time"]')?.setAttribute('value', timestamp);
-
-        if (sel.parentElement.tagName === 'DIALOG') {
-          sel.parentElement.addEventListener('close', console.log);
-          form.addEventListener('submit', (e) => {
-            setTimeout(() => {
-              close();
-              resolve(true);
-            }, 0);
-          });
-        }
+        close();
+        document.querySelector<HTMLAnchorElement>('a#questionnaire-link')?.click();
+        resolve(true);
       });
   });
 }

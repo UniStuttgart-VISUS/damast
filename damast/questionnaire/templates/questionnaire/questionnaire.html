@@ -1,0 +1,105 @@
+{# vim: set filetype=htmldjango #}
+{% extends "base.html" %}
+{% block title %}Questionnaire{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('questionnaire.file', path='style.css') }}">
+<script type="module" src="{{ url_for('questionnaire.file', path='questionnaire.js') }}"></script>
+{% endblock %}
+{% block content %}
+  <h1>Questionnaire</h1>
+
+  <p>
+    Thank you for taking the time to provide us with feedback!
+    This feedback will be used to improve <span class="small-caps">Damast,</span> to extend <span class="small-caps">Damast</span> to new fields of research and data sets, and in scientific publications regarding <span class="small-caps">Damast.</span>
+    Providing feedback is completely optional, and your feedback would only be published in anonymized form.
+    You can leave this page at any time if you change your mind.
+    Once you click on the submit button in the bottom right of the page, your feedback will be sent to the server.
+  </p>
+
+  <form
+    action="{{ url_for('questionnaire.post_feedback') }}"
+    method="POST"
+    enctype="application/x-www-form-urlencoded">
+    <input type="hidden" name="version" value="{{ version }}">
+    <input type="hidden" name="time" value="{{ timestamp }}">
+    <input type="hidden" name="usage-time" value="">
+
+    <label for="general-feedback">
+      Please put general feedback you want to provide, as well as suggestions, here:
+    </label>
+    <textarea id="general-feedback" required name="general-feedback" cols="60" rows="8" placeholder="Enter general feedback or suggestions (required)"></textarea>
+
+    <fieldset>
+      <legend>
+        Would you recommend <span class="small-caps">Damast</span> to your colleagues and peers?
+      </legend>
+      <div class="likert-scale">
+        <label for="recommendation1">Definitely <strong>not</strong></label>
+        <input type="radio" id="recommendation1" name="recommendation" value="1-definitely not" title="definitely not">
+        <input type="radio" id="recommendation2" name="recommendation" value="2-probably not" title="probably not">
+        <input type="radio" id="recommendation3" name="recommendation" value="3-unsure" title="unsure">
+        <input type="radio" id="recommendation4" name="recommendation" value="4-probably" title="probably">
+        <input type="radio" id="recommendation5" name="recommendation" value="5-definitely" title="definitely">
+        <label for="recommendation5">Definitely</label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>
+        How intuitive and useable do you think the interface of <span class="small-caps">Damast</span> is?
+      </legend>
+      <div class="likert-scale">
+        <label for="intuitive1">Very unintuitive</label>
+        <input type="radio" id="intuitive1" name="intuitive" value="1-very unintuitive" title="very unintuitive">
+        <input type="radio" id="intuitive2" name="intuitive" value="2-not intuitive" title="not intuitive">
+        <input type="radio" id="intuitive3" name="intuitive" value="3-unsure" title="unsure">
+        <input type="radio" id="intuitive4" name="intuitive" value="4-intuitive" title="intuitive">
+        <input type="radio" id="intuitive5" name="intuitive" value="5-very intuitive" title="very intuitive">
+        <label for="intuitive5">Very intuitive</label>
+      </div>
+    </fieldset>
+
+    <label for="most-interesting">
+      What, in your opinion, is the most interesting or exciting aspect or component of <span class="small-caps">Damast</span>?
+    </label>
+    <input type="text" id="most-interesting" name="most-interesting" placeholder="Name the most interesting aspect (optional)"></input>
+
+    <label for="most-confusing">
+      What aspect or component of <span class="small-caps">Damast</span>, if any, did you find most confusing or hard to use?
+    </label>
+    <input type="text" id="most-confusing" name="most-confusing" placeholder="Name the most confusing aspect (optional)"></input>
+
+    <label for="anecdotes">
+      What did you use <span class="small-caps">Damast</span> for today?
+      How did you interact with the interface, and with what goal in mind?
+      Were you able to find anything interesting to you, and if so, what?
+    </label>
+    <textarea id="anecdotes" name="anecdotes" cols="60" rows="8" placeholder="Describe your use and findings (optional)"></textarea>
+
+    <label for="other-domains">
+      Could you see <span class="small-caps">Damast</span> being used for a different domain, or different data?
+      If so, what would that be?
+      Do you know of any tools that currently support this domain or data analysis?
+    </label>
+    <textarea id="other-domains" name="other-domains" cols="60" rows="8" placeholder="Describe other suggested uses (optional)"></textarea>
+
+    <label for="e-mail">
+      If you want, you can leave an e-mail address.
+      In that case, we might notify you if your suggestions become part of <span class="small-caps">Damast.</span>
+      We will handle your e-mail address confidentially, and not use it for any other purposes.
+    </label>
+    <input type="email" id="e-mail" name="e-mail" placeholder="E-mail address (optional)"></input>
+
+    <div class="horizontal-flex-buttons">
+      <button class="button button--large button--red" type="reset">
+        <i class="fa fa-fw fa-eraser"></i>
+        Clear form
+      </button>
+      <button class="button button--large button--green" type="submit">
+        <i class="fa fa-fw fa-envelope"></i>
+        Submit feedback
+      </button>
+    </div>
+  </form>
+{% endblock %}

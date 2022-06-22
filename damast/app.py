@@ -378,7 +378,9 @@ class FlaskApp(flask.Flask):
             if cookie_preference not in ('essential', 'all'):
                 cookie_preference = None
 
-            today = datetime.datetime.now().astimezone().strftime('%B %_d, %Y')
+            now = datetime.datetime.now().astimezone()
+            today = now.strftime('%B %_d, %Y')
+            timestamp = now.isoformat()
 
             this_url = flask.url_for(flask.request.endpoint,
                     **(flask.request.view_args if flask.request.view_args else dict()))
@@ -394,6 +396,7 @@ class FlaskApp(flask.Flask):
                     environment='TESTING' if is_testing else 'PRODUCTION',
                     cookie_path=self.cookiepath,
                     today=today,
+                    timestamp=timestamp,
                     this_url=this_url,
                     )
 

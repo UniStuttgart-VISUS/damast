@@ -334,6 +334,16 @@ module.exports = function(env, argv) {
           {to: 'images/', from: 'node_modules/leaflet-color-number-markers/dist/img/marker-shadow.png'},
         ],
       ],
+
+      // questionnaire
+      [
+        {
+          'questionnaire': './src/questionnaire/index.ts',
+          'style.css': './src/scss/questionnaire.scss',
+        },
+        'damast/questionnaire/static/',
+        [],
+      ],
     ].map(([entry, out, patterns]) => {
       return {
         entry,
@@ -353,6 +363,7 @@ module.exports = function(env, argv) {
                 path.resolve(__dirname, "src/common"),
                 path.resolve(__dirname, "src/flashes"),
                 path.resolve(__dirname, "src/cookies"),
+                path.resolve(__dirname, "src/questionnaire"),
               ],
             },
             {
