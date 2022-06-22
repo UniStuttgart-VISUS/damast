@@ -85,6 +85,7 @@ dialog.infobox[open] {
   overflow: auto;
 
   padding: 1em;
+  scrollbar-gutter: stable;
 
   font-size: 0.8rem;
   font-weight: normal;
@@ -233,6 +234,11 @@ b
   form > label {
     text-align: start;
     margin-top: 1em;
+  }
+
+  form .likert-scale {
+    display: grid;
+    grid-template-columns: max-content repeat(5, 1fr) max-content;
   }
 
   .vertical-fill-buttons,
