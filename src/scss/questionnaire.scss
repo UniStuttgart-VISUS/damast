@@ -12,7 +12,8 @@ h1, h2, h3, h4, h5, h6,
 p,
 ul,
 form,
-.content__block {
+.content__block,
+.intro {
   width: 80vw;
   max-width: 1200px;
   margin: auto;
@@ -102,4 +103,56 @@ section {
 
 :is(article, section) > :is(label, textarea, input) {
   margin-inline: 1ex;
+}
+
+.intro {
+  --img-width: var(--width, 600px);
+  display: grid;
+  grid-template-columns: auto calc(var(--img-width) + 1em + 2px);
+  grid-auto-rows: 1fr;
+  align-items: start;
+  gap: 1ex;
+
+  div {
+    grid-column: 1 / span 1;
+
+    p {
+      width: initial;
+    }
+  }
+
+  figure {
+    grid-column: 2 / span 1;
+  }
+}
+
+figure {
+  border: 1px solid $clr-gray;
+  padding: 0.5em 1em;
+  margin: 0;
+
+  display: grid;
+  grid-template-columns: min-content;
+
+  svg,
+  img {
+    width: var(--img-width);
+  }
+
+  figcaption {
+    margin-top: 0.5em;
+    font-size: 12px;
+    max-width: var(--img-width);
+  }
+
+  &:first-of-type {
+    margin-top: 0;
+  }
+}
+
+:is(article, section)::before {
+  width: 500px;
+  margin: 2em auto;
+  content: '';
+  border-top: 1px solid $clr-gray;
 }

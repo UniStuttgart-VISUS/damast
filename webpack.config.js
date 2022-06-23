@@ -342,7 +342,9 @@ module.exports = function(env, argv) {
           'style.css': './src/scss/questionnaire.scss',
         },
         'damast/questionnaire/static/',
-        [],
+        [
+          { from: 'src/assets/questionnaire/', to: '.', },
+        ],
       ],
     ].map(([entry, out, patterns]) => {
       return {

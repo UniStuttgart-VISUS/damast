@@ -38,7 +38,7 @@
         Would you recommend <span class="small-caps">Damast</span> to your colleagues and peers?
       </legend>
       <div class="likert-scale">
-        <label for="recommendation1">Definitely <strong>not</strong></label>
+        <label for="recommendation1">Definitely not</label>
         <input type="radio" id="recommendation1" name="recommendation" value="1-definitely not" title="definitely not">
         <input type="radio" id="recommendation2" name="recommendation" value="2-probably not" title="probably not">
         <input type="radio" id="recommendation3" name="recommendation" value="3-unsure" title="unsure">
@@ -86,10 +86,19 @@
     <article>
     <h3>Map and List of Places</h3>
 
-    <p>
-      TODO
-      Dolor veniam maxime velit alias maiores? Quis laudantium dolorum eius fuga culpa? Tenetur consequuntur nihil excepturi possimus ipsam, repellendus Recusandae.
-    </p>
+    <div class="intro">
+      <div>
+        <p>
+          The map (left) and list of places (right) show the geographical context of religious groups.
+          They let you see which religious groups existed in which cities, and allow to filter and search for place names.
+        </p>
+      </div>
+      <figure>
+        <img src="{{ url_for('questionnaire.file', path='map-location-list.png') }}" alt="map and location list">
+        <figcaption>The map and the list of places.</figcaption>
+      </figure>
+    </div>
+
 
     <fieldset>
       <legend>
@@ -131,10 +140,19 @@
     <article>
       <h3>Timeline</h3>
 
-    <p>
-      TODO
-      Dolor veniam maxime velit alias maiores? Quis laudantium dolorum eius fuga culpa? Tenetur consequuntur nihil excepturi possimus ipsam, repellendus Recusandae.
-    </p>
+    <div class="intro">
+      <div>
+        <p>
+          The timeline shows the presence of religious groups at different times.
+          Each religious group is represented as a row, which is colored if we have evidence of that religious group at that time.
+          The timeline can also be used to specify a filter criterion for data shown, by selecting a rectangular area.
+        </p>
+      </div>
+      <figure>
+        <img src="{{ url_for('questionnaire.file', path='timeline.png') }}" alt="timeline">
+        <figcaption>The timeline.</figcaption>
+      </figure>
+    </div>
 
     <fieldset>
       <legend>
@@ -176,10 +194,19 @@
     <article>
       <h3>Religion hierarchy</h3>
 
-    <p>
-      TODO
-      Dolor veniam maxime velit alias maiores? Quis laudantium dolorum eius fuga culpa? Tenetur consequuntur nihil excepturi possimus ipsam, repellendus Recusandae.
-    </p>
+    <div class="intro" style="--width:300px">
+      <div>
+        <p>
+          The religion hierarchy shows the different religious groups.
+          The groups are shown hierarchically under their respective main religion.
+          Checkboxes behind each religious group can be used to filter the dataset for specific religious groups.
+        </p>
+      </div>
+      <figure>
+        <img src="{{ url_for('questionnaire.file', path='religion-hierarchy.png') }}" alt="religion hierarchy">
+        <figcaption>The religion hierarchy.</figcaption>
+      </figure>
+    </div>
 
     <fieldset>
       <legend>
