@@ -14,6 +14,7 @@ export default class SettingsPane {
   private brush_only_active_input: d3.Selection<HTMLInputElement, any, any, any>;
   private timeline_mode_input: d3.Selection<HTMLInputElement, any, any, any>;
   private map_mode_input: d3.Selection<HTMLInputElement, any, any, any>;
+  private falsecolor_mode_input: d3.Selection<HTMLInputElement, any, any, any>;
 
   constructor(
     private readonly data_worker: Worker,
@@ -63,6 +64,14 @@ export default class SettingsPane {
       })
       .on('change', function() {
         ref.data_worker.postMessage({type: 'set-map-mode', data: this.checked ? T.MapMode.Cluttered : T.MapMode.Clustered });
+      })
+
+    this.falsecolor_mode_input = d.select<HTMLInputElement>('div#falsecolor-controls input#falsecolor')
+      .each(function() {
+        this.checked = (ViewModeDefaults.use_falsecolors);
+      })
+      .on('change', function() {
+        ref.data_worker.postMessage({type: 'set-falsecolors', data: this.checked });
       })
 
     d.select('#save-layout')
@@ -230,18 +239,28 @@ export default class SettingsPane {
       }, 1500);});
   }
 
-  private async onSettingsEvent(eventData: MessageData<{brush_only_active: boolean, display_mode: 'religion' | 'confidence', timeline_mode: T.TimelineMode, map_mode: T.MapMode}>) {
+  private async onSettingsEvent(eventData: MessageData<{brush_only_active: boolean, display_mode: 'religion' | 'confidence', timeline_mode: T.TimelineMode, map_mode: T.MapMode, use_falsecolors: boolean}>) {
     const c1 = this.brush_only_active_input.on('change');
     this.brush_only_active_input.on('change', null);
     const c2 = this.confidence_mode_input.on('change');
     this.confidence_mode_input.on('change', null);
+    const c3 = this.timeline_mode_input.on('change');
+    this.timeline_mode_input.on('change', null);
+    const c4 = this.map_mode_input.on('change');
+    this.map_mode_input.on('change', null);
+    const c5 = this.falsecolor_mode_input.on('change');
+    this.falsecolor_mode_input.on('change', null);
 
     this.brush_only_active_input.node().checked = eventData.data.brush_only_active;
     this.confidence_mode_input.node().checked = (eventData.data.display_mode === 'confidence');
     this.timeline_mode_input.node().checked = (eventData.data.timeline_mode === T.TimelineMode.Qualitative);
     this.map_mode_input.node().checked = (eventData.data.map_mode === T.MapMode.Cluttered);
+    this.falsecolor_mode_input.node().checked = (eventData.data.use_falsecolors);
 
     this.brush_only_active_input.on('change', c1);
     this.confidence_mode_input.on('change', c2);
+    this.timeline_mode_input.on('change', c3);
+    this.map_mode_input.on('change', c4);
+    this.falsecolor_mode_input.on('change', c5);
   }
 };

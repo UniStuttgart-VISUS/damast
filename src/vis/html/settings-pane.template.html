@@ -42,6 +42,27 @@
         <label class="switch__label" for="confidence-mode">Confidence</label>
       </div>
     </dd>
+    <dt>False coloring</dt>
+    <dd>
+      <details>
+        <summary>Use false coloring for religions</summary>
+        <p>
+          This switch controls whether a consistent color scheme is used for religions, or a <em>false-color</em> scheme.
+          The former uses the colors defined for each religion in the database, resulting in consistent coloring over time.
+          The latter tries to distribute the colors of currently-visible religions as well as possible.
+          This coloring is easier to distinguish, but is not consistent if the set of visible religions changes.
+          For screenshots and comparisons, we recommend using the consistent coloring from the database.
+        </p>
+      </details>
+      <div class="timeline__controls" id="falsecolor-controls">
+        <label class="switch__label" for="falsecolor">Consistent</label>
+        <label class="switch">
+          <input type="checkbox" id="falsecolor">
+          <span class="slider round"></span>
+        </label>
+        <label class="switch__label" for="falsecolor">False color</label>
+      </div>
+    </dd>
     <dt>Timeline mode</dt>
     <dd>
       <details>
