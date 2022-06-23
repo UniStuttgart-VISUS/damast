@@ -99,3 +99,7 @@ section {
     min-width: 13em;
   }
 }
+
+:is(article, section) > :is(label, textarea, input) {
+  margin-inline: 1ex;
+}
