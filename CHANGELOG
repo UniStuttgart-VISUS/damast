@@ -7,7 +7,8 @@ a way to go to the place URI pages directly from the map. Add history tree
 to visualization (beta testers only). Add form to navigate to reports by
 UUID. Improve post-login/logout navigation. Development mode now creates
 and hosts a PostgreSQL database locally as a Docker container, instead of
-port-forwarding to a database on a server.
+port-forwarding to a database on a server. Add a distributed false-color
+religion mode.
 
 
 2022-05-12                                            1.1.3+hotfix-wasm-csp
