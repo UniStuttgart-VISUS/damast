@@ -34,6 +34,9 @@
     "display-mode": {
       "enum": ["religion", "confidence"]
     },
+    "false-colors": {
+      "type": "boolean"
+    },
     "timeline-mode": {
       "enum": ["qualitative", "quantitative"]
     },

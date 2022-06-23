@@ -74,6 +74,7 @@ interface Metadata {
 interface _VisualizationState {
   ["show-filtered"]: boolean;
   ["display-mode"]: "religion" | "confidence";
+  ["false-colors"]: boolean,
   ["timeline-mode"]: "qualitative" | "quantitative";
   ["map-mode"]: "clustered" | "cluttered";
   ["source-sort-mode"]: "count" | "name";
@@ -158,6 +159,7 @@ export class Dataset {
   private _timeline_mode: T.TimelineMode = ViewModeDefaults.timeline_mode;
   private _map_mode: T.MapMode = ViewModeDefaults.map_mode;
   private _source_sort_mode: T.SourceViewSortMode = ViewModeDefaults.source_sort_mode;
+  private _use_falsecolors: boolean = ViewModeDefaults.use_falsecolors;
 
   private _existing_religions: Set<number> = new Set<number>();
 
@@ -335,9 +337,8 @@ export class Dataset {
   transferableColorscheme(): T.TransferableColorscheme {
     if (this.display_mode === T.DisplayMode.Religion) {
       const colorscheme = {};
-      // XXX
-      //this._religion_colorscale.domain().forEach(k => colorscheme[k] = this._religion_colorscale(k));
-      this._falsecolor_religion_colorscale.domain().forEach(k => colorscheme[k] = this._falsecolor_religion_colorscale(k));
+      const scale = this._use_falsecolors ? this._falsecolor_religion_colorscale : this._religion_colorscale;
+      scale.domain().forEach(k => colorscheme[k] = scale(k));
       return colorscheme;
     } else {
       return this.transferableConfidenceColorscheme();
@@ -885,6 +886,17 @@ export class Dataset {
     }
   }
 
+  get use_falsecolors(): boolean {
+    return this._use_falsecolors;
+  }
+
+  set use_falsecolors(v: boolean) {
+    if (v !== this._use_falsecolors) {
+      this._use_falsecolors = v;
+      this.enqueueStateChange('set use false colors', ChangeScope.DisplayMode);
+    }
+  }
+
   get timeline_mode(): T.TimelineMode {
     return this._timeline_mode;
   }
@@ -1070,6 +1082,7 @@ export class Dataset {
       ["timeline-mode"]: (this._timeline_mode === T.TimelineMode.Qualitative) ? 'qualitative' : 'quantitative',
       ["map-mode"]: (this._map_mode === T.MapMode.Clustered) ? 'clustered' : 'cluttered',
       ["source-sort-mode"]: (this._source_sort_mode === T.SourceViewSortMode.ByCountDescending) ? 'count' : 'name',
+      ["false-colors"]: this._use_falsecolors,
       ["confidence-aspect"]: confidence_keys.get(this._displayed_confidence_aspect),
       ["map-state"]: this._map_state,
       filters: {
@@ -1123,6 +1136,9 @@ export class Dataset {
         this._display_mode = (state['display-mode'] === 'religion')
           ? T.DisplayMode.Religion
           : T.DisplayMode.Confidence;
+
+      if ('false-colors' in state)
+        this._use_falsecolors = Boolean(state['false-colors']);
 
       if ('timeline-mode' in state)
         this._timeline_mode = (state['timeline-mode'] === 'qualitative')

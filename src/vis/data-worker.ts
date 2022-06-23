@@ -2,6 +2,7 @@ export type MessageDataType =
     'pass-message-port'
   | 'set-show-only-active'
   | 'set-display-mode'
+  | 'set-falsecolors'
   | 'set-timeline-mode'
   | 'set-map-mode'
   | 'set-confidence-aspect'
