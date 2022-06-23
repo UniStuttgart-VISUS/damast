@@ -146,6 +146,7 @@ export class Dataset {
   private _displayed_confidence_aspect: T.ConfidenceAspect = T.ConfidenceAspect.Religion;
 
   private _religion_colorscale: d3scale.ScaleOrdinal<number, string>;
+  private _falsecolor_religion_colorscale: d3scale.ScaleOrdinal<number, string>;
   private _confidence_colorscale: d3scale.ScaleOrdinal<T.Confidence, string>;
 
   // event stuff
@@ -334,7 +335,9 @@ export class Dataset {
   transferableColorscheme(): T.TransferableColorscheme {
     if (this.display_mode === T.DisplayMode.Religion) {
       const colorscheme = {};
-      this._religion_colorscale.domain().forEach(k => colorscheme[k] = this._religion_colorscale(k));
+      // XXX
+      //this._religion_colorscale.domain().forEach(k => colorscheme[k] = this._religion_colorscale(k));
+      this._falsecolor_religion_colorscale.domain().forEach(k => colorscheme[k] = this._falsecolor_religion_colorscale(k));
       return colorscheme;
     } else {
       return this.transferableConfidenceColorscheme();
@@ -843,6 +846,21 @@ export class Dataset {
 
       this._place_data.forEach(p => p.active = (active_ids.has(p.tuple_id) && place_ids.has(p.place_id)));
     }
+
+    this.updateFalsecolorReligionColorscale();
+  }
+
+  private updateFalsecolorReligionColorscale() {
+    const allReligions = this._hierarchy.descendants().map(d => d.data.id);
+    const activeReligions = this._brush_only_active
+      ? new Set<number>(this._place_data.filter(d => d.active).map(d => d.religion_id))
+      : new Set<number>(allReligions);
+    this._falsecolor_religion_colorscale = color.createFalseReligionColorscale(
+      this._hierarchy.data,
+      this._religion_ordering,
+      activeReligions,
+      allReligions,
+    );
   }
 
   get brush_only_active(): boolean {
