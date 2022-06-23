@@ -25,6 +25,9 @@
     <input type="hidden" name="time" value="{{ timestamp }}">
     <input type="hidden" name="usage-time" value="">
 
+    <section>
+    <h2>General Feedback</h2>
+
     <label for="general-feedback">
       Please put general feedback you want to provide, as well as suggestions, here:
     </label>
@@ -69,6 +72,66 @@
       What aspect or component of <span class="small-caps">Damast</span>, if any, did you find most confusing or hard to use?
     </label>
     <input type="text" id="most-confusing" name="most-confusing" placeholder="Name the most confusing aspect (optional)"></input>
+    </section>
+
+    <section>
+    <h2>Visualization Feedback</h2>
+
+    <p>
+      Please provide feedback for the individual views and features of the visualization.
+      Each view and feature is briefly presented and explained.
+      If you had not previously explored or used the feature, you may specify so.
+    </p>
+
+    <article>
+    <h3>Map and List of Places</h3>
+
+    <p>
+      TODO
+      Dolor veniam maxime velit alias maiores? Quis laudantium dolorum eius fuga culpa? Tenetur consequuntur nihil excepturi possimus ipsam, repellendus Recusandae.
+    </p>
+
+    <fieldset>
+      <legend>
+        How important and helpful do you consider the map and list of places to be?
+      </legend>
+      <div class="likert-scale">
+        <label for="map-helpful-1">Not at all</label>
+        <input type="radio" id="map-helpful-1" name="map-helpful" value="1-not at all" title="not at all">
+        <input type="radio" id="iap-helpful-2" name="map-helpful" value="2-not really" title="not really">
+        <input type="radio" id="iap-helpful-3" name="map-helpful" value="3-unsure" title="unsure">
+        <input type="radio" id="iap-helpful-4" name="map-helpful" value="4-helpful" title="helpful">
+        <input type="radio" id="iap-helpful-5" name="map-helpful" value="5-very helpful" title="very helpful">
+        <label for="map-helpful-5">Very important and helpful</label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>
+        How much time did you approximately spend using the map and list of places?
+      </legend>
+      <div class="vertical-radio-options">
+        <input type="radio" id="map-time-1" name="map-time" value="0" title="none at all">
+        <label for="map-time-1">none at all</label>
+        <input type="radio" id="map-time-2" name="map-time" value="<5min" title="less than 5min">
+        <label for="map-time-2">less than five minutes</label>
+        <input type="radio" id="map-time-3" name="map-time" value="<15min" title="less than 15min">
+        <label for="map-time-3">less than fifteen minutes</label>
+        <input type="radio" id="map-time-4" name="map-time" value="<1h" title="less than 1h">
+        <label for="map-time-4">less than one hour</label>
+        <input type="radio" id="map-time-5" name="map-time" value=">1h" title="more than 1h">
+        <label for="map-time-5">more than one hour</label>
+      </div>
+    </fieldset>
+
+    <label for="map-comment">Do you have any more comments regarding the map and list of places?</label>
+    <textarea id="map-comment" name="map-comment" rows="2" placeholder="Additional comment (optional)"></textarea>
+    </article>
+
+    </section>
+
+    <section>
+    <h2>Other Feedback</h2>
 
     <label for="anecdotes">
       What did you use <span class="small-caps">Damast</span> for today?
@@ -90,6 +153,7 @@
       We will handle your e-mail address confidentially, and not use it for any other purposes.
     </label>
     <input type="email" id="e-mail" name="e-mail" placeholder="E-mail address (optional)"></input>
+    </section>
 
     <div class="horizontal-flex-buttons">
       <button class="button button--large button--red" type="reset">

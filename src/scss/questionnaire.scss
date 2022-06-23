@@ -18,7 +18,9 @@ form,
   margin: auto;
 }
 
-form {
+form,
+form section,
+form section article {
   display: grid;
   grid-auto-flow: row;
   gap: 1em;
@@ -27,28 +29,50 @@ form {
     display: block;
   }
 
-  & > label + textarea {
+  & > label + :where(textarea, input[type="text"], input[type="email"]) {
     margin-top: -0.7em;
   }
-}
 
-form > label {
-  text-align: start;
-  margin-top: 1em;
-}
-
-form .likert-scale {
-  display: grid;
-  grid-template-columns: 1fr repeat(5, 3em) 1fr;
-  justify-content: center;
-  gap: 1ex;
-
-  & > input[type="radio"] {
-    min-width: 3em;
+  & > label {
+    text-align: start;
+    margin-top: 1em;
   }
 
-  & > label:last-of-type {
-    text-align: start;
+  .likert-scale {
+    display: grid;
+    grid-template-columns: 1fr repeat(5, 3em) 1fr;
+    justify-content: center;
+    gap: 1ex;
+
+    & > input[type="radio"] {
+      min-width: 3em;
+    }
+
+    & > label:last-of-type {
+      text-align: start;
+    }
+  }
+
+  .vertical-radio-options {
+    display: grid;
+    gap: 1ex;
+    grid-template-columns: max-content auto;
+
+    padding-inline-start: 1em;
+
+    input { grid-column: 1 / span 1; }
+    label {
+      grid-column: 2 / span 1;
+      text-align: start;
+    }
+  }
+}
+
+section {
+  margin-block: 2rem;
+
+  h2 {
+    padding: 0;
   }
 }
 

@@ -2,6 +2,7 @@
 {% block title %}Thank you{% endblock %}
 {% block head %}
 {{ super() }}
+<link rel="stylesheet" href="{{ url_for('questionnaire.file', path='style.css') }}">
 {% endblock %}
 {% block content %}
   <h1>Thank you for your feedback!</h1>
