@@ -1,6 +1,6 @@
 import * as d3 from 'd3-scale';
 import * as d3c from 'd3-color';
-import { interpolateSinebow, interpolateViridis, interpolateSpectral } from 'd3-scale-chromatic';
+import * as d3cs from 'd3-scale-chromatic';
 import { hierarchy as d3hier, partition } from 'd3-hierarchy';
 import type { HierarchyNode } from 'd3-hierarchy';
 import * as T from './datatypes';
@@ -59,7 +59,7 @@ export function createFalseReligionColorscale(
   religionOrder: Map<number, number>,
   activeReligions: Set<number>,
   allReligions: Array<number>,
-  colorFn: (t: number) => string = interpolateSinebow,
+  colorFn: (t: number) => string = (t) => d3cs.interpolateRainbow(t+0.25),
 ): d3.ScaleOrdinal<number, string> {
   function visit(node: T.OwnHierarchyNode) {
     if (node.children) {
