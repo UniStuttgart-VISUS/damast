@@ -66,6 +66,12 @@ class FetchWorker extends DataWorker<any> {
       this.data.brush_only_active = data.data;
 
       this.data.resumeEvents();
+    } else if (data.type === 'set-falsecolors') {
+      this.data.suspendEvents();
+
+      this.data.use_falsecolors = data.data;
+
+      this.data.resumeEvents();
     } else if (data.type === 'set-display-mode') {
       this.data.suspendEvents();
 
@@ -512,6 +518,7 @@ class FetchWorker extends DataWorker<any> {
       display_mode: (this.data.display_mode === DisplayMode.Religion) ? 'religion' : 'confidence',
       timeline_mode: this.data.timeline_mode,
       map_mode: this.data.map_mode,
+      use_falsecolors: this.data.use_falsecolors,
     }});
   }
 
