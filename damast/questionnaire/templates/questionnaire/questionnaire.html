@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="{{ url_for('questionnaire.file', path='style.css') }}">
 <script type="module" src="{{ url_for('questionnaire.file', path='questionnaire.js') }}"></script>
 {% endblock %}
+{% from "questionnaire/macros.html" import likert_scale_helpful, time_used, checkbox_used, additional_comment %}
 {% block content %}
   <h1>Questionnaire</h1>
 
@@ -27,11 +28,6 @@
 
     <section>
     <h2>General Feedback</h2>
-
-    <label for="general-feedback">
-      Please put general feedback you want to provide, as well as suggestions, here:
-    </label>
-    <textarea id="general-feedback" required name="general-feedback" cols="60" rows="8" placeholder="Enter general feedback or suggestions (required)"></textarea>
 
     <fieldset>
       <legend>
@@ -64,14 +60,19 @@
     </fieldset>
 
     <label for="most-interesting">
-      What, in your opinion, is the most interesting or exciting aspect or component of <span class="small-caps">Damast</span>?
+      What, in your opinion, is the most interesting or exciting aspect or functionality of <span class="small-caps">Damast</span>?
     </label>
     <textarea rows="1" id="most-interesting" name="most-interesting" placeholder="Name the most interesting aspect (optional)"></textarea>
 
     <label for="most-confusing">
-      What aspect or component of <span class="small-caps">Damast</span>, if any, did you find most confusing or hard to use?
+      What aspect or functionality of <span class="small-caps">Damast</span>, if any, did you find most confusing or hard to use?
     </label>
     <textarea rows="1" id="most-confusing" name="most-confusing" placeholder="Name the most confusing aspect (optional)"></textarea>
+
+    <label for="general-feedback">
+      Please put other general feedback you want to provide, as well as suggestions, here:
+    </label>
+    <textarea id="general-feedback" name="general-feedback" cols="60" rows="8" placeholder="Enter general feedback or suggestions"></textarea>
     </section>
 
     <section>
@@ -90,7 +91,7 @@
       <div>
         <p>
           The map (left) and list of places (right) show the geographical context of religious groups.
-          They let you see which religious groups existed in which cities, and allow to filter and search for place names.
+          They show which religious groups existed in which cities, and both allow to filter and search for place names.
         </p>
       </div>
       <figure>
@@ -99,42 +100,9 @@
       </figure>
     </div>
 
-
-    <fieldset>
-      <legend>
-        How important and helpful do you consider the map and list of places to be?
-      </legend>
-      <div class="likert-scale">
-        <label for="map-helpful-1">Not at all</label>
-        <input type="radio" id="map-helpful-1" name="map.helpful" value="1-not at all" title="not at all">
-        <input type="radio" id="iap-helpful-2" name="map.helpful" value="2-not really" title="not really">
-        <input type="radio" id="iap-helpful-3" name="map.helpful" value="3-unsure" title="unsure">
-        <input type="radio" id="iap-helpful-4" name="map.helpful" value="4-helpful" title="helpful">
-        <input type="radio" id="iap-helpful-5" name="map.helpful" value="5-very helpful" title="very helpful">
-        <label for="map-helpful-5">Very important and helpful</label>
-      </div>
-    </fieldset>
-
-    <fieldset>
-      <legend>
-        How much time did you approximately spend using the map and list of places?
-      </legend>
-      <div class="vertical-radio-options">
-        <input type="radio" id="map-time-1" name="map.time" value="0" title="none at all">
-        <label for="map-time-1">none at all</label>
-        <input type="radio" id="map-time-2" name="map.time" value="<5min" title="less than 5min">
-        <label for="map-time-2">less than five minutes</label>
-        <input type="radio" id="map-time-3" name="map.time" value="<15min" title="less than 15min">
-        <label for="map-time-3">less than fifteen minutes</label>
-        <input type="radio" id="map-time-4" name="map.time" value="<1h" title="less than 1h">
-        <label for="map-time-4">less than one hour</label>
-        <input type="radio" id="map-time-5" name="map.time" value=">1h" title="more than 1h">
-        <label for="map-time-5">more than one hour</label>
-      </div>
-    </fieldset>
-
-    <label for="map-comment">Do you have any more comments regarding the map and list of places?</label>
-    <textarea id="map-comment" name="map.comment" rows="1" placeholder="Additional comment (optional)"></textarea>
+    {{ likert_scale_helpful('map', 'map and list of places') }}
+    {{ time_used('map', 'map and list of places') }}
+    {{ additional_comment('map', 'map and list of places') }}
     </article>
 
     <article>
@@ -145,7 +113,7 @@
         <p>
           The timeline shows the presence of religious groups at different times.
           Each religious group is represented as a row, which is colored if we have evidence of that religious group at that time.
-          The timeline can also be used to specify a filter criterion for data shown, by selecting a rectangular area.
+          The timeline can also be used to filter data by time.
         </p>
       </div>
       <figure>
@@ -154,41 +122,9 @@
       </figure>
     </div>
 
-    <fieldset>
-      <legend>
-        How important and helpful do you consider the timeline to be?
-      </legend>
-      <div class="likert-scale">
-        <label for="timeline-helpful-1">Not at all</label>
-        <input type="radio" id="timeline-helpful-1" name="timeline.helpful" value="1-not at all" title="not at all">
-        <input type="radio" id="iap-helpful-2" name="timeline.helpful" value="2-not really" title="not really">
-        <input type="radio" id="iap-helpful-3" name="timeline.helpful" value="3-unsure" title="unsure">
-        <input type="radio" id="iap-helpful-4" name="timeline.helpful" value="4-helpful" title="helpful">
-        <input type="radio" id="iap-helpful-5" name="timeline.helpful" value="5-very helpful" title="very helpful">
-        <label for="timeline-helpful-5">Very important and helpful</label>
-      </div>
-    </fieldset>
-
-    <fieldset>
-      <legend>
-        How much time did you approximately spend using the timeline?
-      </legend>
-      <div class="vertical-radio-options">
-        <input type="radio" id="timeline-time-1" name="timeline.time" value="0" title="none at all">
-        <label for="timeline-time-1">none at all</label>
-        <input type="radio" id="timeline-time-2" name="timeline.time" value="<5min" title="less than 5min">
-        <label for="timeline-time-2">less than five minutes</label>
-        <input type="radio" id="timeline-time-3" name="timeline.time" value="<15min" title="less than 15min">
-        <label for="timeline-time-3">less than fifteen minutes</label>
-        <input type="radio" id="timeline-time-4" name="timeline.time" value="<1h" title="less than 1h">
-        <label for="timeline-time-4">less than one hour</label>
-        <input type="radio" id="timeline-time-5" name="timeline.time" value=">1h" title="more than 1h">
-        <label for="timeline-time-5">more than one hour</label>
-      </div>
-    </fieldset>
-
-    <label for="timeline-comment">Do you have any more comments regarding the timeline?</label>
-    <textarea id="timeline-comment" name="timeline.comment" rows="1" placeholder="Additional comment (optional)"></textarea>
+    {{ likert_scale_helpful('timeline', 'timeline') }}
+    {{ time_used('timeline', 'timeline') }}
+    {{ additional_comment('timeline', 'timeline') }}
     </article>
 
     <article>
@@ -208,133 +144,62 @@
       </figure>
     </div>
 
-    <fieldset>
-      <legend>
-        How important and helpful do you consider the religion hierarchy to be?
-      </legend>
-      <div class="likert-scale">
-        <label for="religion-helpful-1">Not at all</label>
-        <input type="radio" id="religion-helpful-1" name="religion.helpful" value="1-not at all" title="not at all">
-        <input type="radio" id="iap-helpful-2" name="religion.helpful" value="2-not really" title="not really">
-        <input type="radio" id="iap-helpful-3" name="religion.helpful" value="3-unsure" title="unsure">
-        <input type="radio" id="iap-helpful-4" name="religion.helpful" value="4-helpful" title="helpful">
-        <input type="radio" id="iap-helpful-5" name="religion.helpful" value="5-very helpful" title="very helpful">
-        <label for="religion-helpful-5">Very important and helpful</label>
-      </div>
-    </fieldset>
-
-    <fieldset>
-      <legend>
-        How much time did you approximately spend using the religion hierarchy?
-      </legend>
-      <div class="vertical-radio-options">
-        <input type="radio" id="religion-time-1" name="religion.time" value="0" title="none at all">
-        <label for="religion-time-1">none at all</label>
-        <input type="radio" id="religion-time-2" name="religion.time" value="<5min" title="less than 5min">
-        <label for="religion-time-2">less than five minutes</label>
-        <input type="radio" id="religion-time-3" name="religion.time" value="<15min" title="less than 15min">
-        <label for="religion-time-3">less than fifteen minutes</label>
-        <input type="radio" id="religion-time-4" name="religion.time" value="<1h" title="less than 1h">
-        <label for="religion-time-4">less than one hour</label>
-        <input type="radio" id="religion-time-5" name="religion.time" value=">1h" title="more than 1h">
-        <label for="religion-time-5">more than one hour</label>
-      </div>
-    </fieldset>
-
-    <label for="religion-comment">Do you have any more comments regarding the religion hierarchy?</label>
-    <textarea id="religion-comment" name="religion.comment" rows="1" placeholder="Additional comment (optional)"></textarea>
+    {{ likert_scale_helpful('religion', 'religion hierarchy') }}
+    {{ time_used('religion', 'religion hierarchy') }}
+    {{ additional_comment('religion', 'religion hierarchy') }}
     </article>
 
     <article>
       <h3>Confidence view</h3>
+      <div class="intro" style="--width:260px">
+        <div>
+          <p>
+          The data shown in <span class="small-caps">Damast</span> is rated with different aspects of <em>confidence;</em>
+          for example, how confident we are in the geographical placement of a historical settlement;
+          how confident we are in the veracity of a historical source;
+          or how confident we are regarding the religious group mentioned in said source.
+          The confidence view summarizes the data by aspect and level of confidence, and allows to filter the data accordingly.
+          </p>
+        </div>
+        <figure>
+          <img src="{{ url_for('questionnaire.file', path='confidence-view.png') }}" alt="confidence view">
+          <figcaption>The confidence view.</figcaption>
+        </figure>
+      </div>
 
-    <div class="intro" style="--width:260px">
+    {{ likert_scale_helpful('confidence', 'confidence view') }}
+    {{ time_used('confidence', 'confidence view') }}
+    {{ additional_comment('confidence', 'confidence view') }}
+    </article>
+
+    <article>
+      <h3>Highlighting</h3>
+
+    <div class="intro" style="--width:600px">
       <div>
         <p>
           The data shown in <span class="small-caps">Damast</span> is rated with different aspects of <em>confidence;</em>
           for example, how confident we are in the geographical placement of a historical settlement;
           how confident we are in the veracity of a historical source;
           or how confident we are regarding the religious group mentioned in said source.
-          The confidence view shows the number of pieces of evidence we have collected for each level and aspect of confidence.
-          The view also allows to specify a filter on the levels of confidence of which data should be shown in the entire visualization.
+          The confidence view summarizes the data by aspect and level of confidence, and allows to filter the data accordingly.
         </p>
       </div>
       <figure>
-        <img src="{{ url_for('questionnaire.file', path='confidence-view.png') }}" alt="confidence view">
-        <figcaption>The confidence view.</figcaption>
+        <video width="600" height="321" controls autoplay muted loop>
+          <source src="{{ url_for('questionnaire.file', path='brushing-linking.webm') }}" type="video/webm">
+        </video>
+        <figcaption>
+          The highlighting in action:
+          Clicking on a religious group in the religion hierarchy highlights places in the map with that religious group.
+          Clicking on a sym
+        </figcaption>
       </figure>
     </div>
 
-    <fieldset>
-      <legend>
-        How important and helpful do you consider the confidence view to be?
-      </legend>
-      <div class="likert-scale">
-        <label for="confidence-helpful-1">Not at all</label>
-        <input type="radio" id="confidence-helpful-1" name="confidence.helpful" value="1-not at all" title="not at all">
-        <input type="radio" id="iap-helpful-2" name="confidence.helpful" value="2-not really" title="not really">
-        <input type="radio" id="iap-helpful-3" name="confidence.helpful" value="3-unsure" title="unsure">
-        <input type="radio" id="iap-helpful-4" name="confidence.helpful" value="4-helpful" title="helpful">
-        <input type="radio" id="iap-helpful-5" name="confidence.helpful" value="5-very helpful" title="very helpful">
-        <label for="confidence-helpful-5">Very important and helpful</label>
-      </div>
-    </fieldset>
-
-    <fieldset>
-      <legend>
-        How much time did you approximately spend using the confidence view?
-      </legend>
-      <div class="vertical-radio-options">
-        <input type="radio" id="confidence-time-1" name="confidence.time" value="0" title="none at all">
-        <label for="confidence-time-1">none at all</label>
-        <input type="radio" id="confidence-time-2" name="confidence.time" value="<5min" title="less than 5min">
-        <label for="confidence-time-2">less than five minutes</label>
-        <input type="radio" id="confidence-time-3" name="confidence.time" value="<15min" title="less than 15min">
-        <label for="confidence-time-3">less than fifteen minutes</label>
-        <input type="radio" id="confidence-time-4" name="confidence.time" value="<1h" title="less than 1h">
-        <label for="confidence-time-4">less than one hour</label>
-        <input type="radio" id="confidence-time-5" name="confidence.time" value=">1h" title="more than 1h">
-        <label for="confidence-time-5">more than one hour</label>
-      </div>
-    </fieldset>
-
-    <label for="confidence-comment">Do you have any more comments regarding the confidence view?</label>
-    <textarea id="confidence-comment" name="confidence.comment" rows="1" placeholder="Additional comment (optional)"></textarea>
-    </article>
-
-    <article>
-      <h3>Highlighting</h3>
-
-    <p>
-      TODO
-      Dolor veniam maxime velit alias maiores? Quis laudantium dolorum eius fuga culpa? Tenetur consequuntur nihil excepturi possimus ipsam, repellendus Recusandae.
-    </p>
-
-    <fieldset>
-      <legend>
-        How important and helpful do you consider the highlighting feature to be?
-      </legend>
-      <div class="likert-scale">
-        <label for="highlighting-helpful-1">Not at all</label>
-        <input type="radio" id="highlighting-helpful-1" name="highlighting.helpful" value="1-not at all" title="not at all">
-        <input type="radio" id="highlighting-helpful-2" name="highlighting.helpful" value="2-not really" title="not really">
-        <input type="radio" id="highlighting-helpful-3" name="highlighting.helpful" value="3-unsure" title="unsure">
-        <input type="radio" id="highlighting-helpful-4" name="highlighting.helpful" value="4-helpful" title="helpful">
-        <input type="radio" id="highlighting-helpful-5" name="highlighting.helpful" value="5-very helpful" title="very helpful">
-        <label for="highlighting-helpful-5">Very important and helpful</label>
-      </div>
-    </fieldset>
-
-    <fieldset>
-      <legend>
-        Did you use the highlighting feature?
-      </legend>
-      <input type="checkbox" name="highlighting.used" title="yes" id="highlighting-used">
-      <label for="highlighting-used">Yes, I used it.</label>
-    </fieldset>
-
-    <label for="highlighting-comment">Do you have any more comments regarding the highlighting feature?</label>
-    <textarea id="highlighting-comment" name="highlighting.comment" rows="1" placeholder="Additional comment (optional)"></textarea>
+    {{ likert_scale_helpful('highlighting', 'highlighting feature') }}
+    {{ checkbox_used('highlighting', 'highlighting feature') }}
+    {{ additional_comment('highlighting', 'highlighting feature') }}
     </article>
 
     <article>
@@ -345,31 +210,9 @@
       Dolor veniam maxime velit alias maiores? Quis laudantium dolorum eius fuga culpa? Tenetur consequuntur nihil excepturi possimus ipsam, repellendus Recusandae.
     </p>
 
-    <fieldset>
-      <legend>
-        How important and helpful do you consider the filtering feature to be?
-      </legend>
-      <div class="likert-scale">
-        <label for="filtering-helpful-1">Not at all</label>
-        <input type="radio" id="filtering-helpful-1" name="filtering.helpful" value="1-not at all" title="not at all">
-        <input type="radio" id="filtering-helpful-2" name="filtering.helpful" value="2-not really" title="not really">
-        <input type="radio" id="filtering-helpful-3" name="filtering.helpful" value="3-unsure" title="unsure">
-        <input type="radio" id="filtering-helpful-4" name="filtering.helpful" value="4-helpful" title="helpful">
-        <input type="radio" id="filtering-helpful-5" name="filtering.helpful" value="5-very helpful" title="very helpful">
-        <label for="filtering-helpful-5">Very important and helpful</label>
-      </div>
-    </fieldset>
-
-    <fieldset>
-      <legend>
-        Did you use the filtering feature?
-      </legend>
-      <input type="checkbox" name="filtering.used" title="yes" id="filtering-used">
-      <label for="filtering-used">Yes, I used it.</label>
-    </fieldset>
-
-    <label for="filtering-comment">Do you have any more comments regarding the filtering feature?</label>
-    <textarea id="filtering-comment" name="filtering.comment" rows="1" placeholder="Additional comment (optional)"></textarea>
+    {{ likert_scale_helpful('filtering', 'filtering feature') }}
+    {{ checkbox_used('filtering', 'filtering feature') }}
+    {{ additional_comment('filtering', 'filtering feature') }}
     </article>
 
     <article>
@@ -380,31 +223,9 @@
       Dolor veniam maxime velit alias maiores? Quis laudantium dolorum eius fuga culpa? Tenetur consequuntur nihil excepturi possimus ipsam, repellendus Recusandae.
     </p>
 
-    <fieldset>
-      <legend>
-        How important and helpful do you consider the tooltips to be?
-      </legend>
-      <div class="likert-scale">
-        <label for="tooltips-helpful-1">Not at all</label>
-        <input type="radio" id="tooltips-helpful-1" name="tooltips.helpful" value="1-not at all" title="not at all">
-        <input type="radio" id="tooltips-helpful-2" name="tooltips.helpful" value="2-not really" title="not really">
-        <input type="radio" id="tooltips-helpful-3" name="tooltips.helpful" value="3-unsure" title="unsure">
-        <input type="radio" id="tooltips-helpful-4" name="tooltips.helpful" value="4-helpful" title="helpful">
-        <input type="radio" id="tooltips-helpful-5" name="tooltips.helpful" value="5-very helpful" title="very helpful">
-        <label for="tooltips-helpful-5">Very important and helpful</label>
-      </div>
-    </fieldset>
-
-    <fieldset>
-      <legend>
-        Did you use the tooltips?
-      </legend>
-      <input type="checkbox" name="tooltips.used" title="yes" id="tooltips-used">
-      <label for="tooltips-used">Yes, I used them.</label>
-    </fieldset>
-
-    <label for="tooltips-comment">Do you have any more comments regarding the tooltips?</label>
-    <textarea id="tooltips-comment" name="tooltips.comment" rows="1" placeholder="Additional comment (optional)"></textarea>
+    {{ likert_scale_helpful('tooltips', 'tooltips') }}
+    {{ checkbox_used('tooltips', 'tooltips', 'them') }}
+    {{ additional_comment('tooltips', 'tooltips') }}
     </article>
 
     <article>
@@ -415,54 +236,11 @@
       Dolor veniam maxime velit alias maiores? Quis laudantium dolorum eius fuga culpa? Tenetur consequuntur nihil excepturi possimus ipsam, repellendus Recusandae.
     </p>
 
-    <fieldset>
-      <legend>
-        How important and helpful do you consider the reports to be?
-      </legend>
-      <div class="likert-scale">
-        <label for="reports-helpful-1">Not at all</label>
-        <input type="radio" id="reports-helpful-1" name="reports.helpful" value="1-not at all" title="not at all">
-        <input type="radio" id="reports-helpful-2" name="reports.helpful" value="2-not really" title="not really">
-        <input type="radio" id="reports-helpful-3" name="reports.helpful" value="3-unsure" title="unsure">
-        <input type="radio" id="reports-helpful-4" name="reports.helpful" value="4-helpful" title="helpful">
-        <input type="radio" id="reports-helpful-5" name="reports.helpful" value="5-very helpful" title="very helpful">
-        <label for="reports-helpful-5">Very important and helpful</label>
-      </div>
-    </fieldset>
-
-    <fieldset>
-      <legend>
-        Did you use the reporting functionality?
-      </legend>
-      <input type="checkbox" name="reports.used" title="yes" id="reports-used">
-      <label for="reports-used">Yes, I used it.</label>
-    </fieldset>
-
-    <fieldset>
-      <legend>
-        How important and helpful do you consider the linking between pages and reports?
-      </legend>
-      <div class="likert-scale">
-        <label for="linking-helpful-1">Not at all</label>
-        <input type="radio" id="linking-helpful-1" name="linking.helpful" value="1-not at all" title="not at all">
-        <input type="radio" id="linking-helpful-2" name="linking.helpful" value="2-not really" title="not really">
-        <input type="radio" id="linking-helpful-3" name="linking.helpful" value="3-unsure" title="unsure">
-        <input type="radio" id="linking-helpful-4" name="linking.helpful" value="4-helpful" title="helpful">
-        <input type="radio" id="linking-helpful-5" name="linking.helpful" value="5-very helpful" title="very helpful">
-        <label for="linking-helpful-5">Very important and helpful</label>
-      </div>
-    </fieldset>
-
-    <fieldset>
-      <legend>
-        Did you use the links?
-      </legend>
-      <input type="checkbox" name="linking.used" title="yes" id="linking-used">
-      <label for="linking-used">Yes, I used them.</label>
-    </fieldset>
-
-    <label for="reports-linking-comment">Do you have any more comments regarding the tooltips or the links?</label>
-    <textarea id="reports-linking-comment" name="reports-linking.comment" rows="1" placeholder="Additional comment (optional)"></textarea>
+    {{ likert_scale_helpful('reports', 'reports') }}
+    {{ checkbox_used('reports', 'reporting functionality') }}
+    {{ likert_scale_helpful('linking', 'linking between pages and reports') }}
+    {{ checkbox_used('linking', 'links', 'them') }}
+    {{ additional_comment('reports-linking', 'reports or the links') }}
     </article>
 
     <article>
@@ -473,31 +251,9 @@
       Dolor veniam maxime velit alias maiores? Quis laudantium dolorum eius fuga culpa? Tenetur consequuntur nihil excepturi possimus ipsam, repellendus Recusandae.
     </p>
 
-    <fieldset>
-      <legend>
-        How important and helpful do you consider the confidence mode to be?
-      </legend>
-      <div class="likert-scale">
-        <label for="confidence-mode-helpful-1">Not at all</label>
-        <input type="radio" id="confidence-mode-helpful-1" name="confidence-mode.helpful" value="1-not at all" title="not at all">
-        <input type="radio" id="confidence-mode-helpful-2" name="confidence-mode.helpful" value="2-not really" title="not really">
-        <input type="radio" id="confidence-mode-helpful-3" name="confidence-mode.helpful" value="3-unsure" title="unsure">
-        <input type="radio" id="confidence-mode-helpful-4" name="confidence-mode.helpful" value="4-helpful" title="helpful">
-        <input type="radio" id="confidence-mode-helpful-5" name="confidence-mode.helpful" value="5-very helpful" title="very helpful">
-        <label for="confidence-mode-helpful-5">Very important and helpful</label>
-      </div>
-    </fieldset>
-
-    <fieldset>
-      <legend>
-        Did you use the confidence mode?
-      </legend>
-      <input type="checkbox" name="confidence-mode.used" title="yes" id="confidence-mode-used">
-      <label for="confidence-mode-used">Yes, I used it.</label>
-    </fieldset>
-
-    <label for="confidence-mode-comment">Do you have any more comments regarding the confidence mode?</label>
-    <textarea id="confidence-mode-comment" name="confidence-mode.comment" rows="1" placeholder="Additional comment (optional)"></textarea>
+    {{ likert_scale_helpful('confidence-mode', 'confidence mode') }}
+    {{ checkbox_used('confidence-mode', 'confidence mode', 'them') }}
+    {{ additional_comment('confidence-mode', 'confidence mode') }}
     </article>
 
     </section>

@@ -135,7 +135,8 @@ figure {
   grid-template-columns: min-content;
 
   svg,
-  img {
+  img,
+  video {
     width: var(--img-width);
   }
 
