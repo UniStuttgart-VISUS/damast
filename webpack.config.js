@@ -13,7 +13,7 @@ const IgnoreEmitPlugin = require('ignore-emit-webpack-plugin');
 function compress(argv) {
   return new CompressionPlugin({
     filename: '[path][base].br',
-    test: /\.js$|\.css$|\.js\.LICENSE\.txt$|\.js\.map$|\.html$|\.wasm$|\.png$|\.otf$|\.eot$|\.svg$|\.ttf$|\.woff$|\.woff2$/,
+    test: /\.js$|\.css$|\.js\.LICENSE\.txt$|\.js\.map$|\.html$|\.svg$/,
     algorithm: 'brotliCompress',
     deleteOriginalAssets: true,
     minRatio: Infinity,
