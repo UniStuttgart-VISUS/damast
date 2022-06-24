@@ -65,7 +65,7 @@
     <textarea rows="1" id="most-interesting" name="most-interesting" placeholder="Name the most interesting aspect (optional)"></textarea>
 
     <label for="most-confusing">
-      What aspect or functionality of <span class="small-caps">Damast</span>, if any, did you find most confusing or hard to use?
+      What aspect or functionality of <span class="small-caps">Damast</span>, if any, did you find most confusing or difficult to use?
     </label>
     <textarea rows="1" id="most-confusing" name="most-confusing" placeholder="Name the most confusing aspect (optional)"></textarea>
 
@@ -178,11 +178,10 @@
     <div class="intro" style="--width:600px">
       <div>
         <p>
-          The data shown in <span class="small-caps">Damast</span> is rated with different aspects of <em>confidence;</em>
-          for example, how confident we are in the geographical placement of a historical settlement;
-          how confident we are in the veracity of a historical source;
-          or how confident we are regarding the religious group mentioned in said source.
-          The confidence view summarizes the data by aspect and level of confidence, and allows to filter the data accordingly.
+          The different parts of the visualization are coordinated.
+          Clicking on any element of the visualization will highlight the represented data everywhere in the visualization.
+          For instance (see video right), clicking on a religious group in the religion hierarchy highlights places in the map with that religious group.
+          Clicking on a symbol in the map, in turn, highlights the religious groups represented in those places in the religion hierarchy.
         </p>
       </div>
       <figure>
@@ -190,9 +189,7 @@
           <source src="{{ url_for('questionnaire.file', path='brushing-linking.webm') }}" type="video/webm">
         </video>
         <figcaption>
-          The highlighting in action:
-          Clicking on a religious group in the religion hierarchy highlights places in the map with that religious group.
-          Clicking on a sym
+          The highlighting in action in the religion hierarchy and the map.
         </figcaption>
       </figure>
     </div>
@@ -205,10 +202,26 @@
     <article>
       <h3>Filtering</h3>
 
-    <p>
-      TODO
-      Dolor veniam maxime velit alias maiores? Quis laudantium dolorum eius fuga culpa? Tenetur consequuntur nihil excepturi possimus ipsam, repellendus Recusandae.
-    </p>
+    <div class="intro" style="--width:600px">
+      <div>
+        <p>
+        The coordinated views also allow to filter the data by different aspects.
+        The filters affect the data everywhere in the visualization.
+        For instance (see video), selecting a time span in the timeline sets a filter there.
+        In turn, the map, as well as other views, also only show data from that time span.
+        </p>
+      </div>
+      <figure>
+        <video width="600" height="321" controls autoplay muted loop>
+          <source src="{{ url_for('questionnaire.file', path='filtering.webm') }}" type="video/webm">
+        </video>
+        <figcaption>
+          The filtering in action:
+          Selecting a time span in the timeline sets a filter there.
+          In turn, the map also only shows data from that time span.
+        </figcaption>
+      </figure>
+    </div>
 
     {{ likert_scale_helpful('filtering', 'filtering feature') }}
     {{ checkbox_used('filtering', 'filtering feature') }}
@@ -218,10 +231,22 @@
     <article>
       <h3>Tooltips</h3>
 
-    <p>
-      TODO
-      Dolor veniam maxime velit alias maiores? Quis laudantium dolorum eius fuga culpa? Tenetur consequuntur nihil excepturi possimus ipsam, repellendus Recusandae.
-    </p>
+    <div class="intro" style="--width:600px">
+      <div>
+        <p>
+        The visualization also shows <em>tooltips,</em> small popups with additional information about the data under the mouse cursor.
+        These appear when placing the mouse cursor over any part of the visualization where there is data.
+        </p>
+      </div>
+      <figure>
+        <video width="600" height="321" controls autoplay muted loop>
+          <source src="{{ url_for('questionnaire.file', path='tooltips.webm') }}" type="video/webm">
+        </video>
+        <figcaption>
+          Three tooltip examples are shown from the map, the timeline, and the list of places.
+        </figcaption>
+      </figure>
+    </div>
 
     {{ likert_scale_helpful('tooltips', 'tooltips') }}
     {{ checkbox_used('tooltips', 'tooltips', 'them') }}
@@ -231,10 +256,25 @@
     <article>
       <h3>Reports and interlinked pages</h3>
 
-    <p>
-      TODO
-      Dolor veniam maxime velit alias maiores? Quis laudantium dolorum eius fuga culpa? Tenetur consequuntur nihil excepturi possimus ipsam, repellendus Recusandae.
-    </p>
+    <div class="intro" style="--width:600px">
+      <div>
+        <p>
+          <span class="small-caps">Damast</span> offers the possibility to generate a report from the currently shown data in the visualization.
+          These reports are permanent, can be linked to, and even downloaded in a PDF format that can be attached to publications.
+          The reports also contain a link back to the visualization, which will open the visualization with the same filters and data that were used to create the report.
+          <span class="small-caps">Damast</span> also provides links between its different pages;
+          for instance, it is possible to go from each entry in the list of places in the visualization to a page describing that place in more detail.
+        </p>
+      </div>
+      <figure>
+        <video width="600" height="321" controls autoplay muted loop>
+          <source src="{{ url_for('questionnaire.file', path='reports-linking.webm') }}" type="video/webm">
+        </video>
+        <figcaption>
+          Confidence mode uses one selected aspect of confidence to color the views.
+        </figcaption>
+      </figure>
+    </div>
 
     {{ likert_scale_helpful('reports', 'reports') }}
     {{ checkbox_used('reports', 'reporting functionality') }}
@@ -246,10 +286,22 @@
     <article>
       <h3>Confidence mode</h3>
 
-    <p>
-      TODO
-      Dolor veniam maxime velit alias maiores? Quis laudantium dolorum eius fuga culpa? Tenetur consequuntur nihil excepturi possimus ipsam, repellendus Recusandae.
-    </p>
+    <div class="intro" style="--width:600px">
+      <div>
+        <p>
+          The data shown in <span class="small-caps">Damast</span> is rated with different aspects of confidence.
+          In <em>confidence mode,</em> an aspect of confidence is used to color the visualization, instead of the religious groups.
+        </p>
+      </div>
+      <figure>
+        <video width="600" height="321" controls autoplay muted loop>
+          <source src="{{ url_for('questionnaire.file', path='confidence-mode.webm') }}" type="video/webm">
+        </video>
+        <figcaption>
+          Confidence mode uses one selected aspect of confidence to color the views.
+        </figcaption>
+      </figure>
+    </div>
 
     {{ likert_scale_helpful('confidence-mode', 'confidence mode') }}
     {{ checkbox_used('confidence-mode', 'confidence mode', 'them') }}
