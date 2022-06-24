@@ -6,47 +6,58 @@ import {
   QuestionnaireState
 } from '../common/questionnaire';
 
-const checkInterval = 5000;  // XXX
-const triggerTimeMs = 15000;//1_800_000  // 30min
+const updateUsageTimeInterval = 2_000;  // 2 seconds
+const checkInterval = 300_000;  // 5 minutes
+const triggerTimeMs = 900_000;  // 15 minutes
+//
+let updateUseTimeId: any;
 
 export function initQuestionnaire() {
   const consentCookie = getConsentCookie();
   if (consentCookie === null) return;
 
   const now = Date.now();
-  setTimeout(async () => regularCheck(now), checkInterval);
+  setTimeout(async () => regularCheck(), checkInterval);
+  updateUseTimeId = setTimeout(() => updateUseTime(now), updateUsageTimeInterval);
+  window.addEventListener('blur', () => clearTimeout(updateUseTimeId));
+  window.addEventListener('focus', () => updateUseTime(Date.now()));
 }
 
-async function regularCheck(lastTime: number) {
-  const timeDelta = Math.floor(Date.now() - lastTime);
+function updateUseTime(lastTime: number) {
+  const now = Date.now();
+  const timeDelta = Math.floor(now - lastTime);
   const timeUsed = parseInt(localStorage.getItem(localStorageKeyUsageTime)) ?? 0;
   const totalTime = timeDelta + timeUsed;
 
   localStorage.setItem(localStorageKeyUsageTime, totalTime.toString());
+  updateUseTimeId = setTimeout(() => updateUseTime(now), updateUsageTimeInterval);
+}
 
+async function regularCheck() {
   const questionnaireState: QuestionnaireState = (localStorage.getItem(localStorageKeyQuestionnaire) ?? QuestionnaireState.NotYet) as QuestionnaireState;
 
   if (questionnaireState === QuestionnaireState.DoNotWant) return;
   if (questionnaireState === QuestionnaireState.Done) return;
 
-  if (totalTime >= triggerTimeMs) {
-    const finished = await showAskDialog();
+  const totalTime = parseInt(localStorage.getItem(localStorageKeyUsageTime)) ?? 0;
 
-    if (finished) return;
+  if (totalTime >= triggerTimeMs) {
+    await showAskDialog();
+    return;
   }
 
   const now = Date.now();
-  setTimeout(async () => regularCheck(now), checkInterval);
+  setTimeout(async () => regularCheck(), checkInterval);
 }
 
-async function showAskDialog(): Promise<boolean> {
-  return new Promise<boolean>(async (resolve, _reject) => {
+async function showAskDialog() {
+  return new Promise<void>(async (resolve, _reject) => {
     const descriptionPromise = Promise.resolve('');
     const { content, close } = showInfoboxFromURL(
       'Fill out questionnaire',
       async () => descriptionPromise,
       false,
-      () => resolve(true),
+      () => resolve(),
     );
     const sel = await content;
 
@@ -55,20 +66,20 @@ async function showAskDialog(): Promise<boolean> {
       .addEventListener('click', () => {
         close();
         localStorage.setItem(localStorageKeyQuestionnaire, QuestionnaireState.DoNotWant);
-        resolve(true);
+        resolve();
       });
 
     sel.querySelector(':scope button#not-now')
       .addEventListener('click', () => {
         close();
         localStorage.setItem(localStorageKeyQuestionnaire, QuestionnaireState.NotYet);
-        resolve(true);
+        resolve();
       });
     sel.querySelector(':scope button#yes')
       .addEventListener('click', () => {
         close();
         document.querySelector<HTMLAnchorElement>('a#questionnaire-link')?.click();
-        resolve(true);
+        resolve();
       });
   });
 }
