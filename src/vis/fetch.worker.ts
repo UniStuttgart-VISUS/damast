@@ -274,6 +274,8 @@ class FetchWorker extends DataWorker<any> {
       this.data?.setMapState(data.data);
     } else if (data.type === 'set-map-filter') {
       this.data.setMapFilter(data.data);
+    } else if (data.type === 'set-map-mode') {
+      this.data.map_mode = data.data
     } else {
       throw data.type;
     }
