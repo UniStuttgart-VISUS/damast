@@ -10,7 +10,7 @@
   <h1>Questionnaire</h1>
 
   <p>
-    Thank you for taking the time to provide us with feedback!
+    <strong>Thank you</strong> for taking the time to provide us with feedback!
     This feedback will be used to improve <span class="small-caps">Damast,</span> to extend <span class="small-caps">Damast</span> to new fields of research and data sets, and in scientific publications regarding <span class="small-caps">Damast.</span>
     Providing feedback is completely optional, and your feedback would only be published in anonymized form.
     You can leave this page at any time if you change your mind.
@@ -194,7 +194,7 @@
     <article>
       <h3>Religion hierarchy</h3>
 
-    <div class="intro" style="--width:300px">
+    <div class="intro" style="--width:200px">
       <div>
         <p>
           The religion hierarchy shows the different religious groups.
@@ -248,10 +248,22 @@
     <article>
       <h3>Confidence view</h3>
 
-    <p>
-      TODO
-      Dolor veniam maxime velit alias maiores? Quis laudantium dolorum eius fuga culpa? Tenetur consequuntur nihil excepturi possimus ipsam, repellendus Recusandae.
-    </p>
+    <div class="intro" style="--width:260px">
+      <div>
+        <p>
+          The data shown in <span class="small-caps">Damast</span> is rated with different aspects of <em>confidence;</em>
+          for example, how confident we are in the geographical placement of a historical settlement;
+          how confident we are in the veracity of a historical source;
+          or how confident we are regarding the religious group mentioned in said source.
+          The confidence view shows the number of pieces of evidence we have collected for each level and aspect of confidence.
+          The view also allows to specify a filter on the levels of confidence of which data should be shown in the entire visualization.
+        </p>
+      </div>
+      <figure>
+        <img src="{{ url_for('questionnaire.file', path='confidence-view.png') }}" alt="confidence view">
+        <figcaption>The confidence view.</figcaption>
+      </figure>
+    </div>
 
     <fieldset>
       <legend>
@@ -388,7 +400,7 @@
         Did you use the tooltips?
       </legend>
       <input type="checkbox" name="tooltips.used" title="yes" id="tooltips-used">
-      <label for="tooltips-used">Yes, I used it.</label>
+      <label for="tooltips-used">Yes, I used them.</label>
     </fieldset>
 
     <label for="tooltips-comment">Do you have any more comments regarding the tooltips?</label>
