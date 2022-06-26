@@ -1,0 +1,13 @@
+{% macro header_controls() %}
+  <span class="button-group">
+    <span class="button-checkbox" title="Show all data, even in it does not match the current filters. See the settings pane for more details.">
+      <input type="checkbox" id="show-all-data">
+      <label for="show-all-data">All data</label>
+    </span>
+    <button id="header__describe-filters" class="button button--small" title="Describe the current filters. See the settings pane for more details."><i class="fa fa-fw fa-lg fa-info-circle"></i></button>
+    <button id="header__generate-report" class="button button--small" title="Generate a report with the currently shown data. See the settings pane for more details."><i class="fa fa-fw fa-lg fa-file-text-o"></i></button>
+    <button id="header__download-state" class="button button--small" title="Download the current visualization state. See the settings pane for more details."><i class="fa fa-fw fa-lg fa-download"></i></button>
+    <button id="header__load-state" class="button button--small" title="Load a saved visualization state from your computer. See the settings pane for more details."><i class="fa fa-fw fa-lg fa-upload"></i></button>
+  </span>
+  <span id="messages" class="messages"></span>
+{% endmacro %}

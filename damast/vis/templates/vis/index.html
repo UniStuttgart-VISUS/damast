@@ -46,9 +46,10 @@
           </li>
         </ul>
       </nav>
-      {%- from 'history_buttons.html' import history_buttons with context -%}
+      {%- from 'vis/history_buttons.html' import history_buttons with context -%}
       {{ history_buttons() }}
-      <span id="messages" class="messages"></span>
+      {%- from 'vis/header_controls.html' import header_controls with context -%}
+      {{ header_controls() }}
       {%- from 'user_bar.html' import user_bar with context -%}
       {{ user_bar(user, button_class='button--small') }}
     </header>

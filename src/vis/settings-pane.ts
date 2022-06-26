@@ -10,29 +10,29 @@ import {MessageData} from './data-worker';
 import { getConsentCookie } from '../common/cookies';
 
 export default class SettingsPane {
-  private confidence_mode_input: d3.Selection<HTMLInputElement, any, any, any>;
-  private brush_only_active_input: d3.Selection<HTMLInputElement, any, any, any>;
-  private timeline_mode_input: d3.Selection<HTMLInputElement, any, any, any>;
-  private map_mode_input: d3.Selection<HTMLInputElement, any, any, any>;
-  private falsecolor_mode_input: d3.Selection<HTMLInputElement, any, any, any>;
+private confidence_mode_input: d3.Selection<HTMLInputElement, any, any, any>;
+private brush_only_active_input: d3.Selection<HTMLInputElement, any, any, any>;
+private timeline_mode_input: d3.Selection<HTMLInputElement, any, any, any>;
+private map_mode_input: d3.Selection<HTMLInputElement, any, any, any>;
+private falsecolor_mode_input: d3.Selection<HTMLInputElement, any, any, any>;
 
-  constructor(
-    private readonly data_worker: Worker,
-    private readonly container: GoldenLayout.Container,
-    private readonly layout: GoldenLayout
-  ) {
-    this.container?.on('modal-button-clicked', () => this.openModal());
+constructor(
+  private readonly data_worker: Worker,
+  private readonly container: GoldenLayout.Container,
+  private readonly layout: GoldenLayout
+) {
+  this.container?.on('modal-button-clicked', () => this.openModal());
 
-    this.init();
-  }
+  this.init();
+}
 
-  private init() {
-    const ref = this;
-    const div = this.container.getElement()[0];
-    div.classList.add('settings-pane');
-    div.innerHTML = require('html-loader!./html/settings-pane.template.html').default;
+private init() {
+  const ref = this;
+  const div = this.container.getElement()[0];
+  div.classList.add('settings-pane');
+  div.innerHTML = require('html-loader!./html/settings-pane.template.html').default;
 
-    const d = d3.select(div);
+  const d = d3.select<HTMLDivElement, any>(div);
 
     this.confidence_mode_input = d.select<HTMLInputElement>('div#confidence-controls input#confidence-mode')
       .each(function() {
@@ -48,7 +48,15 @@ export default class SettingsPane {
       })
       .on('change', function() {
         ref.data_worker.postMessage({type: 'set-show-only-active', data: this.checked });
+      });
+
+    d3.select<HTMLInputElement, any>('header input#show-all-data')
+      .each(function() {
+        this.checked = !ViewModeDefaults.show_only_active;
       })
+      .on('change', function() {
+        ref.data_worker.postMessage({type: 'set-show-only-active', data: !this.checked });
+      });
 
     this.timeline_mode_input = d.select<HTMLInputElement>('div#timeline-mode-controls input#timeline-mode')
       .each(function() {
@@ -82,6 +90,11 @@ export default class SettingsPane {
     d.select('#load-state').on('click', () => this.onClickLoadVisualizationState());
     d.select('#generate-report').on('click', () => this.onClickGenerateReport());
     d.select('#describe-filters').on('click', () => this.onClickDescribeFilters());
+
+    d3.select('header #header__download-state').on('click', () => this.onClickSaveVisualizationState());
+    d3.select('header #header__load-state').on('click', () => this.onClickLoadVisualizationState());
+    d3.select('header #header__generate-report').on('click', () => this.onClickGenerateReport());
+    d3.select('header #header__describe-filters').on('click', () => this.onClickDescribeFilters());
 
     this.data_worker.addEventListener('message', async e => {
       if (e.data?.type === 'export-visualization-state') await this.onExportEvent(e.data);
@@ -133,7 +146,6 @@ export default class SettingsPane {
       },
       body: JSON.stringify(eventData.data)
     });
-    console.log(this._resolver);
     this._resolver?.(response);
   }
 
@@ -259,6 +271,11 @@ export default class SettingsPane {
     this.timeline_mode_input.node().checked = (eventData.data.timeline_mode === T.TimelineMode.Qualitative);
     this.map_mode_input.node().checked = (eventData.data.map_mode === T.MapMode.Cluttered);
     this.falsecolor_mode_input.node().checked = (eventData.data.use_falsecolors);
+
+    d3.select<HTMLInputElement, any>('header input#show-all-data')
+      .each(function() {
+        this.checked = !eventData.data.brush_only_active;
+      });
 
     this.brush_only_active_input.on('change', c1);
     this.confidence_mode_input.on('change', c2);
