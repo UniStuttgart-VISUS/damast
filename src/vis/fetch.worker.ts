@@ -292,6 +292,14 @@ class FetchWorker extends DataWorker<any> {
       this.data.resumeEvents();
     } else if (data.type === 'set-message') {
       this.sendMessage(data.data);
+    } else if (data.type === 'set-display-mode') {
+      this.data.suspendEvents();
+
+      if (data.data === 'Religion') this.data.display_mode = DisplayMode.Religion;
+      else if (data.data === 'Confidence') this.data.display_mode = DisplayMode.Confidence;
+      else throw data.data;
+
+      this.data.resumeEvents();
     } else {
       throw data.type;
     }
@@ -411,7 +419,8 @@ class FetchWorker extends DataWorker<any> {
         data: this.data.placeData(),
         confidence_filter: this.data.confidence_filter,
         confidence_aspect: this.data.confidence_aspect,
-        colors: this.data.transferableConfidenceColorscheme()
+        colors: this.data.transferableConfidenceColorscheme(),
+        mode: this.data.display_mode,
       }
     });
   }
