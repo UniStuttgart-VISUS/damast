@@ -265,6 +265,10 @@ class FetchWorker extends DataWorker<any> {
       this.data.suspendEvents();
       this.data.setTimeFilter(data.data);
       this.data.resumeEvents();
+    } else if (data.type === 'set-timeline-mode') {
+      this.data.suspendEvents();
+      this.data.timeline_mode = data.data
+      this.data.resumeEvents();
     } else {
       throw data.type;
     }

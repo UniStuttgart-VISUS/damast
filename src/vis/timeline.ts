@@ -63,7 +63,7 @@ export default class Timeline extends View<any, any> {
     this.svg = d3.select(div).select('svg');
 
     container.on('resize', () => { if (this.cachedPathData !== undefined) this.paint(this.cachedPathData, true); });
-    this.init();
+    container.on('open', () => { this.init(); });
   }
 
   private init() {
@@ -82,6 +82,13 @@ export default class Timeline extends View<any, any> {
       .attr('id', 'upper-clip-path') as d3.Selection<SVGClipPathElement, any, any, any>;
 
     this.total_upper_g.attr('clip-path', 'url(#upper-clip-path)');
+
+    const ref = this;
+    d3.select<HTMLInputElement, any>('.timeline__header input#timeline-mode')
+      .each(function() { this.checked = DEFAULTS.timeline_mode === T.TimelineMode.Qualitative; })
+      .on('change', function() {
+        ref.sendToDataThread('set-timeline-mode', this.checked ? T.TimelineMode.Qualitative : T.TimelineMode.Quantitative);
+      });
   }
 
   async setData(data: any) {
@@ -89,6 +96,9 @@ export default class Timeline extends View<any, any> {
     this.cachedDisplayMode = data.display_mode;
     this.cachedTimelineMode = data.timeline_mode;
     this.religionNames = data.religion_names;
+
+    d3.select<HTMLInputElement, any>('.timeline__header input#timeline-mode')
+      .each(function() { this.checked = data.timeline_mode === T.TimelineMode.Qualitative; });
 
     this.paint(data.stack);
   }

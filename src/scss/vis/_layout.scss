@@ -32,7 +32,6 @@ body {
   margin-inline: $margin;
 
   .map-container,
-  .timeline-container,
   .untimed-container {
     display: grid;
   }
@@ -46,6 +45,7 @@ body {
   .confidence-container,
   .religion-container,
   .source-container,
+  .timeline-container,
   .tags-container {
     display: grid;
     grid-template-rows: max-content auto;
