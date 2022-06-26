@@ -216,6 +216,7 @@ export default class MapPane extends View<any, Set<number> | null> {
         <input type="checkbox" id="map-control-clustering">
         <label for="map-control-clustering">Cluster</label>
       `;
+      div.setAttribute('title', 'Cluster locations in the map into glyphs. This is the default. See the info texts of the map view and the settings pane for more details.');
 
       div.addEventListener('click', e => e.stopPropagation());
       const input = div.querySelector<HTMLInputElement>(':scope input');
