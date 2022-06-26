@@ -1,0 +1,350 @@
+{# vim: set filetype=htmldjango #}
+{% extends "base.html" %}
+{% block title %}Questionnaire{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('questionnaire.file', path='style.css') }}">
+<script type="module" src="{{ url_for('questionnaire.file', path='questionnaire.js') }}"></script>
+{% endblock %}
+{% from "questionnaire/macros.html" import likert_scale_helpful, time_used, checkbox_used, additional_comment %}
+{% block content %}
+<h1>Questionnaire</h1>
+
+<p>
+<strong>Thank you</strong> for taking the time to provide us with feedback!
+This feedback will be used to improve <span class="small-caps">Damast,</span> to extend <span class="small-caps">Damast</span> to new fields of research and data sets, and in scientific publications regarding <span class="small-caps">Damast.</span>
+Providing feedback is completely optional, and your feedback would only be published in anonymized form.
+You can leave this page at any time if you change your mind.
+Once you click on the submit button in the bottom right of the page, your feedback will be sent to the server.
+</p>
+
+<form
+    action="{{ url_for('questionnaire.post_feedback') }}"
+    method="POST"
+    enctype="application/x-www-form-urlencoded">
+  <input type="hidden" name="version" value="{{ version }}">
+  <input type="hidden" name="time" value="{{ timestamp }}">
+  <input type="hidden" name="usage-time" value="">
+
+  <section>
+    <h2>General Feedback</h2>
+
+    <fieldset>
+      <legend>
+        Would you recommend <span class="small-caps">Damast</span> to your colleagues and peers?
+      </legend>
+      <div class="likert-scale">
+        <label for="recommendation1">Definitely not</label>
+        <input type="radio" id="recommendation1" name="recommendation" value="1-definitely not" title="definitely not">
+        <input type="radio" id="recommendation2" name="recommendation" value="2-probably not" title="probably not">
+        <input type="radio" id="recommendation3" name="recommendation" value="3-unsure" title="unsure">
+        <input type="radio" id="recommendation4" name="recommendation" value="4-probably" title="probably">
+        <input type="radio" id="recommendation5" name="recommendation" value="5-definitely" title="definitely">
+        <label for="recommendation5">Definitely</label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>
+        How intuitive and useable do you think the interface of <span class="small-caps">Damast</span> is?
+      </legend>
+      <div class="likert-scale">
+        <label for="intuitive1">Very unintuitive</label>
+        <input type="radio" id="intuitive1" name="intuitive" value="1-very unintuitive" title="very unintuitive">
+        <input type="radio" id="intuitive2" name="intuitive" value="2-not intuitive" title="not intuitive">
+        <input type="radio" id="intuitive3" name="intuitive" value="3-unsure" title="unsure">
+        <input type="radio" id="intuitive4" name="intuitive" value="4-intuitive" title="intuitive">
+        <input type="radio" id="intuitive5" name="intuitive" value="5-very intuitive" title="very intuitive">
+        <label for="intuitive5">Very intuitive</label>
+      </div>
+    </fieldset>
+
+    <label for="most-interesting">
+      What, in your opinion, is the most interesting or exciting aspect or functionality of <span class="small-caps">Damast</span>?
+    </label>
+    <textarea rows="1" id="most-interesting" name="most-interesting" placeholder="Name the most interesting aspect (optional)"></textarea>
+
+    <label for="most-confusing">
+      What aspect or functionality of <span class="small-caps">Damast</span>, if any, did you find most confusing or difficult to use?
+    </label>
+    <textarea rows="1" id="most-confusing" name="most-confusing" placeholder="Name the most confusing aspect (optional)"></textarea>
+
+    <label for="general-feedback">
+      Please put other general feedback you want to provide, as well as suggestions, here:
+    </label>
+    <textarea id="general-feedback" name="general-feedback" cols="60" rows="8" placeholder="Enter general feedback or suggestions"></textarea>
+  </section>
+
+  <section>
+    <h2>Visualization Feedback</h2>
+
+    <p>
+    Please provide feedback for the individual views and features of the visualization.
+    Each view and feature is briefly presented and explained.
+    If you had not previously explored or used the feature, you may specify so.
+    </p>
+
+    <article>
+      <h3>Map and List of Places</h3>
+
+      <div class="intro">
+        <div>
+          <p>
+          The map (left) and list of places (right) show the geographical context of religious groups.
+          They show which religious groups existed in which cities, and both allow to filter and search for place names.
+          </p>
+        </div>
+        <figure>
+          <img src="{{ url_for('questionnaire.file', path='map-location-list.png') }}" alt="map and location list">
+          <figcaption>The map and the list of places.</figcaption>
+        </figure>
+      </div>
+
+      {{ likert_scale_helpful('map', 'map and list of places') }}
+      {{ time_used('map', 'map and list of places') }}
+      {{ additional_comment('map', 'map and list of places') }}
+    </article>
+
+    <article>
+      <h3>Timeline</h3>
+
+      <div class="intro">
+        <div>
+          <p>
+          The timeline shows the presence of religious groups at different times.
+          Each religious group is represented as a row, which is colored if we have evidence of that religious group at that time.
+          The timeline can also be used to filter data by time.
+          </p>
+        </div>
+        <figure>
+          <img src="{{ url_for('questionnaire.file', path='timeline.png') }}" alt="timeline">
+          <figcaption>The timeline.</figcaption>
+        </figure>
+      </div>
+
+      {{ likert_scale_helpful('timeline', 'timeline') }}
+      {{ time_used('timeline', 'timeline') }}
+      {{ additional_comment('timeline', 'timeline') }}
+    </article>
+
+    <article>
+      <h3>Religion hierarchy</h3>
+
+      <div class="intro" style="--width:200px">
+        <div>
+          <p>
+          The religion hierarchy shows the different religious groups.
+          The groups are shown hierarchically under their respective main religion.
+          Checkboxes behind each religious group can be used to filter the dataset for specific religious groups.
+          </p>
+        </div>
+        <figure>
+          <img src="{{ url_for('questionnaire.file', path='religion-hierarchy.png') }}" alt="religion hierarchy">
+          <figcaption>The religion hierarchy.</figcaption>
+        </figure>
+      </div>
+
+      {{ likert_scale_helpful('religion', 'religion hierarchy') }}
+      {{ time_used('religion', 'religion hierarchy') }}
+      {{ additional_comment('religion', 'religion hierarchy') }}
+    </article>
+
+    <article>
+      <h3>Confidence view</h3>
+      <div class="intro" style="--width:260px">
+        <div>
+          <p>
+          The data shown in <span class="small-caps">Damast</span> is rated with different aspects of <em>confidence;</em>
+          for example, how confident we are in the geographical placement of a historical settlement;
+          how confident we are in the veracity of a historical source;
+          or how confident we are regarding the religious group mentioned in said source.
+          The confidence view summarizes the data by aspect and level of confidence, and allows to filter the data accordingly.
+          </p>
+        </div>
+        <figure>
+          <img src="{{ url_for('questionnaire.file', path='confidence-view.png') }}" alt="confidence view">
+          <figcaption>The confidence view.</figcaption>
+        </figure>
+      </div>
+
+      {{ likert_scale_helpful('confidence', 'confidence view') }}
+      {{ time_used('confidence', 'confidence view') }}
+      {{ additional_comment('confidence', 'confidence view') }}
+    </article>
+
+    <article>
+      <h3>Highlighting</h3>
+
+      <div class="intro" style="--width:600px">
+        <div>
+          <p>
+          The different parts of the visualization are coordinated.
+          Clicking on any element of the visualization will highlight the represented data everywhere in the visualization.
+          For instance (see video right), clicking on a religious group in the religion hierarchy highlights places in the map with that religious group.
+          Clicking on a symbol in the map, in turn, highlights the religious groups represented in those places in the religion hierarchy.
+          </p>
+        </div>
+        <figure>
+          <video width="600" height="321" controls autoplay muted loop>
+            <source src="{{ url_for('questionnaire.file', path='brushing-linking.webm') }}" type="video/webm">
+          </video>
+          <figcaption>
+            The highlighting in action in the religion hierarchy and the map.
+          </figcaption>
+        </figure>
+      </div>
+
+      {{ likert_scale_helpful('highlighting', 'highlighting feature') }}
+      {{ checkbox_used('highlighting', 'highlighting feature') }}
+      {{ additional_comment('highlighting', 'highlighting feature') }}
+    </article>
+
+    <article>
+      <h3>Filtering</h3>
+
+      <div class="intro" style="--width:600px">
+        <div>
+          <p>
+          The coordinated views also allow to filter the data by different aspects.
+          The filters affect the data everywhere in the visualization.
+          For instance (see video), selecting a time span in the timeline sets a filter there.
+          In turn, the map, as well as other views, also only show data from that time span.
+          </p>
+        </div>
+        <figure>
+          <video width="600" height="321" controls autoplay muted loop>
+            <source src="{{ url_for('questionnaire.file', path='filtering.webm') }}" type="video/webm">
+          </video>
+          <figcaption>
+            The filtering in action:
+            Selecting a time span in the timeline sets a filter there.
+            In turn, the map also only shows data from that time span.
+          </figcaption>
+        </figure>
+      </div>
+
+      {{ likert_scale_helpful('filtering', 'filtering feature') }}
+      {{ checkbox_used('filtering', 'filtering feature') }}
+      {{ additional_comment('filtering', 'filtering feature') }}
+    </article>
+
+    <article>
+      <h3>Tooltips</h3>
+
+      <div class="intro" style="--width:600px">
+        <div>
+          <p>
+          The visualization also shows <em>tooltips,</em> small popups with additional information about the data under the mouse cursor.
+          These appear when placing the mouse cursor over any part of the visualization where there is data.
+          </p>
+        </div>
+        <figure>
+          <video width="600" height="321" controls autoplay muted loop>
+            <source src="{{ url_for('questionnaire.file', path='tooltips.webm') }}" type="video/webm">
+          </video>
+          <figcaption>
+            Three tooltip examples are shown from the map, the timeline, and the list of places.
+          </figcaption>
+        </figure>
+      </div>
+
+      {{ likert_scale_helpful('tooltips', 'tooltips') }}
+      {{ checkbox_used('tooltips', 'tooltips', 'them') }}
+      {{ additional_comment('tooltips', 'tooltips') }}
+    </article>
+
+    <article>
+      <h3>Reports and interlinked pages</h3>
+
+      <div class="intro" style="--width:600px">
+        <div>
+          <p>
+          <span class="small-caps">Damast</span> offers the possibility to generate a report from the currently shown data in the visualization.
+          These reports are permanent, can be linked to, and even downloaded in a PDF format that can be attached to publications.
+          The reports also contain a link back to the visualization, which will open the visualization with the same filters and data that were used to create the report.
+          <span class="small-caps">Damast</span> also provides links between its different pages;
+          for instance, it is possible to go from each entry in the list of places in the visualization to a page describing that place in more detail.
+          </p>
+        </div>
+        <figure>
+          <video width="600" height="321" controls autoplay muted loop>
+            <source src="{{ url_for('questionnaire.file', path='reports-linking.webm') }}" type="video/webm">
+          </video>
+          <figcaption>
+            Confidence mode uses one selected aspect of confidence to color the views.
+          </figcaption>
+        </figure>
+      </div>
+
+      {{ likert_scale_helpful('reports', 'reports') }}
+      {{ checkbox_used('reports', 'reporting functionality') }}
+      {{ likert_scale_helpful('linking', 'linking between pages and reports') }}
+      {{ checkbox_used('linking', 'links', 'them') }}
+      {{ additional_comment('reports-linking', 'reports or the links') }}
+    </article>
+
+    <article>
+      <h3>Confidence mode</h3>
+
+      <div class="intro" style="--width:600px">
+        <div>
+          <p>
+          The data shown in <span class="small-caps">Damast</span> is rated with different aspects of confidence.
+          In <em>confidence mode,</em> an aspect of confidence is used to color the visualization, instead of the religious groups.
+          </p>
+        </div>
+        <figure>
+          <video width="600" height="321" controls autoplay muted loop>
+            <source src="{{ url_for('questionnaire.file', path='confidence-mode.webm') }}" type="video/webm">
+          </video>
+          <figcaption>
+            Confidence mode uses one selected aspect of confidence to color the views.
+          </figcaption>
+        </figure>
+      </div>
+
+      {{ likert_scale_helpful('confidence-mode', 'confidence mode') }}
+      {{ checkbox_used('confidence-mode', 'confidence mode', 'them') }}
+      {{ additional_comment('confidence-mode', 'confidence mode') }}
+    </article>
+  </section>
+
+  <section>
+    <h2>Other Feedback</h2>
+
+    <label for="anecdotes">
+      What did you use <span class="small-caps">Damast</span> for today?
+      How did you interact with the interface, and with what goal in mind?
+      Were you able to find anything interesting to you, and if so, what?
+    </label>
+    <textarea id="anecdotes" name="anecdotes" cols="60" rows="8" placeholder="Describe your use and findings (optional)"></textarea>
+
+    <label for="other-domains">
+      Could you see <span class="small-caps">Damast</span> being used for a different domain, or different data?
+      If so, what would that be?
+      Do you know of any tools that currently support this domain or data analysis?
+    </label>
+    <textarea id="other-domains" name="other-domains" cols="60" rows="8" placeholder="Describe other suggested uses (optional)"></textarea>
+
+    <label for="e-mail">
+      If you want, you can leave an e-mail address.
+      In that case, we might notify you if your suggestions become part of <span class="small-caps">Damast.</span>
+      We will handle your e-mail address confidentially, and not use it for any other purposes.
+    </label>
+    <input type="email" id="e-mail" name="e-mail" placeholder="E-mail address (optional)"></input>
+  </section>
+
+  <section>
+    <div class="horizontal-flex-buttons">
+      <button class="button button--large button--red" type="reset">
+        <i class="fa fa-fw fa-eraser"></i>
+        Clear form
+      </button>
+      <button class="button button--large button--green" type="submit">
+        <i class="fa fa-fw fa-envelope"></i>
+        Submit feedback
+      </button>
+    </div>
+  </section>
+</form>
+{% endblock %}
