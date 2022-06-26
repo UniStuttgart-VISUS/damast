@@ -23,12 +23,16 @@
 
 .hierarchy__header {
   display: grid;
-  grid-template-columns: max-content auto auto;
+  grid-template-columns: auto max-content auto auto;
 
   // put sort switch and apply button separate
   & > :nth-last-child(2),
   & > :nth-last-child(1) {
     margin-left: auto;
+  }
+
+  & > :first-child {
+    margin-right: auto;
   }
 }
 
