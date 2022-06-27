@@ -20,7 +20,10 @@ class ConfidenceWorker extends DataWorker<any> {
     await this.sendToMainThread({
       type: 'set-data',
       target: 'confidence',
-      data: d
+      data: {
+        ...d,
+        mode: data.data.mode,
+      },
     });
 
     this.clearMessage('confidence-worker');

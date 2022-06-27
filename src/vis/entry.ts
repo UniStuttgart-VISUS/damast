@@ -18,6 +18,7 @@ import {Message} from './message';
 import { HistoryControls } from './history-controls';
 import {createView} from './goldenlayout-util';
 import {getConfig, storeConfig} from './default-layout';
+import { initQuestionnaire } from './questionnaire';
 
 // @ts-ignore: Import not found
 import GoldenLayout from 'golden-layout';
@@ -109,3 +110,5 @@ if (hash) {
 } else {
   dataLoader.postMessage({ type: 'load-data' });
 }
+
+initQuestionnaire();

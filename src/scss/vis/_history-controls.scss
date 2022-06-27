@@ -2,10 +2,6 @@
 @use 'variables' as *;
 @use 'filters' as filters;
 
-header .history-buttons {
-  margin-inline: 1rem;
-}
-
 dialog[data-dialog-role="history tree"] {
   min-width: 600px;
   max-width: min(960px, 65%);

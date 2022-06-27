@@ -14,7 +14,8 @@ _brotli_mimetypes = (
         'text/javascript',
         'application/json',
         'image/svg+xml',
-        'text/xml', 'application/xml',
+        'text/xml',
+        'application/xml',
         )
 
 @compress.after_app_request

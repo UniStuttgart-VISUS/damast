@@ -33,5 +33,8 @@ def create_app():
         from . import uri
         uri.app.register(app, url_prefix='/')
 
+        from . import questionnaire
+        questionnaire.app.register(app, url_prefix='/questionnaire')
+
     return app
 

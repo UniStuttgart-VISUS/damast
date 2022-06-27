@@ -150,7 +150,7 @@ export default class SettingsPane {
         'Are you sure?',
         async () => descriptionPromise,
         false,
-        () => resolve(false),
+        () => {}//resolve(false),
       );
       const sel = await content;
 
@@ -162,13 +162,17 @@ export default class SettingsPane {
       sel.querySelector(':scope button#nevermind-no-report')
         .addEventListener('click', () => {
           resolve(false);
+          //close();
         });
 
       sel.querySelector(':scope button#yes-report')
         .addEventListener('click', () => {
           resolve(true);
+          //close();
         });
     });
+
+    console.log(doCreateReport);
 
     if (doCreateReport) {
       if (getConsentCookie() !== null) {
@@ -176,7 +180,8 @@ export default class SettingsPane {
         localStorage.setItem(reportCountKey, (prevReportsDone + 1).toString());
       }
 
-      this.data_worker.postMessage({type: 'generate-report', data: null});
+      console.log('would create');
+      //this.data_worker.postMessage({type: 'generate-report', data: null});
     }
   }
 

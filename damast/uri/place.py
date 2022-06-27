@@ -23,7 +23,7 @@ def root(cursor):
 
 _place_id_list_pattern = re.compile('^(\d+(,\d+)*)?$')
 
-@app.route('/uri/link-list', role='user')
+@app.route('/uri/link-list', role=['vis'])
 @rest_endpoint
 def get_link_list(cursor):
     pids = flask.request.args.get('place_ids', '')

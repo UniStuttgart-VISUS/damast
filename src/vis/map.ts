@@ -22,6 +22,8 @@ import { MapStyle, mapStyles } from '../common/map-styles';
 import { MessageData } from './data-worker';
 import TooltipManager from './tooltip';
 import DiversityLayer from './diversity-layer';
+import { map_mode } from './view-mode-defaults';
+import { MapMode } from './datatypes';
 
 
 export default class MapPane extends View<any, Set<number> | null> {
@@ -38,6 +40,9 @@ export default class MapPane extends View<any, Set<number> | null> {
   private diversityLayer: DiversityLayer;
   private evidenceCountHeatLayer: L.HeatLayer;
   private evidenceCountHeatOptions: L.HeatMapOptions;
+
+  private clusteringCheckbox: HTMLInputElement;
+  private cachedMapMode: MapMode = map_mode;
 
   private map_styles: MapStyle[] = [];
   private baseLayers: Map<string, L.Layer> = new Map<string, L.Layer>();
@@ -103,6 +108,9 @@ export default class MapPane extends View<any, Set<number> | null> {
     this.evidenceCountHeatOptions.maxZoom = this.map.getZoom();
     this.evidenceCountHeatLayer.setOptions(this.evidenceCountHeatOptions);
     this.evidenceCountHeatLayer.setLatLngs(data.distribution);
+
+    this.cachedMapMode = data.map_mode;
+    this.clusteringCheckbox.checked = (data.map_mode === MapMode.Clustered);
   }
 
   private _cached_link_set: Set<number> | null = null;
@@ -198,6 +206,29 @@ export default class MapPane extends View<any, Set<number> | null> {
     };
     this.layer.addTo(this.map);
     this.layerControl.addOverlay(this.layer, '<b>Markers:</b> Aggregated markers for location clusters');
+
+    // clustering control pane
+    const clusteringControl = new L.Control({position: 'topright'});
+    const ref = this;
+    clusteringControl.onAdd = function(_) {
+      const div = L.DomUtil.create('div', 'leaflet-control-clustering');
+      div.innerHTML = `
+        <input type="checkbox" id="map-control-clustering">
+        <label for="map-control-clustering">Cluster</label>
+      `;
+      div.setAttribute('title', 'Cluster locations in the map into glyphs. This is the default. See the info texts of the map view and the settings pane for more details.');
+
+      div.addEventListener('click', e => e.stopPropagation());
+      const input = div.querySelector<HTMLInputElement>(':scope input');
+      input.checked = ref.cachedMapMode === MapMode.Clustered;
+      input.addEventListener('change', () => {
+        ref.sendToDataThread('set-map-mode', input.checked ? MapMode.Clustered : MapMode.Cluttered);
+      });
+      ref.clusteringCheckbox = input;
+
+      return div;
+    };
+    clusteringControl.addTo(this.map);
 
 
     /* SVG OVERLAY */
