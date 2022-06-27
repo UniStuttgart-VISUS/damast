@@ -535,13 +535,16 @@ class FetchWorker extends DataWorker<any> {
     });
   }
 
-  private async sendSettingsData() {
+  private async sendSettingsData(evidenceCount: number, placeCount: number) {
     this.sendToMainThread({ type: 'set-settings-data', data: {
       brush_only_active: this.data.brush_only_active,
       display_mode: (this.data.display_mode === DisplayMode.Religion) ? 'religion' : 'confidence',
       timeline_mode: this.data.timeline_mode,
       map_mode: this.data.map_mode,
       use_falsecolors: this.data.use_falsecolors,
+
+      evidence_count: evidenceCount,
+      place_count: placeCount,
     }});
   }
 
@@ -565,6 +568,11 @@ class FetchWorker extends DataWorker<any> {
       }
     });
 
+    const evidenceIds = new Set<number>();
+    active.forEach(d => { if (d.active) evidenceIds.add(d.tuple_id); });
+    const activeEvidenceCount = evidenceIds.size;
+    const activePlaceCount = active_ids.size;
+
     const religion_order = {};
     this.data.religionOrdering().forEach((v, k) => religion_order[k] = v);
 
@@ -572,13 +580,13 @@ class FetchWorker extends DataWorker<any> {
       // if only TimelineMode changed, there is no reason to rebuild all views
       await Promise.all([
         this.sendTimelineData(active, religion_order),
-        this.sendSettingsData(),
+        this.sendSettingsData(activeEvidenceCount, activePlaceCount),
       ]);
     } else if (cs && cs.size === 1 && cs.has(ChangeScope.MapMode)) {
       // if only MapMode changed, there is no reason to rebuild all views
       await Promise.all([
         this.sendMapData(active, religion_order),
-        this.sendSettingsData(),
+        this.sendSettingsData(activeEvidenceCount, activePlaceCount),
       ]);
     } else if (cs && cs.size === 1 && cs.has(ChangeScope.SourceViewSortMode)) {
       // if only source sort mode changed, there is no reason to rebuild all views
@@ -593,7 +601,7 @@ class FetchWorker extends DataWorker<any> {
         this.sendTimelineData(active, religion_order),
         this.sendMapData(active, religion_order),
         this.sendTagsData(active),
-        this.sendSettingsData(),
+        this.sendSettingsData(activeEvidenceCount, activePlaceCount),
       ]);
     }
 
