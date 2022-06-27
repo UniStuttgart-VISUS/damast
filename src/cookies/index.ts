@@ -6,7 +6,7 @@ import {
 
 const consentForm = document.querySelector('div.cookies__content');
 
-if (getConsentCookie() !== 'all') window.localStorage.clear();
+if (getConsentCookie() !== 'essential') window.localStorage.clear();
 
 if (consentForm !== null) {
   const save = consentForm.querySelector(':scope button#save-cookie-policy');
@@ -31,9 +31,6 @@ if (consentForm !== null) {
       case 'essential':
         setConsentCookie('essential');
         break;
-      case 'all':
-        setConsentCookie('all');
-        break;
     }
 
     saveIcon.classList.remove('fa-pulse', 'fa-spinner');
@@ -49,6 +46,9 @@ if (consentForm !== null) {
       // if page is transient, proceed
       const next = document.querySelector<HTMLLinkElement>('link[rel="next"]');
       if (next) window.location.replace(next.href);
+      else {
+        document.body.dispatchEvent(new CustomEvent('cookieconsentchanged'));
+      }
     } else {
       window.location.reload();
     }

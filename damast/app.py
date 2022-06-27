@@ -245,7 +245,7 @@ class FlaskApp(flask.Flask):
             r = flask.request
 
             cookie_consent = r.cookies.get('cookieConsent')
-            if cookie_consent not in ('essential', 'all'):
+            if cookie_consent not in ('essential',):
                 sessionkeys = list(flask.session)
                 for k in sessionkeys:
                     flask.session.pop(k)
@@ -258,7 +258,7 @@ class FlaskApp(flask.Flask):
             r = flask.request
 
             cookie_consent = r.cookies.get('cookieConsent')
-            if cookie_consent not in ('essential', 'all'):
+            if cookie_consent not in ('essential',):
                 sessionkeys = list(flask.session)
                 for k in sessionkeys:
                     flask.session.pop(k)
@@ -375,7 +375,7 @@ class FlaskApp(flask.Flask):
         def template_context():
             is_testing = self.config.get('TESTING', False)
             cookie_preference = flask.request.cookies.get('cookieConsent', None)
-            if cookie_preference not in ('essential', 'all'):
+            if cookie_preference not in ('essential',):
                 cookie_preference = None
 
             now = datetime.datetime.now().astimezone()

@@ -100,7 +100,7 @@ export default class SettingsPane {
 
     d.select('#save-layout')
       .on('click', () => this.onClickSaveLayout())
-      .attr('disabled', (getConsentCookie() === 'all') ? null : '');
+      .attr('disabled', (getConsentCookie() === 'essential') ? null : '');
     d.select('#reset-layout').on('click', () => this.onClickResetLayout());
     d.select('#save-state').on('click', () => this.onClickSaveVisualizationState());
     d.select('#load-state').on('click', () => this.onClickLoadVisualizationState());

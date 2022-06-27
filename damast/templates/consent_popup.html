@@ -46,17 +46,8 @@
          {% if cookie_preference == 'essential' %}checked{% endif %}>
   <label for="essential">
     <strong>Essential cookies:</strong>
-    Allow only storage of essential cookies.
-    Basic functionalities, such as login, are available.
-  </label>
-  <input type="radio"
-         id="all"
-         name="policy"
-         value="all"
-         {% if cookie_preference == 'all' %}checked{% endif %}>
-  <label for="all">
-    <strong>All cookies:</strong>
-    Allow storage of all cookies.
+    Allow storage of essential cookies.
+    All functionalities, for example login, are available.
   </label>
 </form>
 <div class="content__block">

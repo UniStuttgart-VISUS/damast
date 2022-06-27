@@ -6,13 +6,12 @@ const cookiePath = cookiePathNode
   ? cookiePathNode.getAttribute('content')
   : '/';
 
-type SettableCookieConsent = 'essential' | 'all';
+type SettableCookieConsent = 'essential';
 export type CookieConsent = null | SettableCookieConsent;
 
 export function getConsentCookie(): CookieConsent {
   const c = Cookies.get(cookieKey);
   if (c === 'essential') return c;
-  else if (c === 'all') return c;
   return null;
 }
 
@@ -24,5 +23,5 @@ export function clearConsentCookie() {
 export function setConsentCookie(consent: SettableCookieConsent) {
   Cookies.set(cookieKey, consent, { expires: 90, path: cookiePath });
 
-  if (consent !== 'all') window.localStorage.clear();
+  if (consent !== 'essential') window.localStorage.clear();
 }

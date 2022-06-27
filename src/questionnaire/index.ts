@@ -15,7 +15,7 @@ function onSubmit(event: MouseEvent) {
 
   // handle
   const ck = getConsentCookie();
-  if (ck === 'essential' || ck === 'all') {
+  if (ck === 'essential') {
     localStorage.setItem(localStorageKeyQuestionnaire, QuestionnaireState.Done);
   }
   form.querySelector<HTMLInputElement>(':scope input[name="usage-time"]')?.setAttribute(

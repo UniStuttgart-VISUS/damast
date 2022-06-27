@@ -12,7 +12,15 @@ const triggerTimeMs = 900_000;  // 15 minutes
 //
 let updateUseTimeId: any;
 
+function onCookieConsentChanged() {
+  clearTimeout(updateUseTimeId);
+
+  initQuestionnaire();
+}
+
 export function initQuestionnaire() {
+  document.body.addEventListener('cookieconsentchanged', onCookieConsentChanged);
+
   const consentCookie = getConsentCookie();
   if (consentCookie === null) return;
 
@@ -23,10 +31,16 @@ export function initQuestionnaire() {
   window.addEventListener('focus', () => updateUseTime(Date.now()));
 }
 
+function getUsageTime() {
+  const time = parseInt(localStorage.getItem(localStorageKeyUsageTime));
+  if (isNaN(time)) return 0;
+  return time;
+}
+
 function updateUseTime(lastTime: number) {
   const now = Date.now();
   const timeDelta = Math.floor(now - lastTime);
-  const timeUsed = parseInt(localStorage.getItem(localStorageKeyUsageTime)) ?? 0;
+  const timeUsed = getUsageTime();
   const totalTime = timeDelta + timeUsed;
 
   localStorage.setItem(localStorageKeyUsageTime, totalTime.toString());
@@ -39,7 +53,7 @@ async function regularCheck() {
   if (questionnaireState === QuestionnaireState.DoNotWant) return;
   if (questionnaireState === QuestionnaireState.Done) return;
 
-  const totalTime = parseInt(localStorage.getItem(localStorageKeyUsageTime)) ?? 0;
+  const totalTime = getUsageTime();
 
   if (totalTime >= triggerTimeMs) {
     await showAskDialog();

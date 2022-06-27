@@ -127,7 +127,7 @@ interface ConfigProp {
 const title_icons = /^<i .*>\s*/;
 
 export function storeConfig(layout: GoldenLayout) {
-  if (getConsentCookie() !== 'all') return;
+  if (getConsentCookie() !== 'essential') return;
 
   const cfg = layout.toConfig();
 
