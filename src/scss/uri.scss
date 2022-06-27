@@ -41,3 +41,24 @@ li[data-footnote-number]::marker {
   content: attr(data-footnote-number) " ";
   color: $clr-gray;
 }
+
+h1 {
+  margin-block: 3rem;
+}
+
+h1 + h2.subtitle {
+  text-align: center;
+  margin-block: -3rem 3rem;
+}
+
+h2 + a.evidence-list-link {
+  font-size: small;
+  margin-block-start: calc(-1.2rem + 0.1em);
+  display: block;
+}
+
+a.back-link {
+  position: sticky;
+  left: 1em;
+  top: 0;
+}
