@@ -9,30 +9,41 @@ import {clearConfig, storeConfig} from './default-layout';
 import {MessageData} from './data-worker';
 import { getConsentCookie } from '../common/cookies';
 
-export default class SettingsPane {
-private confidence_mode_input: d3.Selection<HTMLInputElement, any, any, any>;
-private brush_only_active_input: d3.Selection<HTMLInputElement, any, any, any>;
-private timeline_mode_input: d3.Selection<HTMLInputElement, any, any, any>;
-private map_mode_input: d3.Selection<HTMLInputElement, any, any, any>;
-private falsecolor_mode_input: d3.Selection<HTMLInputElement, any, any, any>;
+interface SettingsData {
+  brush_only_active: boolean;
+  display_mode: 'religion' | 'confidence';
+  timeline_mode: T.TimelineMode;
+  map_mode: T.MapMode;
+  use_falsecolors: boolean;
 
-constructor(
-  private readonly data_worker: Worker,
-  private readonly container: GoldenLayout.Container,
-  private readonly layout: GoldenLayout
-) {
-  this.container?.on('modal-button-clicked', () => this.openModal());
-
-  this.init();
+  evidence_count: number;
+  place_count: number;
 }
 
-private init() {
-  const ref = this;
-  const div = this.container.getElement()[0];
-  div.classList.add('settings-pane');
-  div.innerHTML = require('html-loader!./html/settings-pane.template.html').default;
+export default class SettingsPane {
+  private confidence_mode_input: d3.Selection<HTMLInputElement, any, any, any>;
+  private brush_only_active_input: d3.Selection<HTMLInputElement, any, any, any>;
+  private timeline_mode_input: d3.Selection<HTMLInputElement, any, any, any>;
+  private map_mode_input: d3.Selection<HTMLInputElement, any, any, any>;
+  private falsecolor_mode_input: d3.Selection<HTMLInputElement, any, any, any>;
 
-  const d = d3.select<HTMLDivElement, any>(div);
+  constructor(
+    private readonly data_worker: Worker,
+    private readonly container: GoldenLayout.Container,
+    private readonly layout: GoldenLayout
+  ) {
+    this.container?.on('modal-button-clicked', () => this.openModal());
+
+    this.init();
+  }
+
+  private init() {
+    const ref = this;
+    const div = this.container.getElement()[0];
+    div.classList.add('settings-pane');
+    div.innerHTML = require('html-loader!./html/settings-pane.template.html').default;
+
+    const d = d3.select<HTMLDivElement, any>(div);
 
     this.confidence_mode_input = d.select<HTMLInputElement>('div#confidence-controls input#confidence-mode')
       .each(function() {
@@ -124,7 +135,9 @@ private init() {
   }
 
   private async onClickGenerateReport() {
-    this.data_worker.postMessage({type: 'generate-report', data: null});
+
+    console.log('generate report');
+    //this.data_worker.postMessage({type: 'generate-report', data: null});
   }
 
   private _resolver: (v: string) => void;
@@ -230,28 +243,28 @@ private init() {
   }
 
   private static async showSuccess(query: string, innerHTML: string, color: string = '#3b7524') {
-      const button: HTMLButtonElement = document.querySelector(query);
+    const button: HTMLButtonElement = document.querySelector(query);
 
-      button.disabled = true;
-      button.style.setProperty('--clr-primary', 'white');
-      button.style.setProperty('--clr-secondary', color);
-      button.style.filter = 'initial';  // do not desaturate because of disabled
+    button.disabled = true;
+    button.style.setProperty('--clr-primary', 'white');
+    button.style.setProperty('--clr-secondary', color);
+    button.style.filter = 'initial';  // do not desaturate because of disabled
 
-      const oldText = button.innerHTML;
-      button.innerHTML = innerHTML;
+    const oldText = button.innerHTML;
+    button.innerHTML = innerHTML;
 
-      await new Promise<void>(r => {setTimeout(() => {
-        button.disabled = false;
-        button.style.setProperty('--clr-primary', null);
-        button.style.setProperty('--clr-secondary', null);
-        button.style.filter = null;
+    await new Promise<void>(r => {setTimeout(() => {
+      button.disabled = false;
+      button.style.setProperty('--clr-primary', null);
+      button.style.setProperty('--clr-secondary', null);
+      button.style.filter = null;
 
-        button.innerHTML = oldText;
-        r();
-      }, 1500);});
+      button.innerHTML = oldText;
+      r();
+    }, 1500);});
   }
 
-  private async onSettingsEvent(eventData: MessageData<{brush_only_active: boolean, display_mode: 'religion' | 'confidence', timeline_mode: T.TimelineMode, map_mode: T.MapMode, use_falsecolors: boolean}>) {
+  private async onSettingsEvent(eventData: MessageData<SettingsData>) {
     const c1 = this.brush_only_active_input.on('change');
     this.brush_only_active_input.on('change', null);
     const c2 = this.confidence_mode_input.on('change');
