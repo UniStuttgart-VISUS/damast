@@ -11,6 +11,7 @@ from ..postgres_rest_api.decorators import rest_endpoint
 from ..postgres_rest_api.util import parse_geoloc
 from ..map_styles import app as map_styles
 from ..reporting.place_sort import sort_alternative_placenames, sort_placenames
+from ..reporting.collect_report_data import collect_report_data
 
 app = AuthenticatedBlueprintPreparator('place', __name__, template_folder='templates')
 app.register_blueprint(map_styles)
@@ -369,6 +370,36 @@ def get_place(cursor, place_id):
     response.vary.add('Accept')
 
     return response
+
+
+@app.route('/<int:place_id>/evidence', role=['user', 'visitor'])
+@rest_endpoint
+def get_place_evidence_list(cursor, place_id):
+    filters = [
+        # visibility settings of evidence, place, and place type
+        cursor.mogrify('E.visible', tuple()),
+        cursor.mogrify('P.visible', tuple()),
+        cursor.mogrify('PT.visible', tuple()),
+        cursor.mogrify('P.id = %s', (place_id,)),
+            ]
+    evidence_data = collect_report_data(cursor, filters, True)
+
+    place = cursor.one('SELECT name, id, place_type_id FROM place WHERE id = %s;', (place_id,))._asdict()
+    place_type = cursor.one('SELECT * FROM place_type WHERE id = %s;', (place['place_type_id'],))._asdict()
+
+    now_ = date.today()
+    now = now_.strftime('%Y-%m-%d')
+    now_fmt = now_.strftime('%B %-d, %Y')
+
+    data = {
+            "now": now,
+            "now_fmt": now_fmt,
+            "url_root": flask.request.url_root,
+            "place": place,
+            "place_type": place_type,
+            }
+
+    return flask.render_template('uri/place_evidence_list.html', **data, **evidence_data)
 
 
 def render_html(**kwargs):
