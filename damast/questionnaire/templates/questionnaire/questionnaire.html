@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="{{ url_for('questionnaire.file', path='style.css') }}">
 <script type="module" src="{{ url_for('questionnaire.file', path='questionnaire.js') }}"></script>
 {% endblock %}
-{% from "questionnaire/macros.html" import likert_scale_helpful, time_used, checkbox_used, additional_comment %}
+{% from "questionnaire/macros.html" import likert_scale, likert_scale_helpful, time_used, checkbox_used, additional_comment %}
 {% block content %}
 <h1>Questionnaire</h1>
 
@@ -25,6 +25,7 @@ Once you click on the submit button in the bottom right of the page, your feedba
   <input type="hidden" name="version" value="{{ version }}">
   <input type="hidden" name="time" value="{{ timestamp }}">
   <input type="hidden" name="usage-time" value="">
+  <input type="hidden" name="number-reports-generated" value="">
 
   <section>
     <h2>General Feedback</h2>
@@ -73,6 +74,20 @@ Once you click on the submit button in the bottom right of the page, your feedba
       Please put other general feedback you want to provide, as well as suggestions, here:
     </label>
     <textarea id="general-feedback" name="general-feedback" cols="60" rows="8" placeholder="Enter general feedback or suggestions"></textarea>
+  </section>
+
+  <section>
+    <h2>Expertise and Field of Research</h2>
+
+    {{ likert_scale('expertise.data-domain', 'How familiar are you with this research domain and this type of dataset?', ['not at all', 'not very much', 'somewhere in the middle', 'a little bit', 'very much']) }}
+    {{ likert_scale('expertise.interactive-visualization', 'How familiar are you with interactive data visualization?', ['not at all', 'not very much', 'somewhere in the middle', 'a little bit', 'very much']) }}
+
+    <label for="expertise-description">
+      Please describe your own field of work or research, alongside your level of education, briefly.
+      For example: <em><q>historian, European middle ages, doctorate in history.</q></em>
+      Feel free to leave your answer vague (e.g., <em><q>historian</q></em>)&mdash;or empty&mdash;if you feel that the answer would be too identifiable.
+    </label>
+    <textarea id="expertise-description" name="expertise.description" rows="2" placeholder="Enter general feedback or suggestions"></textarea>
   </section>
 
   <section>

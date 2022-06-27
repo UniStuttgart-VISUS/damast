@@ -25,6 +25,7 @@ def post_feedback():
         data = dict(flask.request.form)
         data['uuid'] = u
         data['time-received'] = datetime.datetime.now().astimezone().isoformat()
+        data['user-agent'] = str(flask.request.user_agent)
         json.dump(data, f)
 
     return flask.render_template('questionnaire/thanks.html')

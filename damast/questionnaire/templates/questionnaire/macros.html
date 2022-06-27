@@ -1,5 +1,20 @@
 {# vim: set filetype=htmldjango #}
 
+{%- macro likert_scale(id, question, values) -%}
+<fieldset>
+  <legend>{{ question }}</legend>
+  <div class="likert-scale">
+    <label for="{{ id }}-1">{{ values[0] | capitalize }}</label>
+    {% for value in values %}
+    {% set i = loop.index %}
+    <input type="radio" id="{{ id }}-{{ i }}" name="{{ id }}" value="{{ i }}-{{ value }}" title="{{ value }}">
+    {% endfor %}
+    <label for="{{ id }}-5">{{ values[4] | capitalize }}</label>
+  </div>
+</fieldset>
+{%- endmacro -%}
+
+
 {%- macro likert_scale_helpful(id, text) -%}
 <fieldset>
   <legend>
