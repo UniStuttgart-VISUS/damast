@@ -1,6 +1,6 @@
 {% from 'reporting/fragments/macros.html' import generate_footnote, create_footnote with context %}
 
-{% macro create_evidence(e) %}
+{% macro create_evidence(e, create_place_links=true) %}
 {%- set footnotes.has_footnotes = false -%}
 {%- set footnotes.footnote_keys = [] -%}
 <section class="item" id="evidence{{ e.evidence.id }}">
@@ -32,7 +32,7 @@
     {% else %}
     <em>{{ e.evidence.place_type|lower }}</em>
     {% endif %}
-    <strong>{{ e.evidence.place_name }}</strong><a class="place-link" href="#place{{ e.evidence.place_id }}"><sup>[p{{ e.evidence.place_id}}]</sup></a>
+    <strong>{{ e.evidence.place_name }}</strong>{%- if create_place_links %}<a class="place-link" href="#place{{ e.evidence.place_id }}"><sup>[p{{ e.evidence.place_id}}]</sup></a>{%- endif %}
     <em>({{ e.evidence.place_attribution_confidence or 'no confidence value' }})</em>
     {%- if e.evidence.place_instance_comment -%}
       {{ create_footnote('evidence_place_instance_comment' ~ e.evidence.id) }}
