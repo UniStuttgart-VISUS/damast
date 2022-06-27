@@ -1,0 +1,34 @@
+<p >
+You are requesting to generate a report with
+<strong id="evidence-count"></strong>&nbsp;pieces of evidence and
+<strong id="place-count"></strong>&nbsp;places.
+<span id="extra-sentence"></span>
+</p>
+
+<p>
+We try to keep all reports available via their UUID or URL indefinitely.
+Generating a report takes time, puts load on the server, and uses up storage space on the server.
+Please only use this feature if you are sure you will use the generated report.
+Consider using the tooltips, and the links to the place URI pages in the location list and map
+(press <kbd class="shift-button">Shift</kbd> and click on a map symbol at the same time), instead to get details on demand.
+</p>
+
+<form method="dialog">
+  <div class="vertical-fill-buttons">
+    <button
+        value="no"
+        id="nevermind-no-report"
+        class="button button--medium">
+      <i class="fa fa-fw fa-times"></i>
+      Nevermind, do not generate the report.
+    </button>
+    <button
+        value="yes"
+        id="yes-report"
+        class="button button--medium button--blue">
+      <i class="fa fa-fw fa-file-text-o"></i>
+      I understand. Please generate the report.
+    </button>
+  </div>
+</form>
+

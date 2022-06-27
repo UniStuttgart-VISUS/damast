@@ -26,6 +26,7 @@ export default class ConfidencePane extends View<any, any> {
     div.classList.add('confidence-container');
     div.innerHTML = require('html-loader!./html/confidence.template.html').default;
     this._div = d3.select(div).select('#confidence');
+    const ref = this;
 
     const hdr = d3.select(div).select('.confidence__header');
     hdr.select<HTMLButtonElement>('#confidence-filter-none')
@@ -55,6 +56,10 @@ export default class ConfidencePane extends View<any, any> {
           });
         this.onchange();
       });
+    hdr.select<HTMLInputElement>('#use-confidence-color')
+      .on('change', function() {
+        ref.sendToDataThread('set-display-mode', this.checked ? 'Confidence' : 'Religion');
+      });
   }
 
   async linkData(data: any) {}
@@ -63,6 +68,7 @@ export default class ConfidencePane extends View<any, any> {
     const grid = data.grid;
     const cols: {value: string | null, title: string, default_?: boolean}[]= data.cols;
     const rows: {value: string | null, title: string, color: string, dummy?: boolean}[] = data.rows;
+    const mode: T.DisplayMode = data.mode;
 
     this._columns = cols;
 
@@ -157,6 +163,9 @@ export default class ConfidencePane extends View<any, any> {
 
     d3.select<HTMLButtonElement, any>('button#confidence-filter-apply')
       .on('click', () => this.apply_filters());
+
+    d3.select<HTMLInputElement, any>('input[type="checkbox"]#use-confidence-color')
+      .each(function() { this.checked = mode === T.DisplayMode.Confidence; });
 
     this.onchange();
   }

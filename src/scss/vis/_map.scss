@@ -109,3 +109,15 @@ div#map.no-marker-interaction .leaflet-marker-pane svg * {
     }
   }
 }
+
+.leaflet-control-clustering {
+  display: block;
+  border-radius: 5px;
+  padding: 1ex;
+  border: 2px solid rgba(0,0,0,0.2);
+  background: white;
+
+  label {
+    color: $clr-gray;
+  }
+}

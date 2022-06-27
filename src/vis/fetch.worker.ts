@@ -228,6 +228,13 @@ class FetchWorker extends DataWorker<any> {
       this.data.setReligionFilter(data.data);
 
       this.data.resumeEvents();
+    } else if (data.type === 'set-falsecolors') {
+      this.data.suspendEvents();
+
+      this.data.use_falsecolors = data.data;
+
+      this.data.resumeEvents();
+    } else if (data.type === 'set-display-mode') {
     } else if (data.type === 'set-brush') {
       this.data.brush.onHierarchyBrush(data.data);
     } else if (data.type === 'clear-brush') {
@@ -258,6 +265,10 @@ class FetchWorker extends DataWorker<any> {
       this.data.suspendEvents();
       this.data.setTimeFilter(data.data);
       this.data.resumeEvents();
+    } else if (data.type === 'set-timeline-mode') {
+      this.data.suspendEvents();
+      this.data.timeline_mode = data.data
+      this.data.resumeEvents();
     } else {
       throw data.type;
     }
@@ -274,6 +285,8 @@ class FetchWorker extends DataWorker<any> {
       this.data?.setMapState(data.data);
     } else if (data.type === 'set-map-filter') {
       this.data.setMapFilter(data.data);
+    } else if (data.type === 'set-map-mode') {
+      this.data.map_mode = data.data
     } else {
       throw data.type;
     }
@@ -290,6 +303,14 @@ class FetchWorker extends DataWorker<any> {
       this.data.resumeEvents();
     } else if (data.type === 'set-message') {
       this.sendMessage(data.data);
+    } else if (data.type === 'set-display-mode') {
+      this.data.suspendEvents();
+
+      if (data.data === 'Religion') this.data.display_mode = DisplayMode.Religion;
+      else if (data.data === 'Confidence') this.data.display_mode = DisplayMode.Confidence;
+      else throw data.data;
+
+      this.data.resumeEvents();
     } else {
       throw data.type;
     }
@@ -369,6 +390,7 @@ class FetchWorker extends DataWorker<any> {
         data: place_data,
         active_aspect: this.data.confidence_aspect,
         display_mode: this.data.display_mode,
+        use_falsecolors: this.data.use_falsecolors,
         brush_only_active: this.data.brush_only_active,
         colors: this.data.transferableColorscheme(),
         religion_filter: this.data.religion_filter,
@@ -409,7 +431,8 @@ class FetchWorker extends DataWorker<any> {
         data: this.data.placeData(),
         confidence_filter: this.data.confidence_filter,
         confidence_aspect: this.data.confidence_aspect,
-        colors: this.data.transferableConfidenceColorscheme()
+        colors: this.data.transferableConfidenceColorscheme(),
+        mode: this.data.display_mode,
       }
     });
   }
@@ -512,13 +535,16 @@ class FetchWorker extends DataWorker<any> {
     });
   }
 
-  private async sendSettingsData() {
+  private async sendSettingsData(evidenceCount: number, placeCount: number) {
     this.sendToMainThread({ type: 'set-settings-data', data: {
       brush_only_active: this.data.brush_only_active,
       display_mode: (this.data.display_mode === DisplayMode.Religion) ? 'religion' : 'confidence',
       timeline_mode: this.data.timeline_mode,
       map_mode: this.data.map_mode,
       use_falsecolors: this.data.use_falsecolors,
+
+      evidence_count: evidenceCount,
+      place_count: placeCount,
     }});
   }
 
@@ -542,6 +568,11 @@ class FetchWorker extends DataWorker<any> {
       }
     });
 
+    const evidenceIds = new Set<number>();
+    active.forEach(d => { if (d.active) evidenceIds.add(d.tuple_id); });
+    const activeEvidenceCount = evidenceIds.size;
+    const activePlaceCount = active_ids.size;
+
     const religion_order = {};
     this.data.religionOrdering().forEach((v, k) => religion_order[k] = v);
 
@@ -549,13 +580,13 @@ class FetchWorker extends DataWorker<any> {
       // if only TimelineMode changed, there is no reason to rebuild all views
       await Promise.all([
         this.sendTimelineData(active, religion_order),
-        this.sendSettingsData(),
+        this.sendSettingsData(activeEvidenceCount, activePlaceCount),
       ]);
     } else if (cs && cs.size === 1 && cs.has(ChangeScope.MapMode)) {
       // if only MapMode changed, there is no reason to rebuild all views
       await Promise.all([
         this.sendMapData(active, religion_order),
-        this.sendSettingsData(),
+        this.sendSettingsData(activeEvidenceCount, activePlaceCount),
       ]);
     } else if (cs && cs.size === 1 && cs.has(ChangeScope.SourceViewSortMode)) {
       // if only source sort mode changed, there is no reason to rebuild all views
@@ -570,7 +601,7 @@ class FetchWorker extends DataWorker<any> {
         this.sendTimelineData(active, religion_order),
         this.sendMapData(active, religion_order),
         this.sendTagsData(active),
-        this.sendSettingsData(),
+        this.sendSettingsData(activeEvidenceCount, activePlaceCount),
       ]);
     }
 
