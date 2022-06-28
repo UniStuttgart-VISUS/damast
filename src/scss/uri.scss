@@ -2,6 +2,8 @@
 @use 'vis/variables' as *;
 @use 'common/mixins';
 
+@forward 'reporting';
+
 @forward 'common/target-highlight';
 @forward 'common/leaflet-mapbox-attribution';
 @forward 'common/place-uri-report-layout';
