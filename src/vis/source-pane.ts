@@ -1,5 +1,4 @@
 import * as d3 from 'd3';
-import * as R from 'ramda';
 import {Dataset,ChangeScope} from './dataset';
 import {confidence_aspects} from './confidence-aspects';
 import * as T from './datatypes';
@@ -154,8 +153,8 @@ export default class SourcePane extends View<any, any> {
   private checkActive(): void {
     const selected = this.collectSelected();
 
-    const unchanged = R.all(d => selected.has(d), Array.from(this._applied_selected))
-      && R.all(d => this._applied_selected.has(d), Array.from(selected));
+    const unchanged = Array.from(this._applied_selected).every(d => selected.has(d))
+      && Array.from(selected).every(d => this._applied_selected.has(d));
 
     d3.select('#sources-filter-apply')
       .attr('disabled', unchanged ? '' : null);

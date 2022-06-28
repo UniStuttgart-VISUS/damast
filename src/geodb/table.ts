@@ -176,14 +176,14 @@ export default abstract class Table {
   }
 
   private saveLayout(id: string, type: 'columns', data: Tabulator.ColumnDefinition[]): any {
-    if (getConsentCookie() !== 'all') return;
+    if (getConsentCookie() !== 'essential') return;
 
     const order = data.map(d => d.field);
     localStorage.setItem(`${id}-${type}`, JSON.stringify(order))
   }
 
   private loadLayout(id: string, type: 'columns'): false {
-    if (getConsentCookie() !== 'all') {
+    if (getConsentCookie() !== 'essential') {
       this._on_load_ordering = null;
       return false;
     }

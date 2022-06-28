@@ -1,5 +1,3 @@
-import { type } from "ramda";
-
 /**
  * Filter by tag.id:
  *  - Either permit all (true),

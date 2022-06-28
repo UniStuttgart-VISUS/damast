@@ -14,7 +14,7 @@ interface PlaceSet {
 
 
 async function getSavedPlaceSets(user: User): Promise<PlaceSet[]> {
-  const locals: PlaceSet[] = (getConsentCookie() !== 'all')
+  const locals: PlaceSet[] = (getConsentCookie() !== 'essential')
     ? []
     : JSON.parse(window.localStorage.getItem('damast.place-sets') || '[]');
   locals.forEach(d => d.source = 'local');
@@ -78,7 +78,7 @@ async function savePlaceSets(user: User, placesets: PlaceSet[], idx: number | nu
     }
   }
 
-  if (getConsentCookie() === 'all') window.localStorage.setItem('damast.place-sets', JSON.stringify(locals));
+  if (getConsentCookie() === 'essential') window.localStorage.setItem('damast.place-sets', JSON.stringify(locals));
 }
 
 

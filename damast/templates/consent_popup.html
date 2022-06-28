@@ -46,17 +46,9 @@
          {% if cookie_preference == 'essential' %}checked{% endif %}>
   <label for="essential">
     <strong>Essential cookies:</strong>
-    Allow only storage of essential cookies.
-    Basic functionalities, such as login, are available.
-  </label>
-  <input type="radio"
-         id="all"
-         name="policy"
-         value="all"
-         {% if cookie_preference == 'all' %}checked{% endif %}>
-  <label for="all">
-    <strong>All cookies:</strong>
-    Allow storage of all cookies.
+    Allow storage of essential cookies.
+    These are strictly first-party cookies that are necessary for some functionalities, such as login, storage of place sets in the visualization, and layout preferences in the GeoDB-Editor and visualization.
+    We also store anonymized usage data necessary for filling out the feedback questionnaire, and for determining whether to and when to show a popup asking for feedback.
   </label>
 </form>
 <div class="content__block">

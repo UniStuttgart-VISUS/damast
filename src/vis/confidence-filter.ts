@@ -1,4 +1,3 @@
-import * as R from 'ramda';
 import * as T from './datatypes';
 
 export const rows = [
@@ -67,7 +66,7 @@ export interface ConfidenceAspects {
 
 function contained(v: T.Confidence | T.Confidence[], r: T.ConfidenceRange): boolean {
   if (Array.isArray(v)) {
-    return (r === null) || R.any(d => r.includes(d), v);
+    return (r === null) || v.some(d => r.includes(d));
   } else {
     return (r === null) || r.includes(v);
   }

@@ -1,5 +1,4 @@
 import * as d3 from 'd3';
-import * as R from 'ramda';
 import {Dataset,ChangeScope} from './dataset';
 import * as T from './datatypes';
 import {createColorscales,ColorScales} from './colorscale';
@@ -198,11 +197,11 @@ export default class ConfidencePane extends View<any, any> {
     const filters = this.read_filters();
     if (this._cached_filters === null) this._cached_filters = filters;
 
-    const has_changes = !R.all(
-      ([k, v]) => v.length === this._cached_filters[k].length
-               && R.all(v2 => v.includes(v2), Array.from(this._cached_filters[k])),
-      Array.from(Object.entries(filters))
-    );
+    const has_changes = Array.from(Object.entries(filters))
+      .some(([k, v]) => !(
+        v.length === this._cached_filters[k].length
+        && Array.from(this._cached_filters[k]).every(v2 => v.includes(v2))
+      ));
 
     d3.select<HTMLButtonElement, any>('button#confidence-filter-apply')
       .node()

@@ -9,6 +9,7 @@ import { clearConfig, storeConfig } from './default-layout';
 import { MessageData } from './data-worker';
 import { getConsentCookie } from '../common/cookies';
 import { showInfoboxFromURL } from './modal';
+import { localStorageKeyReportCount } from '../common/questionnaire';
 
 interface SettingsData {
   brush_only_active: boolean;
@@ -20,8 +21,6 @@ interface SettingsData {
   evidence_count: number;
   place_count: number;
 }
-
-const reportCountKey = 'damast-report-count';
 
 export default class SettingsPane {
   private confidence_mode_input: d3.Selection<HTMLInputElement, any, any, any>;
@@ -101,7 +100,7 @@ export default class SettingsPane {
 
     d.select('#save-layout')
       .on('click', () => this.onClickSaveLayout())
-      .attr('disabled', (getConsentCookie() === 'all') ? null : '');
+      .attr('disabled', (getConsentCookie() === 'essential') ? null : '');
     d.select('#reset-layout').on('click', () => this.onClickResetLayout());
     d.select('#save-state').on('click', () => this.onClickSaveVisualizationState());
     d.select('#load-state').on('click', () => this.onClickLoadVisualizationState());
@@ -172,8 +171,8 @@ export default class SettingsPane {
 
     if (doCreateReport) {
       if (getConsentCookie() !== null) {
-        const prevReportsDone = parseInt(localStorage.getItem(reportCountKey) ?? '0');
-        localStorage.setItem(reportCountKey, (prevReportsDone + 1).toString());
+        const prevReportsDone = parseInt(localStorage.getItem(localStorageKeyReportCount) ?? '0');
+        localStorage.setItem(localStorageKeyReportCount, (prevReportsDone + 1).toString());
       }
 
       this.data_worker.postMessage({type: 'generate-report', data: null});

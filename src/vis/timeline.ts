@@ -1,5 +1,4 @@
 import * as d3 from 'd3';
-import * as R from 'ramda';
 import * as T from './datatypes';
 import { Dataset, ChangeScope, ChangeListener } from './dataset';
 import { PathInfoStack, stackKey } from './timeline-data';
@@ -183,7 +182,7 @@ export default class Timeline extends View<any, any> {
     if (this.zoomDomain) this.zoomBrush.move(brush_g,
       [this.x_overview(this.zoomDomain[0]),this.x_overview(this.zoomDomain[1])]);
 
-    this.zoomBrush.on('brush', R.always(null));
+    this.zoomBrush.on('brush', () => null);
     this.zoomBrush.on('end', (e) => this.zoomTo(e.selection));
 
     this.svg.on('mouseenter', this.onMouseEnter.bind(this));
@@ -353,7 +352,7 @@ export default class Timeline extends View<any, any> {
     if (!this.zoomDomain) return;
     const factor = (direction === 1) ? 1.25 : 0.8;
 
-    const middle = R.sum(this.zoomDomain) / 2;
+    const middle = d3.sum(this.zoomDomain) / 2;
     const span = this.zoomDomain[1] - this.zoomDomain[0];
     const start = Math.max(this.totalDomain[0], middle - factor * span / 2);
     const end = Math.min(this.totalDomain[1], middle + factor * span / 2);
@@ -363,9 +362,7 @@ export default class Timeline extends View<any, any> {
       : [start, end].map(this.x_overview);
 
     // short-circuit if old === new
-    const same = R.all(lst => lst[0] === lst[1],
-      R.zip([start,end], this.zoomDomain));
-    if (same) return;
+    if (this.zoomDomain[0] === start && this.zoomDomain[1] === end) return;
 
     this.overview_g.select('.brush').call(this.zoomBrush.move, range);
     this.zoomToDomain([start, end]);

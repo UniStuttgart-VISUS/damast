@@ -1,6 +1,5 @@
 import * as d3 from 'd3';
 import * as L from 'leaflet';
-import * as R from 'ramda';
 import 'leaflet.heat';
 import '@geoman-io/leaflet-geoman-free';
 import union from '@turf/union';
