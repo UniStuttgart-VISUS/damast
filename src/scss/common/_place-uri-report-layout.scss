@@ -7,19 +7,53 @@
   @include mixins.baseFlexBlock();
   padding-block: 2rem;
 
-  &::after {
-    clear: both;
+  & > section:last-child {
+    padding-block-end: 2rem;
   }
+
+  scroll-behavior: smooth;
+
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 1fr
+    clamp(30rem, calc(100% - 2rem), 65rem)
+    minmax(400px, 1fr);
 
   & > :where(h1, h2, h3, h4, section, p, ul, ol, blockquote, nav[role="toc"]) {
-    width: clamp(30rem, calc(100% - 2rem), 65rem);
+    grid-column: 2 / span 1;
     padding-inline: 1rem;
-    margin-inline: auto;
   }
-}
 
-main > :is(nav, section) {
-  margin: auto;
+  nav[role="toc"],
+  .info-box {
+    position: sticky;
+    top: 0;
+    left: 0;
+    grid-column: 3 / span 1;
+    margin-inline: 0 auto;
+    height: 1vh;  // to ensure stickiness
+  }
+
+  @media (max-width: 1500px) {
+    grid-template-columns: 1fr
+      clamp(30rem, calc(100% - 2rem), 65rem)
+      1fr;
+
+    nav[role="toc"],
+    .info-box {
+      position: static;
+      top: unset;
+      left: unset;
+      margin: unset;
+      grid-column: 2 / span 1;
+      height: initial;
+    }
+
+    .info-box {
+      margin: auto;
+    }
+  }
 }
 
 // headings

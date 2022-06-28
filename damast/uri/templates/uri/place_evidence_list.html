@@ -18,17 +18,34 @@
 
 {% block content %}
 
-<a class="back-link" href="{{ url_for('uri.place.get_place', place_id=place.id) }}">
-  <i class="fa fa-arrow-left"></i>
-  Back to overview
-</a>
+<nav role="toc">
+  <a class="back-link" href="{{ url_for('uri.place.get_place', place_id=place.id) }}">
+    <i class="fa fa-arrow-left"></i>
+    Back to overview
+  </a>
 
+  <h2>Table of Contents</h2>
+  <ul>
+    <li><a href="#evidences">Pieces of Evidence</a></li>
+    <li><a href="#religions">Religions</a></li>
+    {%- if persons|length -%}
+    <li><a href="#persons">Persons</a></li>
+    {%- endif -%}
+    <li><a href="#timeline">Timeline</a></li>
+    <li><a href="#sources">Sources</a></li>
+    <li><a href="#cite">How to Cite</a></li>
+  </ul>
+</nav>
+
+
+<section id="evidences">
 <h1>{{ place.name }}</h1>
 <h2 class="subtitle">List of Pieces of Evidence</h2>
 
 {% for evidence in evidences %}
   {{ create_evidence(evidence, create_place_links=false) }}
 {% endfor %}
+</section>
 
 <section id="religions">
   <h2>Religions</h2>
@@ -77,22 +94,10 @@
 </section>
 {% endif %}
 
-
-{#
 <section id="cite">
   <h2>How to Cite</h2>
 
-  <p>We suggest to cite this report in the following way:</p>
-  <blockquote>
-    Damast report <code>{{ report_id }}</code>,
-    based on data by Ralph Barczok and Bernd A. Vest, and the visualization of
-    <em>Damast &mdash; A Research System to Analyze Multi-Religious Constellations in the Islamicate World,</em>
-    edited by Dorothea Weltecke, Steffen Koch, Ralph Barczok, Max Franke, Florian Jäckel, and Bernd A. Vest.
-    <time date="2022-04">April 2022</time>.
-    Created <time datetime="{{ metadata.current_time_machine }}">{{ metadata.current_time_short }}</time>.
-    <a href="{{ report_url }}">{{ report_url }}</a>, data deposited at DaRUS: <a href="https://doi.org/10.18419/darus-2318">https://doi.org/10.18419/darus-2318</a>.
-  </blockquote>
+  <a class="under-header-link" href="{{ url_for('uri.place.get_place', place_id=place.id) }}#cite">See "How to Cite" on parent page.</a>
 </section>
-#}
 
 {% endblock %}

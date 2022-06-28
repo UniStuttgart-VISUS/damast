@@ -7,8 +7,6 @@
 @forward 'common/place-uri-report-layout';
 
 .info-box {
-  float: right;
-  width: 400px;
   font-size: 0.8rem;
 
   .map {
@@ -51,14 +49,9 @@ h1 + h2.subtitle {
   margin-block: -3rem 3rem;
 }
 
-h2 + a.evidence-list-link {
+h2 + a.under-header-link {
   font-size: small;
   margin-block-start: calc(-1.2rem + 0.1em);
   display: block;
 }
 
-a.back-link {
-  position: sticky;
-  left: 1em;
-  top: 0;
-}

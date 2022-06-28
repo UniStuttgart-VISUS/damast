@@ -100,7 +100,7 @@
 <section class="religions">
   <h2>Religions</h2>
 
-  <a class="evidence-list-link" href="{{ url_for('uri.place.get_place_evidence_list', place_id=place.id) }}">
+  <a class="under-header-link" href="{{ url_for('uri.place.get_place_evidence_list', place_id=place.id) }}">
     <i class="fa fa-external-link"></i>
     List all pieces of evidence for {{ place.name }}.
   </a>
@@ -190,7 +190,7 @@
   </ol>
 </section>
 
-<section class="cite">
+<section class="cite" id="cite">
   <h2>How to Cite</h2>
 
   <p>
