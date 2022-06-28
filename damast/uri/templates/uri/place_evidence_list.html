@@ -25,9 +25,11 @@
   </a>
 
   <h2>Table of Contents</h2>
+  <a href="#top">Back to top</a>
+
   <ul>
-    <li><a href="#evidences">Pieces of Evidence</a></li>
     <li><a href="#religions">Religions</a></li>
+    <li><a href="#evidences">Pieces of Evidence</a></li>
     {%- if persons|length -%}
     <li><a href="#persons">Persons</a></li>
     {%- endif -%}
@@ -37,14 +39,9 @@
   </ul>
 </nav>
 
-
-<section id="evidences">
+<section id="top">
 <h1>{{ place.name }}</h1>
 <h2 class="subtitle">List of Pieces of Evidence</h2>
-
-{% for evidence in evidences %}
-  {{ create_evidence(evidence, create_place_links=false) }}
-{% endfor %}
 </section>
 
 <section id="religions">
@@ -53,6 +50,14 @@
   {% for religion in religions %}
     {{ create_religion(religion) }}
   {% endfor %}
+</section>
+
+<section id="evidences">
+  <h2>Pieces of Evidence</h2>
+
+{% for evidence in evidences %}
+  {{ create_evidence(evidence, create_place_links=false) }}
+{% endfor %}
 </section>
 
 {%- if persons|length -%}
