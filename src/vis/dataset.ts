@@ -2,7 +2,6 @@ import * as d3hier from 'd3-hierarchy';
 import * as d3scale from 'd3-scale';
 import * as d3fetch from 'd3-fetch';
 import * as d3array from 'd3-array';
-import * as R from 'ramda';
 import { Validator } from '@cfworker/json-schema';
 import { MultiPolygon, multiPoint, point as turfPoint, Feature, Point, Polygon } from '@turf/helpers';
 import pointsWithinPolygon from '@turf/points-within-polygon';

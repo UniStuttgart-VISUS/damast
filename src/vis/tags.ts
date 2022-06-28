@@ -1,5 +1,4 @@
 import * as d3 from 'd3';
-import * as R from 'ramda';
 import {Dataset,ChangeScope} from './dataset';
 import {confidence_aspects} from './confidence-aspects';
 import * as T from './datatypes';
@@ -123,8 +122,8 @@ export default class TagsPane extends View<any, any> {
     else if (selected.size === 1 && typeof this._tag_filter === 'number' && !selected.has(this._tag_filter)) unchanged = false;
     else if (selected.size !== 1 && typeof this._tag_filter === 'number') unchanged = false;
     else if (typeof this._tag_filter === 'object') {
-      unchanged = R.all(d => selected.has(d), Array.from(this._tag_filter))
-        && R.all(d => (this._tag_filter as Set<number>).has(d), Array.from(selected));
+      unchanged = Array.from(this._tag_filter).every(d => selected.has(d))
+        && Array.from(selected).every(d => (this._tag_filter as Set<number>).has(d));
     }
 
     d3.select('#tags-filter-apply')
