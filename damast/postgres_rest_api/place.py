@@ -79,7 +79,7 @@ def get_place_type_list(c):
     return flask.jsonify(list(map(lambda x: x._asdict(), c.fetchall())))
 
 
-@app.route('/find-alternative-names', methods=['POST'], role='user')
+@app.route('/find-alternative-names', methods=['POST'], role=['user', 'visitor'])
 @rest_endpoint(['POST'])  # POST okay for read-only access
 def search_alternative_names(c):
     '''
