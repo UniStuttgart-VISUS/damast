@@ -18,7 +18,7 @@
   grid-auto-flow: column;
   grid-template-columns: 1fr
     clamp(30rem, calc(100% - 2rem), 65rem)
-    minmax(400px, 1fr);
+    minmax(calc(400px + 2rem), 1fr);
 
   & > :where(h1, h2, h3, h4, section, p, ul, ol, blockquote, nav[role="toc"]) {
     grid-column: 2 / span 1;
@@ -33,6 +33,10 @@
     grid-column: 3 / span 1;
     margin-inline: 0 auto;
     height: 1vh;  // to ensure stickiness
+  }
+
+  .info-box {
+    min-width: 400px;
   }
 
   @media (max-width: 1500px) {
