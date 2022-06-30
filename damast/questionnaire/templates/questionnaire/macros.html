@@ -15,21 +15,18 @@
 {%- endmacro -%}
 
 
-{%- macro likert_scale_helpful(id, text) -%}
-<fieldset>
-  <legend>
-    How important and helpful do you consider the {{ text }} to be?
-  </legend>
-  <div class="likert-scale">
-    <label for="{{ id }}-helpful-1">Not at all</label>
-    <input type="radio" id="{{ id }}-helpful-1" name="{{ id }}.helpful" value="1-not at all" title="not at all">
-    <input type="radio" id="{{ id }}-helpful-2" name="{{ id }}.helpful" value="2-not really" title="not really">
-    <input type="radio" id="{{ id }}-helpful-3" name="{{ id }}.helpful" value="3-unsure" title="unsure">
-    <input type="radio" id="{{ id }}-helpful-4" name="{{ id }}.helpful" value="4-helpful" title="helpful">
-    <input type="radio" id="{{ id }}-helpful-5" name="{{ id }}.helpful" value="5-very helpful" title="very helpful">
-    <label for="{{ id }}-helpful-5">Very much</label>
-  </div>
-</fieldset>
+{%- macro likert_scale_easy_to_use(id, text) -%}
+{%- set question = "How difficult to use do you consider the " ~ text ~ " to be?" -%}
+{%- set id = id ~ ".difficulty" -%}
+{%- set values = [ "very difficult", "difficult", "neither difficult nor easy", "easy", "very easy" ] -%}
+{{ likert_scale(id, question, values) }}
+{%- endmacro -%}
+
+{%- macro likert_scale_important(id, text) -%}
+{%- set question = "How important is the " ~ text ~ " for your tasks and research questions?" -%}
+{%- set id = id ~ ".importance" -%}
+{%- set values = [ "not important at all", "less important", "neither unimportant nor important", "important", "very important" ] -%}
+{{ likert_scale(id, question, values) }}
 {%- endmacro -%}
 
 {%- macro time_used(id, text) -%}

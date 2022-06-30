@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="{{ url_for('questionnaire.file', path='style.css') }}">
 <script type="module" src="{{ url_for('questionnaire.file', path='questionnaire.js') }}"></script>
 {% endblock %}
-{% from "questionnaire/macros.html" import likert_scale, likert_scale_helpful, time_used, checkbox_used, additional_comment %}
+{% from "questionnaire/macros.html" import likert_scale, likert_scale_easy_to_use, likert_scale_important, time_used, checkbox_used, additional_comment %}
 {% block content %}
 <h1>Questionnaire</h1>
 
@@ -79,13 +79,13 @@ Once you click on the submit button in the bottom right of the page, your feedba
   <section>
     <h2>Expertise and Field of Research</h2>
 
-    {{ likert_scale('expertise.data-domain', 'How familiar are you with this research domain and this type of dataset?', ['not at all', 'not very much', 'somewhere in the middle', 'a little bit', 'very much']) }}
-    {{ likert_scale('expertise.interactive-visualization', 'How familiar are you with interactive data visualization?', ['not at all', 'not very much', 'somewhere in the middle', 'a little bit', 'very much']) }}
+    {{ likert_scale('expertise.data-domain', 'How familiar are you with this research domain and this type of dataset?', ['not at all familiar', 'not very much familiar', 'somewhere in the middle', 'a little bit familiar', 'very familiar']) }}
+    {{ likert_scale('expertise.interactive-visualization', 'How familiar are you with interactive data visualization?', ['not at all familiar', 'not very much familiar', 'somewhere in the middle', 'a little bit familiar', 'very familiar']) }}
 
     <label for="expertise-description">
       Please describe your own field of work or research, alongside your level of education, briefly.
       For example: <em><q>historian, European middle ages, doctorate in history.</q></em>
-      Feel free to leave your answer vague (e.g., <em><q>historian</q></em>)&mdash;or empty&mdash;if you feel that the answer would be too identifiable.
+      Feel free to leave your answer vague (e.g., <em><q>historian</q></em>)&mdash;or empty&mdash;if you feel that the answer would make you too identifiable.
     </label>
     <textarea id="expertise-description" name="expertise.description" rows="2" placeholder="Enter general feedback or suggestions"></textarea>
   </section>
@@ -115,7 +115,8 @@ Once you click on the submit button in the bottom right of the page, your feedba
         </figure>
       </div>
 
-      {{ likert_scale_helpful('map', 'map and list of places') }}
+      {{ likert_scale_easy_to_use('map', 'map and list of places') }}
+      {{ likert_scale_important('map', 'map and list of places') }}
       {{ time_used('map', 'map and list of places') }}
       {{ additional_comment('map', 'map and list of places') }}
     </article>
@@ -137,7 +138,8 @@ Once you click on the submit button in the bottom right of the page, your feedba
         </figure>
       </div>
 
-      {{ likert_scale_helpful('timeline', 'timeline') }}
+      {{ likert_scale_easy_to_use('timeline', 'timeline') }}
+      {{ likert_scale_important('timeline', 'timeline') }}
       {{ time_used('timeline', 'timeline') }}
       {{ additional_comment('timeline', 'timeline') }}
     </article>
@@ -159,7 +161,8 @@ Once you click on the submit button in the bottom right of the page, your feedba
         </figure>
       </div>
 
-      {{ likert_scale_helpful('religion', 'religion hierarchy') }}
+      {{ likert_scale_easy_to_use('religion', 'religion hierarchy') }}
+      {{ likert_scale_important('religion', 'religion hierarchy') }}
       {{ time_used('religion', 'religion hierarchy') }}
       {{ additional_comment('religion', 'religion hierarchy') }}
     </article>
@@ -182,7 +185,8 @@ Once you click on the submit button in the bottom right of the page, your feedba
         </figure>
       </div>
 
-      {{ likert_scale_helpful('confidence', 'confidence view') }}
+      {{ likert_scale_easy_to_use('confidence', 'confidence view') }}
+      {{ likert_scale_important('confidence', 'confidence view') }}
       {{ time_used('confidence', 'confidence view') }}
       {{ additional_comment('confidence', 'confidence view') }}
     </article>
@@ -209,7 +213,8 @@ Once you click on the submit button in the bottom right of the page, your feedba
         </figure>
       </div>
 
-      {{ likert_scale_helpful('highlighting', 'highlighting feature') }}
+      {{ likert_scale_easy_to_use('highlighting', 'highlighting feature') }}
+      {{ likert_scale_important('highlighting', 'highlighting feature') }}
       {{ checkbox_used('highlighting', 'highlighting feature') }}
       {{ additional_comment('highlighting', 'highlighting feature') }}
     </article>
@@ -238,7 +243,8 @@ Once you click on the submit button in the bottom right of the page, your feedba
         </figure>
       </div>
 
-      {{ likert_scale_helpful('filtering', 'filtering feature') }}
+      {{ likert_scale_easy_to_use('filtering', 'filtering feature') }}
+      {{ likert_scale_important('filtering', 'filtering feature') }}
       {{ checkbox_used('filtering', 'filtering feature') }}
       {{ additional_comment('filtering', 'filtering feature') }}
     </article>
@@ -263,7 +269,8 @@ Once you click on the submit button in the bottom right of the page, your feedba
         </figure>
       </div>
 
-      {{ likert_scale_helpful('tooltips', 'tooltips') }}
+      {{ likert_scale_easy_to_use('tooltips', 'tooltips') }}
+      {{ likert_scale_important('tooltips', 'tooltips') }}
       {{ checkbox_used('tooltips', 'tooltips', 'them') }}
       {{ additional_comment('tooltips', 'tooltips') }}
     </article>
@@ -291,9 +298,11 @@ Once you click on the submit button in the bottom right of the page, your feedba
         </figure>
       </div>
 
-      {{ likert_scale_helpful('reports', 'reports') }}
+      {{ likert_scale_easy_to_use('reports', 'reports') }}
+      {{ likert_scale_important('reports', 'reports') }}
       {{ checkbox_used('reports', 'reporting functionality') }}
-      {{ likert_scale_helpful('linking', 'linking between pages and reports') }}
+      {{ likert_scale_easy_to_use('linking', 'linking between pages and reports') }}
+      {{ likert_scale_important('linking', 'linking between pages and reports') }}
       {{ checkbox_used('linking', 'links', 'them') }}
       {{ additional_comment('reports-linking', 'reports or the links') }}
     </article>
@@ -318,7 +327,8 @@ Once you click on the submit button in the bottom right of the page, your feedba
         </figure>
       </div>
 
-      {{ likert_scale_helpful('confidence-mode', 'confidence mode') }}
+      {{ likert_scale_easy_to_use('confidence-mode', 'confidence mode') }}
+      {{ likert_scale_important('confidence-mode', 'confidence mode') }}
       {{ checkbox_used('confidence-mode', 'confidence mode', 'them') }}
       {{ additional_comment('confidence-mode', 'confidence mode') }}
     </article>
