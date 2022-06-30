@@ -107,22 +107,34 @@ section {
 
 .intro {
   --img-width: var(--width, 600px);
-  display: grid;
-  grid-template-columns: auto calc(var(--img-width) + 1em + 2px);
-  grid-auto-rows: 1fr;
-  align-items: start;
-  gap: 1ex;
-
-  div {
-    grid-column: 1 / span 1;
-
-    p {
-      width: initial;
-    }
-  }
 
   figure {
-    grid-column: 2 / span 1;
+    margin-block: 1em;
+  }
+
+  @media (min-width: 1200px) {
+    display: grid;
+    grid-template-columns: auto calc(var(--img-width) + 1em + 2px);
+    grid-auto-rows: 1fr;
+    align-items: start;
+    gap: 1ex;
+
+    div {
+      grid-column: 1 / span 1;
+
+      p {
+        width: initial;
+      }
+    }
+
+    figure {
+      grid-column: 2 / span 1;
+      margin-block: initial;
+
+      &:first-of-type {
+        margin-top: 0;
+      }
+    }
   }
 }
 
@@ -144,10 +156,6 @@ figure {
     margin-top: 0.5em;
     font-size: 12px;
     max-width: var(--img-width);
-  }
-
-  &:first-of-type {
-    margin-top: 0;
   }
 }
 
