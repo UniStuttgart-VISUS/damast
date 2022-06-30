@@ -16,6 +16,7 @@ class ReligionWorker extends DataWorker<any> {
   private colorscale: T.TransferableColorscheme;
   private religion_filter: ReligionFilter.ReligionFilter;
   private existing_religions: Set<number> = new Set<number>();
+  private use_falsecolors: boolean = false;
 
   async handleMainEvent(data: MessageData<any>) {
     // nothing
@@ -31,6 +32,7 @@ class ReligionWorker extends DataWorker<any> {
     this.colorscale = data.data.colors;
     this.religion_filter = data.data.religion_filter;
     this.existing_religions = data.data.existing_religions;
+    this.use_falsecolors = data.data.use_falsecolors;
 
     this.setMessage('religion-worker-create-areas', '<i class="fa fa-fw fa-spinner fa-pulse"></i>');
     const per_religion = this.createAreas();
@@ -46,6 +48,7 @@ class ReligionWorker extends DataWorker<any> {
         areas: areas,
         filter: this.religion_filter,
         display_mode: this.display_mode,
+        use_falsecolors: this.use_falsecolors,
       }
     });
 

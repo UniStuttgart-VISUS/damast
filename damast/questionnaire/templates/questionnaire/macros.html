@@ -1,0 +1,63 @@
+{# vim: set filetype=htmldjango #}
+
+{%- macro likert_scale(id, question, values) -%}
+<fieldset>
+  <legend>{{ question }}</legend>
+  <div class="likert-scale">
+    <label for="{{ id }}-1">{{ values[0] | capitalize }}</label>
+    {% for value in values %}
+    {% set i = loop.index %}
+    <input type="radio" id="{{ id }}-{{ i }}" name="{{ id }}" value="{{ i }}-{{ value }}" title="{{ value }}">
+    {% endfor %}
+    <label for="{{ id }}-5">{{ values[4] | capitalize }}</label>
+  </div>
+</fieldset>
+{%- endmacro -%}
+
+
+{%- macro likert_scale_easy_to_use(id, text) -%}
+{%- set question = "How difficult to use do you consider the " ~ text ~ " to be?" -%}
+{%- set id = id ~ ".difficulty" -%}
+{%- set values = [ "very difficult", "difficult", "neither difficult nor easy", "easy", "very easy" ] -%}
+{{ likert_scale(id, question, values) }}
+{%- endmacro -%}
+
+{%- macro likert_scale_important(id, text) -%}
+{%- set question = "How important is the " ~ text ~ " for your tasks and research questions?" -%}
+{%- set id = id ~ ".importance" -%}
+{%- set values = [ "not important at all", "less important", "neither unimportant nor important", "important", "very important" ] -%}
+{{ likert_scale(id, question, values) }}
+{%- endmacro -%}
+
+{%- macro time_used(id, text) -%}
+<fieldset>
+  <legend>
+    How much time did you approximately spend using the {{ text }}?
+  </legend>
+  <div class="vertical-radio-options">
+    <input type="radio" id="{{ id }}-time-1" name="{{ id }}.time" value="0" title="none at all">
+    <label for="{{ id }}-time-1">none at all</label>
+    <input type="radio" id="{{ id }}-time-2" name="{{ id }}.time" value="<5min" title="less than 5min">
+    <label for="{{ id }}-time-2">less than 5min</label>
+    <input type="radio" id="{{ id }}-time-3" name="{{ id }}.time" value="<20min" title="less than 20min">
+    <label for="{{ id }}-time-3">between 5min and 20min</label>
+    <input type="radio" id="{{ id }}-time-4" name="{{ id }}.time" value=">20min" title="more than 20min">
+    <label for="{{ id }}-time-4">20min or more</label>
+  </div>
+</fieldset>
+{%- endmacro -%}
+
+{%- macro additional_comment(id, text) -%}
+<label for="{{ id }}-comment">Do you have any more comments regarding the {{ text }}?</label>
+<textarea id="{{ id }}-comment" name="{{ id }}.comment" rows="1" placeholder="Additional comment (optional)"></textarea>
+{%- endmacro -%}
+
+{%- macro checkbox_used(id, text, verb='it') -%}
+<fieldset>
+  <legend>
+    Did you use the {{ text }}?
+  </legend>
+  <input type="checkbox" name="{{ id }}.used" title="yes" id="{{ id }}-used">
+  <label for="{{ id }}-used">Yes, I used {{ verb }}.</label>
+</fieldset>
+{%- endmacro -%}

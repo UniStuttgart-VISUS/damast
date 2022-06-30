@@ -1,15 +1,12 @@
 #!/bin/bash
 
-imagename=damast-dev:latest
+set -euo pipefail
 
-port() {
-  ssh -NfL ${1}:localhost:${1} narcocorrido
-  echo "Tunnelling localhost:$1 to narcocorrido:$1"
-}
+imagename=damast-dev:latest
+dbimagename=damast-local-db
 
 run() {
-  port 5432     # postgresql
-  set -euo pipefail
+  sudo docker start $dbimagename
 
   version=$(echo -n $(git describe --tags) | tr -sc '[a-zA-Z0-9_.-]' '-')
 
@@ -24,24 +21,24 @@ run() {
         --env FLASK_DEBUG=1 \
         --env FLASK_ACCESS_LOG=/data/access_log \
         --env FLASK_ERROR_LOG=/data/error_log \
-        --env PGPASSWORD=$(pass db/narcocorrido.visus.uni-stuttgart.de/api) \
+        --env PGPASSWORD=apipassword \
         --env DAMAST_REPORT_FILE=/data/reports.db \
         --env DAMAST_USER_FILE=/data/users.db \
         --env DAMAST_SECRET_FILE=/data/secrets.json \
         --env DAMAST_VERSION="$version" \
         --env DAMAST_OVERRIDE_PATH="/data/override" \
-        --env DAMAST_VISITOR_ROLES="user,readdb,vis,reporting" \
+        --env DAMAST_VISITOR_ROLES="readdb,vis,reporting" \
         --env DAMAST_MAP_STYLES="map-styles.json" \
         --env DAMAST_REPORT_EVICTION_DEFERRAL=1 \
         $imagename
+
+  sudo docker stop $dbimagename
 }
 
-build() {
+build_damast() {
   www_user_id=997
   www_group_id=1001
   env="TESTING"
-  basedir="/www"
-  service="damast"
   port=8000
 
   cat util/docker/{base,dev}.in > Dockerfile
@@ -57,22 +54,83 @@ build() {
           .
 }
 
+build_database() {
+  tmpdir=$(mktemp -d)
+  mkdir -p $tmpdir/init.d
+
+  if [[ $dump_gzipped = 1 ]]
+  then
+    zcat $dump_file > $tmpdir/dump.sql
+  else
+    cp $dump_file $tmpdir/dump.sql
+  fi
+
+  cat > $tmpdir/init.d/init-user-db.sh <<-EOF
+#!/bin/bash
+set -e
+
+psql -v ON_ERROR_STOP=1 --username "\$POSTGRES_USER" --dbname "\$POSTGRES_DB" <<-EOSQL
+    CREATE USER users;
+    CREATE USER api PASSWORD 'apipassword';
+    CREATE USER ro_dump;
+EOSQL
+	EOF
+
+  sudo docker run \
+    --detach \
+    --name $dbimagename \
+    --net=host \
+    -e POSTGRES_PASSWORD=postgres \
+    -v $tmpdir/init.d/:/docker-entrypoint-initdb.d:z \
+    postgis/postgis:10-3.1
+
+  while ! pg_isready -h localhost; do sleep 1; done
+
+  PGPASSWORD=postgres psql \
+    -h localhost \
+    -U postgres \
+    --no-password \
+    -f $tmpdir/dump.sql
+
+  PGPASSWORD=postgres psql \
+    -h localhost \
+    -U postgres \
+    --no-password \
+    -c "ALTER DATABASE ocn RENAME TO testing;"
+
+  sudo docker stop $dbimagename
+
+  rm -rf $tmpdir
+}
+
+build() {
+  build_database
+  build_damast
+}
+
 about() {
   cat 1>&2 <<EOF
-Usage: host.sh [-h] [-b]
+Usage: host.sh [-h] [-b [-d dump [-z]]]
 
 Host the Flask server locally. This will run a special variant of the Docker
 container, which mounts the local devdata/ directory as the /data volume on the
 Docker host, for runtime configuration and logging. The local damast/ source
 folder is mounted to the /damast volume.
 
-  -h    Show this help and exit
-  -b    Instead of hosting the server, build the necessary Docker image
+  -h         Show this help and exit
+  -b         Instead of hosting the server, build the necessary Docker images
+  -d dump    Use the file "dump" to populate the dev database
+  -z         Notify that dump file is GZIP:ed
 EOF
 }
 
+do_build=0
+dump_file=/dev/null
+dump_gzipped=0
+
+
 OPTIND=0
-while getopts hb opt
+while getopts hbd:z opt
 do
   case $opt in
     h)
@@ -80,8 +138,13 @@ do
       exit 0
       ;;
     b)
-      build
-      exit 0
+      do_build=1
+      ;;
+    z)
+      dump_gzipped=1
+      ;;
+    d)
+      dump_file=$OPTARG
       ;;
     *)
       about
@@ -90,4 +153,9 @@ do
   esac
 done
 
-run
+if [[ $do_build = 1 ]]
+then
+  build
+else
+  run
+fi

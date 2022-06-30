@@ -14,7 +14,7 @@ name = 'person-type'
 app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 
 
-@app.route('/person-type-list', role='user')
+@app.route('/person-type-list', role=['user', 'visitor'])
 @rest_endpoint
 def get_place_type_list(c):
     '''

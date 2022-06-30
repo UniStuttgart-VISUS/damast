@@ -11,7 +11,7 @@ name = 'source'
 app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 
 
-@app.route('/source-instance/<int:source_instance_id>', methods=['GET', 'PUT', 'DELETE', 'PATCH'], role='user')
+@app.route('/source-instance/<int:source_instance_id>', methods=['GET', 'PUT', 'DELETE', 'PATCH'], role=['user', 'visitor'])
 @rest_endpoint
 def source_instance(c, source_instance_id):
     '''
@@ -149,7 +149,7 @@ def source_instance(c, source_instance_id):
     raise werkzeug.exceptions.MethodNotAllowed()
 
 
-@app.route('/evidence/<int:evidence_id>/source-instances', role='user')
+@app.route('/evidence/<int:evidence_id>/source-instances', role=['user', 'visitor'])
 @rest_endpoint
 def source_instance_list(c, evidence_id):
     '''
@@ -187,7 +187,7 @@ def source_instance_list(c, evidence_id):
     return flask.jsonify(list(map(lambda x: x._asdict(), c.fetchall())))
 
 
-@app.route('/sources-list', role='user')
+@app.route('/sources-list', role=['user', 'visitor'])
 @rest_endpoint
 def get_sources_list(c):
     '''

@@ -8,19 +8,57 @@
 {% endblock %}
 
 {% block content %}
-<h1>Generate a Report</h1>
+<h1>Generate a Textual Report from the Database</h1>
 
-<p>
-  Upload a visualization state file to generate a report.
-  Alternatively, you can generate the report from inside the visualization with its current state by clicking on the <em><q>Generate report</q></em> button in the settings pane.
-</p>
+<section>
+  <p>
+    You can generate a detailed report on the data matching a set of filters from the visualization.
+    These reports are stored permanently, and each one is assigned a <em>universally unique identifier</em> (UUID).
+    The reports can be accessed later if the UUID, or the complete URL, is known, so be sure to save either of those.
+    The URL to a report can also be interpolated from its UUID.
+    For instance, a hypothetical report on this website with the UUID <code>01234567-0123-4567-8901-2345-012345678901</code> would have the URL
+    <code>{{ url_for('reporting.get_report', report_id='01234567-0123-4567-8901-2345-012345678901', _external=True) }}</code>
+  </p>
+</section>
 
-<form action="{{ url_for('reporting.create_report') }}" method="POST" enctype="multipart/form-data">
-  <label for="filter_file">Visualization state file:</label>
-  <input type="file" name="filter_file" accept="application/json" required>
-  <button type="submit" class="button button--medium button--green">
-    <i class="fa fa--pad-right fa-upload"></i>
-    Submit
-  </button>
-</form>
+<section>
+  <h2>Access an Existing Report</h2>
+
+  <p>
+    If you know the UUID to an existing report, you can paste it in the field below, and then click <em><q>Go to report</q></em> to access it directly:
+  </p>
+
+  <form action="{{ url_for('reporting.report_by_uuid') }}" method="GET">
+    <label for="uuid">UUID:</label>
+    <input type="text"
+           name="uuid"
+           placeholder="e.g., 01234567-0123-4567-8901-2345-012345678901"
+           pattern="[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
+           size="40"
+           required>
+    <button type="submit" class="button button--medium button--green">
+      <i class="fa fa--pad-right fa-external-link-square"></i>
+      Go to report
+    </button>
+  </form>
+</section>
+
+<section>
+  <h2>Generate a New Report</h2>
+
+  <p>
+    Upload a visualization state file to generate a report.
+    Alternatively, you can generate the report from inside the visualization with its current state by clicking on the <em><q>Generate report</q></em> button in the settings pane.
+  </p>
+
+  <form action="{{ url_for('reporting.create_report') }}" method="POST" enctype="multipart/form-data">
+    <label for="filter_file">Visualization state file:</label>
+    <input type="file" name="filter_file" accept="application/json" required>
+    <button type="submit" class="button button--medium button--green">
+      <i class="fa fa--pad-right fa-upload"></i>
+      Submit
+    </button>
+  </form>
+</section>
 {% endblock %}
+

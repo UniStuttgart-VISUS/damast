@@ -11,7 +11,7 @@ name = 'uri-namespace'
 app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 
 
-@app.route('/uri-namespace-list', role='user')
+@app.route('/uri-namespace-list', role=['user', 'visitor'])
 @rest_endpoint
 def get_uri_namespace_list(c):
     '''

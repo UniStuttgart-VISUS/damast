@@ -4,6 +4,7 @@
 
 dialog.infobox[open] {
   max-height: 50vh;
+  max-width: 800px;
 
   padding: 0;
   border: 2px solid $clr-accent;
@@ -21,7 +22,7 @@ dialog.infobox[open] {
 
   h1, h2, h3, h4, h5, h6,
   p, ul, ol, article, section,
-  dl, blockquote {
+  dl, blockquote, label {
     max-width: 65ch;
   }
 }
@@ -84,6 +85,7 @@ dialog.infobox[open] {
   overflow: auto;
 
   padding: 1em;
+  scrollbar-gutter: stable;
 
   font-size: 0.8rem;
   font-weight: normal;
@@ -147,7 +149,7 @@ b
 
 /* TOOLTIPS */
 .tooltip {
-  position: absolute;
+  position: fixed;
   z-index: 20000;
 
   box-sizing: border-box;
@@ -219,3 +221,37 @@ b
   background: $clr-bg;
 }
 
+.modal__foreground {
+  form > * {
+    display: block;
+  }
+
+  form {
+    display: grid;
+    grid-auto-flow: row;
+  }
+
+  form > label {
+    text-align: start;
+    margin-top: 1em;
+  }
+
+  form .likert-scale {
+    display: grid;
+    grid-template-columns: max-content repeat(5, 1fr) max-content;
+  }
+
+  .vertical-fill-buttons,
+  .horizontal-fill-buttons {
+    display: grid;
+    grid-auto-flow: row;
+    gap: 1ex;
+  }
+
+  .horizontal-fill-buttons {
+    margin-top: 1em;
+
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+  }
+}

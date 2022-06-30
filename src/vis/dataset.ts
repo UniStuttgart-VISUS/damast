@@ -2,7 +2,6 @@ import * as d3hier from 'd3-hierarchy';
 import * as d3scale from 'd3-scale';
 import * as d3fetch from 'd3-fetch';
 import * as d3array from 'd3-array';
-import * as R from 'ramda';
 import { Validator } from '@cfworker/json-schema';
 import { MultiPolygon, multiPoint, point as turfPoint, Feature, Point, Polygon } from '@turf/helpers';
 import pointsWithinPolygon from '@turf/points-within-polygon';
@@ -19,6 +18,7 @@ import * as SourceFilter from './source-data';
 import * as TagFilter from './tag-filter';
 import * as DefaultMapState from './default-map-zoomlevel';
 import { LocationFilter, LocationMatcher, createLocationMatcher, PlaceFilter, tupleIsActive as placeTupleIsActive } from './location-filter';
+import HistoryTree from './history-tree';
 
 
 export async function getDataset(): Promise<Dataset> {
@@ -73,6 +73,7 @@ interface Metadata {
 interface _VisualizationState {
   ["show-filtered"]: boolean;
   ["display-mode"]: "religion" | "confidence";
+  ["false-colors"]: boolean,
   ["timeline-mode"]: "qualitative" | "quantitative";
   ["map-mode"]: "clustered" | "cluttered";
   ["source-sort-mode"]: "count" | "name";
@@ -87,6 +88,8 @@ export interface FilterJson {
 
 export type VisualizationState = Partial<_VisualizationState> & FilterJson;
 export type CompleteVisualizationState = _VisualizationState & FilterJson;
+export type RawVisualizationState = _VisualizationState & Pick<FilterJson, 'filters'>;
+
 
 export class Dataset {
   private _hierarchy: d3hier.HierarchyNode<T.OwnHierarchyNode>;
@@ -143,6 +146,7 @@ export class Dataset {
   private _displayed_confidence_aspect: T.ConfidenceAspect = T.ConfidenceAspect.Religion;
 
   private _religion_colorscale: d3scale.ScaleOrdinal<number, string>;
+  private _falsecolor_religion_colorscale: d3scale.ScaleOrdinal<number, string>;
   private _confidence_colorscale: d3scale.ScaleOrdinal<T.Confidence, string>;
 
   // event stuff
@@ -154,6 +158,7 @@ export class Dataset {
   private _timeline_mode: T.TimelineMode = ViewModeDefaults.timeline_mode;
   private _map_mode: T.MapMode = ViewModeDefaults.map_mode;
   private _source_sort_mode: T.SourceViewSortMode = ViewModeDefaults.source_sort_mode;
+  private _use_falsecolors: boolean = ViewModeDefaults.use_falsecolors;
 
   private _existing_religions: Set<number> = new Set<number>();
 
@@ -169,8 +174,10 @@ export class Dataset {
     base_layer: 'light',
     overlay_layers: [ 'markerLayer' ],
   };
-  private _user: T.User = { user: null, readdb: false, writedb: false, geodb: false, visitor: true }
+  private _user: T.User = { user: null, readdb: false, writedb: false, geodb: false, dev: false, visitor: true }
   private _server_version: string;
+
+  private _historyTree?: HistoryTree;
 
   constructor() {
     this._symbol_lookup = new Map<number, string>();
@@ -200,6 +207,12 @@ export class Dataset {
     this.updatePlacesActive();
     this.updateBrushingLinkingLookupTables();
     await this.purgeUnusedLocations();
+
+    if (!this._user.visitor) this._historyTree = new HistoryTree(this.getState());
+  }
+
+  get historyTree(): typeof this._historyTree {
+    return this._historyTree;
   }
 
   get is_advanced_filter_active(): boolean {
@@ -323,7 +336,8 @@ export class Dataset {
   transferableColorscheme(): T.TransferableColorscheme {
     if (this.display_mode === T.DisplayMode.Religion) {
       const colorscheme = {};
-      this._religion_colorscale.domain().forEach(k => colorscheme[k] = this._religion_colorscale(k));
+      const scale = this._use_falsecolors ? this._falsecolor_religion_colorscale : this._religion_colorscale;
+      scale.domain().forEach(k => colorscheme[k] = scale(k));
       return colorscheme;
     } else {
       return this.transferableConfidenceColorscheme();
@@ -337,10 +351,21 @@ export class Dataset {
     return colorscheme;
   }
 
+  /* CHANGE EVENTS */
+
+  private notifyListeners(scopeSet: Set<ChangeScope>): void {
+    Promise.all(this._changeListeners.map(d => d(scopeSet)));
+  }
+
+  onDatasetChange(callback: ChangeListener): void {
+    this._changeListeners.push(callback);
+  }
+
   suspendEvents() {
     this._is_paused = true;
   }
-  resumeEvents() {
+
+  resumeEvents(resumeSource: 'resume' | 'load-state' | 'set-state' = 'resume') {
     this._is_paused = false;
 
     const cs = this._queued_events;
@@ -349,8 +374,100 @@ export class Dataset {
     if (cs.size) {
       this.updatePlacesActive();
       this.updateBrushingLinkingLookupTables();
+    }
+
+    if (this._queuedStateChangeDescriptions.length) {
+      const newState = this.getState();
+      const description = this._queuedStateChangeDescriptions.join('; ');
+      this._queuedStateChangeDescriptions = [];
+      if (resumeSource === 'resume') {
+        this.historyTree?.pushState(newState, description);
+      } else if (resumeSource === 'load-state') {
+        this.historyTree?.pushStateToRoot(newState, 'loaded state');
+      }
+    }
+
+    if (cs.size) {
       this.notifyListeners(cs);
     }
+  }
+
+  private _queuedStateChangeDescriptions: string[] = [];
+  private enqueueStateChange(
+    changeDescription: string,
+    changeScope: ChangeScope,
+  ): void {
+    if (this._is_paused) {
+      this._queuedStateChangeDescriptions.push(changeDescription);
+      this._queued_events.add(changeScope);
+    } else {
+      this.updatePlacesActive();
+      this.updateBrushingLinkingLookupTables();
+
+      const newState = this.getState();
+      this.historyTree?.pushState(newState, changeDescription);
+
+      this.notifyListeners(new Set([changeScope]));
+    }
+  }
+
+  /* HISTORY STUFF */
+  async historyBack() {
+    if (!this.historyTree) return;
+
+    if (!this.historyTree.canBack()) {
+      console.error('cannot go back in history');
+      return;
+    }
+
+    this.historyTree.back();
+    await this.applyCurrentHistoryState();
+  }
+
+  async historyForward() {
+    if (!this.historyTree) return;
+
+    if (!this.historyTree.canForward()) {
+      console.error('cannot go forward in history');
+      return;
+    }
+
+    this.historyTree.forward();
+    await this.applyCurrentHistoryState();
+  }
+
+  async historyGoToState(uuid: string) {
+    if (!this.historyTree) return;
+
+    this.historyTree.goToEntry(uuid);
+    await this.applyCurrentHistoryState();
+  }
+
+  async historyReset() {
+    if (!this.historyTree) return;
+
+    this.historyTree.reset();
+    await this.applyCurrentHistoryState();
+  }
+
+  async historyPrune() {
+    if (!this.historyTree) return;
+
+    this.historyTree.prune();
+  }
+
+  async historyPruneCondense() {
+    if (!this.historyTree) return;
+
+    this.historyTree.pruneCondense();
+  }
+
+  private async applyCurrentHistoryState() {
+    if (!this.historyTree) return;
+
+    const state: CompleteVisualizationState = this.historyTree.getCurrentState();
+
+    await this.setState(state);
   }
 
 
@@ -609,24 +726,6 @@ export class Dataset {
   maxYear(): number { return this._maxYear; }
   maxPerYear(): number { return this._maxCountPerYear; }
 
-  private changed(scope: ChangeScope): void {
-    if (this._is_paused) {
-      this._queued_events.add(scope);
-    } else {
-      this.updatePlacesActive();
-      this.updateBrushingLinkingLookupTables();
-      this.notifyListeners(new Set([scope]));
-    }
-  }
-
-  private notifyListeners(scopeSet: Set<ChangeScope>): void {
-    Promise.all(this._changeListeners.map(d => d(scopeSet)));
-  }
-
-  onDatasetChange(callback: ChangeListener): void {
-    this._changeListeners.push(callback);
-  }
-
   setReligionFilter(f: ReligionFilter.ReligionFilter): void {
     if (typeof f === 'object' && f.type === 'simple') {
       // if all religion IDs contained, we can simplify to true (no filter)
@@ -638,13 +737,13 @@ export class Dataset {
 
     this._religion_filter = f;
 
-    this.changed(ChangeScope.Religion);
+    this.enqueueStateChange('set religion filter', ChangeScope.Religion);
   }
 
   setTimeFilter(f: [number, number] | null): void {
     this._time_filter = f;
 
-    this.changed(ChangeScope.Time);
+    this.enqueueStateChange('set time filter', ChangeScope.Time);
   }
 
   setSourceFilter(f: SourceFilter.SourceFilter): void {
@@ -655,26 +754,26 @@ export class Dataset {
 
     this._source_filter = f;
 
-    this.changed(ChangeScope.Source);
+    this.enqueueStateChange('set source filter', ChangeScope.Source);
   }
 
   setTagsFilter(f: TagFilter.TagFilter): void {
     this._tag_filter = f;
 
-    this.changed(ChangeScope.Tags);
+    this.enqueueStateChange('set tag filter', ChangeScope.Tags);
   }
 
   setPlaceFilter(f: PlaceFilter): void {
     this._place_filter = f;
 
-    this.changed(ChangeScope.PlaceSet);
+    this.enqueueStateChange('set place filter', ChangeScope.PlaceSet);
   }
 
   setMapFilter(f: Feature<MultiPolygon | Polygon> | null): void {
     this._map_filter = f;
     this._map_filter_matcher = createLocationMatcher(this._placeMap, f);
 
-    this.changed(ChangeScope.Location);
+    this.enqueueStateChange('set map filter', ChangeScope.Location);
   }
 
   leastCommonAncestor(religion_id_a: number | null, religion_id_b: number): number {
@@ -692,7 +791,7 @@ export class Dataset {
 
   updateHierarchyFilters(uh: ConfidenceAspects) {
     this._confidence_filter = uh;
-    this.changed(ChangeScope.Certainty);
+    this.enqueueStateChange('set confidence filter', ChangeScope.Certainty);
   }
 
   private tupleIsActive(p: T.LocationData): boolean {
@@ -747,6 +846,21 @@ export class Dataset {
 
       this._place_data.forEach(p => p.active = (active_ids.has(p.tuple_id) && place_ids.has(p.place_id)));
     }
+
+    this.updateFalsecolorReligionColorscale();
+  }
+
+  private updateFalsecolorReligionColorscale() {
+    const allReligions = this._hierarchy.descendants().map(d => d.data.id);
+    const activeReligions = this._brush_only_active
+      ? new Set<number>(this._place_data.filter(d => d.active).map(d => d.religion_id))
+      : new Set<number>(allReligions);
+    this._falsecolor_religion_colorscale = color.createFalseReligionColorscale(
+      this._hierarchy.data,
+      this._religion_ordering,
+      activeReligions,
+      allReligions,
+    );
   }
 
   get brush_only_active(): boolean {
@@ -756,7 +870,7 @@ export class Dataset {
   set brush_only_active(b: boolean) {
     if (b !== this._brush_only_active) {
       this._brush_only_active = b;
-      this.changed(ChangeScope.ShowOnlyActive);
+      this.enqueueStateChange('changed show only active', ChangeScope.ShowOnlyActive);
     }
   }
 
@@ -767,7 +881,18 @@ export class Dataset {
   set display_mode(d: T.DisplayMode) {
     if (d !== this._display_mode) {
       this._display_mode = d;
-      this.changed(ChangeScope.DisplayMode);
+      this.enqueueStateChange('set display mode', ChangeScope.DisplayMode);
+    }
+  }
+
+  get use_falsecolors(): boolean {
+    return this._use_falsecolors;
+  }
+
+  set use_falsecolors(v: boolean) {
+    if (v !== this._use_falsecolors) {
+      this._use_falsecolors = v;
+      this.enqueueStateChange('set use false colors', ChangeScope.DisplayMode);
     }
   }
 
@@ -778,7 +903,7 @@ export class Dataset {
   set timeline_mode(d: T.TimelineMode) {
     if (d !== this._timeline_mode) {
       this._timeline_mode = d;
-      this.changed(ChangeScope.TimelineMode);
+      this.enqueueStateChange('set timeline mode', ChangeScope.TimelineMode);
     }
   }
 
@@ -789,7 +914,7 @@ export class Dataset {
   set map_mode(d: T.MapMode) {
     if (d !== this._map_mode) {
       this._map_mode = d;
-      this.changed(ChangeScope.MapMode);
+      this.enqueueStateChange('set map mode', ChangeScope.MapMode);
     }
   }
 
@@ -800,7 +925,7 @@ export class Dataset {
   set source_sort_mode(d: T.SourceViewSortMode) {
     if (d !== this._source_sort_mode) {
       this._source_sort_mode = d;
-      this.changed(ChangeScope.SourceViewSortMode);
+      this.enqueueStateChange('set source view sort mode', ChangeScope.SourceViewSortMode);
     }
   }
 
@@ -882,7 +1007,7 @@ export class Dataset {
 
   set_aspect(aspect: T.ConfidenceAspect): void {
     this._displayed_confidence_aspect = aspect;
-    this.changed(ChangeScope.DisplayedConfidenceAspect);
+    this.enqueueStateChange('set displayed confidence aspect', ChangeScope.DisplayedConfidenceAspect);
   }
 
   get religion_filter(): ReligionFilter.ReligionFilter {
@@ -949,13 +1074,14 @@ export class Dataset {
     return this._user;
   }
 
-  getState(): CompleteVisualizationState {
+  private getRawVisualizationState(): RawVisualizationState {
     return {
       ["show-filtered"]: this._brush_only_active,
       ["display-mode"]: (this._display_mode === T.DisplayMode.Religion) ? 'religion' : 'confidence',
       ["timeline-mode"]: (this._timeline_mode === T.TimelineMode.Qualitative) ? 'qualitative' : 'quantitative',
       ["map-mode"]: (this._map_mode === T.MapMode.Clustered) ? 'clustered' : 'cluttered',
       ["source-sort-mode"]: (this._source_sort_mode === T.SourceViewSortMode.ByCountDescending) ? 'count' : 'name',
+      ["false-colors"]: this._use_falsecolors,
       ["confidence-aspect"]: confidence_keys.get(this._displayed_confidence_aspect),
       ["map-state"]: this._map_state,
       filters: {
@@ -967,6 +1093,12 @@ export class Dataset {
         location: this._map_filter,
         places: this._place_filter,
       },
+    };
+  }
+
+  getState(): CompleteVisualizationState {
+    return {
+      ...this.getRawVisualizationState(),
       metadata: {
         version: this._server_version,
         createdBy: this._user.user,
@@ -977,7 +1109,7 @@ export class Dataset {
     };
   }
 
-  async setState(state: VisualizationState): Promise<{ success: boolean, error_message: any }> {
+  async setState(state: VisualizationState, isLoad: boolean = false): Promise<{ success: boolean, error_message: any }> {
     this.suspendEvents();
 
     const { valid, errors } = this._visualization_state_validator.validate(state);
@@ -1004,6 +1136,9 @@ export class Dataset {
           ? T.DisplayMode.Religion
           : T.DisplayMode.Confidence;
 
+      if ('false-colors' in state)
+        this._use_falsecolors = Boolean(state['false-colors']);
+
       if ('timeline-mode' in state)
         this._timeline_mode = (state['timeline-mode'] === 'qualitative')
           ? T.TimelineMode.Qualitative
@@ -1025,27 +1160,36 @@ export class Dataset {
       if ('map-state' in state)
         this._map_state = state['map-state'];
 
-      this.changed(ChangeScope.Religion);
-      this.changed(ChangeScope.Time);
-      this.changed(ChangeScope.Source);
-      this.changed(ChangeScope.Tags);
-      this.changed(ChangeScope.Certainty);
-      this.changed(ChangeScope.Location);
-      this.changed(ChangeScope.PlaceSet);
-      this.changed(ChangeScope.ShowOnlyActive);
-      this.changed(ChangeScope.SourceViewSortMode);
-      this.changed(ChangeScope.DisplayMode);
-      this.changed(ChangeScope.MapMode);
-      this.changed(ChangeScope.DisplayedConfidenceAspect);
+      this._queued_events = new Set([
+        ChangeScope.Religion,
+        ChangeScope.Time,
+        ChangeScope.Source,
+        ChangeScope.Tags,
+        ChangeScope.Certainty,
+        ChangeScope.Location,
+        ChangeScope.PlaceSet,
+        ChangeScope.ShowOnlyActive,
+        ChangeScope.SourceViewSortMode,
+        ChangeScope.DisplayMode,
+        ChangeScope.MapMode,
+        ChangeScope.DisplayedConfidenceAspect,
+      ]);
+      this._queuedStateChangeDescriptions.push('');
     }
 
-    this.resumeEvents();
+    this.resumeEvents(isLoad ? 'load-state' : 'set-state');
 
     return retval;
   }
 
   setMapState(map_state: T.MapState) {
     this._map_state = map_state;
+
+    if (this._is_paused) {
+      this._queuedStateChangeDescriptions.push('moved map');
+    } else {
+      this.historyTree?.pushState(this.getState(), 'moved map');
+    }
   }
 
   getMapState(): T.MapState {

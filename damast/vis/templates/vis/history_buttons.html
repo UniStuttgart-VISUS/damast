@@ -1,0 +1,27 @@
+{% macro history_buttons() %}
+  {%- if user and not user.visitor -%}
+    <span id="vis-history-buttons" class="history-buttons">
+      <button
+          class="button button--small"
+          id="vis-history-back"
+          title="Undo last interaction"
+          disabled>
+        <i class="fa fa-fw fa-lg fa-undo"></i>
+      </button>
+      <button
+          class="button button--small"
+          id="vis-history-forward"
+          title="Redo last undone interaction"
+          disabled>
+        <i class="fa fa-fw fa-lg fa-repeat"></i>
+      </button>
+      <button
+          class="button button--small"
+          id="vis-history-show-graph"
+          title="Open interaction tree"
+          disabled>
+        <i class="fa fa-fw fa-lg fa-list"></i>
+      </button>
+    </span>
+  {%- endif %}
+{% endmacro %}

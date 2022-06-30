@@ -4,6 +4,7 @@ import * as T from './datatypes';
 import * as glyph from './map-data';
 import {MessageDataType} from './data-worker';
 import TooltipManager from './tooltip';
+import * as modal from './modal';
 
 export default class MapGlyph {
   private _total_group: d3.Selection<SVGGElement, any, any, any>;
@@ -54,8 +55,26 @@ export default class MapGlyph {
     }
   }
 
-  private brush(e: Event): void {
+  private handleShiftClick(): void {
+    const pids = Array.from(this._data.place_ids);
+    if (pids.length === 1) {
+      window.open(`../place/${pids[0]}`);
+    } else {
+      const pidList = pids.join(',');
+      modal.showInfoboxFromURL(
+        `${pids.length} places in this glyph`,
+        async function(): Promise<string> {
+          return await d3.text(`../place/uri/link-list?place_ids=${pidList}`);
+        }
+      );
+    }
+  }
+
+  private brush(e: MouseEvent): void {
     e.stopPropagation();
+
+    if (e.shiftKey) return this.handleShiftClick();
+
     const prev_brushed = this._total_group.classed('cluster--brushed');
 
     if (prev_brushed) {

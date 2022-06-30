@@ -1,5 +1,4 @@
 import * as d3 from 'd3';
-import * as R from 'ramda';
 import * as T from './datatypes';
 import { Dataset, ChangeScope, ChangeListener } from './dataset';
 import { PathInfoStack, stackKey } from './timeline-data';
@@ -15,6 +14,8 @@ import GoldenLayout from 'golden-layout';
 const brush_height = 50;
 const marginLeft = 40;
 const marginBottom = 20;
+
+const NO_TOOLTIP_ITEM_HIGHLIGHTED = Symbol();
 
 export default class Timeline extends View<any, any> {
   private svg: d3.Selection<SVGSVGElement, any, any, any>;
@@ -61,7 +62,7 @@ export default class Timeline extends View<any, any> {
     this.svg = d3.select(div).select('svg');
 
     container.on('resize', () => { if (this.cachedPathData !== undefined) this.paint(this.cachedPathData, true); });
-    this.init();
+    container.on('open', () => { this.init(); });
   }
 
   private init() {
@@ -80,6 +81,13 @@ export default class Timeline extends View<any, any> {
       .attr('id', 'upper-clip-path') as d3.Selection<SVGClipPathElement, any, any, any>;
 
     this.total_upper_g.attr('clip-path', 'url(#upper-clip-path)');
+
+    const ref = this;
+    d3.select<HTMLInputElement, any>('.timeline__header input#timeline-mode')
+      .each(function() { this.checked = DEFAULTS.timeline_mode === T.TimelineMode.Qualitative; })
+      .on('change', function() {
+        ref.sendToDataThread('set-timeline-mode', this.checked ? T.TimelineMode.Qualitative : T.TimelineMode.Quantitative);
+      });
   }
 
   async setData(data: any) {
@@ -87,6 +95,9 @@ export default class Timeline extends View<any, any> {
     this.cachedDisplayMode = data.display_mode;
     this.cachedTimelineMode = data.timeline_mode;
     this.religionNames = data.religion_names;
+
+    d3.select<HTMLInputElement, any>('.timeline__header input#timeline-mode')
+      .each(function() { this.checked = data.timeline_mode === T.TimelineMode.Qualitative; });
 
     this.paint(data.stack);
   }
@@ -171,7 +182,7 @@ export default class Timeline extends View<any, any> {
     if (this.zoomDomain) this.zoomBrush.move(brush_g,
       [this.x_overview(this.zoomDomain[0]),this.x_overview(this.zoomDomain[1])]);
 
-    this.zoomBrush.on('brush', R.always(null));
+    this.zoomBrush.on('brush', () => null);
     this.zoomBrush.on('end', (e) => this.zoomTo(e.selection));
 
     this.svg.on('mouseenter', this.onMouseEnter.bind(this));
@@ -341,7 +352,7 @@ export default class Timeline extends View<any, any> {
     if (!this.zoomDomain) return;
     const factor = (direction === 1) ? 1.25 : 0.8;
 
-    const middle = R.sum(this.zoomDomain) / 2;
+    const middle = d3.sum(this.zoomDomain) / 2;
     const span = this.zoomDomain[1] - this.zoomDomain[0];
     const start = Math.max(this.totalDomain[0], middle - factor * span / 2);
     const end = Math.min(this.totalDomain[1], middle + factor * span / 2);
@@ -351,9 +362,7 @@ export default class Timeline extends View<any, any> {
       : [start, end].map(this.x_overview);
 
     // short-circuit if old === new
-    const same = R.all(lst => lst[0] === lst[1],
-      R.zip([start,end], this.zoomDomain));
-    if (same) return;
+    if (this.zoomDomain[0] === start && this.zoomDomain[1] === end) return;
 
     this.overview_g.select('.brush').call(this.zoomBrush.move, range);
     this.zoomToDomain([start, end]);
@@ -407,6 +416,7 @@ export default class Timeline extends View<any, any> {
   }
 
   private cachedYear: number = NaN;
+  private cachedHighlightedId: string | typeof NO_TOOLTIP_ITEM_HIGHLIGHTED = NO_TOOLTIP_ITEM_HIGHLIGHTED;
   private cachedContent: string = '';
   private updateTooltipContent(evt: MouseEvent, tooltipRoot: d3.Selection<HTMLElement, any, any, any>) {
     // get SVG x position
@@ -429,7 +439,28 @@ export default class Timeline extends View<any, any> {
         : this.x.invert(x)
     );
 
-    if (year === this.cachedYear) {
+    // index in path data
+    const idx = year - this.cachedPathData.span_x[0];
+
+    // find Y position in stack
+    const posY = this.y.invert(y);
+    // find ID closest to Y position in stack
+    const closestCandidates = [];
+    this.cachedPathData.ys.forEach((y, i) => {
+      const [y0, y1] = this.cachedPathData.paths[i][idx];
+
+      const distance = (posY >= y0 && posY < y1)
+        ? 0
+        : Math.min(Math.abs(y0 - posY), Math.abs(y1 - posY));
+
+      closestCandidates.push({ id: y.id, distance, empty: y0 === y1 });
+    });
+    const closestCandidate = closestCandidates.sort((a, b) => a.distance - b.distance)[0];
+    const highlightedId = (closestCandidate.empty || closestCandidate.distance > 5)
+      ? NO_TOOLTIP_ITEM_HIGHLIGHTED
+      : closestCandidate.id;
+
+    if (year === this.cachedYear && highlightedId === this.cachedHighlightedId) {
       tooltipRoot.html(this.cachedContent);
       return;
     }
@@ -438,7 +469,6 @@ export default class Timeline extends View<any, any> {
     tooltipRoot.append('h1').text(`Year ${year}`);
 
     // reverse-engineer d3-stack results
-    const idx = year - this.cachedPathData.span_x[0];
     const items = new Map<string, { id: string | null, active: number, total: number }>();
     this.cachedPathData.ys.forEach((y, i) => {
       const poss = this.cachedPathData.paths[i][idx];
@@ -482,7 +512,8 @@ export default class Timeline extends View<any, any> {
           ? this.religionNames.get(parseInt(d.id))
           : (d.id === null) ? `<em>no value</em>` : d.id;
 
-        const r = t.append('tr');
+        const r = t.append('tr')
+          .classed('highlighted-row', d.id === highlightedId);
         r.append('td')
           .html(description);
         r.append('td')
@@ -494,5 +525,6 @@ export default class Timeline extends View<any, any> {
 
     this.cachedContent = tooltipRoot.html();
     this.cachedYear = year;
+    this.cachedHighlightedId = highlightedId;
   }
 };

@@ -18,7 +18,7 @@ from .uri.uri_list_for_place import app as uri_list_for_place
 app.register_blueprint(uri_list_for_place)
 
 
-@app.route('/place/all', role='user')
+@app.route('/place/all', role=['user', 'visitor'])
 @rest_endpoint
 def place_data_all(c):
     '''
@@ -51,7 +51,7 @@ def place_data_all(c):
     return flask.jsonify(list(map(_parse, c.fetchall())))
 
 
-@app.route('/place-type-list', role='user')
+@app.route('/place-type-list', role=['user', 'visitor'])
 @rest_endpoint
 def get_place_type_list(c):
     '''
@@ -79,7 +79,7 @@ def get_place_type_list(c):
     return flask.jsonify(list(map(lambda x: x._asdict(), c.fetchall())))
 
 
-@app.route('/find-alternative-names', methods=['POST'], role='user')
+@app.route('/find-alternative-names', methods=['POST'], role=['user', 'visitor'])
 @rest_endpoint(['POST'])  # POST okay for read-only access
 def search_alternative_names(c):
     '''
@@ -146,7 +146,7 @@ def search_alternative_names(c):
     return flask.jsonify(list(map(lambda x: x.place_id, c.fetchall())))
 
 
-@app.route('/place/<int:place_id>/details', role='user')
+@app.route('/place/<int:place_id>/details', role=['user', 'visitor'])
 @rest_endpoint
 def get_place_details(c, place_id):
     '''
@@ -219,7 +219,7 @@ def get_place_details(c, place_id):
     return flask.jsonify(d)
 
 
-@app.route('/place/<int:place_id>/evidence', role='user')
+@app.route('/place/<int:place_id>/evidence', role=['user', 'visitor'])
 @rest_endpoint
 def get_place_evidence(c, place_id):
     '''
@@ -334,7 +334,7 @@ where
     return flask.jsonify(d)
 
 
-@app.route('/place/<int:place_id>/evidence-ids', role='user')
+@app.route('/place/<int:place_id>/evidence-ids', role=['user', 'visitor'])
 @rest_endpoint
 def get_place_evidence_ids(c, place_id):
     '''
@@ -371,7 +371,7 @@ def get_place_evidence_ids(c, place_id):
 
 
 
-@app.route('/places', role='user')
+@app.route('/places', role=['user', 'visitor'])
 @rest_endpoint
 def get_places(c):
     '''
@@ -396,7 +396,7 @@ def get_places(c):
     return flask.jsonify(list(map(lambda x: x._asdict(), c.fetchall())))
 
 
-@app.route('/place-list', role='user')
+@app.route('/place-list', role=['user', 'visitor'])
 @rest_endpoint
 def get_place_list(c):
     '''
@@ -432,7 +432,7 @@ def get_place_list(c):
 
 
 
-@app.route('/place/<int:place_id>', methods=['GET', 'PUT', 'PATCH', 'DELETE'], role='user')
+@app.route('/place/<int:place_id>', methods=['GET', 'PUT', 'PATCH', 'DELETE'], role=['user', 'visitor'])
 @rest_endpoint
 def place_data(c, place_id):
     '''
@@ -617,7 +617,7 @@ def put_place_data(c):
     return flask.jsonify(dict(place_id=place_id)), 201
 
 
-@app.route('/place/<int:place_id>/alternative-name/all', methods=['GET'], role='user')
+@app.route('/place/<int:place_id>/alternative-name/all', methods=['GET'], role=['user', 'visitor'])
 @rest_endpoint
 def place_alternative_names(c, place_id):
     '''
@@ -648,7 +648,7 @@ def place_alternative_names(c, place_id):
     return flask.jsonify(list(map(lambda x: x._asdict(), c.fetchall())))
 
 
-@app.route('/place/<int:place_id>/alternative-name/<int:name_id>', methods=['GET', 'PUT', 'PATCH', 'DELETE'], role='user')
+@app.route('/place/<int:place_id>/alternative-name/<int:name_id>', methods=['GET', 'PUT', 'PATCH', 'DELETE'], role=['user', 'visitor'])
 @rest_endpoint
 def place_alternative_name(c, place_id, name_id):
     '''
@@ -791,7 +791,7 @@ def update_alternative_name(c, place_id, name_id):
     return '', 205
 
 
-@app.route('/place-list-detailed', role='user')
+@app.route('/place-list-detailed', role=['user', 'visitor'])
 @rest_endpoint
 def get_place_list_detailed(c):
     '''

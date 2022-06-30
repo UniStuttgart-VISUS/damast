@@ -1,0 +1,46 @@
+@use '../common/colors' as *;
+@use 'variables' as *;
+@use 'filters' as filters;
+
+dialog[data-dialog-role="history tree"] {
+  min-width: 600px;
+  max-width: min(960px, 65%);
+
+  // for tooltips
+  overflow: visible;
+
+  .modal__foreground {
+    overflow: auto;
+
+    svg#history-tree {
+      margin-inline: auto;
+      padding-inline: 2ch;
+
+      --clr-accent: #{$clr-accent};
+      --clr-fg: #{$clr-fg};
+
+      .node-label {
+        font-size: xx-small;
+        color: var(--clr-accent);
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        user-select: none;
+
+        top: 0;
+        left: 0;
+        position: absolute;
+      }
+    }
+
+    .history-tree-controls {
+      display: flex;
+      gap: 1ch;
+
+      margin-block-end: 1em;
+      padding-block-end: 1ex;
+      border-block-end: 1px solid $clr-gray;
+    }
+  }
+}

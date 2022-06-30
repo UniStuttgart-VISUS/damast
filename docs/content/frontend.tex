@@ -334,6 +334,43 @@ Later, such a file can be \emph{uploaded} to restore the state.
 The file can also be shared to either present your results or to (re-)generate a report based on the filters.
 
 
+\subsection{History Tree}
+\label{sec:history-tree}
+
+These controls located in the header bar of the page control the \emph{interaction history} of the visualization.
+This allows users to undo, or redo, interactions.
+Each applied filter counts as an interaction, as do mode changes in the settings pane (\cref{sec:settings-pane}), and moving or zooming the map.
+
+\paragraph{Buttons}
+The control bar itself has three buttons:
+The \emph{undo button} reverts the last interaction (i.e., goes up one level in the history tree).
+The \emph{redo button} re-applies the last undone interaction (i.e., goes down one level in the history tree).
+It is disabled if there are no recent undone actions.
+The last button opens the \emph{history tree} in a modal window.
+
+\paragraph{History Tree Window}
+The history tree window shows the interaction tree as a \emph{node-link diagram.}
+Each state is represented by a circle, next to which the age of the state is written.
+Child states are connected to their parent by a link, which is straight for the first child, and makes a step for subsequent children.
+Children are placed to the right of their parent.
+The current state's node is filled.
+Clicking on a node will put the visualization in the respective state.
+Hovering over a node will give additional information in a tooltip.
+Three additional buttons in the history tree window allow to manage the visualization:
+
+\begin{description}
+  \item [Clear:]
+    This will remove all states but the initial state from the tree, and revert the visualization to the initial state.
+  \item [Prune:]
+    This will prune all states from the history tree that are not the current state, or direct ancestors thereof.
+    The result is a linear history from the initial state to the current state.
+  \item [Prune and condense:]
+    This will prune all states from the history tree but the initial state and the current state.
+    The current state is then the direct child of the initial state, and no other states exist.
+    If the current state is the initial state, the result will be the same as if clicking \textbf{Clear.}
+\end{description}
+
+
 \subsection{Map}
 \label{sec:map}
 
@@ -372,6 +409,7 @@ Locations are \emph{aggregated} to eliminate overlap, and so, by default, each m
 \emph{Note:} For this aggregation, all places are treated equally;
 that is, the distribution of religions of place A and place B is combined without taking into account any further aspects of A or B.
 
+\label{sec:map-glyph-hovering-tooltip}
 When \emph{hovering} over a glyph, it loses opacity and the aggregated locations are indicated on the map as small turquoise dots (maybe partially covered by the glyph).
 While hovering, a tooltip is also shown, which provides information on the number of pieces of evidence, of religions, and of places related to the glyph.
 As long as the glyph does not aggregate more than five places, the toponym, geographical coordinates, and more information on the pieces of evidence belonging to that place are provided for each place.
@@ -467,6 +505,7 @@ for instance, a map glyph with three circles does not necessarily represent more
 The map can be interactively zoomed and panned (i.e., the center of the map is moved).
 
 \paragraph{Selection.}
+\label{sec:map-glyph-selection}
 Clicking on a map glyph will \emph{select} the represented places, \emph{brush} the represented data, and \emph{link} the respective data in the rest of the views.
 Likewise, brushing data in other views will link the respective places in the map.
 Also, selecting a place in the location list will pan the map to center on that place.
@@ -485,6 +524,15 @@ If this place is aggregated with other places that additionally have, for instan
   }
   \label{fig:map-3}
 \end{figure}
+
+\paragraph{Link to Place URI Page}
+When hovering over a map glyph, more information is shown in a tooltip (\cref{sec:map-glyph-hovering-tooltip}).
+Normal selection (\cref{sec:map-glyph-selection}) will \emph{link} the places represented by the glyph in the location list view (\cref{sec:location-list}).
+From there, the place URI page (\cref{sec:place-uri-page}) of each place can be opened for more information.
+It is also possible to go to the place URI pages directly from the map:
+Holding the shift key down and left-clicking a glyph will directly open the place's URI page if the glyph represents only one place.
+If it represents more than one place, a dialog window opens on top of the visualization with a list of the place names.
+Each of the names functions as a link to the respective place URI page.
 
 \paragraph{Geographical Filtering.}
 Evidence can be filtered by geographical location.

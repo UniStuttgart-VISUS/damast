@@ -2,6 +2,7 @@ export type MessageDataType =
     'pass-message-port'
   | 'set-show-only-active'
   | 'set-display-mode'
+  | 'set-falsecolors'
   | 'set-timeline-mode'
   | 'set-map-mode'
   | 'set-confidence-aspect'
@@ -16,6 +17,7 @@ export type MessageDataType =
   | 'set-timeline-port'
   | 'set-tags-port'
   | 'set-message-port'
+  | 'set-history-port'
   | 'set-zoom-level'
   | 'forward-to-data'
   | 'set-filter' | 'clear-filter'
@@ -30,6 +32,15 @@ export type MessageDataType =
   | 'generate-report'
   | 'describe-filters'
   | 'set-source-sort-mode'
+
+  // history stuff
+  | 'notify-history-tree-changed'
+  | 'history-back'
+  | 'history-forward'
+  | 'history-go-to-state'
+  | 'history-reset'
+  | 'history-prune'
+  | 'history-prune-condense'
   ;
 
 export interface MessageData<T> {

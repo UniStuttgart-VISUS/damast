@@ -2,13 +2,13 @@
 @use 'vis/variables' as *;
 @use 'common/mixins';
 
+@forward 'reporting';
+
 @forward 'common/target-highlight';
 @forward 'common/leaflet-mapbox-attribution';
 @forward 'common/place-uri-report-layout';
 
 .info-box {
-  float: right;
-  width: 400px;
   font-size: 0.8rem;
 
   .map {
@@ -41,3 +41,19 @@ li[data-footnote-number]::marker {
   content: attr(data-footnote-number) " ";
   color: $clr-gray;
 }
+
+h1 {
+  margin-block: 3rem;
+}
+
+h1 + h2.subtitle {
+  text-align: center;
+  margin-block: -3rem 3rem;
+}
+
+h2 + a.under-header-link {
+  font-size: small;
+  margin-block-start: calc(-1.2rem + 0.1em);
+  display: block;
+}
+

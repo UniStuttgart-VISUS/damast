@@ -245,7 +245,7 @@ class FlaskApp(flask.Flask):
             r = flask.request
 
             cookie_consent = r.cookies.get('cookieConsent')
-            if cookie_consent not in ('essential', 'all'):
+            if cookie_consent not in ('essential',):
                 sessionkeys = list(flask.session)
                 for k in sessionkeys:
                     flask.session.pop(k)
@@ -258,7 +258,7 @@ class FlaskApp(flask.Flask):
             r = flask.request
 
             cookie_consent = r.cookies.get('cookieConsent')
-            if cookie_consent not in ('essential', 'all'):
+            if cookie_consent not in ('essential',):
                 sessionkeys = list(flask.session)
                 for k in sessionkeys:
                     flask.session.pop(k)
@@ -375,10 +375,17 @@ class FlaskApp(flask.Flask):
         def template_context():
             is_testing = self.config.get('TESTING', False)
             cookie_preference = flask.request.cookies.get('cookieConsent', None)
-            if cookie_preference not in ('essential', 'all'):
+            if cookie_preference not in ('essential',):
                 cookie_preference = None
 
-            today = datetime.datetime.now().astimezone().strftime('%B %_d, %Y')
+            now = datetime.datetime.now().astimezone()
+            today = now.strftime('%B %_d, %Y')
+            timestamp = now.isoformat()
+
+            this_url = flask.url_for(flask.request.endpoint,
+                    **(flask.request.view_args if flask.request.view_args else dict()))
+            if flask.request.args:
+                this_url += F'?{werkzeug.urls.url_encode(flask.request.args)}'
 
             return dict(
                     # inject user into every template
@@ -389,6 +396,8 @@ class FlaskApp(flask.Flask):
                     environment='TESTING' if is_testing else 'PRODUCTION',
                     cookie_path=self.cookiepath,
                     today=today,
+                    timestamp=timestamp,
+                    this_url=this_url,
                     )
 
 
@@ -414,7 +423,6 @@ class FlaskApp(flask.Flask):
 
             response.add_etag()
             return response.make_conditional(flask.request)
-
 
         # do conditional compression
         self.register_blueprint(compress)

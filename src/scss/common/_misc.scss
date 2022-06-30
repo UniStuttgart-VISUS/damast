@@ -33,3 +33,17 @@
 .small-caps {
   font-variant: small-caps;
 }
+
+kbd {
+  font-size: 0.8em;
+  font-family: inherit;
+
+  border: 1px solid;
+  border-radius: 0.2em;
+  padding: 0.05em 0.1em;
+
+  &.shift-button::before {
+    content: '⇧';
+    padding-inline-end: 0.3ex;
+  }
+}

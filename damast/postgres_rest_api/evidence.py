@@ -12,7 +12,7 @@ name = 'evidence'
 app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 
 
-@app.route('/evidence-list', role='user')
+@app.route('/evidence-list', role=['user', 'visitor'])
 @rest_endpoint
 def get_evidence_list(c):
     '''
@@ -45,7 +45,7 @@ def get_evidence_list(c):
     return flask.jsonify(list(map(parse_evidence, c.fetchall())))
 
 
-@app.route('/annotator-evidence-list', role='user')
+@app.route('/annotator-evidence-list', role=['user', 'visitor'])
 @rest_endpoint
 def get_evidence_with_annotations(c):
     '''
@@ -73,7 +73,7 @@ def get_evidence_with_annotations(c):
     return flask.jsonify(list(map(list, c.fetchall())))
 
 
-@app.route('/evidence/<int:evidence_id>', methods=['GET', 'PATCH', 'DELETE', 'PUT'], role='user')
+@app.route('/evidence/<int:evidence_id>', methods=['GET', 'PATCH', 'DELETE', 'PUT'], role=['user', 'visitor'])
 @rest_endpoint
 def modify_evidence(c, evidence_id):
     '''
@@ -415,7 +415,7 @@ def update_evidence(c, olddata, evidence_id):
 
 
 
-@app.route('/document/<int:document_id>/evidence-list', role='user')
+@app.route('/document/<int:document_id>/evidence-list', role=['user', 'visitor'])
 @rest_endpoint
 def get_evidence_list_for_document(c, document_id):
     '''

@@ -1,6 +1,5 @@
 import * as d3 from 'd3';
 import * as T from './datatypes';
-import * as R from 'ramda';
 import {Dataset, ChangeScope} from './dataset';
 import {confidence_keys} from './confidence-aspects';
 import {ColorScales} from './colorscale';
@@ -45,6 +44,12 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
 
       d3.select('#religion-filter-revert')
         .on('click', () => this.updateContent(this.hierarchy_.data, this.filter, this.counts));
+
+      const ref = this;
+      d3.select<HTMLInputElement, any>('.hierarchy__header input#use-falsecolor')
+        .on('change', function() {
+          ref.sendToDataThread('set-falsecolors', this.checked);
+        });
     });
   }
 
@@ -52,11 +57,14 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
     this.linkHierarchy(data);
   }
 
-  setData(data: {hierarchy: d3.HierarchyNode<T.OwnHierarchyNode>, areas: any, filter: ReligionFilter.ReligionFilter, display_mode: T.DisplayMode}) {
+  setData(data: {hierarchy: d3.HierarchyNode<T.OwnHierarchyNode>, areas: any, filter: ReligionFilter.ReligionFilter, display_mode: T.DisplayMode, use_falsecolors: boolean}) {
     this.display_mode = data.display_mode;
     this.filter = data.filter;
     this.counts = data.areas;
     this.hierarchy_ = d3.hierarchy<T.OwnHierarchyNode>(data.hierarchy.data);
+
+    d3.select<HTMLInputElement, any>('.hierarchy__header input#use-falsecolor')
+      .each(function() { this.checked = data.use_falsecolors; });
 
     this.updateContent(data.hierarchy.data, data.filter, data.areas);
   }

@@ -1,0 +1,167 @@
+@use 'common/colors' as *;
+@use 'common/mixins';
+
+@forward 'common/forms';
+
+.content {
+  @include mixins.baseFlexBlock();
+  padding-block: 4rem;
+}
+
+h1, h2, h3, h4, h5, h6,
+p,
+ul,
+form,
+.content__block,
+.intro {
+  width: 80vw;
+  max-width: 1200px;
+  margin: auto;
+}
+
+form,
+form section,
+form section article {
+  display: grid;
+  grid-auto-flow: row;
+  gap: 1em;
+
+  & > * {
+    display: block;
+  }
+
+  & > label + :where(textarea, input[type="text"], input[type="email"]) {
+    margin-top: -0.7em;
+  }
+
+  & > label {
+    text-align: start;
+    margin-top: 1em;
+  }
+
+  .likert-scale {
+    display: grid;
+    grid-template-columns: 1fr repeat(5, 3em) 1fr;
+    justify-content: center;
+    gap: 1ex;
+
+    & > input[type="radio"] {
+      min-width: 3em;
+    }
+
+    & > label:last-of-type {
+      text-align: start;
+    }
+  }
+
+  .vertical-radio-options {
+    display: grid;
+    gap: 1ex;
+    grid-template-columns: max-content auto;
+
+    padding-inline-start: 1em;
+
+    input { grid-column: 1 / span 1; }
+    label {
+      grid-column: 2 / span 1;
+      text-align: start;
+    }
+  }
+}
+
+section {
+  margin-block: 2rem;
+
+  h2 {
+    padding: 0;
+  }
+}
+
+.vertical-fill-buttons,
+.horizontal-fill-buttons {
+  display: grid;
+  grid-auto-flow: row;
+  gap: 1ex;
+}
+
+.horizontal-fill-buttons {
+  margin-top: 1em;
+
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+}
+
+.horizontal-flex-buttons {
+  margin-top: 2em;
+  display: flex;
+  justify-content: space-between;
+
+  button {
+    min-width: 13em;
+  }
+}
+
+:is(article, section) > :is(label, textarea, input) {
+  margin-inline: 1ex;
+}
+
+.intro {
+  --img-width: var(--width, 600px);
+
+  figure {
+    margin-block: 1em;
+  }
+
+  @media (min-width: 1200px) {
+    display: grid;
+    grid-template-columns: auto calc(var(--img-width) + 1em + 2px);
+    grid-auto-rows: 1fr;
+    align-items: start;
+    gap: 1ex;
+
+    div {
+      grid-column: 1 / span 1;
+
+      p {
+        width: initial;
+      }
+    }
+
+    figure {
+      grid-column: 2 / span 1;
+      margin-block: initial;
+
+      &:first-of-type {
+        margin-top: 0;
+      }
+    }
+  }
+}
+
+figure {
+  border: 1px solid $clr-gray;
+  padding: 0.5em 1em;
+  margin: 0;
+
+  display: grid;
+  grid-template-columns: min-content;
+
+  svg,
+  img,
+  video {
+    width: var(--img-width);
+  }
+
+  figcaption {
+    margin-top: 0.5em;
+    font-size: 12px;
+    max-width: var(--img-width);
+  }
+}
+
+:is(article, section)::before {
+  width: 500px;
+  margin: 2em auto;
+  content: '';
+  border-top: 1px solid $clr-gray;
+}

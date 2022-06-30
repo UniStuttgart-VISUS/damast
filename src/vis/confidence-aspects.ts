@@ -1,5 +1,4 @@
 import * as d3 from 'd3';
-import * as R from 'ramda';
 import * as T from './datatypes';
 
 export const confidence_keys = new Map<T.ConfidenceAspect, string>();

@@ -1,6 +1,5 @@
 import * as d3 from 'd3';
 import * as L from 'leaflet';
-import * as R from 'ramda';
 import 'leaflet.heat';
 import '@geoman-io/leaflet-geoman-free';
 import union from '@turf/union';
@@ -22,6 +21,8 @@ import { MapStyle, mapStyles } from '../common/map-styles';
 import { MessageData } from './data-worker';
 import TooltipManager from './tooltip';
 import DiversityLayer from './diversity-layer';
+import { map_mode } from './view-mode-defaults';
+import { MapMode } from './datatypes';
 
 
 export default class MapPane extends View<any, Set<number> | null> {
@@ -39,11 +40,16 @@ export default class MapPane extends View<any, Set<number> | null> {
   private evidenceCountHeatLayer: L.HeatLayer;
   private evidenceCountHeatOptions: L.HeatMapOptions;
 
+  private clusteringCheckbox: HTMLInputElement;
+  private cachedMapMode: MapMode = map_mode;
+
   private map_styles: MapStyle[] = [];
   private baseLayers: Map<string, L.Layer> = new Map<string, L.Layer>();
 
   private readonly tooltipManager = new TooltipManager(500);
   private setupState: Promise<void>;
+
+  private readonly onmoveend = () => this.transmitMapStateToData();
 
   constructor(worker: Worker, container: GoldenLayout.Container) {
     super(worker, container, 'map');
@@ -58,7 +64,16 @@ export default class MapPane extends View<any, Set<number> | null> {
 
     container.on('resize', this.onresize.bind(this));
     this.worker.addEventListener('message', ({data}: {data: MessageData<any>}) => {
-      if (data.type === 'set-map-state') this.setMapState(data.data);
+      if (data.type === 'set-map-state') {
+        // set from outside, so no need to transmit back mapmove
+        // map.setView will also fire moveend once, so ignore the first one emitted
+        this.map.off('moveend', this.onmoveend);
+        this.map.once('moveend', () => {
+          this.map.on('moveend', this.onmoveend);
+        });
+
+        this.setMapState(data.data);
+      }
     });
   }
 
@@ -92,6 +107,9 @@ export default class MapPane extends View<any, Set<number> | null> {
     this.evidenceCountHeatOptions.maxZoom = this.map.getZoom();
     this.evidenceCountHeatLayer.setOptions(this.evidenceCountHeatOptions);
     this.evidenceCountHeatLayer.setLatLngs(data.distribution);
+
+    this.cachedMapMode = data.map_mode;
+    this.clusteringCheckbox.checked = (data.map_mode === MapMode.Clustered);
   }
 
   private _cached_link_set: Set<number> | null = null;
@@ -188,6 +206,29 @@ export default class MapPane extends View<any, Set<number> | null> {
     this.layer.addTo(this.map);
     this.layerControl.addOverlay(this.layer, '<b>Markers:</b> Aggregated markers for location clusters');
 
+    // clustering control pane
+    const clusteringControl = new L.Control({position: 'topright'});
+    const ref = this;
+    clusteringControl.onAdd = function(_) {
+      const div = L.DomUtil.create('div', 'leaflet-control-clustering');
+      div.innerHTML = `
+        <input type="checkbox" id="map-control-clustering">
+        <label for="map-control-clustering">Cluster</label>
+      `;
+      div.setAttribute('title', 'Cluster locations in the map into glyphs. This is the default. See the info texts of the map view and the settings pane for more details.');
+
+      div.addEventListener('click', e => e.stopPropagation());
+      const input = div.querySelector<HTMLInputElement>(':scope input');
+      input.checked = ref.cachedMapMode === MapMode.Clustered;
+      input.addEventListener('change', () => {
+        ref.sendToDataThread('set-map-mode', input.checked ? MapMode.Clustered : MapMode.Cluttered);
+      });
+      ref.clusteringCheckbox = input;
+
+      return div;
+    };
+    clusteringControl.addTo(this.map);
+
 
     /* SVG OVERLAY */
     this.svg = d3.select(container).append('svg');
@@ -217,7 +258,7 @@ export default class MapPane extends View<any, Set<number> | null> {
     this.map.on('resize', this.onresize.bind(this));
     this.map.on('move', this.onmove.bind(this));
     this.map.on('click', this.onclick.bind(this));
-    this.map.on('moveend', () => this.transmitMapStateToData());
+    this.map.on('moveend', this.onmoveend);
     this.map.on('baselayerchange', (x: {layer}) => {
       this.setMapStyle(x.layer.options.id)
 

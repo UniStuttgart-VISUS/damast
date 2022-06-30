@@ -11,7 +11,7 @@ name = 'person-uri-list'
 app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 
 
-@app.route('/external-person-uri-list', role='user')
+@app.route('/external-person-uri-list', role=['user', 'visitor'])
 @rest_endpoint
 def get_uri_list(c):
     '''

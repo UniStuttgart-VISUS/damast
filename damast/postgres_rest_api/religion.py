@@ -7,7 +7,7 @@ name = 'religion'
 app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 
 
-@app.route('/religions', role='user')
+@app.route('/religions', role=['user', 'visitor'])
 @rest_endpoint
 def get_all_religions(c):
     '''
@@ -46,7 +46,7 @@ def get_all_religions(c):
     return flask.jsonify(toplevel)
 
 
-@app.route('/religion-list', role='user')
+@app.route('/religion-list', role=['user', 'visitor'])
 @rest_endpoint
 def get_religion_list(c):
     '''

@@ -13,7 +13,7 @@ const IgnoreEmitPlugin = require('ignore-emit-webpack-plugin');
 function compress(argv) {
   return new CompressionPlugin({
     filename: '[path][base].br',
-    test: /\.js$|\.css$|\.js\.LICENSE\.txt$|\.js\.map$|\.html$|\.wasm$|\.png$|\.otf$|\.eot$|\.svg$|\.ttf$|\.woff$|\.woff2$/,
+    test: /\.js$|\.css$|\.js\.LICENSE\.txt$|\.js\.map$|\.html$|\.svg$/,
     algorithm: 'brotliCompress',
     deleteOriginalAssets: true,
     minRatio: Infinity,
@@ -334,6 +334,18 @@ module.exports = function(env, argv) {
           {to: 'images/', from: 'node_modules/leaflet-color-number-markers/dist/img/marker-shadow.png'},
         ],
       ],
+
+      // questionnaire
+      [
+        {
+          'questionnaire': './src/questionnaire/index.ts',
+          'style.css': './src/scss/questionnaire.scss',
+        },
+        'damast/questionnaire/static/',
+        [
+          { from: 'src/assets/questionnaire/', to: '.', },
+        ],
+      ],
     ].map(([entry, out, patterns]) => {
       return {
         entry,
@@ -353,6 +365,7 @@ module.exports = function(env, argv) {
                 path.resolve(__dirname, "src/common"),
                 path.resolve(__dirname, "src/flashes"),
                 path.resolve(__dirname, "src/cookies"),
+                path.resolve(__dirname, "src/questionnaire"),
               ],
             },
             {

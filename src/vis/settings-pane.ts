@@ -5,15 +5,32 @@ import * as d3 from 'd3';
 import * as ViewModeDefaults from './view-mode-defaults';
 import * as modal from './modal';
 import * as T from './datatypes';
-import {clearConfig, storeConfig} from './default-layout';
-import {MessageData} from './data-worker';
+import { clearConfig, storeConfig } from './default-layout';
+import { MessageData } from './data-worker';
 import { getConsentCookie } from '../common/cookies';
+import { showInfoboxFromURL } from './modal';
+import { localStorageKeyReportCount } from '../common/questionnaire';
+
+interface SettingsData {
+  brush_only_active: boolean;
+  display_mode: 'religion' | 'confidence';
+  timeline_mode: T.TimelineMode;
+  map_mode: T.MapMode;
+  use_falsecolors: boolean;
+
+  evidence_count: number;
+  place_count: number;
+}
 
 export default class SettingsPane {
   private confidence_mode_input: d3.Selection<HTMLInputElement, any, any, any>;
   private brush_only_active_input: d3.Selection<HTMLInputElement, any, any, any>;
   private timeline_mode_input: d3.Selection<HTMLInputElement, any, any, any>;
   private map_mode_input: d3.Selection<HTMLInputElement, any, any, any>;
+  private falsecolor_mode_input: d3.Selection<HTMLInputElement, any, any, any>;
+
+  private cachedEvidenceCount: number = 0;
+  private cachedPlaceCount: number = 0;
 
   constructor(
     private readonly data_worker: Worker,
@@ -31,7 +48,7 @@ export default class SettingsPane {
     div.classList.add('settings-pane');
     div.innerHTML = require('html-loader!./html/settings-pane.template.html').default;
 
-    const d = d3.select(div);
+    const d = d3.select<HTMLDivElement, any>(div);
 
     this.confidence_mode_input = d.select<HTMLInputElement>('div#confidence-controls input#confidence-mode')
       .each(function() {
@@ -47,7 +64,15 @@ export default class SettingsPane {
       })
       .on('change', function() {
         ref.data_worker.postMessage({type: 'set-show-only-active', data: this.checked });
+      });
+
+    d3.select<HTMLInputElement, any>('header input#show-all-data')
+      .each(function() {
+        this.checked = !ViewModeDefaults.show_only_active;
       })
+      .on('change', function() {
+        ref.data_worker.postMessage({type: 'set-show-only-active', data: !this.checked });
+      });
 
     this.timeline_mode_input = d.select<HTMLInputElement>('div#timeline-mode-controls input#timeline-mode')
       .each(function() {
@@ -65,14 +90,27 @@ export default class SettingsPane {
         ref.data_worker.postMessage({type: 'set-map-mode', data: this.checked ? T.MapMode.Cluttered : T.MapMode.Clustered });
       })
 
+    this.falsecolor_mode_input = d.select<HTMLInputElement>('div#falsecolor-controls input#falsecolor')
+      .each(function() {
+        this.checked = (ViewModeDefaults.use_falsecolors);
+      })
+      .on('change', function() {
+        ref.data_worker.postMessage({type: 'set-falsecolors', data: this.checked });
+      })
+
     d.select('#save-layout')
       .on('click', () => this.onClickSaveLayout())
-      .attr('disabled', (getConsentCookie() === 'all') ? null : '');
+      .attr('disabled', (getConsentCookie() === 'essential') ? null : '');
     d.select('#reset-layout').on('click', () => this.onClickResetLayout());
     d.select('#save-state').on('click', () => this.onClickSaveVisualizationState());
     d.select('#load-state').on('click', () => this.onClickLoadVisualizationState());
     d.select('#generate-report').on('click', () => this.onClickGenerateReport());
     d.select('#describe-filters').on('click', () => this.onClickDescribeFilters());
+
+    d3.select('header #header__download-state').on('click', () => this.onClickSaveVisualizationState());
+    d3.select('header #header__load-state').on('click', () => this.onClickLoadVisualizationState());
+    d3.select('header #header__generate-report').on('click', () => this.onClickGenerateReport());
+    d3.select('header #header__describe-filters').on('click', () => this.onClickDescribeFilters());
 
     this.data_worker.addEventListener('message', async e => {
       if (e.data?.type === 'export-visualization-state') await this.onExportEvent(e.data);
@@ -102,16 +140,49 @@ export default class SettingsPane {
   }
 
   private async onClickGenerateReport() {
-    this.data_worker.postMessage({type: 'generate-report', data: null});
+    const extraSentence = (this.cachedEvidenceCount >= 100)
+      ? 'This is a lot of data.' : '';
+
+    const doCreateReport = await new Promise<boolean>(async (resolve, _reject) => {
+      const descriptionPromise = Promise.resolve('');
+      const { content, close } = showInfoboxFromURL(
+        'Are you sure?',
+        async () => descriptionPromise,
+        false,
+        () => resolve(false),
+      );
+      const sel = await content;
+
+      sel.innerHTML = require('html-loader!./html/confirmation-report-generation.template.html').default;
+      sel.querySelector(':scope #evidence-count').innerHTML = this.cachedEvidenceCount.toString();
+      sel.querySelector(':scope #place-count').innerHTML = this.cachedPlaceCount.toString();
+      sel.querySelector(':scope #extra-sentence').innerHTML = extraSentence;
+
+      sel.querySelector(':scope button#nevermind-no-report')
+        .addEventListener('click', () => {
+          resolve(false);
+        });
+
+      sel.querySelector(':scope button#yes-report')
+        .addEventListener('click', () => {
+          resolve(true);
+        });
+    });
+
+    if (doCreateReport) {
+      if (getConsentCookie() !== null) {
+        const prevReportsDone = parseInt(localStorage.getItem(localStorageKeyReportCount) ?? '0');
+        localStorage.setItem(localStorageKeyReportCount, (prevReportsDone + 1).toString());
+      }
+
+      this.data_worker.postMessage({type: 'generate-report', data: null});
+    }
   }
 
   private _resolver: (v: string) => void;
   private async onClickDescribeFilters() {
     const descriptionPromise = new Promise<string>(r => this._resolver = r);
     modal.showInfoboxFromURL('Currently Active Filters', () => descriptionPromise);
-    //this._describe_filter_modal.content.append('p')
-    //  .classed('modal__content--loading', true)
-    //  .html(`<i class="fa fa-pulse fa-3x fa-fw fa-spinner"></i>`);
 
     this.data_worker.postMessage({type: 'describe-filters', data: null});
   }
@@ -124,7 +195,6 @@ export default class SettingsPane {
       },
       body: JSON.stringify(eventData.data)
     });
-    console.log(this._resolver);
     this._resolver?.(response);
   }
 
@@ -212,39 +282,57 @@ export default class SettingsPane {
   }
 
   private static async showSuccess(query: string, innerHTML: string, color: string = '#3b7524') {
-      const button: HTMLButtonElement = document.querySelector(query);
+    const button: HTMLButtonElement = document.querySelector(query);
 
-      button.disabled = true;
-      button.style.setProperty('--clr-primary', 'white');
-      button.style.setProperty('--clr-secondary', color);
-      button.style.filter = 'initial';  // do not desaturate because of disabled
+    button.disabled = true;
+    button.style.setProperty('--clr-primary', 'white');
+    button.style.setProperty('--clr-secondary', color);
+    button.style.filter = 'initial';  // do not desaturate because of disabled
 
-      const oldText = button.innerHTML;
-      button.innerHTML = innerHTML;
+    const oldText = button.innerHTML;
+    button.innerHTML = innerHTML;
 
-      await new Promise<void>(r => {setTimeout(() => {
-        button.disabled = false;
-        button.style.setProperty('--clr-primary', null);
-        button.style.setProperty('--clr-secondary', null);
-        button.style.filter = null;
+    await new Promise<void>(r => {setTimeout(() => {
+      button.disabled = false;
+      button.style.setProperty('--clr-primary', null);
+      button.style.setProperty('--clr-secondary', null);
+      button.style.filter = null;
 
-        button.innerHTML = oldText;
-        r();
-      }, 1500);});
+      button.innerHTML = oldText;
+      r();
+    }, 1500);});
   }
 
-  private async onSettingsEvent(eventData: MessageData<{brush_only_active: boolean, display_mode: 'religion' | 'confidence', timeline_mode: T.TimelineMode, map_mode: T.MapMode}>) {
+  private async onSettingsEvent(eventData: MessageData<SettingsData>) {
     const c1 = this.brush_only_active_input.on('change');
     this.brush_only_active_input.on('change', null);
     const c2 = this.confidence_mode_input.on('change');
     this.confidence_mode_input.on('change', null);
+    const c3 = this.timeline_mode_input.on('change');
+    this.timeline_mode_input.on('change', null);
+    const c4 = this.map_mode_input.on('change');
+    this.map_mode_input.on('change', null);
+    const c5 = this.falsecolor_mode_input.on('change');
+    this.falsecolor_mode_input.on('change', null);
 
     this.brush_only_active_input.node().checked = eventData.data.brush_only_active;
     this.confidence_mode_input.node().checked = (eventData.data.display_mode === 'confidence');
     this.timeline_mode_input.node().checked = (eventData.data.timeline_mode === T.TimelineMode.Qualitative);
     this.map_mode_input.node().checked = (eventData.data.map_mode === T.MapMode.Cluttered);
+    this.falsecolor_mode_input.node().checked = (eventData.data.use_falsecolors);
+
+    d3.select<HTMLInputElement, any>('header input#show-all-data')
+      .each(function() {
+        this.checked = !eventData.data.brush_only_active;
+      });
 
     this.brush_only_active_input.on('change', c1);
     this.confidence_mode_input.on('change', c2);
+    this.timeline_mode_input.on('change', c3);
+    this.map_mode_input.on('change', c4);
+    this.falsecolor_mode_input.on('change', c5);
+
+    this.cachedEvidenceCount = eventData.data.evidence_count;
+    this.cachedPlaceCount = eventData.data.place_count;
   }
 };

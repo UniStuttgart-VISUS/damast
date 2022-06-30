@@ -11,7 +11,7 @@ name = 'external-database'
 app = AuthenticatedBlueprintPreparator(name, __name__, template_folder=None)
 
 
-@app.route('/external-database-list', role='user')
+@app.route('/external-database-list', role=['user', 'visitor'])
 @rest_endpoint
 def get_external_database_list(c):
     '''

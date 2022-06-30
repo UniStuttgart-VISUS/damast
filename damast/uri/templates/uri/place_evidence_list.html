@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% set footnote_lut = dict() %}
+{% set footnotes = namespace(i=1) %}
+{%- from 'reporting/fragments/macros.html' import create_evidence_linklist with context -%}
+{%- from 'reporting/fragments/evidence.html' import create_evidence with context -%}
+{%- from 'reporting/fragments/religion.html' import create_religion with context -%}
+{%- from 'reporting/fragments/person.html' import create_person with context -%}
+{%- from 'reporting/fragments/timeline.html' import create_timeline with context -%}
+
+{% block title %}{{ place.name }}{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <link type="text/css" rel="stylesheet" href="{{ url_for('uri.file', path='uri.css') }}">
+  <script src="{{ url_for('uri.file', path='map.js') }}" defer></script>
+{% endblock %}
+
+{% block content %}
+
+<nav role="toc">
+  <a class="back-link" href="{{ url_for('uri.place.get_place', place_id=place.id) }}">
+    <i class="fa fa-arrow-left"></i>
+    Back to overview
+  </a>
+
+  <h2>Table of Contents</h2>
+  <a href="#top">Back to top</a>
+
+  <ul>
+    <li><a href="#religions">Religions</a></li>
+    <li><a href="#evidences">Pieces of Evidence</a></li>
+    {%- if persons|length -%}
+    <li><a href="#persons">Persons</a></li>
+    {%- endif -%}
+    <li><a href="#timeline">Timeline</a></li>
+    <li><a href="#sources">Sources</a></li>
+    <li><a href="#cite">How to Cite</a></li>
+  </ul>
+</nav>
+
+<section id="top">
+<h1>{{ place.name }}</h1>
+<h2 class="subtitle">List of Pieces of Evidence</h2>
+</section>
+
+<section id="religions">
+  <h2>Religions</h2>
+
+  {% for religion in religions %}
+    {{ create_religion(religion) }}
+  {% endfor %}
+</section>
+
+<section id="evidences">
+  <h2>Pieces of Evidence</h2>
+
+{% for evidence in evidences %}
+  {{ create_evidence(evidence, create_place_links=false) }}
+{% endfor %}
+</section>
+
+{%- if persons|length -%}
+<section id="persons">
+  <h2>Persons</h2>
+
+  {% for person in persons %}
+    {{ create_person(person) }}
+  {% endfor %}
+</section>
+{%- endif -%}
+
+<section id="timeline">
+  <h2>Timeline</h2>
+
+  {{ create_timeline(time_data) }}
+</section>
+
+{% if sources %}
+<section id="sources">
+  <h2>Sources</h2>
+
+  <ul class="source-list">
+    {% for i, source in sources %}
+    <li id="source{{source.id}}" class="source">
+      <span class="source__short" >
+        {{ source.short }}
+      </span>
+      <p class="source__name">
+        {{ source.name }}
+        <span class="source__type">{{ source.source_type }}</span>
+      </p>
+      <p class="source__name">
+        {{ create_evidence_linklist(source_evidence[source.id], before='', middle=' based on this source: ', after='') }}
+      </p>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+<section id="cite">
+  <h2>How to Cite</h2>
+
+  <a class="under-header-link" href="{{ url_for('uri.place.get_place', place_id=place.id) }}#cite">See "How to Cite" on parent page.</a>
+</section>
+
+{% endblock %}
