@@ -3,7 +3,7 @@
 
 2022-0x-xx                                                           v1.1.5
 
-tba
+Fix an issue with empty time spans crashing place URI pages (#166).
 
 
 2022-06-30                                                           v1.1.4
