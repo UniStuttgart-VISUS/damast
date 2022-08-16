@@ -8,7 +8,7 @@ from functools import lru_cache
 from psycopg2.extras import NumericRange
 from ..authenticated_blueprint_preparator import AuthenticatedBlueprintPreparator
 from ..postgres_rest_api.decorators import rest_endpoint
-from ..postgres_rest_api.util import parse_geoloc
+from ..postgres_rest_api.util import parse_geoloc, istime
 from ..map_styles import app as map_styles
 from ..reporting.place_sort import sort_alternative_placenames, sort_placenames
 from ..reporting.collect_report_data import collect_report_data
@@ -182,9 +182,9 @@ def get_place(cursor, place_id):
         evidences = cursor.fetchall()
         time_spans = None
 
-        if all(map(lambda e: e.span is None and e.source_ids is None, evidences)):
+        if all(map(lambda e: not istime(e.span) and e.source_ids is None, evidences)):
             time_spans = [ (None, None), ]
-        elif all(map(lambda e: e.span is None, evidences)):
+        elif all(map(lambda e: not istime(e.span), evidences)):
             sids = set()
             for e in evidences:
                 if e.source_ids is not None:
@@ -196,8 +196,8 @@ def get_place(cursor, place_id):
         else:
             time_spans = []
 
-            without_time = list(filter(lambda x: x.span is None or ( x.span.lower_inf and x.span.upper_inf ), evidences))
-            with_time = list(filter(lambda x: x.span is not None and not ( x.span.lower_inf and x.span.upper_inf ), evidences))
+            without_time = [ x for x in evidences if not istime(x.span) ]
+            with_time = [ x for x in evidences if istime(x.span) ]
 
             if len(without_time) > 0:
                 without_time_sources = set()
