@@ -195,7 +195,7 @@ export default class Timeline extends View<any, any> {
     const noFilter = JSON.stringify(this.totalDomain) === JSON.stringify(data);
     const h0 = this._cached_bbox.height - brush_height;
 
-    let r = this.overview_g.selectAll('rect.overview-filter-indicator')
+    const r = this.overview_g.selectAll('rect.overview-filter-indicator')
       .data([data]) as d3.Selection<SVGRectElement, any, any, any>;
     r.enter()
       .append('rect')
@@ -325,6 +325,74 @@ export default class Timeline extends View<any, any> {
     s.exit().remove();
 
     if (this.x_overview) this.timeFilterIndicator(selection as [number, number]);
+
+    this.updateSelectionLabels();
+  }
+
+  private updateSelectionLabels(): void {
+    const yearFmt = d3.format('.0f');
+
+    [
+      [ this.x, this.y, 'selection-tick', this.axes_g.select('#x-axis-total'), ],
+      [ this.x_overview, this.y_overview, 'selection-tick--overview', this.axes_g.select('#x-axis-overview') ],
+    ].forEach(([ x, y, className, tickGroup, ]: [ d3.ScaleLinear<number, number>, d3.ScaleLinear<number, number>, string, d3.Selection<SVGGElement, any, any, any> ]) => {
+      const [ year0, year1 ] = x.domain();
+      const ticks = (this.selectionRange
+        ?.map((d, i) => [d, i])
+        ?.filter(([d, i]) => d >= year0 && d <= year1)
+        ?? []
+      ).map(([d, i]) => {
+        const _x = x(d);
+        const _y = y.range()[0];
+        const transform = `translate(${_x}, ${_y})`;
+        const tickPath = `m0 0 v6 l${i === 0 ? '' : '-'}4 -3z`;
+        const textAnchor = i === 0 ? 'end' : 'start';
+        const dx = i === 0 ? -0.2 : 0.2;
+
+        return { transform, tickPath, textAnchor, year: d, dx, };
+      });
+
+      const extraTicks = this.axes_g
+        .selectAll<SVGGElement, typeof ticks[0]>(`g.${className}`)
+        .data(ticks)
+        .join('g')
+          .classed(className, true)
+          .attr('transform', d => d.transform)
+          .attr('fill', 'currentColor')
+          .attr('stroke', 'none')
+          .attr('font-family', 'sans-serif')
+          .attr('font-size', 10)
+          .attr('text-anchor', d => d.textAnchor);
+
+      extraTicks.selectAll('path')
+        .data(d => [d])
+        .join('path')
+          .attr('d', d => d.tickPath);
+
+      extraTicks.selectAll('text')
+        .data(d => [d])
+        .join('text')
+          .attr('y', 9)
+          .attr('dy', '0.71em')
+          .attr('dx', d => `${d.dx}em`)
+          .text(d => yearFmt(d.year));
+
+      // hide ordinary ticks interfering with start or end tick
+      const boundingRects = extraTicks.nodes().map(d => d.getBoundingClientRect());
+
+      tickGroup.selectAll<SVGGElement, any>('g.tick')
+        .attr('opacity', function() {
+          const { left, right } = this.getBoundingClientRect();
+
+          for (const rect of boundingRects) {
+            if (rect.left - 5 > right || rect.right + 5 < left) continue;
+
+            return 0;
+          }
+
+          return 1;
+        });
+    });
   }
 
   private brushed(event: d3.D3BrushEvent<any>): void {
