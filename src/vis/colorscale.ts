@@ -72,6 +72,13 @@ export function createFalseReligionColorscale(
     }
   }
   const newHierarchy = visit(hierarchy);
+
+
+  if (newHierarchy === null) {
+    console.warn('no active religions, false-color scale is empty');
+    return d3.scaleOrdinal<number, string>();
+  }
+
   const hier = d3hier(newHierarchy);
   hier.sort((a, b) => religionOrder.get(a.data.id) - religionOrder.get(b.data.id));
 
