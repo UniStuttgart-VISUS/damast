@@ -50,3 +50,14 @@ def parse_evidence(record):
     return d
 
 
+def istime(t):
+    if isinstance(t, psycopg2.extras.NumericRange):
+        if t.isempty:
+            return False
+
+        if t.lower_inf and t.upper_inf:
+            return False
+
+        return True
+
+    return False

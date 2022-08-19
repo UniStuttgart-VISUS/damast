@@ -1,5 +1,14 @@
                                 CHANGELOG
 
+
+2022-08-19                                                           v1.1.5
+
+Fix an issue with empty time spans crashing place URI pages (#166). Fix an
+issue with the false-color scale generation code crashing with zero
+religious groups visible (#164). Add ticks indicating the time filter start
+and end year in the horizontal axes of the timeline.
+
+
 2022-06-30                                                           v1.1.4
 
 Highlight hovered religion or confidence level in the timeline tooltip. Add
