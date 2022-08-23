@@ -1,6 +1,11 @@
                                 CHANGELOG
 
 
+2022-08-23                                                    1.1.5+history
+
+Enable history tree feature for all users.
+
+
 2022-08-19                                                           v1.1.5
 
 Fix an issue with empty time spans crashing place URI pages (#166). Fix an

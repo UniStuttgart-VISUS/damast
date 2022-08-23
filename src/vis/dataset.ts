@@ -177,7 +177,7 @@ export class Dataset {
   private _user: T.User = { user: null, readdb: false, writedb: false, geodb: false, dev: false, visitor: true }
   private _server_version: string;
 
-  private _historyTree?: HistoryTree;
+  private _historyTree: HistoryTree;
 
   constructor() {
     this._symbol_lookup = new Map<number, string>();
@@ -208,7 +208,7 @@ export class Dataset {
     this.updateBrushingLinkingLookupTables();
     await this.purgeUnusedLocations();
 
-    if (!this._user.visitor) this._historyTree = new HistoryTree(this.getState());
+    this._historyTree = new HistoryTree(this.getState());
   }
 
   get historyTree(): typeof this._historyTree {
@@ -381,9 +381,9 @@ export class Dataset {
       const description = this._queuedStateChangeDescriptions.join('; ');
       this._queuedStateChangeDescriptions = [];
       if (resumeSource === 'resume') {
-        this.historyTree?.pushState(newState, description);
+        this.historyTree.pushState(newState, description);
       } else if (resumeSource === 'load-state') {
-        this.historyTree?.pushStateToRoot(newState, 'loaded state');
+        this.historyTree.pushStateToRoot(newState, 'loaded state');
       }
     }
 
@@ -405,7 +405,7 @@ export class Dataset {
       this.updateBrushingLinkingLookupTables();
 
       const newState = this.getState();
-      this.historyTree?.pushState(newState, changeDescription);
+      this.historyTree.pushState(newState, changeDescription);
 
       this.notifyListeners(new Set([changeScope]));
     }
@@ -413,8 +413,6 @@ export class Dataset {
 
   /* HISTORY STUFF */
   async historyBack() {
-    if (!this.historyTree) return;
-
     if (!this.historyTree.canBack()) {
       console.error('cannot go back in history');
       return;
@@ -425,8 +423,6 @@ export class Dataset {
   }
 
   async historyForward() {
-    if (!this.historyTree) return;
-
     if (!this.historyTree.canForward()) {
       console.error('cannot go forward in history');
       return;
@@ -437,34 +433,24 @@ export class Dataset {
   }
 
   async historyGoToState(uuid: string) {
-    if (!this.historyTree) return;
-
     this.historyTree.goToEntry(uuid);
     await this.applyCurrentHistoryState();
   }
 
   async historyReset() {
-    if (!this.historyTree) return;
-
     this.historyTree.reset();
     await this.applyCurrentHistoryState();
   }
 
   async historyPrune() {
-    if (!this.historyTree) return;
-
     this.historyTree.prune();
   }
 
   async historyPruneCondense() {
-    if (!this.historyTree) return;
-
     this.historyTree.pruneCondense();
   }
 
   private async applyCurrentHistoryState() {
-    if (!this.historyTree) return;
-
     const state: CompleteVisualizationState = this.historyTree.getCurrentState();
 
     await this.setState(state);
@@ -1188,7 +1174,7 @@ export class Dataset {
     if (this._is_paused) {
       this._queuedStateChangeDescriptions.push('moved map');
     } else {
-      this.historyTree?.pushState(this.getState(), 'moved map');
+      this.historyTree.pushState(this.getState(), 'moved map');
     }
   }
 
