@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7403751.svg)](https://doi.org/10.5281/zenodo.7403751)
+
 # Damast
 
 This repository contains code developed for the digital humanities project *"Dhimmis & Muslims &ndash; Analysing Multireligious Spaces in the Medieval Muslim World"*.
