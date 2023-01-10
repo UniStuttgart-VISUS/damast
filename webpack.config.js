@@ -80,20 +80,6 @@ module.exports = function(env, argv) {
               },
             },
           },
-          {
-            test: /\.template\.html$/,
-            use: [
-              {
-                loader: 'extract-loader'
-              },
-              {
-                loader: 'html-loader',
-                options: {
-                  minimize: true,
-                },
-              },
-            ],
-          },
         ]
       },
       resolve: {

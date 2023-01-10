@@ -4,9 +4,7 @@ import 'leaflet.heat';
 import '@geoman-io/leaflet-geoman-free';
 import union from '@turf/union';
 import { polygon, feature, multiPolygon, MultiPolygon, Feature, Polygon } from '@turf/helpers';
-import {
-  map
-} from './html-templates';
+import { map } from './html-templates';
 
 // @ts-ignore: Import not found
 import GoldenLayout from 'golden-layout';
@@ -60,7 +58,7 @@ export default class MapPane extends View<any, Set<number> | null> {
     const div = container.getElement()[0];
 
     div.classList.add('map-container');
-    div.innerHTML = map_mode;
+    div.innerHTML = map;
     this.mapdiv = div.querySelector('#map');
 
     this.setupLeaflet(this.mapdiv);
