@@ -5,6 +5,7 @@ import * as T from './datatypes';
 import * as modal from './modal';
 import View from './view';
 import TooltipManager from './tooltip';
+import { untimed } from './html-templates';
 
 // @ts-ignore: Import not found
 import GoldenLayout from 'golden-layout';
@@ -21,7 +22,7 @@ export default class Untimed extends View<any, any> {
     const div = container.getElement()[0];
 
     div.classList.add('untimed-container');
-    div.innerHTML = require('html-loader!./html/untimed.template.html').default;
+    div.innerHTML = untimed;
 
     this._svg = d3.select(div).select('svg');
     container.on('resize', () => this.repaint());
@@ -147,7 +148,7 @@ export default class Untimed extends View<any, any> {
       .merge(sel)
       .style('--clr-icon', 'var(--clr-fg)')
       .attr('href', d => main_religion_icons[d] || '#undefined')
-      .attr('transform', d => 'translate(' 
+      .attr('transform', d => 'translate('
         + (xscale(d) + xscale.bandwidth()/2) + ',' + marginBottom/2 + ')'
         + 'scale(0.2)');
     sel.exit().remove();

@@ -8,6 +8,7 @@ import * as modal from './modal';
 import View from './view';
 import * as ReligionFilter from './religion-filter';
 import TooltipManager from './tooltip';
+import { religion } from './html-templates';
 
 // @ts-ignore: Import not found
 import GoldenLayout from 'golden-layout';
@@ -31,7 +32,7 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
     const div = container.getElement()[0];
 
     div.classList.add('religion-container');
-    div.innerHTML = require('html-loader!./html/religion.template.html').default;
+    div.innerHTML = religion;
     this.div = d3.select(div);
 
     container.on('open', () => {

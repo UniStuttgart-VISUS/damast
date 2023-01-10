@@ -7,6 +7,7 @@ import * as modal from './modal';
 import View from './view';
 import TooltipManager from './tooltip';
 import * as DEFAULTS from './view-mode-defaults';
+import { timeline } from './html-templates';
 
 // @ts-ignore: Import not found
 import GoldenLayout from 'golden-layout';
@@ -57,7 +58,7 @@ export default class Timeline extends View<any, any> {
     const div = container.getElement()[0];
 
     div.classList.add('timeline-container');
-    div.innerHTML = require('html-loader!./html/timeline.template.html').default;
+    div.innerHTML = timeline;
 
     this.svg = d3.select(div).select('svg');
 

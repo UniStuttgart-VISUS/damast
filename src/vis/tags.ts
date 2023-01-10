@@ -8,6 +8,7 @@ import {SourceTuple} from './timeline-data';
 import View from './view';
 import {SourceWithPayload,CountStackDatum} from './source-data';
 import TooltipManager from './tooltip';
+import { tags } from './html-templates';
 
 // @ts-ignore: Import not found
 import GoldenLayout from 'golden-layout';
@@ -30,7 +31,7 @@ export default class TagsPane extends View<any, any> {
     const div = container.getElement()[0];
 
     div.classList.add('tags-container');
-    div.innerHTML = require('html-loader!./html/tags.template.html').default;
+    div.innerHTML = tags;
     this.div = d3.select(div);
     this.body = this.div.select('.tags__body');
   }

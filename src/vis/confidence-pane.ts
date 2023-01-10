@@ -6,6 +6,7 @@ import * as modal from './modal';
 import default_selection from './default-confidence-filter-selection';
 import * as CF from './confidence-filter';
 import View from './view';
+import { confidence } from './html-templates';
 
 // @ts-ignore: Import not found
 import GoldenLayout from 'golden-layout';
@@ -23,7 +24,7 @@ export default class ConfidencePane extends View<any, any> {
     const div = container.getElement()[0];
 
     div.classList.add('confidence-container');
-    div.innerHTML = require('html-loader!./html/confidence.template.html').default;
+    div.innerHTML = confidence;
     this._div = d3.select(div).select('#confidence');
     const ref = this;
 
