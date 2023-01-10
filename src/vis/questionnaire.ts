@@ -5,6 +5,7 @@ import {
   localStorageKeyQuestionnaire,
   QuestionnaireState
 } from '../common/questionnaire';
+import { questionnaire_intro } from './html-templates';
 
 const updateUsageTimeInterval = 2_000;  // 2 seconds
 const checkInterval = 300_000;  // 5 minutes
@@ -75,7 +76,7 @@ async function showAskDialog() {
     );
     const sel = await content;
 
-    sel.innerHTML = require('html-loader!./html/questionnaire-intro.template.html').default;
+    sel.innerHTML = questionnaire_intro;
     sel.querySelector(':scope button#no-thanks')
       .addEventListener('click', () => {
         close();

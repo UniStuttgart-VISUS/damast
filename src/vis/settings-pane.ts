@@ -1,6 +1,8 @@
 // @ts-ignore: Import not found
 import GoldenLayout from 'golden-layout';
 import * as d3 from 'd3';
+import { settings_pane } from './html-templates';
+import { confirmation_report_generation } from './html-templates';
 
 import * as ViewModeDefaults from './view-mode-defaults';
 import * as modal from './modal';
@@ -46,7 +48,7 @@ export default class SettingsPane {
     const ref = this;
     const div = this.container.getElement()[0];
     div.classList.add('settings-pane');
-    div.innerHTML = require('html-loader!./html/settings-pane.template.html').default;
+    div.innerHTML = settings_pane;
 
     const d = d3.select<HTMLDivElement, any>(div);
 
@@ -153,7 +155,7 @@ export default class SettingsPane {
       );
       const sel = await content;
 
-      sel.innerHTML = require('html-loader!./html/confirmation-report-generation.template.html').default;
+      sel.innerHTML = confirmation_report_generation;
       sel.querySelector(':scope #evidence-count').innerHTML = this.cachedEvidenceCount.toString();
       sel.querySelector(':scope #place-count').innerHTML = this.cachedPlaceCount.toString();
       sel.querySelector(':scope #extra-sentence').innerHTML = extraSentence;

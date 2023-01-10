@@ -8,6 +8,7 @@ import {SourceTuple} from './timeline-data';
 import View from './view';
 import {SourceWithPayload,CountStackDatum} from './source-data';
 import TooltipManager from './tooltip';
+import { sources } from './html-templates';
 
 // @ts-ignore: Import not found
 import GoldenLayout from 'golden-layout';
@@ -32,7 +33,7 @@ export default class SourcePane extends View<any, any> {
     const div = container.getElement()[0];
 
     div.classList.add('source-container');
-    div.innerHTML = require('html-loader!./html/sources.template.html').default;
+    div.innerHTML = sources;
     this.div = d3.select(div);
 
     this.sort_mode_checkbox = this.div.select<HTMLInputElement>('#source-sort-mode').node();

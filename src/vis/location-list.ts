@@ -5,6 +5,7 @@ import TooltipManager from './tooltip';
 import View from './view';
 import { saveCurrentFilter, loadFilter } from './manage-place-sets';
 import locationNamePrefix from '../common/ignore-name-prefixes';
+import { location_list } from './html-templates';
 
 // @ts-ignore: Import not found
 import GoldenLayout from 'golden-layout';
@@ -37,7 +38,7 @@ export default class LocationList extends View<any, any> {
     const div = container.getElement()[0];
 
     div.classList.add('location-list-container');
-    div.innerHTML = require('html-loader!./html/location-list.template.html').default;
+    div.innerHTML = location_list;
     this.div = d3.select(div);
 
     const search_div = this.div.select('div.location-list__search-bar');
