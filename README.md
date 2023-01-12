@@ -1,4 +1,4 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7403751.svg)](https://doi.org/10.5281/zenodo.7403751)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7403750.svg)](https://doi.org/10.5281/zenodo.7403750)
 
 # Damast
 
@@ -12,6 +12,15 @@ A publicly explorable version of the research is available at [Humboldt-Universi
 An export of the data collected in the project can be found in [the data repository of the University of Stuttgart (DaRUS)](https://doi.org/10.18419/darus-2318).
 
 
+## Documentation
+
+All parts of Damast are documented, and this documentation is split over different places, such as:
+this and other Markdown files in the repository,
+comments in the code and scripts,
+and HTML files hosted by Damast itself.
+All those documentation parts, as well as a general system description and explanation, are also collected in one LaTeX document in the repository, which is also checked in as a [PDF file](./documentation.pdf).
+
+
 ## Database
 
 The historical data is collected in a relational PostgreSQL database.
@@ -19,7 +28,7 @@ For the project, we have used PostgreSQL version 10.
 Since the project also deals with geographical data, we additionally use the PostGIS extension.
 A suitable database setup is to use the [`postgis/postgis:10-3.1`](https://registry.hub.docker.com/layers/postgis/postgis/10-3.1/images/sha256-e2738cc6a9c6a86e0e5ca0759158839fadb9289459b52e9898b4995e74156131) Docker image.
 An SQL script for creating the database schema is located in [`util/postgres/schema.sql`](util/postgres/schema.sql), and in [DaRUS](https://doi.org/10.18419/darus-2318).
-An overview of the interplay between tables of the database, and a general explanation, can be found in the [`docs/`](./docs/) directory.
+An overview of the interplay between tables of the database, and a general explanation, can be found in the [documentation](#documentation).
 
 
 ## Software
@@ -30,7 +39,7 @@ for example, there is a blueprints for the landing page, one for the visualizati
 The server provides multiple pages, as well as a HTTP interface for reading from and writing to the PostgreSQL database.
 The server is built and deployed as a Docker container that contains all necessary dependencies.
 
-An overview and explanation of the different pages and functionalities is located in the [`docs/`](./docs/) directory.
+An overview and explanation of the different pages and functionalities is provided in the [documentation](#documentation).
 The web pages consist of HTML, CSS and JavaScript.
 The HTML content is in most cases served via Jinja2 templates that are processed by Flask.
 The JavaScript code is compiled from TypeScript source, and the CSS is compiled from SCSS.
@@ -111,7 +120,7 @@ The server infrastructure consists of three components:
  3. a reverse HTTP proxy on the host machine that handles traffic from the outside and SSL.
 
 The [`util/`](./util/) directory contains configuration templates for an [NGINX reverse proxy](./util/nginx/), [`cron`](./util/crontab), the [start script](./util/run_server.sh.in), the [`systemd` configuration](./util/systemd/), and the [user authentication file](./util/sqlite3-user-file/).
-The [documentation](./docs/) also goes into more details about the setup.
+The [documentation](#documentation) also goes into more details about the setup.
 A directory on the host machine is mapped as a volume to the `/data` directory in the docker container.
 The `/data` directory contains runtime configuration files (`users.db`, `reports.db`, as well as log files).
 The main Docker container requires some additional runtime configuration, for example for the PostgreSQL password, which can be passed as environment variables to Docker using the `--env` and `--env-file` flags.
