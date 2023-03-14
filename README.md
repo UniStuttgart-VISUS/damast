@@ -12,6 +12,26 @@ A publicly explorable version of the research is available at [Humboldt-Universi
 An export of the data collected in the project can be found in [the data repository of the University of Stuttgart (DaRUS)](https://doi.org/10.18419/darus-2318).
 
 
+## Publications
+
+Damast has been used for and discussed in the following publications:
+
+- Weltecke, Dorothea, Ralph Barczok, and Bernd A. Vest:
+  *Damast. Konzeptionelle Prinzipien und technische Methoden eines digitalen Projekts zur geotemporalen Visualisierung religiöser Pluralität.*
+  In preparation.
+- Franke, Max and Steffen Koch.
+  "Damast: A Visual Analysis Approach for Religious History Research"
+  In: *Proceedings of the 18th International Conference on Computer Vision, Imaging and Computer Graphics Theory and Applications - Volume 3: IVAPP,* pp. 40–52.
+  Lisbon, Portugal.
+  February 19–21, 2023, SciTePress.
+  DOI: [10.5220/0011609700003417](https://dx.doi.org/10.5220/0011609700003417)
+-  Franke, Max, Ralph Barczok, Steffen Koch, and Dorothea Weltecke.
+  "Confidence as a First-class Attribute in Digital Humanities Data"
+  In: *Proceedings of the 4th VIS4DH Workshop,* VIS 2019, Vancouver, Canada.
+  October 20–25, 2019, IEEE.
+  [https://vis4dh.dbvis.de/2019/papers/2019/VIS4DH2019_paper_1.pdf](https://vis4dh.dbvis.de/2019/papers/2019/VIS4DH2019_paper_1.pdf)
+
+
 ## Documentation
 
 All parts of Damast are documented, and this documentation is split over different places, such as:
