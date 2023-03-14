@@ -1,6 +1,12 @@
                                 CHANGELOG
 
 
+2023-03-14                                                           v1.1.7
+
+Update listed publications related to Damast in the root HTML page and the
+README. Update npm dependencies. Remove feedback prompt (#174).
+
+
 2023-01-10                                                           v1.1.6
 
 Fix CVE-2022-46175, remove old, conflicting dependencies to extract-loader
