@@ -29,7 +29,7 @@
 
 \addbibresource{bibliography.bib}
 
-\def\versionstring{v1.1.6}
+\usepackage{damastversion}
 
 \makeatletter
 \newcommand{\customlabel}[2]{%
@@ -76,7 +76,7 @@
 Germany }}
 \subject{System Description}
 \title{Damast}
-\subtitle{\versionstring{}}
+\subtitle{\damastversion{}}
 \author{Max Franke}
 \date{\today}
 \publishers{\parbox{11cm}{Institute for Visualization and Interactive Systems\\University of Stuttgart\\Germany}}
@@ -92,7 +92,7 @@ Germany }}
 \ohead*{}
 \renewcommand*{\chaptermark}[1]{ \ohead*{\thechapter\ \MakeUppercase{#1}}}
 \chead*{}
-\ihead*{Damast \texttt{\versionstring}}
+\ihead*{Damast \texttt{\damastversion}}
 
 \setcounter{tocdepth}{1}
 \tableofcontents
@@ -102,6 +102,7 @@ Germany }}
 \input{content/backend}
 \input{content/frontend}
 
+\nocite{Franke_2023a}
 \printbibliography
 
 \appendix
