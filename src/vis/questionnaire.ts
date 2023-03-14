@@ -1,16 +1,9 @@
 import { getConsentCookie } from '../common/cookies';
-import { showInfoboxFromURL } from './modal';
 import {
   localStorageKeyUsageTime,
-  localStorageKeyQuestionnaire,
-  QuestionnaireState
 } from '../common/questionnaire';
-import { questionnaire_intro } from './html-templates';
 
 const updateUsageTimeInterval = 2_000;  // 2 seconds
-const checkInterval = 300_000;  // 5 minutes
-const triggerTimeMs = 900_000;  // 15 minutes
-//
 let updateUseTimeId: any;
 
 function onCookieConsentChanged() {
@@ -26,7 +19,6 @@ export function initQuestionnaire() {
   if (consentCookie === null) return;
 
   const now = Date.now();
-  setTimeout(async () => regularCheck(), checkInterval);
   updateUseTimeId = setTimeout(() => updateUseTime(now), updateUsageTimeInterval);
   window.addEventListener('blur', () => clearTimeout(updateUseTimeId));
   window.addEventListener('focus', () => updateUseTime(Date.now()));
@@ -46,55 +38,4 @@ function updateUseTime(lastTime: number) {
 
   localStorage.setItem(localStorageKeyUsageTime, totalTime.toString());
   updateUseTimeId = setTimeout(() => updateUseTime(now), updateUsageTimeInterval);
-}
-
-async function regularCheck() {
-  const questionnaireState: QuestionnaireState = (localStorage.getItem(localStorageKeyQuestionnaire) ?? QuestionnaireState.NotYet) as QuestionnaireState;
-
-  if (questionnaireState === QuestionnaireState.DoNotWant) return;
-  if (questionnaireState === QuestionnaireState.Done) return;
-
-  const totalTime = getUsageTime();
-
-  if (totalTime >= triggerTimeMs) {
-    await showAskDialog();
-    return;
-  }
-
-  const now = Date.now();
-  setTimeout(async () => regularCheck(), checkInterval);
-}
-
-async function showAskDialog() {
-  return new Promise<void>(async (resolve, _reject) => {
-    const descriptionPromise = Promise.resolve('');
-    const { content, close } = showInfoboxFromURL(
-      'Fill out questionnaire',
-      async () => descriptionPromise,
-      false,
-      () => resolve(),
-    );
-    const sel = await content;
-
-    sel.innerHTML = questionnaire_intro;
-    sel.querySelector(':scope button#no-thanks')
-      .addEventListener('click', () => {
-        close();
-        localStorage.setItem(localStorageKeyQuestionnaire, QuestionnaireState.DoNotWant);
-        resolve();
-      });
-
-    sel.querySelector(':scope button#not-now')
-      .addEventListener('click', () => {
-        close();
-        localStorage.setItem(localStorageKeyQuestionnaire, QuestionnaireState.NotYet);
-        resolve();
-      });
-    sel.querySelector(':scope button#yes')
-      .addEventListener('click', () => {
-        close();
-        document.querySelector<HTMLAnchorElement>('a#questionnaire-link')?.click();
-        resolve();
-      });
-  });
 }

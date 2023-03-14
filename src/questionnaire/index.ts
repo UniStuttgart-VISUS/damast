@@ -1,9 +1,6 @@
-import { getConsentCookie } from '../common/cookies';
 import {
   localStorageKeyUsageTime,
-  localStorageKeyQuestionnaire,
   localStorageKeyReportCount,
-  QuestionnaireState
 } from '../common/questionnaire';
 export {};
 
@@ -14,10 +11,6 @@ function onSubmit(event: MouseEvent) {
   event.preventDefault();
 
   // handle
-  const ck = getConsentCookie();
-  if (ck === 'essential') {
-    localStorage.setItem(localStorageKeyQuestionnaire, QuestionnaireState.Done);
-  }
   form.querySelector<HTMLInputElement>(':scope input[name="usage-time"]')?.setAttribute(
     'value',
     localStorage.getItem(localStorageKeyUsageTime) ?? '<unknown>'
