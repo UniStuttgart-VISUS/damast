@@ -4,7 +4,7 @@ docker run \
   --rm \
   --detach \
   --name !!SYSTEMD_SERVICE_NAME!! \
-  -v "$(pwd):/data:z" \
+  -v "$(pwd):/data:Z" \
   --net=host \
   --env-file=docker.env \
   !!DOCKER_IMAGE_NAME!!

@@ -15,8 +15,8 @@ run() {
         -it \
         --init \
         --rm \
-        --volume="$(pwd)/damast:/damast:z" \
-        --volume="$(pwd)/devdata:/data/:z" \
+        --volume="$(pwd)/damast:/damast:Z" \
+        --volume="$(pwd)/devdata:/data/:Z" \
         --net=host \
         --env FLASK_DEBUG=1 \
         --env FLASK_ACCESS_LOG=/data/access_log \
@@ -81,7 +81,7 @@ EOSQL
     --name $dbimagename \
     --net=host \
     -e POSTGRES_PASSWORD=postgres \
-    -v $tmpdir/init.d/:/docker-entrypoint-initdb.d:z \
+    -v $tmpdir/init.d/:/docker-entrypoint-initdb.d:Z \
     postgis/postgis:10-3.1
 
   while ! pg_isready -h localhost; do sleep 1; done

@@ -269,7 +269,7 @@
 
   \node [circle,fill=white,draw=black,inner sep=1pt] (hostfs2-node) at (www-hostfs-top) {};
   \draw [very thin] (hostfs2-node.north) -- (damast-docker-south)
-    node [inner sep=1pt,anchor=west,pos=0.65] { \tiny \texttt{--volume /www:/data/:z} };
+    node [inner sep=1pt,anchor=west,pos=0.65] { \tiny \texttt{--volume /www:/data/:Z} };
 
   \draw [very thin,write] (damast-flask-south) -- (reporter-north) node [midway,anchor=west] { \tiny Launches report generator process };
   \coordinate (rep-west-1) at ($ (reporter-west) + (0,0.1) $);
