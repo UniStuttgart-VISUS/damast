@@ -19,7 +19,7 @@ The directory also contains an exemplary backup script, which can be used in com
 ## User file
 
 The [`sqlite3-user-file`](./sqlite3-user-file/) directory contains a SQL schema of the user file, which is used to define which users exist, when they expire, which password they have, and what roles they are part of.
-See [the roles documentation](../docs/roles.md) for more information.
+See the roles documentation in subsection *"Roles"*, subsubsection *"User Database"*, and subsection *"User Authetication*" of [the PDF documentation](../documentation.pdf) for more information.
 The directory also contains a Python script for user management.
 
 
