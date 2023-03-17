@@ -53,25 +53,6 @@ The sample run script in the repository assumes that a file \verb!docker.env! is
 Configuration values can also be passed via a JSON file, the path to which (in the Damast Docker container) is passed to Damast with the \verb!DAMAST_CONFIG! environment variable.
 \Cref{tab:configuration-variables} lists the configuration options, their environment variables and JSON keys, as well as their default value and description.
 
-In the rest of the documentation, configuration variables are referred to by their environment variable name.
-If an option is passed in multiple ways (e.g., default value and JSON config and environment variable), the following precedence rules apply:
-
-\begin{itemize}
-  \item[\bfseries 1] The environment variable value, if set, always wins.
-    \begin{itemize}
-      \item[\bfseries 1a] Some environment variables are set within the Docker image at build time.
-        These also take precedence over the JSON config and default values, but are overruled by environment variables passed to \verb!docker run!.
-        \end{itemize}
-  \item[\bfseries 2] The value set in the JSON configuration passed via \verb!DAMAST_CONFIG! takes precedence over the default value.
-  \item[\bfseries 3] The default value has lowest precedence.
-    \begin{itemize}
-      \item[\bfseries 3a] If no value was passed anywhere, and the configuration option has no default, special behavior applies:
-        In most cases, the relevant feature is disabled (e.g., \verb!DAMAST_MAP_STYLES!), but Damast will start normally.
-        As of today\footnote{March 17, 2023, version \texttt{v1.1.7}.}, only the \verb!PGPASSWORD! option \emph{must} be set in some way, otherwise Damast will fail.
-    \end{itemize}
-\end{itemize}
-
-
 \newcommand\configentry[4]{%
     \parbox[t][][t]{7cm}{%
       \texttt{#1} \\
@@ -83,10 +64,7 @@ If an option is passed in multiple ways (e.g., default value and JSON config and
 
 \afterpage{%
 \begin{longtable}{ll}
-  \caption{
-    Configuration options for Damast.
-    In the first column; for each entry the environment variable (\enquote{screaming snake case}), JSON config key (snake case) and default value are given as rows.
-  }
+  \caption{Configuration options for Damast.}
   \label{tab:configuration-variables} \\
   \toprule[1pt]
   \endfirsthead
@@ -105,7 +83,7 @@ If an option is passed in multiple ways (e.g., default value and JSON config and
       {DAMAST\_CONFIG}%
       {-}%
       {}%
-      {JSON file to load configuration from. All other configuration values in this table can be passed via this file as key-value entries in the root object, where the key is specified in each second row of the first column of this table.}
+      {JSON file to load configuration from. All other configuration values in this table can be passed via this file as key-value entries in the root object, where the key is the \enquote{JSON key} column of this table.}
       \\ \midrule
     \configentry%
       {DAMAST\_ENVIRONMENT}%
