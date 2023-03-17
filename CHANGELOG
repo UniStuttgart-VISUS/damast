@@ -1,5 +1,10 @@
                                 CHANGELOG
 
+2023-03-xx                                                           v1.1.8
+
+Fix some inconsistencies and clarify configuration option precedence in the
+documentation (#176).
+
 
 2023-03-14                                                           v1.1.7
 
