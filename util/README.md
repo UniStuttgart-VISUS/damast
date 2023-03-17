@@ -11,7 +11,7 @@ On the PostgreSQL server, there should be the following roles:
  1. The default `postgres` admin role,
  2. a `users` role which can be `GRANT`ed to all users that need to connect to the database,
  3. an `api` role, which the Flask server will use to connect to the database, and
- 4. a read-only `pg_dump` role, which is used for backups.
+ 4. a read-only `ro_dump` role, which is used for backups.
 
 The directory also contains an exemplary backup script, which can be used in combination with a `cron` job to create daily/weekly/... backups.
 
