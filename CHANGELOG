@@ -1,5 +1,12 @@
                                 CHANGELOG
 
+2023-03-xx                                                           v1.1.8
+
+Fix some inconsistencies and clarify configuration option precedence in the
+documentation (#176). Change the Docker containers to use non-shared volume
+mounts instead of shared ones (#177). Update Flask version to mitigate a
+vulnerability with sessions (GHSA-m2qf-hxjv-5gpq).
+
 
 2023-03-14                                                           v1.1.7
 

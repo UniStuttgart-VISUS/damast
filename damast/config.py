@@ -4,6 +4,7 @@ import json
 from dataclasses import dataclass, field, make_dataclass, MISSING
 from typing import List
 from functools import namedtuple
+import logging
 
 ConfigEntry = namedtuple(
         'ConfigEntry',
@@ -237,7 +238,9 @@ def get_config():
 
         # otherwise, fail
         else:
-            logger.critical('No value passed for "%s" via environment variable "%s" or configuration file entry "%s" (type %s), and no default given. Aborting.',
+            import traceback as tb
+            tb.print_stack()
+            logging.critical('No value passed for "%s" via environment variable "%s" or configuration file entry "%s" (type %s), and no default given. Aborting.',
                     entry.description,
                     entry.envvar,
                     entry.varname,

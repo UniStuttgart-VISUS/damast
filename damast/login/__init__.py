@@ -129,7 +129,7 @@ def change_password_post():
 def generate_session_token(username, expiry=None):
     if expiry is not None:
         expiry = datetime.datetime.combine(expiry, datetime.time()).astimezone()
-    now = datetime.datetime.now().astimezone()
+    now = datetime.datetime.now().astimezone() - datetime.timedelta(seconds=1)  # ensure immediate verification works
     exp = now + datetime.timedelta(hours=token_expiry_hours)
     if expiry is not None:
         exp = min(exp, expiry)

@@ -16,7 +16,7 @@ login_paths = [
         ]
 
 def login(client_ro, username, password):
-    client_ro.set_cookie('', 'cookieConsent', 'all')
+    client_ro.set_cookie('cookieConsent', 'essential')
     return client_ro.post('/login', data=dict(username=username, password=password), follow_redirects=True)
 
 
