@@ -11,7 +11,7 @@ class HTTPCookieTokenAuth(HTTPTokenAuth):
 
     def get_auth(self):
         if 'jwt_token' in flask.session:
-            return Authorization(self.scheme, {'token': flask.session['jwt_token']})
+            return Authorization(self.scheme, token=flask.session['jwt_token'])
         else:
             return None
 

@@ -206,7 +206,6 @@ def ro_cursor(client_ro):
 def get_headers(client, username, password):
     client.set_cookie('cookieConsent', 'essential')
     rv = client.post('/login', data=dict(username=username, password=password))
-    print(rv.request.headers, rv.status, rv.headers)
 
     # No need to set any extra headers, as the client will do that
     # automatically with the Set-Cookie header. However, all tests manually
