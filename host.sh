@@ -104,7 +104,7 @@ EOSQL
 }
 
 build() {
-  build_database
+ # build_database
   build_damast
 }
 

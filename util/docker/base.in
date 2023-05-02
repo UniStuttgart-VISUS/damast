@@ -55,7 +55,7 @@ RUN apt-get update && apt-get install -y postgresql-client
 USER www
 
 RUN pip install --no-warn-script-location \
-  'flask==2.0.1' \
+  'flask==2.3.2' \
   'gunicorn[gevent]' \
   'requests' \
   'Flask-HTTPAuth' \
