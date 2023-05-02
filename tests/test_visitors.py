@@ -56,10 +56,10 @@ _visitor_roles = [
 @pytest.fixture(params=_visitor_roles, scope='function', autouse=True)
 def visitor_roles(request):
     if request.param.roles is None:
-        if 'damast_VISITOR_ROLES' in os.environ:
-            os.environ.pop('damast_VISITOR_ROLES')
+        if 'DAMAST_VISITOR_ROLES' in os.environ:
+            os.environ.pop('DAMAST_VISITOR_ROLES')
     else:
-        os.environ['damast_VISITOR_ROLES'] = ','.join(request.param.valid)
+        os.environ['DAMAST_VISITOR_ROLES'] = ','.join(request.param.valid)
 
     return request.param
 

@@ -245,6 +245,9 @@ class FlaskApp(flask.Flask):
             r = flask.request
 
             cookie_consent = r.cookies.get('cookieConsent')
+
+            print('cookie_consent', cookie_consent)
+
             if cookie_consent not in ('essential',):
                 sessionkeys = list(flask.session)
                 for k in sessionkeys:
