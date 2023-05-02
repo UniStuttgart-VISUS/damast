@@ -93,8 +93,8 @@ _put_data = [
     PutAnnotation(dict(document_id=1, comment='different comment'), True, False, 409),
     PutAnnotation(dict(comment='different comment'), True, False, 409),
     PutAnnotation(dict(document_id=422, span='[1,2]'), True, False, 409),
-    PutAnnotation(b'', False, False, 400),
-    PutAnnotation(b'Garbage payload, not JSON', False, False, 400),
+    PutAnnotation(b'', False, False, 415),
+    PutAnnotation(b'Garbage payload, not JSON', False, False, 415),
     PutAnnotation(dict(), True, False, 400),
     PutAnnotation(dict(document_id=2, span='[1,4]', garbage_arg=12), True, False, 400),
     PutAnnotation(dict(document_id=3, span='[-101,4]'), True, False, 409),
@@ -166,8 +166,8 @@ _patch_data = [
 
     # invalid or empty payload
     PatchAnnotation(2, dict(), True, False, 400),
-    PatchAnnotation(3, b'', False, False, 400),
-    PatchAnnotation(7, b'garbage', False, False, 400),
+    PatchAnnotation(3, b'', False, False, 415),
+    PatchAnnotation(7, b'garbage', False, False, 415),
 
     # payload contains non-changeable keys
     PatchAnnotation(1, dict(comment='test', illegal_payload_member=15), True, False, 400),

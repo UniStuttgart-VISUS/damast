@@ -36,7 +36,7 @@ build() {
       source pyenv/bin/activate
       pip install --upgrade pip
       pip install wheel
-      pip install 'flask==2.0.1' 'gunicorn[gevent]' 'requests' 'Flask-HTTPAuth' \
+      pip install 'flask==2.3.2' 'gunicorn[gevent]' 'requests' 'Flask-HTTPAuth' \
       'passlib[bcrypt]' 'pyjwt>=2' 'pyyaml' 'postgres' 'password-strength' \
       'brotli' 'apscheduler' 'html5lib' 'jsonschema==3.2.0' 'python-dateutil' \
       'beautifulsoup4' 'python-Levenshtein==0.12.2' 'wheel' 'pytest' \

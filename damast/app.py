@@ -245,6 +245,7 @@ class FlaskApp(flask.Flask):
             r = flask.request
 
             cookie_consent = r.cookies.get('cookieConsent')
+
             if cookie_consent not in ('essential',):
                 sessionkeys = list(flask.session)
                 for k in sessionkeys:
@@ -479,7 +480,7 @@ class FlaskApp(flask.Flask):
             if fmt in flask.request.accept_encodings and os.path.exists(compressed):
                 response = flask.send_file(compressed,
                         mimetype=mime,
-                        add_etags=True,
+                        etag=True,
                         conditional=False,
                         download_name=download_name)
 
