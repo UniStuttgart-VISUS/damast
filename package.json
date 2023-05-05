@@ -35,7 +35,7 @@
     "event-target-shim": "^6.0.2",
     "event-target-shim-es5": "^2.0.0",
     "font-awesome": "^4.7.0",
-    "golden-layout": "^1.5.9",
+    "golden-layout": "^2.6.0",
     "js-cookie": "^3.0.1",
     "leaflet": "^1.7.1",
     "leaflet-canvasicon": "^0.1.6",

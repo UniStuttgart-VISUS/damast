@@ -21,7 +21,7 @@ import {getConfig, storeConfig} from './default-layout';
 import { initQuestionnaire } from './questionnaire';
 
 // @ts-ignore: Import not found
-import GoldenLayout from 'golden-layout';
+import { GoldenLayout, LayoutConfig } from 'golden-layout';
 
 import DataLoader from 'worker-loader?filename=[name].js!./fetch.worker';
 const dataLoader = new DataLoader();
@@ -49,8 +49,8 @@ const workerListener = async function(event: MessageEvent) {
 };
 
 
-const layout_config = getConfig();
-const layout = new GoldenLayout(layout_config, d3.select('#goldenlayout-root').node());
+const layout_config = getConfig() as LayoutConfig;
+const layout = new GoldenLayout(layout_config, d3.select<HTMLDivElement, any>('#goldenlayout-root').node());
 
 import ReligionWorker from 'worker-loader?filename=[name].js!./religion.worker';
 createView(ReligionWorker, ReligionHierarchy, 'religion', dataLoader, messageReceivers, workerListener, layout);

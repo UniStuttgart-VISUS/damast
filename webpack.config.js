@@ -74,11 +74,6 @@ module.exports = function(env, argv) {
               path.resolve(__dirname, "src/vis"),
               path.resolve(__dirname, "src/common"),
             ],
-            options: {
-              compilerOptions: {
-                target: 'es5',
-              },
-            },
           },
         ]
       },
