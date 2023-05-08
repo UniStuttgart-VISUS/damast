@@ -1,4 +1,5 @@
-import Tabulator from 'tabulator-tables';
+import { Tabulator } from 'tabulator-tables';
+import type { ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
 import * as L from 'leaflet';
@@ -55,7 +56,7 @@ export default class PlaceTable extends Table {
     this.place_types = await this.cache.place_types;
   }
 
-  protected getTableOptions(): Tabulator.Options {
+  protected getTableOptions(): Options {
     return {
       initialSort: [
         {column:'name', dir:'asc'}
@@ -65,9 +66,9 @@ export default class PlaceTable extends Table {
     };
   }
 
-  protected getMainColumns(): Tabulator.ColumnDefinition[] {
+  protected getMainColumns(): ColumnDefinition[] {
     const ref = this;
-    const place_type_editor_params: Tabulator.EditorParams = {
+    const place_type_editor_params: EditorParams = {
       values: this.place_types.map(d => d.id),
       listItemFormatter: function(value, _) {
         const vs = ref.place_types.filter(d => d.id === value);
@@ -202,7 +203,7 @@ export default class PlaceTable extends Table {
       `Could not delete place ${cell.getRow().getData().name}`);
   }
 
-  protected doCreate(cell: Tabulator.CellComponent, data: any): Promise<number> {
+  protected doCreate(cell: CellComponent, data: any): Promise<number> {
     if (!data.name) {
       return accept_dialog('Name must not be empty', '', {})
         .then(() => Promise.reject(cell.getRow().getIndex()));
@@ -227,7 +228,7 @@ export default class PlaceTable extends Table {
     });
   }
 
-  protected doSave(cell: Tabulator.CellComponent, data: any): Promise<boolean> {
+  protected doSave(cell: CellComponent, data: any): Promise<boolean> {
     if (data['geoloc.lng'] !== undefined || data['geoloc.lat'] !== undefined) {
       const lngval = ((typeof data['geoloc.lng']) !== 'number');
       const latval = ((typeof data['geoloc.lat']) !== 'number');

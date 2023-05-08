@@ -1,4 +1,5 @@
-import Tabulator from 'tabulator-tables';
+import { Tabulator } from 'tabulator-tables';
+import type { ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
 
@@ -30,7 +31,7 @@ export default class TimeTable extends Table {
     return 'id';
   }
 
-  protected getTableOptions(): Tabulator.Options {
+  protected getTableOptions(): Options {
     return {
       initialSort: [
         {column:'start', dir:'asc'},
@@ -40,7 +41,7 @@ export default class TimeTable extends Table {
     };
   }
 
-  protected getMainColumns(): Tabulator.ColumnDefinition[] {
+  protected getMainColumns(): ColumnDefinition[] {
     return [
         {
           title: 'Start',
@@ -104,7 +105,7 @@ export default class TimeTable extends Table {
   }
 
   private static validateStart(
-    cell: Tabulator.CellComponent,
+    cell: CellComponent,
     value: number,
     _
   ): boolean {
@@ -113,7 +114,7 @@ export default class TimeTable extends Table {
   }
 
   private static validateEnd(
-    cell: Tabulator.CellComponent,
+    cell: CellComponent,
     value: number,
     _
   ): boolean {
@@ -166,7 +167,7 @@ export default class TimeTable extends Table {
       `Could not delete time span ${cell.getRow().getIndex()}`);
   }
 
-  protected doCreate(cell: Tabulator.CellComponent, data: any): Promise<number> {
+  protected doCreate(cell: CellComponent, data: any): Promise<number> {
     return this.createData(
       `../rest/time-group/${this.time_group_id}/time-instance/0`,
       data,
@@ -176,7 +177,7 @@ export default class TimeTable extends Table {
       });
   }
 
-  protected doSave(cell: Tabulator.CellComponent, data: any): Promise<boolean> {
+  protected doSave(cell: CellComponent, data: any): Promise<boolean> {
     // always send entire data
     const d = cell.getRow().getData();
     if ('start' in data && !('end' in data)) data.end = d.end;

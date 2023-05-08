@@ -1,4 +1,5 @@
-import Tabulator from 'tabulator-tables';
+import { Tabulator } from 'tabulator-tables';
+import type { ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
 
@@ -38,7 +39,7 @@ export default class SourceTable extends Table {
     });
   }
 
-  protected getTableOptions(): Tabulator.Options {
+  protected getTableOptions(): Options {
     return {
       initialSort: [
         {column:'source_id', dir:'asc'}
@@ -47,7 +48,7 @@ export default class SourceTable extends Table {
     };
   }
 
-  protected getMainColumns(): Tabulator.ColumnDefinition[] {
+  protected getMainColumns(): ColumnDefinition[] {
     return [
         {
           title: 'Source',
@@ -112,7 +113,7 @@ export default class SourceTable extends Table {
     ];
   }
 
-  private onSourceFieldChanged(cell: Tabulator.CellComponent): void {
+  private onSourceFieldChanged(cell: CellComponent): void {
     if (cell.getRow().getData().newRow) {
       const val = cell.getValue();
       const conf = this.source_confidence.get(val);
@@ -169,7 +170,7 @@ export default class SourceTable extends Table {
     );
   }
 
-  protected doCreate(cell: Tabulator.CellComponent, data: any): Promise<number> {
+  protected doCreate(cell: CellComponent, data: any): Promise<number> {
     return this.createData(
       `../rest/source-instance/0`,
       data,
@@ -179,7 +180,7 @@ export default class SourceTable extends Table {
     });
   }
 
-  protected doSave(cell: Tabulator.CellComponent, data: any): Promise<boolean> {
+  protected doSave(cell: CellComponent, data: any): Promise<boolean> {
     return this.saveData(
       `../rest/source-instance/${cell.getRow().getIndex()}`,
       data,

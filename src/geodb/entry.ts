@@ -1,4 +1,5 @@
-import Tabulator from 'tabulator-tables';
+import { Tabulator } from 'tabulator-tables';
+import type { ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
 import * as d3 from 'd3';
 import PlaceTable from './place-table';
 import PersonTable from './person-table';

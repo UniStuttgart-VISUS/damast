@@ -1,6 +1,5 @@
-import Tabulator from 'tabulator-tables';
-import * as _ from 'lodash';
-import * as d3 from 'd3';
+import { Tabulator } from 'tabulator-tables';
+import type { ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
 
 import Table from './table';
 import {confirm_dialog,choice_or_cancel_dialog,accept_dialog} from '../common/dialog';
@@ -29,7 +28,7 @@ export default class ExternalPersonUriTable extends Table {
     return ['@@externalLink'];
   }
 
-  protected getTableOptions(): Tabulator.Options {
+  protected getTableOptions(): Options {
     return {
       initialSort: [
         {column:'id', dir:'asc'},
@@ -39,7 +38,7 @@ export default class ExternalPersonUriTable extends Table {
     };
   }
 
-  protected getMainColumns(): Tabulator.ColumnDefinition[] {
+  protected getMainColumns(): ColumnDefinition[] {
     return [
         {
           title: 'URI Namespace',
@@ -104,7 +103,7 @@ export default class ExternalPersonUriTable extends Table {
     ];
   }
 
-  protected cellEdited(cell: Tabulator.CellComponent) {
+  protected cellEdited(cell: CellComponent) {
     super.cellEdited(cell);
     cell.getRow().reformat();
   }
@@ -143,7 +142,7 @@ export default class ExternalPersonUriTable extends Table {
       `Could not delete external person URI with ID ${cell.getRow().getIndex()}`);
   }
 
-  protected doCreate(cell: Tabulator.CellComponent, data: any): Promise<number> {
+  protected doCreate(cell: CellComponent, data: any): Promise<number> {
     return this.createData(
       `../rest/uri/external-person-uri/0`,
       data,
@@ -153,7 +152,7 @@ export default class ExternalPersonUriTable extends Table {
       });
   }
 
-  protected doSave(cell: Tabulator.CellComponent, data: any): Promise<boolean> {
+  protected doSave(cell: CellComponent, data: any): Promise<boolean> {
     return this.saveData(
       `../rest/uri/external-person-uri/${cell.getRow().getIndex()}`,
       data,
@@ -165,7 +164,7 @@ export default class ExternalPersonUriTable extends Table {
     return true; // no dependents
   }
 
-  private onExternalLinkClick(e: Event, cell: Tabulator.CellComponent) {
+  private onExternalLinkClick(e: Event, cell: CellComponent) {
     const id = cell.getRow().getData().uri_namespace_id;
     const uri_fragment = cell.getRow().getData().uri_fragment;
     if (id === null || !this.formatting_map.has(id) || !uri_fragment) return;

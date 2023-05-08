@@ -1,4 +1,5 @@
-import Tabulator from 'tabulator-tables';
+import { Tabulator } from 'tabulator-tables';
+import type { ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
 
@@ -22,7 +23,7 @@ export default class EvidenceTable extends Table {
     return ['sources', 'time_spans'];
   }
 
-  protected getTableOptions(): Tabulator.Options {
+  protected getTableOptions(): Options {
     return {
       initialSort: [
         {column:'id', dir:'asc'}
@@ -67,7 +68,7 @@ export default class EvidenceTable extends Table {
     this.annotator_evidences = await this.cache.annotator_evidences;
   }
 
-  protected getMainColumns(): Tabulator.ColumnDefinition[] {
+  protected getMainColumns(): ColumnDefinition[] {
     return [
         {
           title: 'Confidence of interpretation',
@@ -307,9 +308,9 @@ export default class EvidenceTable extends Table {
   }
 
   private static formatTimespans(
-    cell: Tabulator.CellComponent,
-    formatterParams: Tabulator.FormatterParams,
-    onRendered: Tabulator.EmptyCallback
+    cell: CellComponent,
+    formatterParams: FormatterParams,
+    onRendered: EmptyCallback
   ): string {
     const ts = cell.getValue();
 
@@ -383,7 +384,7 @@ export default class EvidenceTable extends Table {
       `Could not delete evidence ${cell.getRow().getIndex()}`);
   }
 
-  protected doCreate(cell: Tabulator.CellComponent, data: any): Promise<number> {
+  protected doCreate(cell: CellComponent, data: any): Promise<number> {
     if (!data.religion_id) {
       return accept_dialog('Religion must be set.', '', {})
         .then(() => Promise.reject(cell.getRow().getIndex()));
@@ -508,7 +509,7 @@ export default class EvidenceTable extends Table {
     return {evidence, place_instance, religion_instance, evidence_tag, person_instance};
   }
 
-  protected async doSave(cell: Tabulator.CellComponent, data: any): Promise<boolean> {
+  protected async doSave(cell: CellComponent, data: any): Promise<boolean> {
     const {evidence, place_instance, religion_instance, evidence_tag, person_instance} = this.dataPerTable(data);
 
     let pre: () => Promise<any> = () => Promise.resolve(evidence);
@@ -650,7 +651,7 @@ export default class EvidenceTable extends Table {
     this.table.scrollToRow(row);
   }
 
-  private onAnnotatorLinkClick(e: Event, cell: Tabulator.CellComponent) {
+  private onAnnotatorLinkClick(e: Event, cell: CellComponent) {
     const id = cell.getRow().getIndex();
     if (id === null || !this.annotator_evidences.has(id)) return;
 

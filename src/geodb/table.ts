@@ -1,4 +1,5 @@
-import Tabulator from 'tabulator-tables';
+import { Tabulator } from 'tabulator-tables';
+import type { ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
 
@@ -52,7 +53,7 @@ export default abstract class Table {
 
     this.prepare()
       .then(() => {
-        const options: Tabulator.Options = {
+        const options: Options = {
           index: this._id,
           layout: 'fitColumns',
           virtualDom: true,
@@ -79,7 +80,7 @@ export default abstract class Table {
           ...(this.getTableOptions())
         };
 
-        const select_column: Tabulator.ColumnDefinition = {
+        const select_column: ColumnDefinition = {
           title: undefined,
           field: '@@selectColumn',
           headerSort: false,
@@ -93,7 +94,7 @@ export default abstract class Table {
           download: false,
           frozen: true
         };
-        const id_column: Tabulator.ColumnDefinition = {
+        const id_column: ColumnDefinition = {
           title: 'ID',
           field: this._id,
           sorter: 'number',
@@ -103,7 +104,7 @@ export default abstract class Table {
           resizable: false
         };
 
-        const management_columns: Tabulator.ColumnDefinition[] = [
+        const management_columns: ColumnDefinition[] = [
           {
             formatter: Table.revertIcon,
             cellClick: this.onRevert.bind(this),
@@ -175,7 +176,7 @@ export default abstract class Table {
     return [];
   }
 
-  private saveLayout(id: string, type: 'columns', data: Tabulator.ColumnDefinition[]): any {
+  private saveLayout(id: string, type: 'columns', data: ColumnDefinition[]): any {
     if (getConsentCookie() !== 'essential') return;
 
     const order = data.map(d => d.field);
@@ -212,8 +213,8 @@ export default abstract class Table {
     }
   }
 
-  protected abstract getMainColumns(): Tabulator.ColumnDefinition[];
-  protected abstract getTableOptions(): Tabulator.Options;
+  protected abstract getMainColumns(): ColumnDefinition[];
+  protected abstract getTableOptions(): Options;
 
   setData(data: any[], preferential_index?: number): Promise<any> {
     this.table.clearData();
@@ -225,7 +226,7 @@ export default abstract class Table {
     return this.table.setData(data)
       .then(() => {
         if (data.length) {
-          const rowIndex = preferential_index || this.table.getRowFromPosition(0, true).getIndex();
+          const rowIndex = preferential_index || this.table.getRowFromPosition(0).getIndex();
           this.table.selectRow(rowIndex);
           this.table.scrollToRow(rowIndex);
         }
@@ -237,7 +238,7 @@ export default abstract class Table {
     this.table.download('csv', fname, {bom: true}, 'active')
   }
 
-  protected cellEdited(cell: Tabulator.CellComponent) {
+  protected cellEdited(cell: CellComponent) {
     if (this.hasChanges(cell.getRow())) {
       cell.getRow().getElement().setAttribute('dirty', '');
     } else {
@@ -315,20 +316,20 @@ export default abstract class Table {
     return '<i class="fa fa-lg fa-hand-pointer-o selected-row-indicator"></i>';
   }
 
-  private onRowStartUpload(row: Tabulator.RowComponent): void {
+  private onRowStartUpload(row: RowComponent): void {
     const i = this.saveIcons.get(row.getIndex());
     i.className = 'fa fa-lg fa-pulse fa-spinner sync-in-progress';
   }
-  private onRowEndUpload(row: Tabulator.RowComponent): void {
+  private onRowEndUpload(row: RowComponent): void {
     const i = this.saveIcons.get(row.getIndex());
     if (!row.getData().newRow) i.className = 'fa fa-lg fa-floppy-o save-button';
     else i.className = 'fa fa-lg fa-cloud-upload upload-button';
   }
-  private onRowStartDelete(row: Tabulator.RowComponent): void {
+  private onRowStartDelete(row: RowComponent): void {
     const i = this.deleteIcons.get(row.getIndex());
     i.className = 'fa fa-lg fa-pulse fa-spinner delete-in-progress';
   }
-  private onRowEndDelete(row: Tabulator.RowComponent): void {
+  private onRowEndDelete(row: RowComponent): void {
     const i = this.deleteIcons.get(row.getIndex());
     if (row.getData().newRow) i.className = 'fa fa-lg fa-ban cancel-button';
     else i.className = 'fa fa-lg fa-trash delete-button';
@@ -338,11 +339,11 @@ export default abstract class Table {
     return null;
   }
 
-  protected hasChanges(row: Tabulator.RowComponent): boolean {
+  protected hasChanges(row: RowComponent): boolean {
     if (row.getData().newRow) return false;
 
     const initial = this.initialValues.get(row.getIndex());
-    return _.some(row.getCells(), (cell: Tabulator.CellComponent) => {
+    return _.some(row.getCells(), (cell: CellComponent) => {
       if (this._ignore_column_changes.includes(cell.getField())) return false;
 
       const val = cell.getValue();
@@ -406,12 +407,12 @@ export default abstract class Table {
       .catch(_ => {this.onRowEndDelete(cell.getRow());});
   };
 
-  protected abstract doCreate(cell: Tabulator.CellComponent, data: any): Promise<number>;
-  protected abstract doSave(cell: Tabulator.CellComponent, data: any): Promise<boolean>;
+  protected abstract doCreate(cell: CellComponent, data: any): Promise<number>;
+  protected abstract doSave(cell: CellComponent, data: any): Promise<boolean>;
 
   abstract clearTable();
 
-  protected getChanges(cell: Tabulator.CellComponent): any {
+  protected getChanges(cell: CellComponent): any {
     const initial = this.initialValues.get(cell.getRow().getIndex());
     return cell.getRow()
         .getCells()
@@ -727,7 +728,7 @@ export default abstract class Table {
       .enter()
       .append('div')
       .classed('column-visibility-option', true)
-      .each(function(d: Tabulator.ColumnComponent) {
+      .each(function(d: ColumnComponent) {
         d3.select(this)
           .append('input')
           .attr('id', d.getField())

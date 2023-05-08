@@ -1,4 +1,5 @@
-import Tabulator from 'tabulator-tables';
+import { Tabulator } from 'tabulator-tables';
+import type { ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
 
@@ -21,7 +22,7 @@ export default class AlternativeNameTable extends Table {
     return 'id';
   }
 
-  protected getTableOptions(): Tabulator.Options {
+  protected getTableOptions(): Options {
     return {
       initialSort: [
         {column:'id', dir:'asc'},
@@ -31,7 +32,7 @@ export default class AlternativeNameTable extends Table {
     };
   }
 
-  protected getMainColumns(): Tabulator.ColumnDefinition[] {
+  protected getMainColumns(): ColumnDefinition[] {
     return [
         {
           title: 'Name',
@@ -141,7 +142,7 @@ export default class AlternativeNameTable extends Table {
       `Could not delete alternative name with ID ${cell.getRow().getIndex()}`);
   }
 
-  protected doCreate(cell: Tabulator.CellComponent, data: any): Promise<number> {
+  protected doCreate(cell: CellComponent, data: any): Promise<number> {
     return this.createData(
       `../rest/place/${this.place_id}/alternative-name/0`,
       data,
@@ -151,7 +152,7 @@ export default class AlternativeNameTable extends Table {
       });
   }
 
-  protected doSave(cell: Tabulator.CellComponent, data: any): Promise<boolean> {
+  protected doSave(cell: CellComponent, data: any): Promise<boolean> {
     return this.saveData(
       `../rest/place/${this.place_id}/alternative-name/${cell.getRow().getIndex()}`,
       data,
