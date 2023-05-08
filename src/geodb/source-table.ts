@@ -71,6 +71,7 @@ export default class SourceTable extends Table {
             values: this.sources
           },
           sorter: 'number',
+          sorterParams: { thousandSeparator: ',', },
           cellEdited: this.onSourceFieldChanged.bind(this)
         },
         {

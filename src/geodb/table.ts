@@ -98,6 +98,7 @@ export default abstract class Table {
           title: 'ID',
           field: this._id,
           sorter: 'number',
+          sorterParams: { thousandSeparator: ',', },
           headerFilter: true,
           formatter: Table.idFormatter,
           width: 60,

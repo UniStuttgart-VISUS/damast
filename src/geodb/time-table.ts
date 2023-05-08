@@ -48,6 +48,7 @@ export default class TimeTable extends Table {
           field: 'start',
           headerSort: true,
           sorter: 'number',
+          sorterParams: { thousandSeparator: ',', },
           headerFilter: 'number',
           editor: 'number',
           editorParams: {
@@ -64,6 +65,7 @@ export default class TimeTable extends Table {
           field: 'end',
           headerSort: true,
           sorter: 'number',
+          sorterParams: { thousandSeparator: ',', },
           headerFilter: 'number',
           editor: 'number',
           editorParams: {
