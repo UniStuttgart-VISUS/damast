@@ -90,11 +90,11 @@ export default class TimeTable extends Table {
           title: 'Confidence',
           field: 'confidence',
           headerSort: true,
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.confidence_values
           },
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.confidence_values_with_null
           },

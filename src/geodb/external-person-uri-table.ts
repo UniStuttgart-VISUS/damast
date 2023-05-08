@@ -44,12 +44,12 @@ export default class ExternalPersonUriTable extends Table {
           title: 'URI Namespace',
           field: 'uri_namespace_id',
           headerSort: true,
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.uri_namespaces,
           },
           headerFilterFunc: '=',
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.uri_namespaces,
           },

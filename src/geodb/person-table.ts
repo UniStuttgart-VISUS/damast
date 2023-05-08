@@ -56,12 +56,12 @@ export default class PersonTable extends Table {
           title: 'Person type',
           field: 'person_type',
           headerSort: true,
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.person_types,
           },
           headerFilterFunc: '=',
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.person_types,
           },

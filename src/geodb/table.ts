@@ -56,7 +56,7 @@ export default abstract class Table {
         const options: Options = {
           index: this._id,
           layout: 'fitColumns',
-          virtualDom: true,
+          //virtualDom: true,  // XXX
           addRowPos: 'top',
           selectable: 'highlight',
           rowSelected: this.rowSelected.bind(this),
@@ -226,6 +226,7 @@ export default abstract class Table {
     return this.table.setData(data)
       .then(() => {
         if (data.length) {
+          // TODO: correct? 5.3 -> 5.4 upgrade
           const rowIndex = preferential_index || this.table.getRowFromPosition(0).getIndex();
           this.table.selectRow(rowIndex);
           this.table.scrollToRow(rowIndex);

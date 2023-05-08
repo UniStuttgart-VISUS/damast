@@ -54,12 +54,12 @@ export default class SourceTable extends Table {
           title: 'Source',
           field: 'source_id',
           headerSort: true,
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.sources
           },
           headerFilterFunc: '=',
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.sources
           },
@@ -99,11 +99,11 @@ export default class SourceTable extends Table {
           title: 'Source confidence',
           field: 'source_confidence',
           headerSort: true,
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.confidence_values
           },
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.confidence_values_with_null
           },

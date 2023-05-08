@@ -1,5 +1,5 @@
 import { Tabulator } from 'tabulator-tables';
-import type { ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
+import type { ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent, EditorParams } from 'tabulator-tables';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
 import * as L from 'leaflet';
@@ -70,7 +70,8 @@ export default class PlaceTable extends Table {
     const ref = this;
     const place_type_editor_params: EditorParams = {
       values: this.place_types.map(d => d.id),
-      listItemFormatter: function(value, _) {
+        // TODO: correct?
+      itemFormatter: function(_label, value, _) {
         const vs = ref.place_types.filter(d => d.id === value);
         if (vs.length > 0) return vs[0].type;
         return null;
@@ -123,9 +124,9 @@ export default class PlaceTable extends Table {
         title: 'Place type',
         field: 'place_type_id',
         headerSort: true,
-        headerFilter: 'select',
+        headerFilter: 'list',
         headerFilterParams: place_type_editor_params,
-        editor: 'select',
+        editor: 'list',
         editorParams: place_type_editor_params,
         formatter: 'lookup',
         formatterParams,
@@ -138,11 +139,11 @@ export default class PlaceTable extends Table {
       {
         title: 'Location confidence',
         field: 'confidence',
-        headerFilter: 'select',
+        headerFilter: 'list',
         headerFilterParams: {
           values: this.confidence_values
         },
-        editor: 'select',
+        editor: 'list',
         editorParams: {
           values: this.confidence_values_with_null,
         },

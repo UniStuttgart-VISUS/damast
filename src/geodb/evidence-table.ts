@@ -1,5 +1,5 @@
 import { Tabulator } from 'tabulator-tables';
-import type { ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
+import type { ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent, FormatterParams, EmptyCallback, EditorParams } from 'tabulator-tables';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
 
@@ -74,11 +74,11 @@ export default class EvidenceTable extends Table {
           title: 'Confidence of interpretation',
           field: 'interpretation_confidence',
           headerSort: true,
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.confidence_values
           },
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.confidence_values_with_null
           },
@@ -109,18 +109,19 @@ export default class EvidenceTable extends Table {
               .map(d => d.label)
               .join(', ');
           },
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.tags,
             multiselect: true,
-            listItemFormatter: (value, title) => {
+            // TODO: correct?
+            itemFormatter: (label, value, item, element) => {
               const comment = this.tag_comments.get(parseInt(value));
-              let s = `<b>${title}</b>`;
+              let s = `<b>${label}</b>`;
               if (comment) s += ` <i style="font-size: smaller;">(${comment})</i>`;
               return s;
             },
           },
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.tags,
           },
@@ -134,11 +135,11 @@ export default class EvidenceTable extends Table {
           title: 'Place attribution confidence',
           field: 'place_attribution_confidence',
           headerSort: true,
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.confidence_values
           },
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.confidence_values_with_null
           },
@@ -158,12 +159,12 @@ export default class EvidenceTable extends Table {
         {
           title: 'Religion',
           field: 'religion_id',
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.religions
           },
           headerFilterFunc: '=',
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.religions
           },
@@ -181,11 +182,11 @@ export default class EvidenceTable extends Table {
           title: 'Religion confidence',
           field: 'religion_confidence',
           headerSort: true,
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.confidence_values
           },
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.confidence_values_with_null
           },
@@ -205,12 +206,12 @@ export default class EvidenceTable extends Table {
         {
           title: 'Person',
           field: 'person_id',
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.persons
           },
           headerFilterFunc: '=',
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.persons
           },
@@ -227,11 +228,11 @@ export default class EvidenceTable extends Table {
           title: 'Person confidence',
           field: 'person_confidence',
           headerSort: true,
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.confidence_values
           },
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.confidence_values_with_null
           },

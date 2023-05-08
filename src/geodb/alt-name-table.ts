@@ -62,12 +62,12 @@ export default class AlternativeNameTable extends Table {
           title: 'Language',
           field: 'language_id',
           headerSort: true,
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.languages
           },
           headerFilterFunc: '=',
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.languages
           },
