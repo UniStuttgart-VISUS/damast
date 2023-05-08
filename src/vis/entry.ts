@@ -21,7 +21,7 @@ import {getConfig, storeConfig} from './default-layout';
 import { initQuestionnaire } from './questionnaire';
 
 // @ts-ignore: Import not found
-import { GoldenLayout, LayoutConfig } from 'golden-layout';
+import { GoldenLayout, LayoutConfig, VirtualLayout, ContentItem, Stack, ComponentItem, EventEmitter } from 'golden-layout';
 
 import DataLoader from 'worker-loader?filename=[name].js!./fetch.worker';
 const dataLoader = new DataLoader();
@@ -85,16 +85,21 @@ layout.registerComponentFactoryFunction('settings', (container, _) => {
   const view = new SettingsPane(dataLoader, container, layout);
 });
 
-
-// TODO
 /// Callback for every created stack
-//layout.on( 'stackCreated', function(stack){
-//    stack.header.controlsContainer.prepend(`<span class="modal-button" title="About this view"><i class="fa fa-fw fa-question-circle-o"></i></span>`);
-//    d3.select(stack.header.controlsContainer[0]).select('span.modal-button')
-//      .on('click', () => {
-//        stack.getActiveContentItem().container.emit('modal-button-clicked');
-//      });
-//});
+layout.on('itemCreated', function(item) {
+  if (!(item.target as ContentItem).isStack) return;
+
+  const stack = item.target as Stack;
+  const elem = stack.header.controlsContainerElement;
+  elem.innerHTML = `<span class="modal-button" title="About this view"><i class="fa fa-fw fa-question-circle-o"></i></span>${elem.innerHTML}`;
+
+  d3.select<HTMLElement, any>(elem)
+    .select<HTMLButtonElement>('span.modal-button')
+    .on('click', () => {
+      const current = stack.getActiveComponentItem() as ComponentItem;
+      current.container.trigger('modal-button-clicked' as unknown as keyof EventEmitter.EventParamsMap);
+    });
+});
 
 
 layout.loadLayout(layout_config);

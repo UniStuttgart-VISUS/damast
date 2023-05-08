@@ -1,6 +1,5 @@
 // @ts-ignore: Import not found
-import GoldenLayout from 'golden-layout';
-import { LayoutConfig } from 'golden-layout';
+import { LayoutConfig, GoldenLayout } from 'golden-layout';
 import { getConsentCookie } from '../common/cookies';
 
 const ls_key = 'damast-vis-layout';
@@ -10,7 +9,7 @@ const ls_key = 'damast-vis-layout';
 // emerge, the new default config should be loaded.
 const layout_version: string = '2';
 
-const default_config: GoldenLayout.LayoutConfig = {
+const default_config: LayoutConfig = {
   root: undefined,
   settings: {
     showPopoutIcon: false,
@@ -128,7 +127,7 @@ interface ConfigProp {
 
 const title_icons = /^<i .*>\s*/;
 
-export function storeConfig(layout: GoldenLayout.GoldenLayout) {
+export function storeConfig(layout: GoldenLayout) {
   if (getConsentCookie() !== 'essential') return;
 
   const cfg = layout.saveLayout();
@@ -158,15 +157,13 @@ export function storeConfig(layout: GoldenLayout.GoldenLayout) {
   }
 }
 
-export function getConfig(): GoldenLayout.LayoutConfig {
+export function getConfig(): LayoutConfig {
   try {
     const cfg = JSON.parse(window.localStorage.getItem(ls_key));
 
     if (cfg === null || cfg.version !== layout_version) return default_config;
 
-    console.log(cfg, GoldenLayout);
     const layoutConfig = LayoutConfig.fromResolved(cfg.content);
-    console.log(cfg, layoutConfig);
 
     return layoutConfig;
   } catch (err) {

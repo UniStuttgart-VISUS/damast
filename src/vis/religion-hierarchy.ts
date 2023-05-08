@@ -35,10 +35,7 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
     div.innerHTML = religion;
     this.div = d3.select(div);
 
-    console.log(div, div.innerHTML);
-
     container.on('open', () => {
-    console.log(div, div.innerHTML);
       this.apply_button = this.div.select('#hierarchy-apply');
       this.filter_mode = this.div.select('#hierarchy-filter-mode');
 
