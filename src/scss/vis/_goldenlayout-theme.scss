@@ -143,7 +143,7 @@
 // Pane controls (popout, maximize, minimize, close)
 .lm_controls {
   // All Pane controls shares these
-  > li {
+  > div {
     position: relative;
     background-position: center center;
     background-repeat: no-repeat;

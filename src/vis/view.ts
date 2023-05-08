@@ -77,6 +77,6 @@ export default abstract class View<_DataType, _LinkDataType> {
       ? `<i class="yellow-icon fa fa-fw fa-asterisk"></i> `
       : '';
 
-    this.container.setTitle(`${loading_state}${change_state}${this._original_title}`);
+    this.container.tab.titleElement.innerHTML = `${loading_state}${change_state}${this._original_title}`;
   }
 };
