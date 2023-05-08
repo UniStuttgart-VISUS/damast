@@ -1,5 +1,6 @@
 // @ts-ignore: Import not found
 import GoldenLayout from 'golden-layout';
+import { LayoutConfig } from 'golden-layout';
 import { getConsentCookie } from '../common/cookies';
 
 const ls_key = 'damast-vis-layout';
@@ -7,9 +8,10 @@ const ls_key = 'damast-vis-layout';
 // Increment this if there are breaking changes in the default layout so old
 // layouts are no longer loaded from localStorage. For example, if new views
 // emerge, the new default config should be loaded.
-const layout_version: string = '1';
+const layout_version: string = '2';
 
-const default_config: GoldenLayout.Config = {
+const default_config: GoldenLayout.LayoutConfig = {
+  root: undefined,
   settings: {
     showPopoutIcon: false,
     showCloseIcon: false,
@@ -37,25 +39,25 @@ const default_config: GoldenLayout.Config = {
               content: [
                 {
                   type: 'component',
-                  componentName: 'confidence',
+                  componentType: 'confidence',
                   isClosable: false,
                   title: 'Confidence',
                 },
                 {
                   type: 'component',
-                  componentName: 'source-list',
+                  componentType: 'source-list',
                   isClosable: false,
                   title: 'Sources',
                 },
                 {
                   type: 'component',
-                  componentName: 'tags',
+                  componentType: 'tags',
                   isClosable: false,
                   title: 'Tags',
                 },
                 {
                   type: 'component',
-                  componentName: 'settings',
+                  componentType: 'settings',
                   isClosable: false,
                   title: 'Settings'
                 },
@@ -63,7 +65,7 @@ const default_config: GoldenLayout.Config = {
             },
             {
               type: 'component',
-              componentName: 'religion',
+              componentType: 'religion',
               isClosable: false,
               title: 'Religion',
               height: 70,
@@ -79,14 +81,14 @@ const default_config: GoldenLayout.Config = {
               content: [
                 {
                   type: 'component',
-                  componentName: 'map',
+                  componentType: 'map',
                   isClosable: false,
                   title: 'Map',
                   width: 80
                 },
                 {
                   type: 'component',
-                  componentName: 'location-list',
+                  componentType: 'location-list',
                   isClosable: false,
                   title: 'Location List',
                   width: 20
@@ -98,14 +100,14 @@ const default_config: GoldenLayout.Config = {
               content: [
                 {
                   type: 'component',
-                  componentName: 'timeline',
+                  componentType: 'timeline',
                   isClosable: false,
                   title: 'Timeline',
                   width: 85
                 },
                 {
                   type: 'component',
-                  componentName: 'untimed',
+                  componentType: 'untimed',
                   isClosable: false,
                   title: 'Untimed Data',
                 },
@@ -126,10 +128,10 @@ interface ConfigProp {
 
 const title_icons = /^<i .*>\s*/;
 
-export function storeConfig(layout: GoldenLayout) {
+export function storeConfig(layout: GoldenLayout.GoldenLayout) {
   if (getConsentCookie() !== 'essential') return;
 
-  const cfg = layout.toConfig();
+  const cfg = layout.saveLayout();
 
   // avoid settings dialog always being visible by removing all activeItemIndex entries
   const traverse = (c: ConfigProp) => {
@@ -142,13 +144,13 @@ export function storeConfig(layout: GoldenLayout) {
     }
   };
 
-  cfg.content.forEach(traverse);
-
+  cfg.root.content.forEach(traverse);
+  
   const obj = JSON.stringify({
     version: layout_version,
     content: cfg
   });
-
+  
   try {
     window.localStorage.setItem(ls_key, obj);
   } catch (err) {
@@ -156,12 +158,17 @@ export function storeConfig(layout: GoldenLayout) {
   }
 }
 
-export function getConfig(): GoldenLayout.Config {
+export function getConfig(): GoldenLayout.LayoutConfig {
   try {
     const cfg = JSON.parse(window.localStorage.getItem(ls_key));
 
     if (cfg === null || cfg.version !== layout_version) return default_config;
-    return cfg.content;
+
+    console.log(cfg, GoldenLayout);
+    const layoutConfig = LayoutConfig.fromResolved(cfg.content);
+    console.log(cfg, layoutConfig);
+
+    return layoutConfig;
   } catch (err) {
     console.error(err);
     return default_config;

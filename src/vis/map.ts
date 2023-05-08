@@ -52,10 +52,10 @@ export default class MapPane extends View<any, Set<number> | null> {
 
   private readonly onmoveend = () => this.transmitMapStateToData();
 
-  constructor(worker: Worker, container: GoldenLayout.Container) {
+  constructor(worker: Worker, container: GoldenLayout.ComponentContainer) {
     super(worker, container, 'map');
 
-    const div = container.getElement()[0];
+    const div = container.element as HTMLDivElement;
 
     div.classList.add('map-container');
     div.innerHTML = map;

@@ -50,8 +50,7 @@ const workerListener = async function(event: MessageEvent) {
 
 
 const layout_config = getConfig() as LayoutConfig;
-const layout = new GoldenLayout(layout_config, d3.select<HTMLDivElement, any>('#goldenlayout-root').node());
-
+const layout = new GoldenLayout(d3.select<HTMLDivElement, any>('#goldenlayout-root').node());
 import ReligionWorker from 'worker-loader?filename=[name].js!./religion.worker';
 createView(ReligionWorker, ReligionHierarchy, 'religion', dataLoader, messageReceivers, workerListener, layout);
 
@@ -82,22 +81,23 @@ createView(MessageWorker, Message, 'message', dataLoader, messageReceivers, work
 import HistoryWorker from 'worker-loader?filename=[name].js!./history.worker';
 createView(HistoryWorker, HistoryControls, 'history', dataLoader, messageReceivers, workerListener);
 
-layout.registerComponent('settings', (container, _) => {
+layout.registerComponentFactoryFunction('settings', (container, _) => {
   const view = new SettingsPane(dataLoader, container, layout);
 });
 
 
+// TODO
 /// Callback for every created stack
-layout.on( 'stackCreated', function(stack){
-    stack.header.controlsContainer.prepend(`<span class="modal-button" title="About this view"><i class="fa fa-fw fa-question-circle-o"></i></span>`);
-    d3.select(stack.header.controlsContainer[0]).select('span.modal-button')
-      .on('click', () => {
-        stack.getActiveContentItem().container.emit('modal-button-clicked');
-      });
-});
+//layout.on( 'stackCreated', function(stack){
+//    stack.header.controlsContainer.prepend(`<span class="modal-button" title="About this view"><i class="fa fa-fw fa-question-circle-o"></i></span>`);
+//    d3.select(stack.header.controlsContainer[0]).select('span.modal-button')
+//      .on('click', () => {
+//        stack.getActiveContentItem().container.emit('modal-button-clicked');
+//      });
+//});
 
 
-layout.init();
+layout.loadLayout(layout_config);
 
 // check if the location has a hash that is a UUID
 const url = new URL(window.location.toString());

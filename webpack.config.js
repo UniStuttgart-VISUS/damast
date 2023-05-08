@@ -95,7 +95,7 @@ module.exports = function(env, argv) {
         new IgnoreEmitPlugin(['style.css.js']),
         new CopyPlugin({
           patterns: [
-            {from: 'node_modules/golden-layout/src/css/goldenlayout-base.css', to: '.'},
+            {from: 'node_modules/golden-layout/dist/css/goldenlayout-base.css', to: '.'},
             {from: 'node_modules/leaflet/dist/leaflet.css', to: '.'},
             {from: 'node_modules/@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css', to: '.'},
             {to: 'images/', from: 'node_modules/leaflet/dist/images/layers-2x.png'},

@@ -10,13 +10,13 @@ export default abstract class View<_DataType, _LinkDataType> {
 
   constructor(
     protected worker: Worker,
-    protected container: GoldenLayout.Container,
+    protected container: GoldenLayout.ComponentContainer,
     private source_name: string,
   ) {
     this._default_symbol = source_name;
     this._original_title = (<any>container)?._config.title;
 
-    this.container?.on('modal-button-clicked', () => this.openModal());
+    this.container?.on('modal-button-clicked' as unknown as keyof GoldenLayout.EventEmitter.EventParamsMap, () => this.openModal());
   }
 
   abstract setData(data: _DataType): void;
