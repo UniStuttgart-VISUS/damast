@@ -2,7 +2,8 @@
 
 2023-05-xx                                                           v1.2.0
 
-tba
+Upgrade GoldenLayout version from 1.5.9 to 2.6.0 (#186). This removes some
+limitations on the target ECMAScript version.
 
 
 2023-05-02                                                           v1.1.8

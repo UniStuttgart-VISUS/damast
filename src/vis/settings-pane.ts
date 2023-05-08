@@ -36,17 +36,17 @@ export default class SettingsPane {
 
   constructor(
     private readonly data_worker: Worker,
-    private readonly container: GoldenLayout.Container,
-    private readonly layout: GoldenLayout
+    private readonly container: GoldenLayout.ComponentContainer,
+    private readonly layout: GoldenLayout.GoldenLayout
   ) {
-    this.container?.on('modal-button-clicked', () => this.openModal());
+    this.container?.on('modal-button-clicked' as unknown as keyof GoldenLayout.EventEmitter.EventParamsMap, () => this.openModal());
 
     this.init();
   }
 
   private init() {
     const ref = this;
-    const div = this.container.getElement()[0];
+    const div = this.container.element as HTMLDivElement;
     div.classList.add('settings-pane');
     div.innerHTML = settings_pane;
 

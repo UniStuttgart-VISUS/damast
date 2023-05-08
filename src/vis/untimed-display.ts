@@ -16,10 +16,10 @@ export default class Untimed extends View<any, any> {
 
   private _scale: ColorScales;
 
-  constructor(worker: Worker, container: GoldenLayout.Container) {
+  constructor(worker: Worker, container: GoldenLayout.ComponentContainer) {
     super(worker, container, 'untimed');
 
-    const div = container.getElement()[0];
+    const div = container.element as HTMLDivElement;
 
     div.classList.add('untimed-container');
     div.innerHTML = untimed;

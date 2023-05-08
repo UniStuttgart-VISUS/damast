@@ -1,4 +1,4 @@
-import EventTarget, { defineEventAttribute } from 'event-target-shim-es5';
+//import EventTarget, { defineEventAttribute } from 'event-target-shim-es5';
 import { v4 as uuid } from 'uuid';
 
 import type { FilterJson, VisualizationState, CompleteVisualizationState } from './dataset';
@@ -233,4 +233,4 @@ export default class HistoryTree extends EventTarget {
   }
 }
 
-defineEventAttribute(HistoryTree.prototype, 'change');
+//defineEventAttribute(HistoryTree.prototype, 'change');

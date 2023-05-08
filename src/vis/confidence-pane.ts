@@ -18,10 +18,10 @@ export default class ConfidencePane extends View<any, any> {
 
   private _columns: {value:string}[];
 
-  constructor(worker: Worker, container: GoldenLayout.Container) {
+  constructor(worker: Worker, container: GoldenLayout.ComponentContainer) {
     super(worker, container, 'confidence');
 
-    const div = container.getElement()[0];
+    const div = container.element as HTMLDivElement;
 
     div.classList.add('confidence-container');
     div.innerHTML = confidence;
