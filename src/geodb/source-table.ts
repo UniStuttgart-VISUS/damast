@@ -1,5 +1,5 @@
 import { Tabulator } from 'tabulator-tables';
-import type { ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
+import type { ColumnDefinitionSorterParams, ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
 
@@ -71,7 +71,7 @@ export default class SourceTable extends Table {
             values: this.sources
           },
           sorter: 'number',
-          sorterParams: { thousandSeparator: ',', },
+          sorterParams: { thousandSeparator: ',', } as ColumnDefinitionSorterParams,
           cellEdited: this.onSourceFieldChanged.bind(this)
         },
         {

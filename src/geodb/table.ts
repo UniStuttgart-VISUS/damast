@@ -1,5 +1,5 @@
 import { Tabulator } from 'tabulator-tables';
-import type { ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
+import type { ColumnDefinitionSorterParams, ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
 
@@ -56,7 +56,7 @@ export default abstract class Table {
         const options: Options = {
           index: this._id,
           layout: 'fitColumns',
-          //virtualDom: true,  // XXX
+          renderVertical: 'basic',
           addRowPos: 'top',
           selectable: 'highlight',
           rowSelected: this.rowSelected.bind(this),
@@ -98,7 +98,7 @@ export default abstract class Table {
           title: 'ID',
           field: this._id,
           sorter: 'number',
-          sorterParams: { thousandSeparator: ',', },
+          sorterParams: { thousandSeparator: ',', } as ColumnDefinitionSorterParams,
           headerFilter: true,
           formatter: Table.idFormatter,
           width: 60,
@@ -228,9 +228,12 @@ export default abstract class Table {
       .then(() => {
         if (data.length) {
           // TODO: correct? 5.3 -> 5.4 upgrade
-          const rowIndex = preferential_index || this.table.getRowFromPosition(0).getIndex();
-          this.table.selectRow(rowIndex);
-          this.table.scrollToRow(rowIndex);
+          const activeData = this.table.getData('active');
+          console.log(this.table.getRowFromPosition(0), activeData);
+          console.warn('TODO: should scroll to first visible row here');
+         // const rowIndex = preferential_index || this.table.getRowFromPosition(0).getIndex();
+         // this.table.selectRow(rowIndex);
+         // this.table.scrollToRow(rowIndex);
         }
       });
   }

@@ -1,5 +1,5 @@
 import { Tabulator } from 'tabulator-tables';
-import type { ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
+import type { ColumnDefinitionSorterParams, ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
 
@@ -48,7 +48,7 @@ export default class TimeTable extends Table {
           field: 'start',
           headerSort: true,
           sorter: 'number',
-          sorterParams: { thousandSeparator: ',', },
+          sorterParams: { thousandSeparator: ',', } as ColumnDefinitionSorterParams,
           headerFilter: 'number',
           editor: 'number',
           editorParams: {
@@ -65,7 +65,7 @@ export default class TimeTable extends Table {
           field: 'end',
           headerSort: true,
           sorter: 'number',
-          sorterParams: { thousandSeparator: ',', },
+          sorterParams: { thousandSeparator: ',', } as ColumnDefinitionSorterParams,
           headerFilter: 'number',
           editor: 'number',
           editorParams: {
