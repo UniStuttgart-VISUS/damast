@@ -59,7 +59,6 @@ export default abstract class Table {
           renderVertical: 'basic',
           addRowPos: 'top',
           selectable: 'highlight',
-          rowSelected: this.rowSelected.bind(this),
           movableColumns: true,
 
           placeholder: ph,
@@ -171,6 +170,7 @@ export default abstract class Table {
     // events
     this.table.on('cellEdited', this.cellEdited.bind(this));
     this.table.on('cellClick', this._onCellClick.bind(this));
+    this.table.on('rowSelected', this.rowSelected.bind(this));
   }
 
   private _onCellClick(evt: UIEvent, cell: CellComponent): void {

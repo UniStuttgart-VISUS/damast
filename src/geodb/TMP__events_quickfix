@@ -1,4 +1,0 @@
-evidence-table.ts:71:    this.table.on('cellClick', (evt, cell) => {
-external-person-uri-table.ts:23:    this.table.on('cellClick', (evt, cell) => {
-external-uri-table.ts:112:    this.table.on('cellClick', (evt, cell) => {
-table.ts:173:    this.table.on('cellClick', this._onCellClick.bind(this));
