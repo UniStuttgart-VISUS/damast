@@ -66,6 +66,11 @@ export default class EvidenceTable extends Table {
     this.persons.unshift({ label: '<i>no value</i>', value: null });
 
     this.annotator_evidences = await this.cache.annotator_evidences;
+
+    // events
+    this.table.on('cellClick', (evt, cell) => {
+      if (cell.getField() === '@@annotatorLink') this.onAnnotatorLinkClick(evt, cell);
+    });
   }
 
   protected getMainColumns(): ColumnDefinition[] {
@@ -282,7 +287,6 @@ export default class EvidenceTable extends Table {
           formatterParams: {
             annotator_evidences: this.annotator_evidences as any,
           },
-          cellClick: this.onAnnotatorLinkClick.bind(this),
           title: undefined,
           field: '@@annotatorLink',
           width: 30,

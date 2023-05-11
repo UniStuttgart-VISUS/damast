@@ -86,7 +86,6 @@ export default abstract class Table {
           headerSort: false,
           formatter: Table.selectionFormatter,
           width: 20,
-          cellClick: (evt, cell) => this.onRowClick(cell.getRow()),
           hozAlign: 'center',
           tooltip: 'Select row',
           cssClass: 'tabulator-cell--crosshair',
@@ -108,7 +107,6 @@ export default abstract class Table {
         const management_columns: ColumnDefinition[] = [
           {
             formatter: Table.revertIcon,
-            cellClick: this.onRevert.bind(this),
             title: undefined,
             field: '@@revertIcon',
             width: 30,
@@ -121,7 +119,6 @@ export default abstract class Table {
           },
           {
             formatter: this.deleteIcon.bind(this),
-            cellClick: this.onDelete.bind(this),
             title: undefined,
             field: '@@deleteIcon',
             width: 30,
@@ -134,7 +131,6 @@ export default abstract class Table {
           },
           {
             formatter: this.saveIcon.bind(this),
-            cellClick: this.onSave.bind(this),
             title: undefined,
             field: '@@saveIcon',
             width: 30,
@@ -174,6 +170,22 @@ export default abstract class Table {
 
     // events
     this.table.on('cellEdited', this.cellEdited.bind(this));
+    this.table.on('cellClick', this._onCellClick.bind(this));
+  }
+
+  private _onCellClick(evt: UIEvent, cell: CellComponent): void {
+    switch (cell.getField()) {
+      case '@@saveIcon':
+        return this.onSave.bind(evt, cell);
+      case '@@deleteIcon':
+        return this.onDelete.bind(evt, cell);
+      case '@@revertIcon':
+        return this.onRevert.bind(evt, cell);
+      case '@@selectColumn':
+        return this.onRowClick(cell.getRow());
+      default:
+        return;
+    }
   }
 
   protected virtualColumns(): string[] {

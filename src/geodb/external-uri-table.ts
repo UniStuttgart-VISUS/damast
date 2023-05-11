@@ -107,6 +107,11 @@ export class ExternalPlaceUriTable extends Table {
     ns.forEach(({id, uri_pattern, short_name}: {id: number, uri_pattern: string, short_name: string}) => {
       this.formatting_map.set(id, [uri_pattern, short_name]);
     });
+
+    // events
+    this.table.on('cellClick', (evt, cell) => {
+      if (cell.getField() === '@@externalLink') this.onExternalLinkClick(evt, cell);
+    });
   }
 
   protected id_column(): string {
@@ -176,7 +181,6 @@ export class ExternalPlaceUriTable extends Table {
           formatterParams: {
             formatting_map: this.formatting_map as any,
           },
-          cellClick: this.onExternalLinkClick.bind(this),
           title: undefined,
           field: '@@externalLink',
           width: 30,
