@@ -49,7 +49,6 @@ export default class PersonTable extends Table {
           headerSort: true,
           headerFilter: 'input',
           editor: 'input',
-          cellEdited: this.cellEdited.bind(this),
           widthGrow: 2,
         },
         {
@@ -67,7 +66,6 @@ export default class PersonTable extends Table {
           },
           formatter: 'lookup',
           formatterParams: this.person_types.reduce((a, b) => { a[b.value] = b.label; return a; }, {}),
-          cellEdited: this.cellEdited.bind(this),
           accessorDownload: Table.lookupAccessor,
           accessorDownloadParams: {
             values: this.person_types,

@@ -58,7 +58,6 @@ export default class TimeTable extends Table {
           },
           validator: [ { type: TimeTable.validateStart } ],
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'End',
@@ -75,7 +74,6 @@ export default class TimeTable extends Table {
           },
           validator: [ { type: TimeTable.validateEnd } ],
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Comment',
@@ -86,7 +84,6 @@ export default class TimeTable extends Table {
           headerSort: false,
           headerFilter: 'input',
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Confidence',
@@ -101,7 +98,6 @@ export default class TimeTable extends Table {
             values: this.confidence_values_with_null
           },
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         }
     ];
   }

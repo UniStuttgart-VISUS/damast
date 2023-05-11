@@ -40,7 +40,6 @@ export default class AlternativeNameTable extends Table {
           headerSort: true,
           headerFilter: 'input',
           editor: 'input',
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Transcription',
@@ -48,7 +47,6 @@ export default class AlternativeNameTable extends Table {
           headerSort: true,
           headerFilter: 'input',
           editor: 'input',
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Simplified',
@@ -56,7 +54,6 @@ export default class AlternativeNameTable extends Table {
           headerSort: true,
           headerFilter: 'input',
           editor: 'input',
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Language',
@@ -73,7 +70,6 @@ export default class AlternativeNameTable extends Table {
           },
           formatter: 'lookup',
           formatterParams: this.languages.reduce((a, b) => { a[b.value] = b.label; return a; }, {"null": ""}),
-          cellEdited: this.cellEdited.bind(this),
           accessorDownload: Table.lookupAccessor,
           accessorDownloadParams: {
             values: this.languages
@@ -85,7 +81,6 @@ export default class AlternativeNameTable extends Table {
           headerSort: true,
           headerFilter: 'input',
           editor: 'input',
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Main form',
@@ -96,7 +91,6 @@ export default class AlternativeNameTable extends Table {
           hozAlign: 'center',
           headerSort: false,
           headerFilter: true,
-          cellEdited: this.cellEdited.bind(this),
           width: 40
         }
     ];

@@ -1,0 +1,10 @@
+evidence-table.ts:285:          cellClick: this.onAnnotatorLinkClick.bind(this),
+external-person-uri-table.ts:89:          cellClick: this.onExternalLinkClick.bind(this),
+external-uri-table.ts:179:          cellClick: this.onExternalLinkClick.bind(this),
+place-table.ts:65:      dataFiltered: (_, rows) => this.dispatch.call('places-filtered', null, rows.map(d => d.getData().id))
+table.ts:62:          rowSelected: this.rowSelected.bind(this),
+table.ts:89:          cellClick: (evt, cell) => this.onRowClick(cell.getRow()),
+table.ts:111:            cellClick: this.onRevert.bind(this),
+table.ts:124:            cellClick: this.onDelete.bind(this),
+table.ts:137:            cellClick: this.onSave.bind(this),
+table.ts:553:  private rowSelected(row) {

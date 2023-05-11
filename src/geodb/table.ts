@@ -171,6 +171,9 @@ export default abstract class Table {
         button_group.select<HTMLButtonElement>('#add-row').on('click', this.newRow.bind(this));
       })
         .catch(console.error);
+
+    // events
+    this.table.on('cellEdited', this.cellEdited.bind(this));
   }
 
   protected virtualColumns(): string[] {

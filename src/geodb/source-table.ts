@@ -72,7 +72,6 @@ export default class SourceTable extends Table {
           },
           sorter: 'number',
           sorterParams: { thousandSeparator: ',', } as ColumnDefinitionSorterParams,
-          cellEdited: this.onSourceFieldChanged.bind(this)
         },
         {
           title: 'Page',
@@ -83,7 +82,6 @@ export default class SourceTable extends Table {
           headerSort: true,
           headerFilter: 'input',
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Comment',
@@ -94,7 +92,6 @@ export default class SourceTable extends Table {
           headerSort: false,
           headerFilter: 'input',
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Source confidence',
@@ -109,9 +106,13 @@ export default class SourceTable extends Table {
             values: this.confidence_values_with_null
           },
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         }
     ];
+  }
+
+  protected cellEdited(cell: CellComponent): void {
+    if (cell.getField() === 'source_id') return this.onSourceFieldChanged(cell);
+    return super.cellEdited(cell);
   }
 
   private onSourceFieldChanged(cell: CellComponent): void {

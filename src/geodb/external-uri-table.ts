@@ -144,7 +144,6 @@ export class ExternalPlaceUriTable extends Table {
           },
           formatter: 'lookup',
           formatterParams: this.uri_namespaces.reduce((a, b) => { a[b.value] = b.label; return a; }, {}),
-          cellEdited: this.cellEdited.bind(this),
           accessorDownload: Table.lookupAccessor,
           accessorDownloadParams: {
             values: this.uri_namespaces,
@@ -155,7 +154,6 @@ export class ExternalPlaceUriTable extends Table {
           field: 'uri_fragment',
           headerSort: true,
           headerFilter: 'input',
-          cellEdited: this.cellEdited.bind(this),
           widthGrow: 3,
           // TODO: formatter
           formatter: uri_formatter,
@@ -171,7 +169,6 @@ export class ExternalPlaceUriTable extends Table {
           headerSort: true,
           headerFilter: 'input',
           editor: 'input',
-          cellEdited: this.cellEdited.bind(this),
           widthGrow: 2,
         },
         {

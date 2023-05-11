@@ -86,7 +86,6 @@ export default class PlaceTable extends Table {
         editor: 'input',
         headerFilter: true,
         accessorDownload: Table.nullOrStringDownloadFormatter,
-        cellEdited: this.cellEdited.bind(this),
         sorter: place_name_sorter
       },
       {
@@ -96,7 +95,6 @@ export default class PlaceTable extends Table {
         accessorDownload: geoloc_dl_fmt,
         editor: 'number',
         headerSort: false,
-        cellEdited: this.cellEdited.bind(this),
         cssClass: 'geoloc-cell'
       },
       {
@@ -106,7 +104,6 @@ export default class PlaceTable extends Table {
         accessorDownload: geoloc_dl_fmt,
         editor: 'number',
         headerSort: false,
-        cellEdited: this.cellEdited.bind(this),
         cssClass: 'geoloc-cell'
       },
       {
@@ -118,7 +115,6 @@ export default class PlaceTable extends Table {
         widthGrow: 3,
         headerSort: false,
         headerFilter: 'input',
-        cellEdited: this.cellEdited.bind(this)
       },
       {
         title: 'Place type',
@@ -134,7 +130,6 @@ export default class PlaceTable extends Table {
         accessorDownloadParams: {
           values: this.place_types.map(({id, type}) => { return {value:id, label:type};} )
         },
-        cellEdited: this.cellEdited.bind(this)
       },
       {
         title: 'Location confidence',
@@ -148,7 +143,6 @@ export default class PlaceTable extends Table {
           values: this.confidence_values_with_null,
         },
         accessorDownload: Table.nullOrStringDownloadFormatter,
-        cellEdited: this.cellEdited.bind(this),
       },
       {
         title: 'Visible',
@@ -159,7 +153,6 @@ export default class PlaceTable extends Table {
         hozAlign: 'center',
         headerSort: false,
         headerFilter: true,
-        cellEdited: this.cellEdited.bind(this),
         width: 40
       },
     ];

@@ -55,7 +55,6 @@ export default class ExternalPersonUriTable extends Table {
           },
           formatter: 'lookup',
           formatterParams: this.uri_namespaces.reduce((a, b) => { a[b.value] = b.label; return a; }, {}),
-          cellEdited: this.cellEdited.bind(this),
           accessorDownload: Table.lookupAccessor,
           accessorDownloadParams: {
             values: this.uri_namespaces,
@@ -66,7 +65,6 @@ export default class ExternalPersonUriTable extends Table {
           field: 'uri_fragment',
           headerSort: true,
           headerFilter: 'input',
-          cellEdited: this.cellEdited.bind(this),
           widthGrow: 3,
           formatter: uri_formatter,
           formatterParams: {
@@ -81,7 +79,6 @@ export default class ExternalPersonUriTable extends Table {
           headerSort: true,
           headerFilter: 'input',
           editor: 'input',
-          cellEdited: this.cellEdited.bind(this),
           widthGrow: 2,
         },
         {

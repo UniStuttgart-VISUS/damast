@@ -83,7 +83,6 @@ export default class EvidenceTable extends Table {
             values: this.confidence_values_with_null
           },
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Comment',
@@ -94,7 +93,6 @@ export default class EvidenceTable extends Table {
           headerSort: false,
           headerFilter: 'input',
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Tags',
@@ -129,7 +127,6 @@ export default class EvidenceTable extends Table {
             return vals.includes(filter);
           },
           headerSort: false,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Place attribution confidence',
@@ -144,7 +141,6 @@ export default class EvidenceTable extends Table {
             values: this.confidence_values_with_null
           },
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Place instance comment',
@@ -154,7 +150,6 @@ export default class EvidenceTable extends Table {
           headerSort: false,
           headerFilter: 'input',
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Religion',
@@ -176,7 +171,6 @@ export default class EvidenceTable extends Table {
           },
           headerSort: true,
           sorter: this.religionSort.bind(this),
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Religion confidence',
@@ -191,7 +185,6 @@ export default class EvidenceTable extends Table {
             values: this.confidence_values_with_null
           },
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Religion comment',
@@ -201,7 +194,6 @@ export default class EvidenceTable extends Table {
           headerSort: false,
           headerFilter: 'input',
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Person',
@@ -222,7 +214,6 @@ export default class EvidenceTable extends Table {
             values: this.persons,
           },
           headerSort: false,
-          cellEdited: this.cellEdited.bind(this),
         },
         {
           title: 'Person confidence',
@@ -237,7 +228,6 @@ export default class EvidenceTable extends Table {
             values: this.confidence_values_with_null
           },
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this),
         },
         {
           title: 'Person comment',
@@ -247,7 +237,6 @@ export default class EvidenceTable extends Table {
           headerSort: false,
           headerFilter: 'input',
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this),
         },
         {
           title: 'Time spans',
@@ -287,7 +276,6 @@ export default class EvidenceTable extends Table {
           headerSort: false,
           headerFilter: true,
           width: 40,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           formatter: EvidenceTable.linkIcon,
