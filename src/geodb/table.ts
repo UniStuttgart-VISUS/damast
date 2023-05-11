@@ -164,13 +164,13 @@ export default abstract class Table {
         button_group.select<HTMLButtonElement>('#download-current').on('click', () => this.downloadCurrentView());
         button_group.select<HTMLButtonElement>('#clear-filter').on('click', () => this.table.clearHeaderFilter());
         button_group.select<HTMLButtonElement>('#add-row').on('click', this.newRow.bind(this));
+
+        // events
+        this.table.on('cellEdited', this.cellEdited.bind(this));
+        this.table.on('cellClick', this._onCellClick.bind(this));
+        this.table.on('rowSelected', this.rowSelected.bind(this));
       })
         .catch(console.error);
-
-    // events
-    this.table.on('cellEdited', this.cellEdited.bind(this));
-    this.table.on('cellClick', this._onCellClick.bind(this));
-    this.table.on('rowSelected', this.rowSelected.bind(this));
   }
 
   private _onCellClick(evt: UIEvent, cell: CellComponent): void {
