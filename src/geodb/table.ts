@@ -1,4 +1,4 @@
-import { Tabulator, SelectRowModule, SortModule, FormatModule, TooltipModule, EditModule, FilterModule, ResizeColumnsModule } from 'tabulator-tables';
+import { Tabulator, SelectRowModule, SortModule, FormatModule, TooltipModule, EditModule, FilterModule, ResizeColumnsModule, DownloadModule, AccessorModule } from 'tabulator-tables';
 import type { ColumnDefinitionSorterParams, ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
@@ -7,7 +7,7 @@ import Cache from '../common/cache';
 import {confirm_dialog,choice_or_cancel_dialog,accept_dialog} from '../common/dialog';
 import { getConsentCookie } from '../common/cookies';
 
-Tabulator.registerModule([ SelectRowModule, SortModule, FormatModule, TooltipModule, EditModule, FilterModule, ResizeColumnsModule ]);
+Tabulator.registerModule([ SelectRowModule, SortModule, FormatModule, TooltipModule, EditModule, FilterModule, ResizeColumnsModule, DownloadModule ]);
 
 interface DependentTableData {
   name: string;
