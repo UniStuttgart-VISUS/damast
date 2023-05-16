@@ -1,4 +1,4 @@
-import { Tabulator, SelectRowModule, SortModule, FormatModule, TooltipModule, EditModule, FilterModule, ResizeColumnsModule, DownloadModule, AccessorModule, FrozenColumnsModule, ValidateModule } from 'tabulator-tables';
+import { Tabulator, SelectRowModule, SortModule, FormatModule, TooltipModule, EditModule, FilterModule, ResizeColumnsModule, DownloadModule, AccessorModule, FrozenColumnsModule, ValidateModule, InteractionModule } from 'tabulator-tables';
 import type { ColumnDefinitionSorterParams, ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
@@ -10,7 +10,7 @@ import { getConsentCookie } from '../common/cookies';
 Tabulator.registerModule([
   SelectRowModule, SortModule, FormatModule, TooltipModule, EditModule,
   FilterModule, ResizeColumnsModule, DownloadModule, AccessorModule,
-  FrozenColumnsModule, ValidateModule
+  FrozenColumnsModule, ValidateModule, InteractionModule
 ]);
 
 interface DependentTableData {
@@ -189,13 +189,15 @@ export default abstract class Table {
   }
 
   private _onCellClick(evt: UIEvent, cell: CellComponent): void {
-    switch (cell.getField()) {
+    console.log('onCellClick', cell, cell.getColumn().getField());
+    switch (cell.getColumn().getField()) {
       case '@@saveIcon':
-        return this.onSave.bind(evt, cell);
+        this.onSave(evt, cell);
+        return;
       case '@@deleteIcon':
-        return this.onDelete.bind(evt, cell);
+        return this.onDelete(evt, cell);
       case '@@revertIcon':
-        return this.onRevert.bind(evt, cell);
+        return this.onRevert(evt, cell);
       case '@@selectColumn':
         return this.onRowClick(cell.getRow());
       default:
