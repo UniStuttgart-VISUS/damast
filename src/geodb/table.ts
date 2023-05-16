@@ -156,6 +156,7 @@ export default abstract class Table {
 
         this.table = new Tabulator(table_element_id, options);
         this.onLoadReorderColumns();
+        this.addTableEventListeners();
 
         const button_group = this.section_group
           .select<HTMLDivElement>('.section__head > .controls');
@@ -164,11 +165,6 @@ export default abstract class Table {
         button_group.select<HTMLButtonElement>('#download-current').on('click', () => this.downloadCurrentView());
         button_group.select<HTMLButtonElement>('#clear-filter').on('click', () => this.table.clearHeaderFilter());
         button_group.select<HTMLButtonElement>('#add-row').on('click', this.newRow.bind(this));
-
-        // events
-        this.table.on('cellEdited', this.cellEdited.bind(this));
-        this.table.on('cellClick', this._onCellClick.bind(this));
-        this.table.on('rowSelected', this.rowSelected.bind(this));
       })
         .catch(console.error);
   }
@@ -186,6 +182,12 @@ export default abstract class Table {
       default:
         return;
     }
+  }
+
+  protected addTableEventListeners(): void {
+    this.table.on('cellEdited', this.cellEdited.bind(this));
+    this.table.on('cellClick', this._onCellClick.bind(this));
+    this.table.on('rowSelected', this.rowSelected.bind(this));
   }
 
   protected virtualColumns(): string[] {
@@ -567,6 +569,8 @@ export default abstract class Table {
   }
 
   hasUnsavedChanges(): boolean {
+    if (this.table === undefined) return false;
+
     return _.some(
       this.table.getRows(),
       this.hasChanges.bind(this));

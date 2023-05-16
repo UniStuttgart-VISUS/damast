@@ -54,6 +54,10 @@ export default class PlaceTable extends Table {
     this.confidence_values = await this.cache.confidence;
     this.confidence_values_with_null = await confidence_dropdown_values(this.cache);
     this.place_types = await this.cache.place_types;
+  }
+
+  protected addTableEventListeners(): void {
+    super.addTableEventListeners();
 
     this.table.on('dataFiltered', (_, rows) => this.dispatch.call('places-filtered', null, rows.map(d => d.getData().id)));
   }
