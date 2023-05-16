@@ -3,7 +3,8 @@
 2023-05-xx                                                           v1.2.0
 
 Upgrade GoldenLayout version from 1.5.9 to 2.6.0 (#186). This removes some
-limitations on the target ECMAScript version.
+limitations on the target ECMAScript version. Fix an issue with deleting
+places using the REST API (#194).
 
 
 2023-05-02                                                           v1.1.8
