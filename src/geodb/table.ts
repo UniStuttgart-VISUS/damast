@@ -68,7 +68,7 @@ export default abstract class Table {
         const options: Options = {
           index: this._id,
           layout: 'fitColumns',
-          renderVertical: 'basic',
+          renderVertical: 'virtual',
           addRowPos: 'top',
           selectable: 'highlight',
           movableColumns: true,
