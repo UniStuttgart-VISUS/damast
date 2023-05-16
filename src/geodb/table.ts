@@ -1,4 +1,4 @@
-import { Tabulator } from 'tabulator-tables';
+import { Tabulator, SelectRowModule } from 'tabulator-tables';
 import type { ColumnDefinitionSorterParams, ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
@@ -6,6 +6,8 @@ import * as d3 from 'd3';
 import Cache from '../common/cache';
 import {confirm_dialog,choice_or_cancel_dialog,accept_dialog} from '../common/dialog';
 import { getConsentCookie } from '../common/cookies';
+
+Tabulator.registerModule([ SelectRowModule ]);
 
 interface DependentTableData {
   name: string;
@@ -244,13 +246,10 @@ export default abstract class Table {
     return this.table.setData(data)
       .then(() => {
         if (data.length) {
-          // TODO: correct? 5.3 -> 5.4 upgrade
           const activeData = this.table.getData('active');
-          console.log(this.table.getRowFromPosition(0), activeData);
-          console.warn('TODO: should scroll to first visible row here');
-         // const rowIndex = preferential_index || this.table.getRowFromPosition(0).getIndex();
-         // this.table.selectRow(rowIndex);
-         // this.table.scrollToRow(rowIndex);
+          const rowIndex = preferential_index || this.table.getRowFromPosition(1).getIndex();
+          this.table.selectRow(rowIndex);
+          this.table.scrollToRow(rowIndex);
         }
       });
   }
