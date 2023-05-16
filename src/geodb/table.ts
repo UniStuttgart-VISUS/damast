@@ -7,7 +7,7 @@ import Cache from '../common/cache';
 import {confirm_dialog,choice_or_cancel_dialog,accept_dialog} from '../common/dialog';
 import { getConsentCookie } from '../common/cookies';
 
-Tabulator.registerModule([ SelectRowModule, SortModule, FormatModule, TooltipModule, EditModule, FilterModule, ResizeColumnsModule, DownloadModule ]);
+Tabulator.registerModule([ SelectRowModule, SortModule, FormatModule, TooltipModule, EditModule, FilterModule, ResizeColumnsModule, DownloadModule, AccessorModule ]);
 
 interface DependentTableData {
   name: string;
