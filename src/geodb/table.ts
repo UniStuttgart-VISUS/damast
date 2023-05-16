@@ -37,6 +37,8 @@ export default abstract class Table {
 
   protected abstract prepare(): Promise<void>;
 
+  readonly tableBuilt: Promise<void>;
+
   constructor(
     protected readonly dispatch: d3.Dispatch<any>,
     protected readonly cache: Cache,
@@ -52,6 +54,10 @@ export default abstract class Table {
     this.placeholder_element.innerText = 'No data';
 
     ph.appendChild(this.placeholder_element);
+
+    // have a check that the table is ready to be populated
+    let tableBuiltResolve;
+    this.tableBuilt = new Promise<void>(resolve => tableBuiltResolve = resolve);
 
     this.prepare()
       .then(() => {
@@ -157,6 +163,13 @@ export default abstract class Table {
         this.virtualColumns().forEach(field => this._ignore_column_changes.push(field));
 
         this.table = new Tabulator(table_element_id, options);
+
+        const cb = () => {
+          this.table.off('tableBuilt', cb);
+          tableBuiltResolve();
+        };
+        this.table.on('tableBuilt', cb);
+
         this.onLoadReorderColumns();
         this.addTableEventListeners();
 

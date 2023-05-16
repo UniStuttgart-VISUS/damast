@@ -164,13 +164,6 @@ export default class PlaceTable extends Table {
   }
 
   async loadData(initial_index?: number) {
-    await new Promise<void>(resolve => {
-      const cb = () => {
-        this.table.off('tableBuilt', cb);
-        resolve();
-      };
-      this.table.on('tableBuilt', cb);
-    });
     return await this.loadDataOrFail(
       '../rest/place/all',
       'Could not load place data'
