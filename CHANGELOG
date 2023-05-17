@@ -4,7 +4,11 @@
 
 Upgrade GoldenLayout version from 1.5.9 to 2.6.0 (#186). This removes some
 limitations on the target ECMAScript version. Fix an issue with deleting
-places using the REST API (#194).
+places using the REST API (#194). Add a safeguard to the deploy script, and
+documentation to the README file, for the case that the checked-out
+repository has no tags (forks), which would result in the Docker build step
+failing (#196). Fix an issue with builds failing on a fresh check-out of
+the repository (#197).
 
 
 2023-05-02                                                           v1.1.8
