@@ -19,16 +19,22 @@ Damast has been used for and discussed in the following publications:
 - Weltecke, Dorothea, Ralph Barczok, and Bernd A. Vest:
   *Damast. Konzeptionelle Prinzipien und technische Methoden eines digitalen Projekts zur geotemporalen Visualisierung religiöser Pluralität.*
   In preparation.
+- Franke, Max, Guido Reina, and Steffen Koch.
+  "Toward Reproducible Visual Analysis Results."
+  In: *Proceedings of the 16th Pacific Visualization Symposium,* pp. 102&ndash;106.
+  Seoul, Republic of Korea.
+  April 18&ndash;21, 2023, IEEE.
+  DOI: [10.1109/PacificVis56936.2023.00018](https://dx.doi.org/10.1109/PacificVis56936.2023.00018)
 - Franke, Max and Steffen Koch.
   "Damast: A Visual Analysis Approach for Religious History Research"
-  In: *Proceedings of the 18th International Conference on Computer Vision, Imaging and Computer Graphics Theory and Applications - Volume 3: IVAPP,* pp. 40–52.
+  In: *Proceedings of the 18th International Conference on Computer Vision, Imaging and Computer Graphics Theory and Applications - Volume 3: IVAPP,* pp. 40&ndash;52.
   Lisbon, Portugal.
-  February 19–21, 2023, SciTePress.
+  February 19&ndash;21, 2023, SciTePress.
   DOI: [10.5220/0011609700003417](https://dx.doi.org/10.5220/0011609700003417)
 -  Franke, Max, Ralph Barczok, Steffen Koch, and Dorothea Weltecke.
   "Confidence as a First-class Attribute in Digital Humanities Data"
   In: *Proceedings of the 4th VIS4DH Workshop,* VIS 2019, Vancouver, Canada.
-  October 20–25, 2019, IEEE.
+  October 20&ndash;25, 2019, IEEE.
   [https://vis4dh.dbvis.de/2019/papers/2019/VIS4DH2019_paper_1.pdf](https://vis4dh.dbvis.de/2019/papers/2019/VIS4DH2019_paper_1.pdf)
 
 
@@ -69,6 +75,18 @@ The JavaScript code is compiled from TypeScript source, and the CSS is compiled 
 
 Basic knowledge with build tools and Docker are required.
 The instructions below assume a Linux machine with the Bash shell are used.
+
+
+### Special Note of Forked Repositories
+
+On forks, make sure that the tags from the upstream repository are also present in your fork.
+The tags (for `git describe --tags`) are required to run the [deploy script](./deploy.sh).
+To get the upstream tags, run:
+
+``` bash
+$ git remote add upstream git@github.com:UniStuttgart-VISUS/damast.git
+$ git fetch upstream --tags
+```
 
 
 ### Installing Dependencies
