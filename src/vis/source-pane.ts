@@ -26,11 +26,11 @@ export default class SourcePane extends View<any, any> {
 
   constructor(
     worker: Worker,
-    container: GoldenLayout.Container
+    container: GoldenLayout.ComponentContainer
   ) {
     super(worker, container, 'source-list');
 
-    const div = container.getElement()[0];
+    const div = container.element as HTMLDivElement;
 
     div.classList.add('source-container');
     div.innerHTML = sources;

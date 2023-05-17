@@ -12,7 +12,7 @@ export function createView<T extends View<any, any>>(
   loader: DataLoader,
   receivers: Map<string, View<any, any>>,
   listener: ((event: MessageEvent) => void),
-  layout?: GoldenLayout
+  layout?: GoldenLayout.GoldenLayout,
 ): void {
   const worker = new worker_class();
   const channel = new MessageChannel();
@@ -27,7 +27,7 @@ export function createView<T extends View<any, any>>(
   worker.addEventListener('message', listener);
 
   if (layout) {
-    layout.registerComponent(namespace_, (container, _) => {
+    layout.registerComponentFactoryFunction(namespace_, (container, _) => {
       const view = new view_class(worker, container);
 
       receivers.set(namespace_, view);

@@ -134,7 +134,8 @@ b
 
 // Button to open
 .lm_stack .modal-button {
-  display: inline-block;
+  display: grid;
+  place-content: center;
   cursor: pointer;
 
   // like GoldenLayout controls
