@@ -1,10 +1,17 @@
-import Tabulator from 'tabulator-tables';
+import { Tabulator, SelectRowModule, SortModule, FormatModule, TooltipModule, EditModule, FilterModule, ResizeColumnsModule, DownloadModule, AccessorModule, FrozenColumnsModule, ValidateModule, InteractionModule } from 'tabulator-tables';
+import type { ColumnDefinitionSorterParams, ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
 
 import Cache from '../common/cache';
 import {confirm_dialog,choice_or_cancel_dialog,accept_dialog} from '../common/dialog';
 import { getConsentCookie } from '../common/cookies';
+
+Tabulator.registerModule([
+  SelectRowModule, SortModule, FormatModule, TooltipModule, EditModule,
+  FilterModule, ResizeColumnsModule, DownloadModule, AccessorModule,
+  FrozenColumnsModule, ValidateModule, InteractionModule
+]);
 
 interface DependentTableData {
   name: string;
@@ -34,6 +41,8 @@ export default abstract class Table {
 
   protected abstract prepare(): Promise<void>;
 
+  readonly tableBuilt: Promise<void>;
+
   constructor(
     protected readonly dispatch: d3.Dispatch<any>,
     protected readonly cache: Cache,
@@ -50,15 +59,18 @@ export default abstract class Table {
 
     ph.appendChild(this.placeholder_element);
 
+    // have a check that the table is ready to be populated
+    let tableBuiltResolve;
+    this.tableBuilt = new Promise<void>(resolve => tableBuiltResolve = resolve);
+
     this.prepare()
       .then(() => {
-        const options: Tabulator.Options = {
+        const options: Options = {
           index: this._id,
           layout: 'fitColumns',
-          virtualDom: true,
+          renderVertical: 'virtual',
           addRowPos: 'top',
           selectable: 'highlight',
-          rowSelected: this.rowSelected.bind(this),
           movableColumns: true,
 
           placeholder: ph,
@@ -79,13 +91,12 @@ export default abstract class Table {
           ...(this.getTableOptions())
         };
 
-        const select_column: Tabulator.ColumnDefinition = {
+        const select_column: ColumnDefinition = {
           title: undefined,
           field: '@@selectColumn',
           headerSort: false,
           formatter: Table.selectionFormatter,
           width: 20,
-          cellClick: (evt, cell) => this.onRowClick(cell.getRow()),
           hozAlign: 'center',
           tooltip: 'Select row',
           cssClass: 'tabulator-cell--crosshair',
@@ -93,20 +104,20 @@ export default abstract class Table {
           download: false,
           frozen: true
         };
-        const id_column: Tabulator.ColumnDefinition = {
+        const id_column: ColumnDefinition = {
           title: 'ID',
           field: this._id,
           sorter: 'number',
+          sorterParams: { thousandSeparator: ',', } as ColumnDefinitionSorterParams,
           headerFilter: true,
           formatter: Table.idFormatter,
           width: 60,
           resizable: false
         };
 
-        const management_columns: Tabulator.ColumnDefinition[] = [
+        const management_columns: ColumnDefinition[] = [
           {
             formatter: Table.revertIcon,
-            cellClick: this.onRevert.bind(this),
             title: undefined,
             field: '@@revertIcon',
             width: 30,
@@ -119,7 +130,6 @@ export default abstract class Table {
           },
           {
             formatter: this.deleteIcon.bind(this),
-            cellClick: this.onDelete.bind(this),
             title: undefined,
             field: '@@deleteIcon',
             width: 30,
@@ -132,7 +142,6 @@ export default abstract class Table {
           },
           {
             formatter: this.saveIcon.bind(this),
-            cellClick: this.onSave.bind(this),
             title: undefined,
             field: '@@saveIcon',
             width: 30,
@@ -158,7 +167,15 @@ export default abstract class Table {
         this.virtualColumns().forEach(field => this._ignore_column_changes.push(field));
 
         this.table = new Tabulator(table_element_id, options);
+
+        const cb = () => {
+          this.table.off('tableBuilt', cb);
+          tableBuiltResolve();
+        };
+        this.table.on('tableBuilt', cb);
+
         this.onLoadReorderColumns();
+        this.addTableEventListeners();
 
         const button_group = this.section_group
           .select<HTMLDivElement>('.section__head > .controls');
@@ -171,11 +188,34 @@ export default abstract class Table {
         .catch(console.error);
   }
 
+  private _onCellClick(evt: UIEvent, cell: CellComponent): void {
+    console.log('onCellClick', cell, cell.getColumn().getField());
+    switch (cell.getColumn().getField()) {
+      case '@@saveIcon':
+        this.onSave(evt, cell);
+        return;
+      case '@@deleteIcon':
+        return this.onDelete(evt, cell);
+      case '@@revertIcon':
+        return this.onRevert(evt, cell);
+      case '@@selectColumn':
+        return this.onRowClick(cell.getRow());
+      default:
+        return;
+    }
+  }
+
+  protected addTableEventListeners(): void {
+    this.table.on('cellEdited', this.cellEdited.bind(this));
+    this.table.on('cellClick', this._onCellClick.bind(this));
+    this.table.on('rowSelected', this.rowSelected.bind(this));
+  }
+
   protected virtualColumns(): string[] {
     return [];
   }
 
-  private saveLayout(id: string, type: 'columns', data: Tabulator.ColumnDefinition[]): any {
+  private saveLayout(id: string, type: 'columns', data: ColumnDefinition[]): any {
     if (getConsentCookie() !== 'essential') return;
 
     const order = data.map(d => d.field);
@@ -212,8 +252,8 @@ export default abstract class Table {
     }
   }
 
-  protected abstract getMainColumns(): Tabulator.ColumnDefinition[];
-  protected abstract getTableOptions(): Tabulator.Options;
+  protected abstract getMainColumns(): ColumnDefinition[];
+  protected abstract getTableOptions(): Options;
 
   setData(data: any[], preferential_index?: number): Promise<any> {
     this.table.clearData();
@@ -225,7 +265,8 @@ export default abstract class Table {
     return this.table.setData(data)
       .then(() => {
         if (data.length) {
-          const rowIndex = preferential_index || this.table.getRowFromPosition(0, true).getIndex();
+          const activeData = this.table.getData('active');
+          const rowIndex = preferential_index || this.table.getRowFromPosition(1).getIndex();
           this.table.selectRow(rowIndex);
           this.table.scrollToRow(rowIndex);
         }
@@ -237,7 +278,7 @@ export default abstract class Table {
     this.table.download('csv', fname, {bom: true}, 'active')
   }
 
-  protected cellEdited(cell: Tabulator.CellComponent) {
+  protected cellEdited(cell: CellComponent) {
     if (this.hasChanges(cell.getRow())) {
       cell.getRow().getElement().setAttribute('dirty', '');
     } else {
@@ -315,20 +356,20 @@ export default abstract class Table {
     return '<i class="fa fa-lg fa-hand-pointer-o selected-row-indicator"></i>';
   }
 
-  private onRowStartUpload(row: Tabulator.RowComponent): void {
+  private onRowStartUpload(row: RowComponent): void {
     const i = this.saveIcons.get(row.getIndex());
     i.className = 'fa fa-lg fa-pulse fa-spinner sync-in-progress';
   }
-  private onRowEndUpload(row: Tabulator.RowComponent): void {
+  private onRowEndUpload(row: RowComponent): void {
     const i = this.saveIcons.get(row.getIndex());
     if (!row.getData().newRow) i.className = 'fa fa-lg fa-floppy-o save-button';
     else i.className = 'fa fa-lg fa-cloud-upload upload-button';
   }
-  private onRowStartDelete(row: Tabulator.RowComponent): void {
+  private onRowStartDelete(row: RowComponent): void {
     const i = this.deleteIcons.get(row.getIndex());
     i.className = 'fa fa-lg fa-pulse fa-spinner delete-in-progress';
   }
-  private onRowEndDelete(row: Tabulator.RowComponent): void {
+  private onRowEndDelete(row: RowComponent): void {
     const i = this.deleteIcons.get(row.getIndex());
     if (row.getData().newRow) i.className = 'fa fa-lg fa-ban cancel-button';
     else i.className = 'fa fa-lg fa-trash delete-button';
@@ -338,11 +379,11 @@ export default abstract class Table {
     return null;
   }
 
-  protected hasChanges(row: Tabulator.RowComponent): boolean {
+  protected hasChanges(row: RowComponent): boolean {
     if (row.getData().newRow) return false;
 
     const initial = this.initialValues.get(row.getIndex());
-    return _.some(row.getCells(), (cell: Tabulator.CellComponent) => {
+    return _.some(row.getCells(), (cell: CellComponent) => {
       if (this._ignore_column_changes.includes(cell.getField())) return false;
 
       const val = cell.getValue();
@@ -406,12 +447,12 @@ export default abstract class Table {
       .catch(_ => {this.onRowEndDelete(cell.getRow());});
   };
 
-  protected abstract doCreate(cell: Tabulator.CellComponent, data: any): Promise<number>;
-  protected abstract doSave(cell: Tabulator.CellComponent, data: any): Promise<boolean>;
+  protected abstract doCreate(cell: CellComponent, data: any): Promise<number>;
+  protected abstract doSave(cell: CellComponent, data: any): Promise<boolean>;
 
   abstract clearTable();
 
-  protected getChanges(cell: Tabulator.CellComponent): any {
+  protected getChanges(cell: CellComponent): any {
     const initial = this.initialValues.get(cell.getRow().getIndex());
     return cell.getRow()
         .getCells()
@@ -546,6 +587,8 @@ export default abstract class Table {
   }
 
   hasUnsavedChanges(): boolean {
+    if (this.table === undefined) return false;
+
     return _.some(
       this.table.getRows(),
       this.hasChanges.bind(this));
@@ -727,7 +770,7 @@ export default abstract class Table {
       .enter()
       .append('div')
       .classed('column-visibility-option', true)
-      .each(function(d: Tabulator.ColumnComponent) {
+      .each(function(d: ColumnComponent) {
         d3.select(this)
           .append('input')
           .attr('id', d.getField())

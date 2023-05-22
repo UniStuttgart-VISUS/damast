@@ -1,4 +1,5 @@
-import Tabulator from 'tabulator-tables';
+import { Tabulator } from 'tabulator-tables';
+import type { ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent, FormatterParams, EmptyCallback, EditorParams } from 'tabulator-tables';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
 
@@ -22,7 +23,7 @@ export default class EvidenceTable extends Table {
     return ['sources', 'time_spans'];
   }
 
-  protected getTableOptions(): Tabulator.Options {
+  protected getTableOptions(): Options {
     return {
       initialSort: [
         {column:'id', dir:'asc'}
@@ -67,22 +68,29 @@ export default class EvidenceTable extends Table {
     this.annotator_evidences = await this.cache.annotator_evidences;
   }
 
-  protected getMainColumns(): Tabulator.ColumnDefinition[] {
+  protected addTableEventListeners(): void {
+    super.addTableEventListeners();
+
+    this.table.on('cellClick', (evt, cell) => {
+      if (cell.getField() === '@@annotatorLink') this.onAnnotatorLinkClick(evt, cell);
+    });
+  }
+
+  protected getMainColumns(): ColumnDefinition[] {
     return [
         {
           title: 'Confidence of interpretation',
           field: 'interpretation_confidence',
           headerSort: true,
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.confidence_values
           },
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.confidence_values_with_null
           },
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Comment',
@@ -93,7 +101,6 @@ export default class EvidenceTable extends Table {
           headerSort: false,
           headerFilter: 'input',
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Tags',
@@ -108,18 +115,19 @@ export default class EvidenceTable extends Table {
               .map(d => d.label)
               .join(', ');
           },
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.tags,
             multiselect: true,
-            listItemFormatter: (value, title) => {
+            // TODO: correct?
+            itemFormatter: (label, value, item, element) => {
               const comment = this.tag_comments.get(parseInt(value));
-              let s = `<b>${title}</b>`;
+              let s = `<b>${label}</b>`;
               if (comment) s += ` <i style="font-size: smaller;">(${comment})</i>`;
               return s;
             },
           },
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.tags,
           },
@@ -127,22 +135,20 @@ export default class EvidenceTable extends Table {
             return vals.includes(filter);
           },
           headerSort: false,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Place attribution confidence',
           field: 'place_attribution_confidence',
           headerSort: true,
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.confidence_values
           },
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.confidence_values_with_null
           },
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Place instance comment',
@@ -152,17 +158,16 @@ export default class EvidenceTable extends Table {
           headerSort: false,
           headerFilter: 'input',
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Religion',
           field: 'religion_id',
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.religions
           },
           headerFilterFunc: '=',
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.religions
           },
@@ -174,22 +179,20 @@ export default class EvidenceTable extends Table {
           },
           headerSort: true,
           sorter: this.religionSort.bind(this),
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Religion confidence',
           field: 'religion_confidence',
           headerSort: true,
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.confidence_values
           },
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.confidence_values_with_null
           },
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Religion comment',
@@ -199,17 +202,16 @@ export default class EvidenceTable extends Table {
           headerSort: false,
           headerFilter: 'input',
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Person',
           field: 'person_id',
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.persons
           },
           headerFilterFunc: '=',
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.persons
           },
@@ -220,22 +222,20 @@ export default class EvidenceTable extends Table {
             values: this.persons,
           },
           headerSort: false,
-          cellEdited: this.cellEdited.bind(this),
         },
         {
           title: 'Person confidence',
           field: 'person_confidence',
           headerSort: true,
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.confidence_values
           },
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.confidence_values_with_null
           },
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this),
         },
         {
           title: 'Person comment',
@@ -245,7 +245,6 @@ export default class EvidenceTable extends Table {
           headerSort: false,
           headerFilter: 'input',
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this),
         },
         {
           title: 'Time spans',
@@ -285,14 +284,12 @@ export default class EvidenceTable extends Table {
           headerSort: false,
           headerFilter: true,
           width: 40,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           formatter: EvidenceTable.linkIcon,
           formatterParams: {
             annotator_evidences: this.annotator_evidences as any,
           },
-          cellClick: this.onAnnotatorLinkClick.bind(this),
           title: undefined,
           field: '@@annotatorLink',
           width: 30,
@@ -307,9 +304,9 @@ export default class EvidenceTable extends Table {
   }
 
   private static formatTimespans(
-    cell: Tabulator.CellComponent,
-    formatterParams: Tabulator.FormatterParams,
-    onRendered: Tabulator.EmptyCallback
+    cell: CellComponent,
+    formatterParams: FormatterParams,
+    onRendered: EmptyCallback
   ): string {
     const ts = cell.getValue();
 
@@ -383,7 +380,7 @@ export default class EvidenceTable extends Table {
       `Could not delete evidence ${cell.getRow().getIndex()}`);
   }
 
-  protected doCreate(cell: Tabulator.CellComponent, data: any): Promise<number> {
+  protected doCreate(cell: CellComponent, data: any): Promise<number> {
     if (!data.religion_id) {
       return accept_dialog('Religion must be set.', '', {})
         .then(() => Promise.reject(cell.getRow().getIndex()));
@@ -508,7 +505,7 @@ export default class EvidenceTable extends Table {
     return {evidence, place_instance, religion_instance, evidence_tag, person_instance};
   }
 
-  protected async doSave(cell: Tabulator.CellComponent, data: any): Promise<boolean> {
+  protected async doSave(cell: CellComponent, data: any): Promise<boolean> {
     const {evidence, place_instance, religion_instance, evidence_tag, person_instance} = this.dataPerTable(data);
 
     let pre: () => Promise<any> = () => Promise.resolve(evidence);
@@ -650,7 +647,7 @@ export default class EvidenceTable extends Table {
     this.table.scrollToRow(row);
   }
 
-  private onAnnotatorLinkClick(e: Event, cell: Tabulator.CellComponent) {
+  private onAnnotatorLinkClick(e: Event, cell: CellComponent) {
     const id = cell.getRow().getIndex();
     if (id === null || !this.annotator_evidences.has(id)) return;
 

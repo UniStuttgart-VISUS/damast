@@ -1,4 +1,5 @@
-import Tabulator from 'tabulator-tables';
+import { Tabulator } from 'tabulator-tables';
+import type { ColumnDefinitionSorterParams, ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
 
@@ -30,7 +31,7 @@ export default class TimeTable extends Table {
     return 'id';
   }
 
-  protected getTableOptions(): Tabulator.Options {
+  protected getTableOptions(): Options {
     return {
       initialSort: [
         {column:'start', dir:'asc'},
@@ -40,13 +41,14 @@ export default class TimeTable extends Table {
     };
   }
 
-  protected getMainColumns(): Tabulator.ColumnDefinition[] {
+  protected getMainColumns(): ColumnDefinition[] {
     return [
         {
           title: 'Start',
           field: 'start',
           headerSort: true,
           sorter: 'number',
+          sorterParams: { thousandSeparator: ',', } as ColumnDefinitionSorterParams,
           headerFilter: 'number',
           editor: 'number',
           editorParams: {
@@ -56,13 +58,13 @@ export default class TimeTable extends Table {
           },
           validator: [ { type: TimeTable.validateStart } ],
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'End',
           field: 'end',
           headerSort: true,
           sorter: 'number',
+          sorterParams: { thousandSeparator: ',', } as ColumnDefinitionSorterParams,
           headerFilter: 'number',
           editor: 'number',
           editorParams: {
@@ -72,7 +74,6 @@ export default class TimeTable extends Table {
           },
           validator: [ { type: TimeTable.validateEnd } ],
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Comment',
@@ -83,28 +84,26 @@ export default class TimeTable extends Table {
           headerSort: false,
           headerFilter: 'input',
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Confidence',
           field: 'confidence',
           headerSort: true,
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.confidence_values
           },
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.confidence_values_with_null
           },
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         }
     ];
   }
 
   private static validateStart(
-    cell: Tabulator.CellComponent,
+    cell: CellComponent,
     value: number,
     _
   ): boolean {
@@ -113,7 +112,7 @@ export default class TimeTable extends Table {
   }
 
   private static validateEnd(
-    cell: Tabulator.CellComponent,
+    cell: CellComponent,
     value: number,
     _
   ): boolean {
@@ -166,7 +165,7 @@ export default class TimeTable extends Table {
       `Could not delete time span ${cell.getRow().getIndex()}`);
   }
 
-  protected doCreate(cell: Tabulator.CellComponent, data: any): Promise<number> {
+  protected doCreate(cell: CellComponent, data: any): Promise<number> {
     return this.createData(
       `../rest/time-group/${this.time_group_id}/time-instance/0`,
       data,
@@ -176,7 +175,7 @@ export default class TimeTable extends Table {
       });
   }
 
-  protected doSave(cell: Tabulator.CellComponent, data: any): Promise<boolean> {
+  protected doSave(cell: CellComponent, data: any): Promise<boolean> {
     // always send entire data
     const d = cell.getRow().getData();
     if ('start' in data && !('end' in data)) data.end = d.end;
