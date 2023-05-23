@@ -569,7 +569,7 @@ def update_place_data(c, place_id):
     return '', 205
 
 def delete_place_data(c, place_id):
-    restricting_tables = ['bishopric_place', 'bishopric_residence', 'place_instance']
+    restricting_tables = ['place_instance']
     conflicts = dict()
     for restricting_table in restricting_tables:
         query = c.mogrify(F'select id from {restricting_table} where place_id = %s;', (place_id,))

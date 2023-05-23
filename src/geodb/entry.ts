@@ -1,4 +1,5 @@
-import Tabulator from 'tabulator-tables';
+import { Tabulator } from 'tabulator-tables';
+import type { ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
 import * as d3 from 'd3';
 import PlaceTable from './place-table';
 import PersonTable from './person-table';
@@ -36,7 +37,11 @@ if (/\/persons/.test(window.location.toString())) {
   // EVENTS
   dispatch.on('person-selected.load-external-uris', data => external_person_uri_table.loadData(data.id));
 
-  cache.ready.then(() => person_table.loadData());
+  Promise.all([
+    cache.ready,
+    person_table.tableBuilt,
+    external_person_uri_table.tableBuilt,
+  ]).then(() => person_table.loadData());
 
   window.onbeforeunload = function (e: BeforeUnloadEvent) {
     if ([

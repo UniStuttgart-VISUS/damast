@@ -239,6 +239,23 @@ tmpdir=$(ssh ${build_user}@${build_server} mktemp -d)
 
 # version: git tag, plus optionally a divergence, but only allow a certain set of characters
 version=$(echo -n $(git describe --tags) | tr -sc '[a-zA-Z0-9_.\-]' '-')
+
+# check if version is not empty (#196)
+if [[ -z "$version" ]]
+then
+  1>&2 cat <<EOF
+
+ERROR! Version string is empty.
+
+The version string is derived from the output of "git describe --tags". If it
+is empty, that probably means there are no tags in the repository. That should
+never be the case! If you are on a forked repository, please make sure to fetch
+the tags of the upstream repository by adding it as a remote (here:
+"upstream"), and then calling "git fetch upstream --tags".
+EOF
+  exit 1
+fi
+
 # name of Docker image, e.g.: damast:v1.6.2rc1-testing
 imagename="damast:$version-$(echo $env | tr '[:upper:]' '[:lower:]')"
 filename="$imagename.tgz"

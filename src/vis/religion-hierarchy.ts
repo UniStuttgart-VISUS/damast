@@ -26,28 +26,28 @@ export default class ReligionHierarchy extends View<any, number[] | null> {
 
   private readonly tooltipManager = new TooltipManager(200);
 
-  constructor(worker: Worker, container: GoldenLayout.Container) {
+  constructor(worker: Worker, container: GoldenLayout.ComponentContainer) {
     super(worker, container, 'religion');
 
-    const div = container.getElement()[0];
+    const div = container.element as HTMLDivElement;
 
     div.classList.add('religion-container');
     div.innerHTML = religion;
     this.div = d3.select(div);
 
     container.on('open', () => {
-      this.apply_button = d3.select('#hierarchy-apply');
-      this.filter_mode = d3.select('#hierarchy-filter-mode');
+      this.apply_button = this.div.select('#hierarchy-apply');
+      this.filter_mode = this.div.select('#hierarchy-filter-mode');
 
       this.filter_mode.node().checked = false;
       this.apply_button.on('click', this.onApply.bind(this));
       this.filter_mode.on('change', () => this.updateContent(this.hierarchy_.data, this.getState(), this.counts));
 
-      d3.select('#religion-filter-revert')
+      this.div.select('#religion-filter-revert')
         .on('click', () => this.updateContent(this.hierarchy_.data, this.filter, this.counts));
 
       const ref = this;
-      d3.select<HTMLInputElement, any>('.hierarchy__header input#use-falsecolor')
+      this.div.select<HTMLInputElement>('.hierarchy__header input#use-falsecolor')
         .on('change', function() {
           ref.sendToDataThread('set-falsecolors', this.checked);
         });

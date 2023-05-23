@@ -24,11 +24,11 @@ export default class TagsPane extends View<any, any> {
 
   constructor(
     worker: Worker,
-    container: GoldenLayout.Container
+    container: GoldenLayout.ComponentContainer
   ) {
     super(worker, container, 'tags');
 
-    const div = container.getElement()[0];
+    const div = container.element as HTMLDivElement;
 
     div.classList.add('tags-container');
     div.innerHTML = tags;

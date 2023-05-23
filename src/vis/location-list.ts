@@ -32,10 +32,10 @@ export default class LocationList extends View<any, any> {
 
   private tooltip: TooltipManager = new TooltipManager();
 
-  constructor(worker: Worker, container: GoldenLayout.Container) {
+  constructor(worker: Worker, container: GoldenLayout.ComponentContainer) {
     super(worker, container, 'location-list');
 
-    const div = container.getElement()[0];
+    const div = container.element as HTMLDivElement;
 
     div.classList.add('location-list-container');
     div.innerHTML = location_list;
