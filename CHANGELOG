@@ -11,7 +11,7 @@ repositories, and would leat to the Docker build failing because of an
 invalid tag name. The deploy script now produces a detailed error message,
 which, alongside the README file, describes how to get the upstream tags.
 Fix an issue with builds failing on a fresh check-out of the repository
-(#197).
+(#197). Use stable wikimedia URLs for logos on homepage (# 192).
 
 
 2023-05-02                                                           v1.1.8
