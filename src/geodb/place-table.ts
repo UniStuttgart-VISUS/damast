@@ -2,7 +2,6 @@ import { Tabulator } from 'tabulator-tables';
 import type { ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent, EditorParams } from 'tabulator-tables';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
-import * as L from 'leaflet';
 
 import Table from './table';
 import {confirm_dialog,choice_or_cancel_dialog,accept_dialog} from '../common/dialog';
