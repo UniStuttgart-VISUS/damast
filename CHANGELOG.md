@@ -1,33 +1,38 @@
 # CHANGELOG
 
-2023-05-xx                                                           v1.2.0
+## v1.2.0
 
-Upgrade GoldenLayout version from 1.5.9 to 2.6.0 (#186). Update Tabulator
-version from 4.8.2 to 5.4.4 (#187). Update Leaflet version from 1.7.1 to
-1.9.4 (#190). This removes some limitations on the target ECMAScript
-version. Use stable Wikimedia URLs for the university and funding logos on
-the home page (#192). Fix an issue with deleting places using the REST API
-(#194). Add a safeguard to the deploy script for the case that the
-checked-out repository has no tags (#196). This could happen on forked
-repositories, and would leat to the Docker build failing because of an
-invalid tag name. The deploy script now produces a detailed error message,
-which, alongside the README file, describes how to get the upstream tags.
-Fix an issue with builds failing on a fresh check-out of the repository
-(#197).
+Release date: *2023-05-xx*
+
+This minor release includes migrations to newer versions of some dependencies.
+This removes some limitations on the target ECMAScript version and improves tree-shaking capability of the build:
+
+- Upgrade GoldenLayout version from 1.5.9 to 2.6.0 ([#186](https://github.com/UniStuttgart-VISUS/damast/issues/186)).
+- Upgrade Tabulator version from 4.8.2 to 5.4.4 ([#187](https://github.com/UniStuttgart-VISUS/damast/issues/187)).
+- Upgrade Leaflet version from 1.7.1 to 1.9.4 ([#190](https://github.com/UniStuttgart-VISUS/damast/issues/190)).
+
+The release also includes various smaller bugfixes and some documentation improvements:
+
+- Use stable Wikimedia URLs for the university and funding logos on the home page ([#192](https://github.com/UniStuttgart-VISUS/damast/issues/192)).
+- Fix an issue with deleting places using the REST API ([#194](https://github.com/UniStuttgart-VISUS/damast/issues/194)).
+- Add a safeguard to the [deploy script](./deploy.sh) for the case that the checked-out repository has no tags ([#196](https://github.com/UniStuttgart-VISUS/damast/issues/196)).
+  This could happen on forked repositories, and would lead to the Docker build failing because of an invalid tag name.
+  The deploy script now produces a detailed error message, which, alongside the `README` file, describes how to get the upstream tags.
+- Fix an issue with builds failing on a fresh check-out of the repository ([#197](https://github.com/UniStuttgart-VISUS/damast/issues/197)).
 
 
 2023-05-02                                                           v1.1.8
 
 Fix some inconsistencies and clarify configuration option precedence in the
-documentation (#176). Change the Docker containers to use non-shared volume
-mounts instead of shared ones (#177). Update Flask version to mitigate a
+documentation ([#176](https://github.com/UniStuttgart-VISUS/damast/issues/176)). Change the Docker containers to use non-shared volume
+mounts instead of shared ones ([#177](https://github.com/UniStuttgart-VISUS/damast/issues/177)). Update Flask version to mitigate a
 vulnerability with sessions (GHSA-m2qf-hxjv-5gpq).
 
 
 2023-03-14                                                           v1.1.7
 
 Update listed publications related to Damast in the root HTML page and the
-README. Update npm dependencies. Remove feedback prompt (#174).
+README. Update npm dependencies. Remove feedback prompt ([#174](https://github.com/UniStuttgart-VISUS/damast/issues/174)).
 
 
 2023-01-10                                                           v1.1.6
@@ -43,9 +48,9 @@ Enable history tree feature for all users.
 
 2022-08-19                                                           v1.1.5
 
-Fix an issue with empty time spans crashing place URI pages (#166). Fix an
+Fix an issue with empty time spans crashing place URI pages ([#166](https://github.com/UniStuttgart-VISUS/damast/issues/166)). Fix an
 issue with the false-color scale generation code crashing with zero
-religious groups visible (#164). Add ticks indicating the time filter start
+religious groups visible ([#164](https://github.com/UniStuttgart-VISUS/damast/issues/164)). Add ticks indicating the time filter start
 and end year in the horizontal axes of the timeline.
 
 
@@ -937,5 +942,3 @@ Add more data (hard-coded).
 
 Initial version of visualization and Flask app.
 
-
-; vim: tw=75
