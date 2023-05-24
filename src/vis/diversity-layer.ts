@@ -1,10 +1,11 @@
-import * as L from 'leaflet';
+import { Icon, point, marker, layerGroup, circleMarker } from 'leaflet';
+import type { LayerGroup } from 'leaflet';
 import * as d3 from 'd3';
 
 // canvas icon code inspired by and adapted from https://github.com/sashakavun/leaflet-canvasicon/blob/master/leaflet-canvasicon.js
-const CanvasIcon = L.Icon.extend({
+const CanvasIcon = Icon.extend({
   createIcon: function(icon: HTMLElement): HTMLCanvasElement {
-    const size = L.point(this.options.iconSize);
+    const size = point(this.options.iconSize);
 
     if (!icon || (icon.tagName !== 'CANVAS')) {
       icon = document.createElement('canvas');
@@ -23,7 +24,7 @@ const CanvasIcon = L.Icon.extend({
       this.options.drawIcon.apply(this, arguments);
     }
 
-    (L.Icon.prototype as any)._setIconStyles.apply(this, arguments);
+    (Icon.prototype as any)._setIconStyles.apply(this, arguments);
   }
 });
 
@@ -53,8 +54,8 @@ for (let i = 0; i < 2*radius; ++i) {
 function drawIcon(icon, type, [r, g, b]) {
   if (type === 'icon') {
     const ctx = icon.getContext('2d');
-    const size = L.point(this.options.iconSize);
-    const center = L.point(Math.floor(size.x / 2), Math.floor(size.y / 2));
+    const size = point(this.options.iconSize);
+    const center = point(Math.floor(size.x / 2), Math.floor(size.y / 2));
 
     const imagedata = new Uint8ClampedArray(new Uint32Array(size.x * size.y).buffer);
 
@@ -74,12 +75,12 @@ function drawIcon(icon, type, [r, g, b]) {
 }
 
 export default class DiversityLayer {
-  readonly markerLayer: L.LayerGroup;
-  readonly densityLayer: L.LayerGroup;
+  readonly markerLayer: LayerGroup;
+  readonly densityLayer: LayerGroup;
 
   constructor() {
-    this.markerLayer = L.layerGroup();
-    this.densityLayer = L.layerGroup();
+    this.markerLayer = layerGroup();
+    this.densityLayer = layerGroup();
   }
 
   setData(data: DiversityDatum[]) {
@@ -91,7 +92,7 @@ export default class DiversityLayer {
       const col = d3.rgb(d3.interpolateViridis(intensity));
       const color = [ col.r, col.g, col.b ];
 
-      this.markerLayer.addLayer(L.circleMarker(
+      this.markerLayer.addLayer(circleMarker(
         [lat, lng],
         {
           radius: 4,
@@ -101,7 +102,7 @@ export default class DiversityLayer {
           fillOpacity: 1,
         }));
 
-      this.densityLayer.addLayer(L.marker(
+      this.densityLayer.addLayer(marker(
         [lat, lng],
         {
           icon: canvasIcon({
