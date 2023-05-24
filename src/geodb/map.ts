@@ -1,18 +1,19 @@
-import * as L from 'leaflet';
+import { map, Control, DomUtil, tileLayer, control, featureGroup, icon, marker as leafletMarker } from 'leaflet';
+import type { FeatureGroup, Map, LatLngLiteral } from 'leaflet';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
 
 import { mapStyles, MapStyle } from '../common/map-styles';
 
 export default class MapPane {
-  private readonly map: L.Map;
+  private readonly map: Map;
 
   private _selected_place_id: number | null = null;
   private _matching_place_ids: Set<number> = new Set<number>();
   private _place_data: any[] = [];
 
-  private selected_marker_layer: L.FeatureGroup;
-  private other_marker_layer: L.FeatureGroup;
+  private selected_marker_layer: FeatureGroup;
+  private other_marker_layer: FeatureGroup;
   private map_styles: MapStyle[];
   private loadState: Promise<void>;
 
@@ -23,15 +24,15 @@ export default class MapPane {
     const div = map_section.append('div')
       .style('height', '400px')
       .style('width', '600px');
-    this.map = L.map(div.node(), {
+    this.map = map(div.node(), {
       center: [0,0],
       zoom: 3
     });
 
     const mapbox_layers = new Set<string>();
-    const mapbox_attribution = new L.Control({position: 'bottomleft'});
+    const mapbox_attribution = new Control({position: 'bottomleft'});
     mapbox_attribution.onAdd = function(_) {
-      const div = L.DomUtil.create('div', 'attribution');
+      const div = DomUtil.create('div', 'attribution');
       div.innerHTML = `<a href="http://mapbox.com/about/maps" class='mapbox-wordmark' target="_blank">Mapbox</a>`;
       return div;
     };
@@ -50,17 +51,17 @@ export default class MapPane {
       const layers = {};
       this.map_styles.forEach(layer => {
         if (layer.is_mapbox) mapbox_layers.add(layer.name);
-        layers[layer.name] = L.tileLayer(layer.url, layer.options || {});
+        layers[layer.name] = tileLayer(layer.url, layer.options || {});
         if (layer.default_) {
           layers[layer.name].addTo(this.map);
           if (layer.is_mapbox) mapbox_attribution.addTo(this.map);
         }
       });
-      L.control.layers(layers).addTo(this.map);
+      control.layers(layers).addTo(this.map);
     });
 
-    this.selected_marker_layer = L.featureGroup().addTo(this.map);
-    this.other_marker_layer = L.featureGroup().addTo(this.map);
+    this.selected_marker_layer = featureGroup().addTo(this.map);
+    this.other_marker_layer = featureGroup().addTo(this.map);
 
     this.dispatch.on('places-loaded', this.onTableLoaded.bind(this));
     this.dispatch.on('places-filtered', this.onPlacesFiltered.bind(this));
@@ -127,10 +128,10 @@ export default class MapPane {
       const {lat, lng} = d;
 
       if (datum.id === this._selected_place_id) {
-        const marker = L.marker({lat, lng}, {
+        const marker = leafletMarker({lat, lng}, {
           zIndexOffset: 1000,
           draggable: true,
-          icon: L.icon({
+          icon: icon({
             iconUrl: 'images/marker-icon-red.png',
             iconRetinaUrl: 'images/marker-icon-2x-red.png',
             shadowUrl: 'images/marker-shadow.png',
@@ -149,10 +150,10 @@ export default class MapPane {
       } else {
         const active = this._matching_place_ids.has(datum.id);
         const prefix = active ? 'blue' : 'grey';
-        const marker = L.marker({lat, lng}, {
+        const marker = leafletMarker({lat, lng}, {
           opacity: active ? 0.7 : 0.5,
           zIndexOffset: active ? 500 : 0,
-          icon: L.icon({
+          icon: icon({
             iconUrl: `images/marker-icon-${prefix}.png`,
             iconRetinaUrl: `images/marker-icon-2x-${prefix}.png`,
             shadowUrl: 'images/marker-shadow.png',
@@ -168,7 +169,7 @@ export default class MapPane {
     });
   }
 
-  private latLngFromString(s: string | null): L.LatLngLiteral | null {
+  private latLngFromString(s: string | null): LatLngLiteral | null {
     const coord = /^\((-?\d+(\.\d+)?),(-?\d+(\.\d+)?)\)$/;
 
     if (s === null) return null;
@@ -179,7 +180,7 @@ export default class MapPane {
     return {lat,lng};
   }
 
-  private latLngToString(l: L.LatLngLiteral): string {
+  private latLngToString(l: LatLngLiteral): string {
     const f = d3.format('.6f');
     return `(${f(l.lat)},${f(l.lng)})`;
   }
