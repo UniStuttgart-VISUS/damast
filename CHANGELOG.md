@@ -25,26 +25,25 @@ The release also includes various smaller bugfixes and some documentation improv
 
 Release date: *2023-05-02*
 
-Fix some inconsistencies and clarify configuration option precedence in the
-documentation ([#176](https://github.com/UniStuttgart-VISUS/damast/issues/176)). Change the Docker containers to use non-shared volume
-mounts instead of shared ones ([#177](https://github.com/UniStuttgart-VISUS/damast/issues/177)). Update Flask version to mitigate a
-vulnerability with sessions (GHSA-m2qf-hxjv-5gpq).
+Fix some inconsistencies and clarify configuration option precedence in the documentation ([#176](https://github.com/UniStuttgart-VISUS/damast/issues/176)).
+Change the Docker containers to use non-shared volume mounts instead of shared ones ([#177](https://github.com/UniStuttgart-VISUS/damast/issues/177)).
+Update Flask version to mitigate a vulnerability with sessions ([GHSA-m2qf-hxjv-5gpq](https://github.com/advisories/GHSA-m2qf-hxjv-5gpq)).
 
 
 ## v1.1.7
 
 Release date: *2023-03-14*
 
-Update listed publications related to Damast in the root HTML page and the
-README. Update npm dependencies. Remove feedback prompt ([#174](https://github.com/UniStuttgart-VISUS/damast/issues/174)).
+Update listed publications related to Damast in the root HTML page and the `README`.
+Update npm dependencies.
+Remove feedback prompt ([#174](https://github.com/UniStuttgart-VISUS/damast/issues/174)).
 
 
 ## v1.1.6
 
 Release date: *2023-01-10*
 
-Fix CVE-2022-46175, remove old, conflicting dependencies to extract-loader
-by inlining HTML template strings into the TypeScript source.
+Fix [CVE-2022-46175](https://github.com/advisories/GHSA-9c47-m6qq-7p4h), remove old, conflicting dependencies to `extract-loader` by inlining HTML template strings into the TypeScript source.
 
 
 ## v1.1.5+history
@@ -58,25 +57,24 @@ Enable history tree feature for all users.
 
 Release date: *2022-08-19*
 
-Fix an issue with empty time spans crashing place URI pages ([#166](https://github.com/UniStuttgart-VISUS/damast/issues/166)). Fix an
-issue with the false-color scale generation code crashing with zero
-religious groups visible ([#164](https://github.com/UniStuttgart-VISUS/damast/issues/164)). Add ticks indicating the time filter start
-and end year in the horizontal axes of the timeline.
+Fix an issue with empty time spans crashing place URI pages ([#166](https://github.com/UniStuttgart-VISUS/damast/issues/166)).
+Fix an issue with the false-color scale generation code crashing with zero religious groups visible ([#164](https://github.com/UniStuttgart-VISUS/damast/issues/164)).
+Add ticks indicating the time filter start and end year in the horizontal axes of the timeline.
 
 
 ## v1.1.4
 
 Release date: *2022-06-30*
 
-Highlight hovered religion or confidence level in the timeline tooltip. Add
-a way to go to the place URI pages directly from the map. Add history tree
-to visualization (beta testers only). Add form to navigate to reports by
-UUID. Improve post-login/logout navigation. Development mode now creates
-and hosts a PostgreSQL database locally as a Docker container, instead of
-port-forwarding to a database on a server. Add a distributed false-color
-religion mode. Add buttons to the most-used settings options to the
-respective views, or the header bar, as well. Add a detailed evidence list
-page for the place URI page.
+Add a way to go to the place URI pages directly from the map ([#146](https://github.com/UniStuttgart-VISUS/damast/issues/146)).
+Highlight hovered religion or confidence level in the timeline tooltip ([#150](https://github.com/UniStuttgart-VISUS/damast/issues/150)).
+Add form to navigate to reports by UUID ([#155](https://github.com/UniStuttgart-VISUS/damast/issues/155)).
+Add a distributed false-color religion mode ([#158](https://github.com/UniStuttgart-VISUS/damast/issues/158)).
+Add buttons to the most-used settings options to the respective views, or the header bar, as well ([#160](https://github.com/UniStuttgart-VISUS/damast/issues/160)).
+Add history tree to visualization (beta testers only).
+Improve post-login/logout navigation.
+Development mode now creates and hosts a PostgreSQL database locally as a Docker container, instead of port-forwarding to a database on a server.
+Add a detailed evidence list page for the place URI page.
 
 
 2022-05-12                                            1.1.3+hotfix-wasm-csp
