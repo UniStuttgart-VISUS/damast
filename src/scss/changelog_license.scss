@@ -6,7 +6,6 @@
   color: $clr-fg;
 
   display: flex;
-  align-items: center;
   justify-content: center;
 }
 
@@ -17,4 +16,17 @@ pre {
   padding: 2rem;
   height: 100%;
   box-sizing: border-box;
+}
+
+.changelog-wrapper {
+  max-width: 65ch;
+}
+
+h2 {
+  padding-inline: 0;
+  padding-block: 1rem 0.5rem;
+}
+
+h2 + p {
+  margin-top: 0.2rem;
 }
