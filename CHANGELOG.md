@@ -98,9 +98,10 @@ Add an extensive documentation PDF.
 
 Release date: *2022-05-03*
 
-Make deploy script more versatile and documented. Use native HTML Dialog
-element for popups and infoboxes if it is supported. Update info texts and
-make them more understandable.
+Make deploy script more versatile and documented.
+Use native HTML Dialog element for popups and infoboxes if it is supported ([#98](https://github.com/UniStuttgart-VISUS/damast/issues/98)).
+Update info texts and make them more understandable ([#6](https://github.com/UniStuttgart-VISUS/damast/issues/6), [#116](https://github.com/UniStuttgart-VISUS/damast/issues/116), [#117](https://github.com/UniStuttgart-VISUS/damast/issues/117)).
+Fix a bug with the positions of annotation suggestions ([#130](https://github.com/UniStuttgart-VISUS/damast/issues/130)).
 
 
 ## v1.1.1
