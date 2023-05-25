@@ -134,17 +134,17 @@ the report format regarding sorting, placement of footnotes, and the like.
 
 Release date: *2022-02-09*
 
-The server can now be configured to evict old reports. Evicted reports can
-still be retrieved from the filters, but the report contents need to be
-regenerated on demand. Alternative names for places are now sorted first
-by language, then by transcription and name. The place URI page and reports
-now contain a "How to Cite" section. The annotation suggestion refresh jobs
-can now be configured as to whether and how often they run, and can be
-triggered manually. Minor CSS source file restructuring. Fix internal
-GitHub dependencies to point to public repositories. Fix a bug with
-incorrect match sources on place search. Fix a bug with the time filter not
-being shown correctly in the overview timeline. Fix a vulnerable npm
-dependency (CVE-2021-23566).
+The server can now be configured to evict old reports ([#61](https://github.com/UniStuttgart-VISUS/damast/issues/61)).
+Evicted reports can still be retrieved from the filters, but the report contents need to be regenerated on demand.
+Alternative names for places are now sorted first by language, then by transcription and name ([#74](https://github.com/UniStuttgart-VISUS/damast/issues/74)).
+The place URI page and reports now contain a "How to Cite" section ([#2](https://github.com/UniStuttgart-VISUS/damast/issues/2), [#56](https://github.com/UniStuttgart-VISUS/damast/issues/56)).
+The annotation suggestion refresh jobs can now be configured as to whether and how often they run, and can be triggered manually.
+Minor CSS source file restructuring ([#57](https://github.com/UniStuttgart-VISUS/damast/issues/57)).
+Fix internal GitHub dependencies to point to public repositories ([`b12a6df`](https://github.com/UniStuttgart-VISUS/damast/pull/59/commits/b12a6df67580e66650b18ab77ea6fac2c0a7af54), [`490611a`](https://github.com/UniStuttgart-VISUS/damast/pull/59/commits/490611a2bbf39265aea232a56fd8f44ecb4193b5)).
+Fix a bug with incorrect match sources on place search ([#68](https://github.com/UniStuttgart-VISUS/damast/issues/68)).
+Fix a bug with the time filter not being shown correctly in the overview timeline ([#80](https://github.com/UniStuttgart-VISUS/damast/issues/80)).
+Fix a vulnerable npm dependency ([CVE-2021-23566](https://github.com/advisories/GHSA-qrpm-p2h7-hrv2)).
+Minor fixes ([#66](https://github.com/UniStuttgart-VISUS/damast/issues/66), [#75](https://github.com/UniStuttgart-VISUS/damast/issues/75), [#84](https://github.com/UniStuttgart-VISUS/damast/issues/84)).
 
 
 ## v1.0.4
