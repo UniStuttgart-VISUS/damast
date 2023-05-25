@@ -77,21 +77,21 @@ Development mode now creates and hosts a PostgreSQL database locally as a Docker
 Add a detailed evidence list page for the place URI page.
 
 
-2022-05-12                                            1.1.3+hotfix-wasm-csp
+## v1.1.3+hotfix-wasm-csp
 
-Add a CSP that fixes the WASM clustering code not being loaded in newer
-Windows Chromium builds (Edge and Chrome, >=101), and thus the map glyphs
-never appearing in the visualization.
+Release date: *2022-05-12*
+
+Add a CSP that fixes the WASM clustering code not being loaded in newer Windows Chromium builds (Edge and Chrome, >=101) ([1](https://bugs.chromium.org/p/v8/issues/detail?id=7041), [2](https://bugs.chromium.org/p/chromium/issues/detail?id=915648)), and thus the map glyphs never appearing in the visualization ([#141](https://github.com/UniStuttgart-VISUS/damast/issues/141)).
 
 
 ## v1.1.3
 
 Release date: *2022-05-05*
 
-Incorporated the new home page design and contents. Fix an issue where
-Ghostery popup blocker would hide the cookie dialog, but not the
-background. Fix an issue where the cookie dialog would not work properly in
-the visualization. Add an extensive documentation PDF.
+Incorporated the new home page design and contents ([#7](https://github.com/UniStuttgart-VISUS/damast/issues/7)).
+Fix an issue where Ghostery popup blocker would hide the cookie dialog, but not the background ([#137](https://github.com/UniStuttgart-VISUS/damast/issues/137)).
+Fix an issue where the cookie dialog would not work properly in the visualization ([#139](https://github.com/UniStuttgart-VISUS/damast/issues/139)).
+Add an extensive documentation PDF.
 
 
 ## v1.1.2
