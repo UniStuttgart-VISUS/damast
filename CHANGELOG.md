@@ -166,9 +166,9 @@ in to a shorter time range.
 
 Release date: *2022-01-12*
 
-Added functionality to define which roles a visitor (i.e., not logged in)
-will receive via a environment variable. Updated and fixed some of the unit
-tests to work properly with the cookie policies introduced in v0.19.8.
+Add functionality to define which roles a visitor (i.e., not logged in) will receive via an environment variable ([#5](https://github.com/UniStuttgart-VISUS/damast/issues/5)).
+Updat and fix some of the unit tests to work properly with the cookie policies introduced in [`v0.19.8`](#v0198).
+Fix various smaller issues, including labeling in the reports ([#29](https://github.com/UniStuttgart-VISUS/damast/issues/29)).
 
 
 ## v1.0.2
