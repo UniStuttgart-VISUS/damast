@@ -175,14 +175,13 @@ tests to work properly with the cookie policies introduced in v0.19.8.
 
 Release date: *2022-01-10*
 
-Jinja2 templates can now be selectively overridden in an external
-directory, for example to replace the impressum or title page. External
-static files can also be hosted. Fixes PEP495 warnings from apscheduler.
-Fixes an issue with loading map states with non-integer zoom levels. Users
-that are not allowed to see the GeoDB-Editor now have links to the place
-URI pages from the visualization location list instead. Adds a button to
-restore the default confidence selection in the visualization confidence
-view. Remove some historical clutter and naming.
+Jinja2 templates can now be selectively overridden in an external directory, for example to replace the impressum or title page ([#13](https://github.com/UniStuttgart-VISUS/damast/issues/13)).
+External static files can also be hosted.
+Fixes *PEP495* warnings from `apscheduler`.
+Fixes an issue with loading map states with non-integer zoom levels ([#25](https://github.com/UniStuttgart-VISUS/damast/issues/25)).
+Users that are not allowed to see the GeoDB-Editor now have links to the place URI pages from the visualization location list instead.
+Adds a button to restore the default confidence selection in the visualization confidence view ([#23](https://github.com/UniStuttgart-VISUS/damast/issues/23)).
+Remove some historical clutter and naming.
 
 
 ## v1.0.1
