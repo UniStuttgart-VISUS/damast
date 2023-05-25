@@ -1,0 +1,592 @@
+<h1 id="changelog">CHANGELOG</h1>
+<h2 id="v120">v1.2.0</h2>
+<p>Release date: <em>2023-05-xx</em></p>
+<p>This minor release includes migrations to newer versions of some dependencies.
+This removes some limitations on the target ECMAScript version and improves tree-shaking capability of the build:</p>
+<ul>
+<li>Upgrade GoldenLayout version from 1.5.9 to 2.6.0 (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/186">#186</a>).</li>
+<li>Upgrade Tabulator version from 4.8.2 to 5.4.4 (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/187">#187</a>).</li>
+<li>Upgrade Leaflet version from 1.7.1 to 1.9.4 (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/190">#190</a>).</li>
+</ul>
+<p>The release also includes various smaller bugfixes and some documentation improvements:</p>
+<ul>
+<li>Use stable Wikimedia URLs for the university and funding logos on the home page (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/192">#192</a>).</li>
+<li>Fix an issue with deleting places using the REST API (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/194">#194</a>).</li>
+<li>Add a safeguard to the <a href="./deploy.sh">deploy script</a> for the case that the checked-out repository has no tags (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/196">#196</a>).
+This could happen on forked repositories, and would lead to the Docker build failing because of an invalid tag name.
+The deploy script now produces a detailed error message, which, alongside the <code>README</code> file, describes how to get the upstream tags.</li>
+<li>Fix an issue with builds failing on a fresh check-out of the repository (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/197">#197</a>).</li>
+</ul>
+<h2 id="v118">v1.1.8</h2>
+<p>Release date: <em>2023-05-02</em></p>
+<p>Fix some inconsistencies and clarify configuration option precedence in the documentation (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/176">#176</a>).
+Change the Docker containers to use non-shared volume mounts instead of shared ones (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/177">#177</a>).
+Update Flask version to mitigate a vulnerability with sessions (<a href="https://github.com/advisories/GHSA-m2qf-hxjv-5gpq">GHSA-m2qf-hxjv-5gpq</a>).</p>
+<h2 id="v117">v1.1.7</h2>
+<p>Release date: <em>2023-03-14</em></p>
+<p>Update listed publications related to Damast in the root HTML page and the <code>README</code>.
+Update npm dependencies.
+Remove feedback prompt (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/174">#174</a>).</p>
+<h2 id="v116">v1.1.6</h2>
+<p>Release date: <em>2023-01-10</em></p>
+<p>Fix <a href="https://github.com/advisories/GHSA-9c47-m6qq-7p4h">CVE-2022-46175</a>, remove old, conflicting dependencies to <code>extract-loader</code> by inlining HTML template strings into the TypeScript source.</p>
+<h2 id="v115history">v1.1.5+history</h2>
+<p>Release date: <em>2022-08-23</em></p>
+<p>Enable history tree feature for all users.</p>
+<h2 id="v115">v1.1.5</h2>
+<p>Release date: <em>2022-08-19</em></p>
+<p>Fix an issue with empty time spans crashing place URI pages (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/166">#166</a>).
+Fix an issue with the false-color scale generation code crashing with zero religious groups visible (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/164">#164</a>).
+Add ticks indicating the time filter start and end year in the horizontal axes of the timeline.</p>
+<h2 id="v114">v1.1.4</h2>
+<p>Release date: <em>2022-06-30</em></p>
+<p>Add a way to go to the place URI pages directly from the map (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/146">#146</a>).
+Highlight hovered religion or confidence level in the timeline tooltip (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/150">#150</a>).
+Add form to navigate to reports by UUID (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/155">#155</a>).
+Add a distributed false-color religion mode (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/158">#158</a>).
+Add buttons to the most-used settings options to the respective views, or the header bar, as well (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/160">#160</a>).
+Add history tree to visualization (beta testers only).
+Improve post-login/logout navigation.
+Development mode now creates and hosts a PostgreSQL database locally as a Docker container, instead of port-forwarding to a database on a server.
+Add a detailed evidence list page for the place URI page.</p>
+<h2 id="v113hotfix-wasm-csp">v1.1.3+hotfix-wasm-csp</h2>
+<p>Release date: <em>2022-05-12</em></p>
+<p>Add a CSP that fixes the WASM clustering code not being loaded in newer Windows Chromium builds (Edge and Chrome, &gt;=101) (<a href="https://bugs.chromium.org/p/v8/issues/detail?id=7041">1</a>, <a href="https://bugs.chromium.org/p/chromium/issues/detail?id=915648">2</a>), and thus the map glyphs never appearing in the visualization (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/141">#141</a>).</p>
+<h2 id="v113">v1.1.3</h2>
+<p>Release date: <em>2022-05-05</em></p>
+<p>Incorporated the new home page design and contents (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/7">#7</a>).
+Fix an issue where Ghostery popup blocker would hide the cookie dialog, but not the background (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/137">#137</a>).
+Fix an issue where the cookie dialog would not work properly in the visualization (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/139">#139</a>).
+Add an extensive documentation PDF.</p>
+<h2 id="v112">v1.1.2</h2>
+<p>Release date: <em>2022-05-03</em></p>
+<p>Make deploy script more versatile and documented.
+Use native HTML Dialog element for popups and infoboxes if it is supported (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/98">#98</a>).
+Update info texts and make them more understandable (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/6">#6</a>, <a href="https://github.com/UniStuttgart-VISUS/damast/issues/116">#116</a>, <a href="https://github.com/UniStuttgart-VISUS/damast/issues/117">#117</a>).
+Fix a bug with the positions of annotation suggestions (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/130">#130</a>).</p>
+<h2 id="v111">v1.1.1</h2>
+<p>Release date: <em>2022-04-07</em></p>
+<p>Centralized the configuration, made configuration via JSON file possible (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/100">#100</a>).
+Fix a bug with brushing and linking sometimes not matching the filtered data (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/101">#101</a>).
+Add sorting options to the source view: by name or evidence count (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/104">#104</a>).
+Improve navigation and page layout on longer pages (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/114">#114</a>).
+Remove necessity for Rust toolchain when building Damast (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/115">#115</a>).
+Fix a bug with loading a visualization state with a complex religion filter (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/119">#119</a>).
+Other minor fixes (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/108">#108</a>, <a href="https://github.com/UniStuttgart-VISUS/damast/issues/113">#113</a>, <a href="https://github.com/UniStuttgart-VISUS/damast/issues/118">#118</a>, <a href="https://github.com/UniStuttgart-VISUS/damast/issues/126">#126</a>).</p>
+<h2 id="v110">v1.1.0</h2>
+<p>Release date: <em>2022-04-01</em></p>
+<p>Ignore &quot;modifier letter left/right half ring&quot; for place name sorting (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/94">#94</a>).
+Warn about changed underlying data in re-created evicted reports by adding data version history to the report database (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/97">#97</a>).
+Rename the main Python package and all configuration and environment variables from &quot;dhimmis&quot; to &quot;damast&quot; (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/102">#102</a>).
+The source list is now sorted alphabetically as a second key, after evidence count (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/103">#103</a>).
+Various changes to the report format regarding sorting, placement of footnotes, and the like (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/112">#112</a>).
+Add navigation ARIA labels where appropriate.</p>
+<h2 id="v105">v1.0.5</h2>
+<p>Release date: <em>2022-02-09</em></p>
+<p>The server can now be configured to evict old reports (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/61">#61</a>).
+Evicted reports can still be retrieved from the filters, but the report contents need to be regenerated on demand.
+Alternative names for places are now sorted first by language, then by transcription and name (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/74">#74</a>).
+The place URI page and reports now contain a &quot;How to Cite&quot; section (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/2">#2</a>, <a href="https://github.com/UniStuttgart-VISUS/damast/issues/56">#56</a>).
+The annotation suggestion refresh jobs can now be configured as to whether and how often they run, and can be triggered manually.
+Minor CSS source file restructuring (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/57">#57</a>).
+Fix internal GitHub dependencies to point to public repositories (<a href="https://github.com/UniStuttgart-VISUS/damast/pull/59/commits/b12a6df67580e66650b18ab77ea6fac2c0a7af54"><code>b12a6df</code></a>, <a href="https://github.com/UniStuttgart-VISUS/damast/pull/59/commits/490611a2bbf39265aea232a56fd8f44ecb4193b5"><code>490611a</code></a>).
+Fix a bug with incorrect match sources on place search (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/68">#68</a>).
+Fix a bug with the time filter not being shown correctly in the overview timeline (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/80">#80</a>).
+Fix a vulnerable npm dependency (<a href="https://github.com/advisories/GHSA-qrpm-p2h7-hrv2">CVE-2021-23566</a>).
+Minor fixes (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/66">#66</a>, <a href="https://github.com/UniStuttgart-VISUS/damast/issues/75">#75</a>, <a href="https://github.com/UniStuttgart-VISUS/damast/issues/84">#84</a>).</p>
+<h2 id="v104">v1.0.4</h2>
+<p>Release date: <em>2022-01-18</em></p>
+<p>The set of map tiles provided as base layers in the maps (visualization, GeoDB-Editor, and place URI page) can now be configured.
+A default set is provided.
+The religion hierarchy view now uses HTML input elements and has some quality-of-life additions, such as a revert button, subtree toggling, and consistent control icons to the rest of the views (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/34">#34</a>).
+Tag view tooltips now also show a short description, if it exists in the database table (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/17">#17</a>).
+Add a first version of a general visualization documentation page (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/46">#46</a>).
+Fix a bug where the timeline tooltip would be incorrect over the overview when zoomed in to a shorter time range (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/39">#39</a>).</p>
+<h2 id="v103">v1.0.3</h2>
+<p>Release date: <em>2022-01-12</em></p>
+<p>Add functionality to define which roles a visitor (i.e., not logged in) will receive via an environment variable (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/5">#5</a>).
+Updat and fix some of the unit tests to work properly with the cookie policies introduced in <a href="#v0198"><code>v0.19.8</code></a>.
+Fix various smaller issues, including labeling in the reports (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/29">#29</a>).</p>
+<h2 id="v102">v1.0.2</h2>
+<p>Release date: <em>2022-01-10</em></p>
+<p>Jinja2 templates can now be selectively overridden in an external directory, for example to replace the impressum or title page (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/13">#13</a>).
+External static files can also be hosted.
+Fixes <em>PEP495</em> warnings from <code>apscheduler</code>.
+Fixes an issue with loading map states with non-integer zoom levels (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/25">#25</a>).
+Users that are not allowed to see the GeoDB-Editor now have links to the place URI pages from the visualization location list instead.
+Adds a button to restore the default confidence selection in the visualization confidence view (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/23">#23</a>).
+Remove some historical clutter and naming.</p>
+<h2 id="v101">v1.0.1</h2>
+<p>Release date: <em>2021-12-28</em></p>
+<p>Renamed the navigation link to the visualization to &quot;Visualization&quot; (from &quot;Prototype&quot;), and renamed references in the sources to &quot;vis&quot; also (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/9">#9</a>).
+Updated default map center and zoom level to better match public dataset extent (<a href="https://github.com/UniStuttgart-VISUS/damast/issues/10">#10</a>).
+Cleaned up and documented clustering radius constants.</p>
+<h2 id="v100">v1.0.0</h2>
+<p>Release date: <em>2021-12-21</em></p>
+<p>Bump version to 1.0.0 for the public release on GitHub.
+Prior commits are only available in the <a href="https://github.tik.uni-stuttgart.de/frankemx/damast">TIK GitHub</a>.
+Remove some historical clutter, update README files and documentation.</p>
+<h2 id="v01912">v0.19.12</h2>
+<p>Release date: <em>2021-12-21</em></p>
+<p>The HTML report and report list now contain a link to the visualization, with the report UUID in the URL fragment.
+The visualization will evaluate the fragment, and if it consists of a valid UUID to an existing report, apply the filters from that report on load.</p>
+<h2 id="v01911">v0.19.11</h2>
+<p>Release date: <em>2021-12-15</em></p>
+<p>Updated all view infoboxes in the visualization to provide a complete and up-to-date summary of the views&#39; purposes and functionalities.
+Update dependencies, and make the development server run in a modified Docker environment that exposes the server source files.
+The diversity overlay in the map now shows the correct diversities even for densely populated areas.</p>
+<h2 id="v01910">v0.19.10</h2>
+<p>Release date: <em>2021-12-09</em></p>
+<p>Use colored map symbols for the report maps.
+Cycle through a set of shapes to ensure differentiability of religions, as colors can be quite similar.
+Place sets are now actually used in the report.</p>
+<h2 id="v0199">v0.19.9</h2>
+<p>Release date: <em>2021-12-08</em></p>
+<p>The server version is now stored directly in the report filter JSON and the visualization state JSON.
+The visualization now also accepts to load only the filter JSON stored on report generation, in which case the rest of the state will remain unchanged.
+Report generation now properly fails if no evidences match the current criteria.
+Place set filters are now listed in the query description of reports.</p>
+<h2 id="v0198">v0.19.8</h2>
+<p>Release date: <em>2021-12-08</em></p>
+<p>More strict IP logging, add cookie and <code>localStorage</code> consent functionalities to comply with GDPR rules.</p>
+<h2 id="v0197">v0.19.7</h2>
+<p>Release date: <em>2021-12-07</em></p>
+<p>Smaller bugfixes.
+All exceptions and errors during runtime are now logged to the error log.</p>
+<h2 id="v0196">v0.19.6</h2>
+<p>Release date: <em>2021-11-25</em></p>
+<p>The location list now shows how the current location confidence filter affects the locations, and also what location confidence they have.
+The location list now also has a filtering functionality, where a place set can be specified.
+Place sets can also be saved in the database.</p>
+<h2 id="v0195">v0.19.5</h2>
+<p>Release date: <em>2021-11-09</em></p>
+<p>Update the title page content.</p>
+<h2 id="v0194">v0.19.4</h2>
+<p>Release date: <em>2021-11-09</em></p>
+<p>Speed up unit tests, make server more resilient to the number of reverse proxies it lies behind.</p>
+<h2 id="v0193">v0.19.3</h2>
+<p>Release date: <em>2021-11-02</em></p>
+<p>Add CHANGELOG to repository and to server.</p>
+<h2 id="v0192">v0.19.2</h2>
+<p>Release date: <em>2021-11-02</em></p>
+<p>Improve evidence REST endpoint to reduce the number of HTTP requests sent when opening the GeoDB-Editor.</p>
+<h2 id="v0191">v0.19.1</h2>
+<p>Release date: <em>2021-11-02</em></p>
+<p>Improve the way messages from the server, such as &quot;Log-in successful&quot;, are rendered into the page, and how they are removed after a few seconds.</p>
+<h2 id="v0190">v0.19.0</h2>
+<p>Release date: <em>2021-11-02</em></p>
+<p>This release restructures the user/role mapping of the server considerably. 
+Until now, there was a general <code>user</code> role that could do most things, and some additional specialty roles with higher privileges.
+The new system has roles with three aspects:</p>
+<ul>
+<li>General access level: <code>user</code>, <code>dev</code>, and <code>admin</code>.</li>
+<li>Database access: <code>readdb</code> and <code>writedb</code>, where reading access to the database is differentiated from writing access.</li>
+<li>Access to different functionalities: <code>vis</code>, <code>geodb</code>, <code>annotator</code>, <code>reporting</code>, and <code>pgadmin</code>.</li>
+</ul>
+<p>The respective unit tests and test fixtures were also modified to reflect the new structure, and a few new test users were created for different role combinations.</p>
+<h2 id="v01810">v0.18.10</h2>
+<p>Release date: <em>2021-10-22</em></p>
+<p>Make recalculation of annotation suggestions dependent on whether anything changed since the last calculation.</p>
+<h2 id="v0189">v0.18.9</h2>
+<p>Release date: <em>2021-10-22</em></p>
+<p>Existing annotation documents are now regularly scanned for potential annotation suggestions.
+For this, existing names of places, persons, and religions are considered, as well as existing annotations in the same document.
+The suggestions are displayed separately in the annotator, and can be taken on as new annotations in two clicks.
+This release also fixes some issues with the PDF report regarding connected text in Arabic names, as well as LTR/RTL mixing issues.</p>
+<h2 id="v0188">v0.18.8</h2>
+<p>Release date: <em>2021-10-11</em></p>
+<p>Add a PDF version of the report, using LaTeX.
+As report creation now takes longer, reports are created in separate processes.
+The PDF version is also retrievable using the UUID of the report.</p>
+<h2 id="v0187">v0.18.7</h2>
+<p>Release date: <em>2021-10-04</em></p>
+<p>HTML documents for annotation are now sanitized on upload.
+The annotator page now contains documentation about how to prepare the document.</p>
+<h2 id="v0186">v0.18.6</h2>
+<p>Release date: <em>2021-09-30</em></p>
+<p>Creating a report now also creates a PDF map, using <code>pyplot</code>.
+Each report now gets a UUID, and reports can be retrieved later on as long as they are persisted on the server.
+Reports are now stored in a SQLite3 database, and the size limitation on how many evidences are included in the report is removed.
+The report generation is done asynchronously now, and the result page shows a spinner during this time.
+A separate page lists all reports the user can see.</p>
+<h2 id="v0185">v0.18.5</h2>
+<p>Release date: <em>2021-09-29</em></p>
+<p>Move the entire server stuff into a Docker container.
+The container is built and can then be deployed easily to new hosts as a <code>tar</code> file using <code>docker save</code> and <code>docker load</code>.</p>
+<h2 id="v0184">v0.18.4</h2>
+<p>Release date: <em>2021-09-24</em></p>
+<p>The advanced religion filter in the visualization is now performed client-side.
+This simplifies some code both in the server and the front end.
+The infobox text and the filter verbalization were updated.</p>
+<h2 id="v0183">v0.18.3</h2>
+<p>Release date: <em>2021-09-21</em></p>
+<p>Add place search functionality to the place URI endpoint.</p>
+<h2 id="v0182">v0.18.2</h2>
+<p>Release date: <em>2021-09-20</em></p>
+<p>Add a place endpoint which shows data about only the place.
+This will later be used for the place URIs.</p>
+<h2 id="v0181">v0.18.1</h2>
+<p>Release date: <em>2021-09-17</em></p>
+<p>Add map mode without clustering.
+This mode shows smaller icons with one circle for each religious denomination, with the circles arranged in a hexagonal grid pattern.
+The map icons can overlap in this mode, and the mode is stored in the visualization state.</p>
+<h2 id="v01713">v0.17.13</h2>
+<p>Release date: <em>2021-09-16</em></p>
+<p>Minor improvements to visualization.</p>
+<h2 id="v01712">v0.17.12</h2>
+<p>Release date: <em>2021-09-16</em></p>
+<p>Minor improvements to GeoDB-Editor.</p>
+<h2 id="v01711">v0.17.11</h2>
+<p>Release date: <em>2021-09-16</em></p>
+<p>Minor fixes to GeoDB-Editor.</p>
+<h2 id="v01710">v0.17.10</h2>
+<p>Release date: <em>2021-09-13</em></p>
+<p>Use the qualitative timeline by default.
+Show the placed locations before the unplaced by default.</p>
+<h2 id="v0179">v0.17.9</h2>
+<p>Release date: <em>2021-09-01</em></p>
+<p>Add functionality to describe the currently active filters from within the visualization.
+This re-uses the same text that is shown in the report as well.</p>
+<h2 id="v0178">v0.17.8</h2>
+<p>Release date: <em>2021-08-31</em></p>
+<p>Make the WASM clustering code for the map an <a href="https://github.tik.uni-stuttgart.de/frankemx/wasm-clustering">external dependency</a>.</p>
+<h2 id="v0177">v0.17.7</h2>
+<p>Release date: <em>2021-08-30</em></p>
+<p>Clean up and fix some minor issues with the timeline.</p>
+<h2 id="v0176">v0.17.6</h2>
+<p>Release date: <em>2021-08-27</em></p>
+<p>Add a qualitative timeline.
+Instead of showing a quantitative stacked area chart for the number of evidences per religion (or confidence level) for each year, this shows a Gantt chart of whether or not there are evidences in that year for each religion (or confidence level).
+The timeline mode is also stored with the visualization state.</p>
+<h2 id="v0175">v0.17.5</h2>
+<p>Release date: <em>2021-08-26</em></p>
+<p>Clean up database dump compression.</p>
+<h2 id="v0174">v0.17.4</h2>
+<p>Release date: <em>2021-08-23</em></p>
+<p>Clean up server configuration.</p>
+<h2 id="v0173">v0.17.3</h2>
+<p>Release date: <em>2021-08-20</em></p>
+<p>Add GeoJSON polygon filters to the visualization.
+These restrict the geographical locations of the evidence shown.
+The filters are also described in and applied to the reports.</p>
+<h2 id="v0172">v0.17.2</h2>
+<p>Release date: <em>2021-08-19</em></p>
+<p>Misc fixes and tweaks.
+Add linking of evidence from annotator to GeoDB-Editor.</p>
+<h2 id="v0171">v0.17.1</h2>
+<p>Release date: <em>2021-08-19</em></p>
+<p>Implement new annotator feature.
+The annotator has the functionality to add annotations of different types to digital documents, and to link together such annotations to evidences.
+This version also includes functionality to upload new documents for annotations, as well as an extensive documentation.
+It is now also possible to edit the positions of existing annotations.</p>
+<p>Add reporting functionality.
+This generates a textual description of the filters applied to the data, and lists the places, religions, persons, and evidence matching those filters in the database.</p>
+<p>Add some quality-of-life features to the visualization, such as row- and column-wise selection and deselection of confidence levels.
+Split up the GeoDB-Editor to show a separate page for person-related tables.
+Add links between visualization, GeoDB-Editor, and annotator.</p>
+<h2 id="v0163">v0.16.3</h2>
+<p>Release date: <em>2021-06-11</em></p>
+<p>Minor fixes to timeline.</p>
+<h2 id="v0162">v0.16.2</h2>
+<p>Release date: <em>2021-06-01</em></p>
+<p>Cleanup, bug fixes, locale-aware location list sorting.</p>
+<h2 id="v0161">v0.16.1</h2>
+<p>Release date: <em>2021-05-18</em></p>
+<p>Bug fixes and improvements.</p>
+<h2 id="v0160">v0.16.0</h2>
+<p>Release date: <em>2021-05-17</em></p>
+<p>Add a settings pane to the visualization.
+This pane provides the functionality for saving and loading visualization states.
+Further, the layout of the GoldenLayout tiles can be saved in <code>localStorage</code>.</p>
+<h2 id="v0156">v0.15.6</h2>
+<p>Release date: <em>2021-05-10</em></p>
+<p>Make &quot;no value&quot; for confidence selectable in GeoDB-Editor tables.</p>
+<h2 id="v0155">v0.15.5</h2>
+<p>Release date: <em>2021-05-06</em></p>
+<p>Smaller tweaks and fixes.</p>
+<h2 id="v0154">v0.15.4</h2>
+<p>Release date: <em>2021-04-14</em></p>
+<p>Add more person table functionality to GeoDB-Editor.</p>
+<h2 id="v0153">v0.15.3</h2>
+<p>Release date: <em>2021-04-13</em></p>
+<p>Add external place and person URIs, add person columns and tables to GeoDB-Editor.</p>
+<h2 id="v0152">v0.15.2</h2>
+<p>Release date: <em>2021-04-07</em></p>
+<p>More unit tests, tweaks to REST endpoints.</p>
+<h2 id="v0151">v0.15.1</h2>
+<p>Release date: <em>2021-04-07</em></p>
+<p>Improve search for place names, tweak and add unit tests.</p>
+<h2 id="v0150">v0.15.0</h2>
+<p>Release date: <em>2021-04-07</em></p>
+<p>Better name search for places with non-Latin scripts.
+Here, the reverse proxy garbled the URL parameters because of an encoding issue.
+The search data is now sent as the request body.</p>
+<h2 id="v0149">v0.14.9</h2>
+<p>Release date: <em>2021-04-07</em></p>
+<p>Minor tweaks.</p>
+<h2 id="v0148">v0.14.8</h2>
+<p>Release date: <em>2021-02-16</em></p>
+<p>Minor performance improvement to map zoom in the visualization.</p>
+<h2 id="v0147">v0.14.7</h2>
+<p>Release date: <em>2021-02-16</em></p>
+<p>Minor tweaks, continue migration to D3 v6.</p>
+<h2 id="v0146">v0.14.6</h2>
+<p>Release date: <em>2021-02-16</em></p>
+<p>Minor tweaks, begin migration to D3 v6.</p>
+<h2 id="v0145">v0.14.5</h2>
+<p>Release date: <em>2021-02-15</em></p>
+<p>Minor tweaks.</p>
+<h2 id="v0144">v0.14.4</h2>
+<p>Release date: <em>2021-01-26</em></p>
+<p>Tweak and improve unit tests.</p>
+<h2 id="v0143">v0.14.3</h2>
+<p>Release date: <em>2021-01-20</em></p>
+<p>Add info box links to the GoldenLayout view headers.</p>
+<h2 id="v0142">v0.14.2</h2>
+<p>Release date: <em>2021-01-19</em></p>
+<p>Store core evidence view as a materialized view in the PostgreSQL database.
+This improves the loading time of the visualization drastically, but necessitates regular rebuilding of the materialized view.</p>
+<h2 id="v0141">v0.14.1</h2>
+<p>Release date: <em>2021-01-19</em></p>
+<p>Indicate unapplied filter changes in visualization view headers.</p>
+<h2 id="v0140">v0.14.0</h2>
+<p>Release date: <em>2021-01-19</em></p>
+<p>Add more functionality for tagging evidences, as well as a tag view in the visualization.</p>
+<h2 id="v0130">v0.13.0</h2>
+<p>Release date: <em>2021-01-13</em></p>
+<p>Move visualization views to GoldenLayout to provide resizable views and tabbing.</p>
+<h2 id="v0124">v0.12.4</h2>
+<p>Release date: <em>2021-01-11</em></p>
+<p>Minor bug fixes.</p>
+<h2 id="v0122">v0.12.2</h2>
+<p>Release date: <em>2020-12-09</em></p>
+<p>Move map clustering to Rust WASM code.</p>
+<h2 id="v0121">v0.12.1</h2>
+<p>Release date: <em>2020-12-07</em></p>
+<p>Add tag table to GeoDB-Editor, misc tweaks.</p>
+<h2 id="v0120">v0.12.0</h2>
+<p>Release date: <em>2020-11-26</em></p>
+<p>Add tagging functionality to evidences.</p>
+<h2 id="v0113">v0.11.3</h2>
+<p>Release date: <em>2020-11-11</em></p>
+<p>Add a diversity heatmap to the visualization.</p>
+<h2 id="v0112">v0.11.2</h2>
+<p>Release date: <em>2020-10-29</em></p>
+<p>Improvements to annotation REST API.</p>
+<h2 id="v0111">v0.11.1</h2>
+<p>Release date: <em>2020-10-15</em></p>
+<p>Misc tweaks to compression of server responses.</p>
+<h2 id="v0110">v0.11.0</h2>
+<p>Release date: <em>2020-10-14</em></p>
+<p>Move a lot of visualization logic to multiple WebWorkers, one per view.</p>
+<h2 id="v0104">v0.10.4</h2>
+<p>Release date: <em>2020-10-08</em></p>
+<p>Cleanup.</p>
+<h2 id="v0103">v0.10.3</h2>
+<p>Release date: <em>2020-10-08</em></p>
+<p>Migrate some visualization filter logic to WebWorkers.</p>
+<h2 id="v0102">v0.10.2</h2>
+<p>Release date: <em>2020-10-05</em></p>
+<p>Misc fixes to server and tests, add <code>README</code>.</p>
+<h2 id="v0101">v0.10.1</h2>
+<p>Release date: <em>2020-09-21</em></p>
+<p>Add annotation constraints for document length.
+Add default confidence filter selection in visualization.</p>
+<h2 id="v0100">v0.10.0</h2>
+<p>Release date: <em>2020-09-21</em></p>
+<p>Add more unit tests.</p>
+<h2 id="v0910">v0.9.10</h2>
+<p>Release date: <em>2020-08-24</em></p>
+<p>Add a lot of unit tests for the REST API.</p>
+<h2 id="v099">v0.9.9</h2>
+<p>Release date: <em>2020-08-14</em></p>
+<p>Misc bug fixes, add first pytest tests.</p>
+<h2 id="v098">v0.9.8</h2>
+<p>Release date: <em>2020-08-12</em></p>
+<p>Cleanup database dump utility.</p>
+<h2 id="v097">v0.9.7</h2>
+<p>Release date: <em>2020-08-12</em></p>
+<p>Red border on GeoDB-Editor deletion modal.</p>
+<h2 id="v096">v0.9.6</h2>
+<p>Release date: <em>2020-08-12</em></p>
+<p>Tweaks to userlog and login page.</p>
+<h2 id="v095">v0.9.5</h2>
+<p>Release date: <em>2020-08-11</em></p>
+<p>Tweaks to versioning code.</p>
+<h2 id="v094">v0.9.4</h2>
+<p>Release date: <em>2020-08-11</em></p>
+<p>Misc tweaks, reset brushing when zooming the map.</p>
+<h2 id="v093">v0.9.3</h2>
+<p>Release date: <em>2020-08-06</em></p>
+<p>Misc tweaks, improve greyed-out filters in visualization.</p>
+<h2 id="v092">v0.9.2</h2>
+<p>Release date: <em>2020-08-04</em></p>
+<p>First version of a root page introducing the project.</p>
+<h2 id="v091">v0.9.1</h2>
+<p>Release date: <em>2020-08-04</em></p>
+<p>Expire logins.</p>
+<h2 id="v090">v0.9.0</h2>
+<p>Release date: <em>2020-08-03</em></p>
+<p>Add the sources view to the visualization.</p>
+<h2 id="v083">v0.8.3</h2>
+<p>Release date: <em>2020-07-30</em></p>
+<p>Minor tweaks, improvements on database migration script.
+Show a label in the testing instance.</p>
+<h2 id="v082">v0.8.2</h2>
+<p>Release date: <em>2020-07-28</em></p>
+<p>Add database dump endpoint.</p>
+<h2 id="v081">v0.8.1</h2>
+<p>Release date: <em>2020-07-28</em></p>
+<p>Add documentation features: database schema PDF, user log, REST API documentation.</p>
+<h2 id="v080">v0.8.0</h2>
+<p>Release date: <em>2020-07-22</em></p>
+<p>Add testing database.</p>
+<h2 id="v078">v0.7.8</h2>
+<p>Release date: <em>2020-07-21</em></p>
+<p>Start DB migration preparation, misc tweaks.</p>
+<h2 id="v077">v0.7.7</h2>
+<p>Release date: <em>2020-07-21</em></p>
+<p>Minor fixes, rename confidence level &quot;confident&quot; to &quot;probable&quot;.</p>
+<h2 id="v076">v0.7.6</h2>
+<p>Release date: <em>2020-07-14</em></p>
+<p>Prettier coordinate formatting, misc tweaks.</p>
+<h2 id="v075">v0.7.5</h2>
+<p>Release date: <em>2020-07-14</em></p>
+<p>Add CSS compression.</p>
+<h2 id="v074">v0.7.4</h2>
+<p>Release date: <em>2020-07-13</em></p>
+<p>Cleanup SCSS.</p>
+<h2 id="v073">v0.7.3</h2>
+<p>Release date: <em>2020-07-13</em></p>
+<p>Link to GeoDB-Editor from the location list of the visualization.</p>
+<h2 id="v072">v0.7.2</h2>
+<p>Release date: <em>2020-07-09</em></p>
+<p>FontAwesome icons in header and footer links.</p>
+<h2 id="v071">v0.7.1</h2>
+<p>Release date: <em>2020-07-09</em></p>
+<p>Add loading spinner.</p>
+<h2 id="v070">v0.7.0</h2>
+<p>Release date: <em>2020-07-09</em></p>
+<p>Replace old by new visualization prototype.
+Include real confidence data in the visualization, remove dummy data.</p>
+<h2 id="v0614">v0.6.14</h2>
+<p>Release date: <em>2020-07-07</em></p>
+<p>More consistent CSS and buttons, add FontAwesome to login/logout buttons.</p>
+<h2 id="v0613">v0.6.13</h2>
+<p>Release date: <em>2020-07-07</em></p>
+<p>Unify style sheets to common SCSS build.</p>
+<h2 id="v0612">v0.6.12</h2>
+<p>Release date: <em>2020-07-03</em></p>
+<p>Ignore Arabic definite articles when sorting the place table.</p>
+<h2 id="v0611">v0.6.11</h2>
+<p>Release date: <em>2020-07-03</em></p>
+<p>Minor fixes.</p>
+<h2 id="v0610">v0.6.10</h2>
+<p>Release date: <em>2020-07-03</em></p>
+<p>Minor fixes.</p>
+<h2 id="v069">v0.6.9</h2>
+<p>Release date: <em>2020-07-03</em></p>
+<p>Add logic regarding unsaved changes to GeoDB-Editor.</p>
+<h2 id="v068">v0.6.8</h2>
+<p>Release date: <em>2020-07-03</em></p>
+<p>Implement new version of GeoDB-Editor.</p>
+<h2 id="v066">v0.6.6</h2>
+<p>Release date: <em>2020-06-10</em></p>
+<p>Log blueprint in access log, fix deploy.</p>
+<h2 id="v065">v0.6.5</h2>
+<p>Release date: <em>2020-06-09</em></p>
+<p>Anonymize IP addresses in access log.</p>
+<h2 id="v064">v0.6.4</h2>
+<p>Release date: <em>2020-06-09</em></p>
+<p>Add rotating logs, small tweaks.</p>
+<h2 id="v063">v0.6.3</h2>
+<p>Release date: <em>2020-06-09</em></p>
+<p>Use a common base Jinja2 template for pages.</p>
+<h2 id="v062">v0.6.2</h2>
+<p>Release date: <em>2020-06-08</em></p>
+<p>Cleanup.</p>
+<h2 id="v061">v0.6.1</h2>
+<p>Release date: <em>2020-06-08</em></p>
+<p>Put visualization behind login.</p>
+<h2 id="v060">v0.6.0</h2>
+<p>Release date: <em>2020-06-08</em></p>
+<p>Combine multiple functionalities in one Flask server.
+Improve REST API to the database.
+Introduce the advanced religion filter mode, where combinations of religions must be present in the same place.</p>
+<h2 id="v050">v0.5.0</h2>
+<p>Release date: <em>2020-01-10</em></p>
+<p>Add live database access and first version of REST API.
+Change religion hierarchy to an indented tree visualization.</p>
+<h2 id="v0412">v0.4.12</h2>
+<p>Release date: <em>2019-11-05</em></p>
+<p>Bug fixes.</p>
+<h2 id="v0411">v0.4.11</h2>
+<p>Release date: <em>2019-10-18</em></p>
+<p>Color scale tweaks.</p>
+<h2 id="v0410">v0.4.10</h2>
+<p>Release date: <em>2019-08-09</em></p>
+<p>Add cache control.</p>
+<h2 id="v049">v0.4.9</h2>
+<p>Release date: <em>2019-08-09</em></p>
+<p>More hard-coded data.</p>
+<h2 id="v048">v0.4.8</h2>
+<p>Release date: <em>2019-08-05</em></p>
+<p>Better linking in location list.</p>
+<h2 id="v047">v0.4.7</h2>
+<p>Release date: <em>2019-08-05</em></p>
+<p>Bug fixes, deploy script.</p>
+<h2 id="v046">v0.4.6</h2>
+<p>Release date: <em>2019-07-25</em></p>
+<p>Minor fixes.</p>
+<h2 id="v045">v0.4.5</h2>
+<p>Release date: <em>2019-07-24</em></p>
+<p>Add alternative names to location search.</p>
+<h2 id="v044">v0.4.4</h2>
+<p>Release date: <em>2019-07-24</em></p>
+<p>New confidence color scheme, package updates.</p>
+<h2 id="v043">v0.4.3</h2>
+<p>Release date: <em>2019-07-23</em></p>
+<p>Add multiple map styles.</p>
+<h2 id="v042">v0.4.2</h2>
+<p>Release date: <em>2019-07-23</em></p>
+<p>Add information modals for more views.</p>
+<h2 id="v041">v0.4.1</h2>
+<p>Release date: <em>2019-07-22</em></p>
+<p>Add info modal for religion hierarchy.</p>
+<h2 id="v040">v0.4.0</h2>
+<p>Release date: <em>2019-07-22</em></p>
+<p>Cleanup, bug fixes and improvements on orthogonal filtering and uncertainty visualization mode.</p>
+<h2 id="v034">v0.3.4</h2>
+<p>Release date: <em>2019-07-16</em></p>
+<p>Untimed display is now affected by filters.</p>
+<h2 id="v033">v0.3.3</h2>
+<p>Release date: <em>2019-07-15</em></p>
+<p>Minor visual tweaks.</p>
+<h2 id="v032">v0.3.2</h2>
+<p>Release date: <em>2019-07-04</em></p>
+<p>Clicking in the location list moves the map to the location.</p>
+<h2 id="v031">v0.3.1</h2>
+<p>Release date: <em>2019-07-01</em></p>
+<p>Smaller bug fixes.
+Add search field to location list.</p>
+<h2 id="v030">v0.3.0</h2>
+<p>Release date: <em>2019-05-29</em></p>
+<p>Add uncertainty coloring mode to visualization.</p>
+<h2 id="v026">v0.2.6</h2>
+<p>Release date: <em>2019-04-16</em></p>
+<p>Add functionality to swap location list positions, and to collapse them.</p>
+<h2 id="v025">v0.2.5</h2>
+<p>Release date: <em>2019-04-10</em></p>
+<p>Add untimed data view, as well as a list of places without coordinates.</p>
+<h2 id="v024">v0.2.4</h2>
+<p>Release date: <em>2019-04-05</em></p>
+<p>Add list of locations.</p>
+<h2 id="v023">v0.2.3</h2>
+<p>Release date: <em>2019-04-04</em></p>
+<p>Add brushing, &quot;only active&quot; option for brushing.</p>
+<h2 id="v022">v0.2.2</h2>
+<p>Release date: <em>2019-04-03</em></p>
+<p>Add more data (hard-coded).</p>
+<h2 id="v021">v0.2.1</h2>
+<p>Release date: <em>2019-02-25</em></p>
+<p>Initial version of visualization and Flask app.</p>
