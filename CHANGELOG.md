@@ -189,47 +189,41 @@ view. Remove some historical clutter and naming.
 
 Release date: *2021-12-28*
 
-Updated default map center and zoom level to better match public dataset
-extent. Cleaned up and documented clustering radius constants. Renamed the
-navigation link to the visualization to "Visualization" (from "Prototype"),
-and renamed references in the sources to "vis" also.
+Updated default map center and zoom level to better match public dataset extent. Cleaned up and documented clustering radius constants. Renamed the navigation link to the visualization to "Visualization" (from "Prototype"), and renamed references in the sources to "vis" also.
 
 
 ## v1.0.0
 
 Release date: *2021-12-21*
 
-Bump version to 1.0.0 for public release. Remove some historical clutter,
-update README files and documentation.
+Bump version to 1.0.0 for the public release on GitHub.
+Prior commits are only available in the [TIK GitHub](https://github.tik.uni-stuttgart.de/frankemx/damast).
+Remove some historical clutter, update README files and documentation.
 
 
 ## v0.19.12
 
 Release date: *2021-12-21*
 
-The HTML report and report list now contain a link to the visualization,
-with the report UUID in the URL fragment. The visualization will evaluate
-the fragment, and if it consists of a valid UUID to an existing report,
-apply the filters from that report on load.
+The HTML report and report list now contain a link to the visualization, with the report UUID in the URL fragment.
+The visualization will evaluate the fragment, and if it consists of a valid UUID to an existing report, apply the filters from that report on load.
 
 
 ## v0.19.11
 
 Release date: *2021-12-15*
 
-Updated all view infoboxes in the visualization to provide a complete and
-up-to-date summary of the views' purposes and functionalities. Update
-dependencies, and make the development server run in a modified Docker
-environment that exposes the server source files. The diversity overlay in
-the map now shows the correct diversities even for densely populated areas.
+Updated all view infoboxes in the visualization to provide a complete and up-to-date summary of the views' purposes and functionalities.
+Update dependencies, and make the development server run in a modified Docker environment that exposes the server source files.
+The diversity overlay in the map now shows the correct diversities even for densely populated areas.
 
 
 ## v0.19.10
 
 Release date: *2021-12-09*
 
-Use colored map symbols for the report maps. Cycle through a set of shapes
-to ensure differentiability of religions, as colors can be quite similar.
+Use colored map symbols for the report maps.
+Cycle through a set of shapes to ensure differentiability of religions, as colors can be quite similar.
 Place sets are now actually used in the report.
 
 
@@ -237,38 +231,34 @@ Place sets are now actually used in the report.
 
 Release date: *2021-12-08*
 
-The server version is now stored directly in the report filter JSON and the
-visualization state JSON. The visualization now also accepts to load only
-the filter JSON stored on report generation, in which case the rest of the
-state will remain unchanged. Report generation now properly fails if no
-evidences match the current criteria. Place set filters are now listed in
-the query description of reports.
+The server version is now stored directly in the report filter JSON and the visualization state JSON.
+The visualization now also accepts to load only the filter JSON stored on report generation, in which case the rest of the state will remain unchanged.
+Report generation now properly fails if no evidences match the current criteria.
+Place set filters are now listed in the query description of reports.
 
 
 ## v0.19.8
 
 Release date: *2021-12-08*
 
-More strict IP-Logging, add Cookie and localStorage consent functionalities
-to comply with GDPR rules.
+More strict IP logging, add cookie and `localStorage` consent functionalities to comply with GDPR rules.
 
 
 ## v0.19.7
 
 Release date: *2021-12-07*
 
-Smaller bugfixes. All exceptions and errors during runtime are now logged
-to the error log.
+Smaller bugfixes.
+All exceptions and errors during runtime are now logged to the error log.
 
 
 ## v0.19.6
 
 Release date: *2021-11-25*
 
-The location list now shows how the current location confidence filter
-affects the locations, and also what location confidence they have. The
-location list now also has a filtering functionality, where a place set can
-be specified. Place sets can also be saved in the database.
+The location list now shows how the current location confidence filter affects the locations, and also what location confidence they have.
+The location list now also has a filtering functionality, where a place set can be specified.
+Place sets can also be saved in the database.
 
 
 ## v0.19.5
@@ -282,8 +272,7 @@ Update the title page content.
 
 Release date: *2021-11-09*
 
-Speed up unittests, make server more resilient to the number of reverse
-proxies it lies behind.
+Speed up unit tests, make server more resilient to the number of reverse proxies it lies behind.
 
 
 ## v0.19.3
@@ -297,106 +286,91 @@ Add CHANGELOG to repository and to server.
 
 Release date: *2021-11-02*
 
-Improve evidence REST endpoint to reduce the number of HTTP requests
-sent when opening the GeoDB-Editor.
+Improve evidence REST endpoint to reduce the number of HTTP requests sent when opening the GeoDB-Editor.
 
 
 ## v0.19.1
 
 Release date: *2021-11-02*
 
-Improve the way messages from the server, such as "Log-in successful",
-are rendered into the page, and how they are removed after a few seconds.
+Improve the way messages from the server, such as "Log-in successful", are rendered into the page, and how they are removed after a few seconds.
 
 
 ## v0.19.0
 
 Release date: *2021-11-02*
 
-This release restructures the user/role mapping of the server
-considerably.  Until now, there was a general "user" role that could do
-most things, and some additional specialty roles with higher privileges.
+This release restructures the user/role mapping of the server considerably. 
+Until now, there was a general `user` role that could do most things, and some additional specialty roles with higher privileges.
 The new system has roles with three aspects:
 
- - General access level: "user", "dev", and "admin".
- - Database access: "readdb" and "writedb", where reading access to the
-   database is differentiated from writing access.
- - Access to different functionalities: "vis", "geodb", "annotator",
-   "reporting", and "pgadmin".
+ - General access level: `user`, `dev`, and `admin`.
+ - Database access: `readdb` and `writedb`, where reading access to the database is differentiated from writing access.
+ - Access to different functionalities: `vis`, `geodb`, `annotator`, `reporting`, and `pgadmin`.
 
-The respective unit tests and test fixtures were also modified to reflect the
-new structure, and a few new test users were created for different role
-combinations.
+The respective unit tests and test fixtures were also modified to reflect the new structure, and a few new test users were created for different role combinations.
 
 
 ## v0.18.10
 
 Release date: *2021-10-22*
 
-Make recalculation of annotation suggestions dependent on whether anything
-changed since the last calculation.
+Make recalculation of annotation suggestions dependent on whether anything changed since the last calculation.
 
 
 ## v0.18.9
 
 Release date: *2021-10-22*
 
-Existing annotation documents are now regularly scanned for potential
-annotation suggestions.  For this, existing names of places, persons,
-and religions are considered, as well as existing annotations in the
-same document.  The suggestions are displayed separately in the annotator,
-and can be taken on as new annotations in two clicks.
-
-This release also fixes some issues with the PDF report regarding
-connected text in Arabic names, as well as LTR/RTL mixing issues.
+Existing annotation documents are now regularly scanned for potential annotation suggestions.
+For this, existing names of places, persons, and religions are considered, as well as existing annotations in the same document.
+The suggestions are displayed separately in the annotator, and can be taken on as new annotations in two clicks.
+This release also fixes some issues with the PDF report regarding connected text in Arabic names, as well as LTR/RTL mixing issues.
 
 
 ## v0.18.8
 
 Release date: *2021-10-11*
 
-Add a PDF version of the report, using LaTeX.  As report creation now
-takes longer, reports are created in separate processes.  The PDF version
-is also retrievable using the UUID of the report.
+Add a PDF version of the report, using LaTeX.
+As report creation now takes longer, reports are created in separate processes.
+The PDF version is also retrievable using the UUID of the report.
 
 
 ## v0.18.7
 
 Release date: *2021-10-04*
 
-HTML documents for annotation are now sanitized on upload.  The annotator
-page now contains documentation about how to prepare the document.
+HTML documents for annotation are now sanitized on upload.
+The annotator page now contains documentation about how to prepare the document.
 
 
 ## v0.18.6
 
 Release date: *2021-09-30*
 
-Creating a report now also creates a PDF map, using pyplot.  Each report
-now gets a UUID, and reports can be retrieved later on as long as they are
-persisted on the server.  Reports are now stored in a SQLite3 database,
-and the size limitation on how many evidences are included in the report
-is removed.  The report generation is done asynchronously now, and the
-result page shows a spinner during this time.  A separate page lists
-all reports the user can see.
+Creating a report now also creates a PDF map, using `pyplot`.
+Each report now gets a UUID, and reports can be retrieved later on as long as they are persisted on the server.
+Reports are now stored in a SQLite3 database, and the size limitation on how many evidences are included in the report is removed.
+The report generation is done asynchronously now, and the result page shows a spinner during this time.
+A separate page lists all reports the user can see.
 
 
 ## v0.18.5
 
 Release date: *2021-09-29*
 
-Move the entire server stuff into a Docker container.  The container is
-built and can then be deployed easily to new hosts as a TAR file using
-"docker save" and "docker load".
+Move the entire server stuff into a Docker container.
+The container is built and can then be deployed easily to new hosts as a `tar` file using `docker save` and `docker load`.
 
 
 ## v0.18.4
 
 Release date: *2021-09-24*
 
-The advanced religion filter in the visualization is now performed
-client-side.  This simplifies some code both in the server and the
-front end.  The infobox text and the filter verbalization were updated.
+The advanced religion filter in the visualization is now performed client-side.
+This simplifies some code both in the server and the front end.
+The infobox text and the filter verbalization were updated.
 
 
 ## v0.18.3
@@ -410,18 +384,17 @@ Add place search functionality to the place URI endpoint.
 
 Release date: *2021-09-20*
 
-Add a place endpoint which shows data about only the place.  This will
-later be used for the place URIs.
+Add a place endpoint which shows data about only the place.
+This will later be used for the place URIs.
 
 
 ## v0.18.1
 
 Release date: *2021-09-17*
 
-Add map mode without clustering.  This mode shows smaller icons with
-one circle for each religious denomination, with the circles arranged
-in a hexagonal grid pattern.  The map icons can overlap in this mode,
-and the mode is stored in the visualization state.
+Add map mode without clustering.
+This mode shows smaller icons with one circle for each religious denomination, with the circles arranged in a hexagonal grid pattern.
+The map icons can overlap in this mode, and the mode is stored in the visualization state.
 
 
 ## v0.17.13
@@ -449,25 +422,23 @@ Minor fixes to GeoDB-Editor.
 
 Release date: *2021-09-13*
 
-Use the qualitative timeline by default.  Show the placed locations
-before the unplaced by default.
+Use the qualitative timeline by default.
+Show the placed locations before the unplaced by default.
 
 
 ## v0.17.9
 
 Release date: *2021-09-01*
 
-Add functionality to describe the currently active filters from within
-the visualization.  This re-uses the same text that is shown in the
-report as well.
+Add functionality to describe the currently active filters from within the visualization.
+This re-uses the same text that is shown in the report as well.
 
 
 ## v0.17.8
 
 Release date: *2021-08-31*
 
-Make the WASM clustering code for the map an external dependency:
-https://github.tik.uni-stuttgart.de/frankemx/wasm-clustering
+Make the WASM clustering code for the map an [external dependency](https://github.tik.uni-stuttgart.de/frankemx/wasm-clustering).
 
 
 ## v0.17.7
@@ -481,10 +452,8 @@ Clean up and fix some minor issues with the timeline.
 
 Release date: *2021-08-27*
 
-Add a qualitative timeline.  Instead of showing a quantitative stacked
-area chart for the number of evidences per religion (or confidence
-level) for each year, this shows a Gantt chart of whether or not there
-are evidences in that year for each religion (or confidence level).
+Add a qualitative timeline.
+Instead of showing a quantitative stacked area chart for the number of evidences per religion (or confidence level) for each year, this shows a Gantt chart of whether or not there are evidences in that year for each religion (or confidence level).
 The timeline mode is also stored with the visualization state.
 
 
@@ -506,37 +475,33 @@ Clean up server configuration.
 
 Release date: *2021-08-20*
 
-Add GeoJSON polygon filters to the visualization.  These restrict the
-geographical locations of the evidence shown.  The filters are also
-described in and applied to the reports.
+Add GeoJSON polygon filters to the visualization.
+These restrict the geographical locations of the evidence shown.
+The filters are also described in and applied to the reports.
 
 
 ## v0.17.2
 
 Release date: *2021-08-19*
 
-Misc fixes and tweaks.  Add linking of evidence from annotator to
-GeoDB-Editor.
+Misc fixes and tweaks.
+Add linking of evidence from annotator to GeoDB-Editor.
 
 
 ## v0.17.1
 
 Release date: *2021-08-19*
 
-Implement new annotator feature.  The annotator has the functionality
-to add annotations of different types to digital documents, and to link
-together such annotations to evidences.  This version also includes
-functionality to upload new documents for annotations, as well as an
-extensive documentation.  It is now also possible to edit the positions of
-existing annotations.
+Implement new annotator feature.
+The annotator has the functionality to add annotations of different types to digital documents, and to link together such annotations to evidences.
+This version also includes functionality to upload new documents for annotations, as well as an extensive documentation.
+It is now also possible to edit the positions of existing annotations.
 
-Add reporting functionality.  This generates a textual description of the
-filters applied to the data, and lists the places, religions, persons,
-and evidence matching those filters in the database.
+Add reporting functionality.
+This generates a textual description of the filters applied to the data, and lists the places, religions, persons, and evidence matching those filters in the database.
 
-Add some quality-of-life features to the visualization, such as row- and
-column-wise selection and deselection of confidence levels.  Split up
-the GeoDB-Editor to show a separate page for person-related tables.
+Add some quality-of-life features to the visualization, such as row- and column-wise selection and deselection of confidence levels.
+Split up the GeoDB-Editor to show a separate page for person-related tables.
 Add links between visualization, GeoDB-Editor, and annotator.
 
 
@@ -565,9 +530,9 @@ Bug fixes and improvements.
 
 Release date: *2021-05-17*
 
-Add a settings pane to the visualization.  This pane provides the
-functionality for saving and loading visualization states.  Further,
-the layout of the GoldenLayout tiles can be saved in localStorage.
+Add a settings pane to the visualization.
+This pane provides the functionality for saving and loading visualization states.
+Further, the layout of the GoldenLayout tiles can be saved in `localStorage`.
 
 
 ## v0.15.6
@@ -595,8 +560,7 @@ Add more person table functionality to GeoDB-Editor.
 
 Release date: *2021-04-13*
 
-Add external place and person URIs, add person columns and tables to
-GeoDB-Editor.
+Add external place and person URIs, add person columns and tables to GeoDB-Editor.
 
 
 ## v0.15.2
@@ -617,9 +581,9 @@ Improve search for place names, tweak and add unit tests.
 
 Release date: *2021-04-07*
 
-Better name search for places with non-Latin scripts.  Here, the reverse
-proxy garbled the URL parameters because of an encoding issue.  The search
-data is now sent as the request body.
+Better name search for places with non-Latin scripts.
+Here, the reverse proxy garbled the URL parameters because of an encoding issue.
+The search data is now sent as the request body.
 
 
 ## v0.14.9
@@ -675,9 +639,8 @@ Add info box links to the GoldenLayout view headers.
 
 Release date: *2021-01-19*
 
-Store core evidence view as a materialized view in the PostgreSQL
-database.  This improves the loading time of the visualization
-drastically, but necessitates regular rebuilding of the materialized view.
+Store core evidence view as a materialized view in the PostgreSQL database.
+This improves the loading time of the visualization drastically, but necessitates regular rebuilding of the materialized view.
 
 
 ## v0.14.1
@@ -691,16 +654,14 @@ Indicate unapplied filter changes in visualization view headers.
 
 Release date: *2021-01-19*
 
-Add more functionality for tagging evidences, as well as a tag view in
-the visualization.
+Add more functionality for tagging evidences, as well as a tag view in the visualization.
 
 
 ## v0.13.0
 
 Release date: *2021-01-13*
 
-Move visualization views to GoldenLayout to provide resizable views
-and tabbing.
+Move visualization views to GoldenLayout to provide resizable views and tabbing.
 
 
 ## v0.12.4
@@ -777,15 +738,15 @@ Migrate some visualization filter logic to WebWorkers.
 
 Release date: *2020-10-05*
 
-Misc fixes to server and tests, add README.
+Misc fixes to server and tests, add `README`.
 
 
 ## v0.10.1
 
 Release date: *2020-09-21*
 
-Add annotation constraints for document length.  Add default confidence
-filter selection in visualization.
+Add annotation constraints for document length.
+Add default confidence filter selection in visualization.
 
 
 ## v0.10.0
@@ -855,7 +816,7 @@ Misc tweaks, improve greyed-out filters in visualization.
 
 Release date: *2020-08-04*
 
-First version of a root page Introducing the project.
+First version of a root page introducing the project.
 
 
 ## v0.9.1
@@ -876,8 +837,8 @@ Add the sources view to the visualization.
 
 Release date: *2020-07-30*
 
-Minor tweaks, improvements on database migration script.  Show a label
-in the testing instance.
+Minor tweaks, improvements on database migration script.
+Show a label in the testing instance.
 
 
 ## v0.8.2
@@ -891,8 +852,7 @@ Add database dump endpoint.
 
 Release date: *2020-07-28*
 
-Add documentation features: database schema PDF, user log, REST API
-documentation.
+Add documentation features: database schema PDF, user log, REST API documentation.
 
 
 ## v0.8.0
@@ -962,8 +922,8 @@ Add loading spinner.
 
 Release date: *2020-07-09*
 
-Replace old by new visualization prototype.  Include real confidence
-data in the visualization, remove dummy data.
+Replace old by new visualization prototype.
+Include real confidence data in the visualization, remove dummy data.
 
 
 ## v0.6.14
@@ -1061,17 +1021,17 @@ Put visualization behind login.
 
 Release date: *2020-06-08*
 
-Combine multiple functionalities in one Flask server.  Improve REST
-API to the database.  Introduce the advanced religion filter mode,
-where combinations of religions must be present in the same place.
+Combine multiple functionalities in one Flask server.
+Improve REST API to the database.
+Introduce the advanced religion filter mode, where combinations of religions must be present in the same place.
 
 
 ## v0.5.0
 
 Release date: *2020-01-10*
 
-Add live database access and first version of REST API.  Change religion
-hierarchy to an indented tree visualization.
+Add live database access and first version of REST API.
+Change religion hierarchy to an indented tree visualization.
 
 
 ## v0.4.12
@@ -1162,8 +1122,7 @@ Add info modal for religion hierarchy.
 
 Release date: *2019-07-22*
 
-Cleanup, bug fixes and improvements on orthogonal filtering and
-uncertainty visualization mode.
+Cleanup, bug fixes and improvements on orthogonal filtering and uncertainty visualization mode.
 
 
 ## v0.3.4
@@ -1191,7 +1150,8 @@ Clicking in the location list moves the map to the location.
 
 Release date: *2019-07-01*
 
-Smaller bug fixes.  Add search field to location list.
+Smaller bug fixes.
+Add search field to location list.
 
 
 ## v0.3.0
