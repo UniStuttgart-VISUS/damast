@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## v1.2.0
+## v1.2.0 (in progress)
 
 Release date: *2023-05-xx*
 
@@ -19,6 +19,7 @@ The release also includes various smaller bugfixes and some documentation improv
   This could happen on forked repositories, and would lead to the Docker build failing because of an invalid tag name.
   The deploy script now produces a detailed error message, which, alongside the `README` file, describes how to get the upstream tags.
 - Fix an issue with builds failing on a fresh check-out of the repository ([#197](https://github.com/UniStuttgart-VISUS/damast/issues/197)).
+- Migrate the `CHANGELOG` to a markdown file that is compiled to HTML for the version included in the Docker image ([#201](https://github.com/UniStuttgart-VISUS/damast/issues/201))
 
 
 ## v1.1.8

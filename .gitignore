@@ -14,7 +14,7 @@
 /damast/reporting/static/
 /damast/uri/static/
 /damast/questionnaire/static/
-/damast/docs/templates/docs/changelog.txt
+/damast/docs/templates/docs/changelog-contents.html
 /damast/docs/templates/docs/license.txt
 /damast/reporting/templates/reporting/license.txt
 /pyenv/
