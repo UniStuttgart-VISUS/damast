@@ -108,12 +108,13 @@ Fix a bug with the positions of annotation suggestions ([#130](https://github.co
 
 Release date: *2022-04-07*
 
-Remove necessity for Rust toolchain when building Damast. Fix a bug with
-loading a visualization state with a complex religion filter. Fix a bug
-with brushing and linking sometimes not matching the filtered data. Other
-minor fixes. Improve navigation and page layout on longer pages. Add
-sorting options to the source view: by name or evidence count. Centralized
-the configuration, made configuration via JSON file possible.
+Centralized the configuration, made configuration via JSON file possible ([#100](https://github.com/UniStuttgart-VISUS/damast/issues/100)).
+Fix a bug with brushing and linking sometimes not matching the filtered data ([#101](https://github.com/UniStuttgart-VISUS/damast/issues/101)).
+Add sorting options to the source view: by name or evidence count ([#104](https://github.com/UniStuttgart-VISUS/damast/issues/104)).
+Improve navigation and page layout on longer pages ([#114](https://github.com/UniStuttgart-VISUS/damast/issues/114)).
+Remove necessity for Rust toolchain when building Damast ([#115](https://github.com/UniStuttgart-VISUS/damast/issues/115)).
+Fix a bug with loading a visualization state with a complex religion filter ([#119](https://github.com/UniStuttgart-VISUS/damast/issues/119)).
+Other minor fixes ([#108](https://github.com/UniStuttgart-VISUS/damast/issues/108), [#113](https://github.com/UniStuttgart-VISUS/damast/issues/113), [#118](https://github.com/UniStuttgart-VISUS/damast/issues/118), [#126](https://github.com/UniStuttgart-VISUS/damast/issues/126)).
 
 
 ## v1.1.0
