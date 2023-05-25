@@ -121,13 +121,12 @@ Other minor fixes ([#108](https://github.com/UniStuttgart-VISUS/damast/issues/10
 
 Release date: *2022-04-01*
 
-Add navigation ARIA labels where appropriate. Warn about changed underlying
-data in re-created evicted reports by adding data version history to the
-report database. Ignore "modifier letter left/right half ring" for place
-name sorting. The source list is now sorted alphabetically as a second key,
-after evidence count. Rename the main Python package and all configuration
-and environment variables from "dhimmis" to "damast". Various changes to
-the report format regarding sorting, placement of footnotes, and the like.
+Ignore "modifier letter left/right half ring" for place name sorting ([#94](https://github.com/UniStuttgart-VISUS/damast/issues/94)).
+Warn about changed underlying data in re-created evicted reports by adding data version history to the report database ([#97](https://github.com/UniStuttgart-VISUS/damast/issues/97)).
+Rename the main Python package and all configuration and environment variables from "dhimmis" to "damast" ([#102](https://github.com/UniStuttgart-VISUS/damast/issues/102)).
+The source list is now sorted alphabetically as a second key, after evidence count ([#103](https://github.com/UniStuttgart-VISUS/damast/issues/103)).
+Various changes to the report format regarding sorting, placement of footnotes, and the like ([#112](https://github.com/UniStuttgart-VISUS/damast/issues/112)).
+Add navigation ARIA labels where appropriate.
 
 
 ## v1.0.5
