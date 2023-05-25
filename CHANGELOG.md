@@ -189,7 +189,9 @@ view. Remove some historical clutter and naming.
 
 Release date: *2021-12-28*
 
-Updated default map center and zoom level to better match public dataset extent. Cleaned up and documented clustering radius constants. Renamed the navigation link to the visualization to "Visualization" (from "Prototype"), and renamed references in the sources to "vis" also.
+Renamed the navigation link to the visualization to "Visualization" (from "Prototype"), and renamed references in the sources to "vis" also ([#9](https://github.com/UniStuttgart-VISUS/damast/issues/9)).
+Updated default map center and zoom level to better match public dataset extent ([#10](https://github.com/UniStuttgart-VISUS/damast/issues/10)).
+Cleaned up and documented clustering radius constants.
 
 
 ## v1.0.0
