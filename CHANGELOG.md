@@ -151,15 +151,12 @@ dependency (CVE-2021-23566).
 
 Release date: *2022-01-18*
 
-The set of map tiles provided as base layers in the maps (visualization,
-GeoDB-Editor, and place URI page) can now be configured. A default set is
-provided. The religion hierarchy view now uses HTML input elements and has
-some quality-of-life additions, such as a revert button, subtree toggling,
-and consistent control icons to the rest of the views. Tag view tooltips
-now also show a short description, if it exists in the database table. Add
-a first version of a general visualization documentation page. Fixes a bug
-where the timeline tooltip would be incorrect over the overview when zoomed
-in to a shorter time range.
+The set of map tiles provided as base layers in the maps (visualization, GeoDB-Editor, and place URI page) can now be configured.
+A default set is provided.
+The religion hierarchy view now uses HTML input elements and has some quality-of-life additions, such as a revert button, subtree toggling, and consistent control icons to the rest of the views ([#34](https://github.com/UniStuttgart-VISUS/damast/issues/34)).
+Tag view tooltips now also show a short description, if it exists in the database table ([#17](https://github.com/UniStuttgart-VISUS/damast/issues/17)).
+Add a first version of a general visualization documentation page ([#46](https://github.com/UniStuttgart-VISUS/damast/issues/46)).
+Fix a bug where the timeline tooltip would be incorrect over the overview when zoomed in to a shorter time range ([#39](https://github.com/UniStuttgart-VISUS/damast/issues/39)).
 
 
 ## v1.0.3
