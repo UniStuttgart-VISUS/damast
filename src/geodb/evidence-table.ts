@@ -395,7 +395,12 @@ export default class EvidenceTable extends Table {
     const ri = this.createData('../rest/religion-instance/0', religion_instance, 'Could not create new religion instance');
     const tg = this.createData('../rest/time-group/0', {}, 'Could not create new time group');
 
-    const person_instance_data_present = ['person_id', 'confidence', 'comment'].some(key => (person_instance[key] !== null && person_instance[key] !== undefined));
+    const person_instance_data_present = ['person_id', 'confidence'].some(key => {
+      return person_instance[key] !== null
+        && person_instance[key] !== undefined;
+    })
+      || !([null, undefined, ''].includes(person_instance['comment']));
+
     const pi = (person_instance_data_present)
         ? this.createData('../rest/person-instance/0', person_instance, 'Could not create new person instance')
         : Promise.resolve({person_instance_id: null});
