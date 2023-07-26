@@ -1,8 +1,8 @@
 # CHANGELOG
 
-## v1.2.0 (in progress)
+## v1.2.0
 
-Release date: *2023-05-xx*
+Release date: *2023-07-26*
 
 This minor release includes migrations to newer versions of some dependencies.
 This removes some limitations on the target ECMAScript version and improves tree-shaking capability of the build:
