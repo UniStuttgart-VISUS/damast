@@ -73,13 +73,12 @@ export default class PlaceTable extends Table {
   protected getMainColumns(): ColumnDefinition[] {
     const ref = this;
     const place_type_editor_params: EditorParams = {
-      values: this.place_types.map(d => d.id),
-        // TODO: correct?
-      itemFormatter: function(_label, value, _) {
-        const vs = ref.place_types.filter(d => d.id === value);
-        if (vs.length > 0) return vs[0].type;
-        return null;
-      }
+      values: this.place_types.map(d => {
+        return {
+          value: d.id,
+          label: d.type,
+        }        
+      }),
     };
     const formatterParams = this.place_types.reduce((a,b) => { a[b.id] = b.type; return a; }, {});
 

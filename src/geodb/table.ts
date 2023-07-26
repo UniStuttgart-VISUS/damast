@@ -1,5 +1,5 @@
 import { Tabulator, SelectRowModule, SortModule, FormatModule, TooltipModule, EditModule, FilterModule, ResizeColumnsModule, DownloadModule, AccessorModule, FrozenColumnsModule, ValidateModule, InteractionModule } from 'tabulator-tables';
-import type { ColumnDefinitionSorterParams, ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
+import type { ColumnDefinitionSorterParams, ColumnDefinition, LabelValue, Options, CellComponent, RowComponent, ColumnComponent, ListEditorParams } from 'tabulator-tables';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
 
@@ -157,8 +157,21 @@ export default abstract class Table {
 
         const mainColumns = this.getMainColumns();
         mainColumns.forEach(col => {
+          // add tooltips
           if (!col.tooltip) col.tooltip = col.title;
-        })
+
+          // add option to clear column filter for 'list' type filters
+          if (col.headerFilter === 'list') {
+            const params = col.headerFilterParams as ListEditorParams | undefined;
+            if (params?.values) {
+              params.values = [
+                { value: undefined, label: ' ' },  // clear option
+                ...params.values as LabelValue[],
+              ];
+            }
+          }
+        });
+
 
         options.columns = [
           select_column,

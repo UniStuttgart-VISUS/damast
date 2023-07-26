@@ -129,7 +129,6 @@ export class ExternalPlaceUriTable extends Table {
     return {
       initialSort: [
         {column:'id', dir:'asc'},
-        {column:'name', dir:'asc'},
       ],
       height: '300px'
     };
