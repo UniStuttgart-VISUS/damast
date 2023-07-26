@@ -21,6 +21,9 @@ The release also includes various smaller bugfixes and some documentation improv
 - Fix an issue with builds failing on a fresh check-out of the repository ([#197](https://github.com/UniStuttgart-VISUS/damast/issues/197)).
 - Migrate the `CHANGELOG` to a markdown file that is compiled to HTML for the version included in the Docker image ([#201](https://github.com/UniStuttgart-VISUS/damast/issues/201)).
 - Fix an issue where selecting a new row in the GeoDB-Editor before it was uploaded would lead to error messages due to loading of non-existent data for dependent tables ([#204](https://github.com/UniStuttgart-VISUS/damast/issues/204)).
+- Fix the error appearing on upload of new evidence tuples after tabbing through the evidence row on creation ([#205](https://github.com/UniStuttgart-VISUS/damast/issues/205)).
+  The issue was that tabbing through the person instance comment field would change its value from `null` to an empty string.
+  Now, the empty string is ignored for the upload.
 - Show GeoDB-Editor column name in tooltip when hovering over a cell ([#206](https://github.com/UniStuttgart-VISUS/damast/issues/206)).
 - Add possibility to clear GeoDB-Editor column filters for dropdown-type columns ([#207](https://github.com/UniStuttgart-VISUS/damast/issues/207)).
   Fix a representation issue with the place type column filter, which would just show the `place_type_id` as a number.
