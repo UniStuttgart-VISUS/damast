@@ -40,7 +40,6 @@ export default class ExternalPersonUriTable extends Table {
     return {
       initialSort: [
         {column:'id', dir:'asc'},
-        {column:'name', dir:'asc'},
       ],
       height: '300px'
     };
