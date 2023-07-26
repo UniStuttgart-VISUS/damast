@@ -189,7 +189,6 @@ export default abstract class Table {
   }
 
   private _onCellClick(evt: UIEvent, cell: CellComponent): void {
-    console.log('onCellClick', cell, cell.getColumn().getField());
     switch (cell.getColumn().getField()) {
       case '@@saveIcon':
         this.onSave(evt, cell);
@@ -536,6 +535,8 @@ export default abstract class Table {
   }
 
   protected onRowClick(row) {
+    if (row.getData().newRow) return;
+
     const switch_row = () => {
       this.table.deselectRow();
       this.table.selectRow(row);
