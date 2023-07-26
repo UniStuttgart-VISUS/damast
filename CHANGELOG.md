@@ -21,6 +21,7 @@ The release also includes various smaller bugfixes and some documentation improv
 - Fix an issue with builds failing on a fresh check-out of the repository ([#197](https://github.com/UniStuttgart-VISUS/damast/issues/197)).
 - Migrate the `CHANGELOG` to a markdown file that is compiled to HTML for the version included in the Docker image ([#201](https://github.com/UniStuttgart-VISUS/damast/issues/201)).
 - Fix an issue where selecting a new row in the GeoDB-Editor before it was uploaded would lead to error messages due to loading of non-existent data for dependent tables ([#204](https://github.com/UniStuttgart-VISUS/damast/issues/204)).
+- Show GeoDB-Editor column name in tooltip when hovering over a cell ([#206](https://github.com/UniStuttgart-VISUS/damast/issues/206)).
 - Fix a warning with the initial sort configuration for the person GeoDB-Editor page ([#208](https://github.com/UniStuttgart-VISUS/damast/issues/208)).
 
 

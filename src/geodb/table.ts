@@ -106,6 +106,7 @@ export default abstract class Table {
         };
         const id_column: ColumnDefinition = {
           title: 'ID',
+          tooltip: 'ID',
           field: this._id,
           sorter: 'number',
           sorterParams: { thousandSeparator: ',', } as ColumnDefinitionSorterParams,
@@ -154,10 +155,15 @@ export default abstract class Table {
           },
         ];
 
+        const mainColumns = this.getMainColumns();
+        mainColumns.forEach(col => {
+          if (!col.tooltip) col.tooltip = col.title;
+        })
+
         options.columns = [
           select_column,
           id_column,
-          ...(this.getMainColumns()),
+          ...mainColumns,
           ...management_columns
         ];
 
