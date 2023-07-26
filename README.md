@@ -77,6 +77,18 @@ Basic knowledge with build tools and Docker are required.
 The instructions below assume a Linux machine with the Bash shell are used.
 
 
+### Special Note of Forked Repositories
+
+On forks, make sure that the tags from the upstream repository are also present in your fork.
+The tags (for `git describe --tags`) are required to run the [deploy script](./deploy.sh).
+To get the upstream tags, run:
+
+``` bash
+$ git remote add upstream git@github.com:UniStuttgart-VISUS/damast.git
+$ git fetch upstream --tags
+```
+
+
 ### Installing Dependencies
 
 On the build system, Docker and NodeJS need to be installed.

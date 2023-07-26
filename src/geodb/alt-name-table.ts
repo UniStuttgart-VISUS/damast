@@ -1,4 +1,5 @@
-import Tabulator from 'tabulator-tables';
+import { Tabulator } from 'tabulator-tables';
+import type { ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
 
@@ -21,7 +22,7 @@ export default class AlternativeNameTable extends Table {
     return 'id';
   }
 
-  protected getTableOptions(): Tabulator.Options {
+  protected getTableOptions(): Options {
     return {
       initialSort: [
         {column:'id', dir:'asc'},
@@ -31,7 +32,7 @@ export default class AlternativeNameTable extends Table {
     };
   }
 
-  protected getMainColumns(): Tabulator.ColumnDefinition[] {
+  protected getMainColumns(): ColumnDefinition[] {
     return [
         {
           title: 'Name',
@@ -39,7 +40,6 @@ export default class AlternativeNameTable extends Table {
           headerSort: true,
           headerFilter: 'input',
           editor: 'input',
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Transcription',
@@ -47,7 +47,6 @@ export default class AlternativeNameTable extends Table {
           headerSort: true,
           headerFilter: 'input',
           editor: 'input',
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Simplified',
@@ -55,24 +54,22 @@ export default class AlternativeNameTable extends Table {
           headerSort: true,
           headerFilter: 'input',
           editor: 'input',
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Language',
           field: 'language_id',
           headerSort: true,
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.languages
           },
           headerFilterFunc: '=',
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.languages
           },
           formatter: 'lookup',
           formatterParams: this.languages.reduce((a, b) => { a[b.value] = b.label; return a; }, {"null": ""}),
-          cellEdited: this.cellEdited.bind(this),
           accessorDownload: Table.lookupAccessor,
           accessorDownloadParams: {
             values: this.languages
@@ -84,7 +81,6 @@ export default class AlternativeNameTable extends Table {
           headerSort: true,
           headerFilter: 'input',
           editor: 'input',
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Main form',
@@ -95,7 +91,6 @@ export default class AlternativeNameTable extends Table {
           hozAlign: 'center',
           headerSort: false,
           headerFilter: true,
-          cellEdited: this.cellEdited.bind(this),
           width: 40
         }
     ];
@@ -141,7 +136,7 @@ export default class AlternativeNameTable extends Table {
       `Could not delete alternative name with ID ${cell.getRow().getIndex()}`);
   }
 
-  protected doCreate(cell: Tabulator.CellComponent, data: any): Promise<number> {
+  protected doCreate(cell: CellComponent, data: any): Promise<number> {
     return this.createData(
       `../rest/place/${this.place_id}/alternative-name/0`,
       data,
@@ -151,7 +146,7 @@ export default class AlternativeNameTable extends Table {
       });
   }
 
-  protected doSave(cell: Tabulator.CellComponent, data: any): Promise<boolean> {
+  protected doSave(cell: CellComponent, data: any): Promise<boolean> {
     return this.saveData(
       `../rest/place/${this.place_id}/alternative-name/${cell.getRow().getIndex()}`,
       data,

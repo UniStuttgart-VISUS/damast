@@ -16,7 +16,7 @@ databaseschemafile:
 	brotli -Zkfo damast/docs/assets/database_schema.pdf.br docs/postgres/page.pdf
 
 CHANGELOG:
-	cp $@ damast/docs/templates/docs/changelog.txt
+	node util/build/compile-html-changelog.mjs CHANGELOG.md damast/docs/templates/docs/changelog-contents.html
 
 LICENSE:
 	cp $@ damast/docs/templates/docs/license.txt

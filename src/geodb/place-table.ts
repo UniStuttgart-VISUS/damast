@@ -1,7 +1,7 @@
-import Tabulator from 'tabulator-tables';
+import { Tabulator } from 'tabulator-tables';
+import type { ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent, EditorParams } from 'tabulator-tables';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
-import * as L from 'leaflet';
 
 import Table from './table';
 import {confirm_dialog,choice_or_cancel_dialog,accept_dialog} from '../common/dialog';
@@ -55,25 +55,30 @@ export default class PlaceTable extends Table {
     this.place_types = await this.cache.place_types;
   }
 
-  protected getTableOptions(): Tabulator.Options {
+  protected addTableEventListeners(): void {
+    super.addTableEventListeners();
+
+    this.table.on('dataFiltered', (_, rows) => this.dispatch.call('places-filtered', null, rows.map(d => d.getData().id)));
+  }
+
+  protected getTableOptions(): Options {
     return {
       initialSort: [
         {column:'name', dir:'asc'}
       ],
       height: 'calc(400px - 4rem)',
-      dataFiltered: (_, rows) => this.dispatch.call('places-filtered', null, rows.map(d => d.getData().id))
     };
   }
 
-  protected getMainColumns(): Tabulator.ColumnDefinition[] {
+  protected getMainColumns(): ColumnDefinition[] {
     const ref = this;
-    const place_type_editor_params: Tabulator.EditorParams = {
-      values: this.place_types.map(d => d.id),
-      listItemFormatter: function(value, _) {
-        const vs = ref.place_types.filter(d => d.id === value);
-        if (vs.length > 0) return vs[0].type;
-        return null;
-      }
+    const place_type_editor_params: EditorParams = {
+      values: this.place_types.map(d => {
+        return {
+          value: d.id,
+          label: d.type,
+        }        
+      }),
     };
     const formatterParams = this.place_types.reduce((a,b) => { a[b.id] = b.type; return a; }, {});
 
@@ -84,7 +89,6 @@ export default class PlaceTable extends Table {
         editor: 'input',
         headerFilter: true,
         accessorDownload: Table.nullOrStringDownloadFormatter,
-        cellEdited: this.cellEdited.bind(this),
         sorter: place_name_sorter
       },
       {
@@ -94,7 +98,6 @@ export default class PlaceTable extends Table {
         accessorDownload: geoloc_dl_fmt,
         editor: 'number',
         headerSort: false,
-        cellEdited: this.cellEdited.bind(this),
         cssClass: 'geoloc-cell'
       },
       {
@@ -104,7 +107,6 @@ export default class PlaceTable extends Table {
         accessorDownload: geoloc_dl_fmt,
         editor: 'number',
         headerSort: false,
-        cellEdited: this.cellEdited.bind(this),
         cssClass: 'geoloc-cell'
       },
       {
@@ -116,15 +118,14 @@ export default class PlaceTable extends Table {
         widthGrow: 3,
         headerSort: false,
         headerFilter: 'input',
-        cellEdited: this.cellEdited.bind(this)
       },
       {
         title: 'Place type',
         field: 'place_type_id',
         headerSort: true,
-        headerFilter: 'select',
+        headerFilter: 'list',
         headerFilterParams: place_type_editor_params,
-        editor: 'select',
+        editor: 'list',
         editorParams: place_type_editor_params,
         formatter: 'lookup',
         formatterParams,
@@ -132,21 +133,19 @@ export default class PlaceTable extends Table {
         accessorDownloadParams: {
           values: this.place_types.map(({id, type}) => { return {value:id, label:type};} )
         },
-        cellEdited: this.cellEdited.bind(this)
       },
       {
         title: 'Location confidence',
         field: 'confidence',
-        headerFilter: 'select',
+        headerFilter: 'list',
         headerFilterParams: {
           values: this.confidence_values
         },
-        editor: 'select',
+        editor: 'list',
         editorParams: {
           values: this.confidence_values_with_null,
         },
         accessorDownload: Table.nullOrStringDownloadFormatter,
-        cellEdited: this.cellEdited.bind(this),
       },
       {
         title: 'Visible',
@@ -157,7 +156,6 @@ export default class PlaceTable extends Table {
         hozAlign: 'center',
         headerSort: false,
         headerFilter: true,
-        cellEdited: this.cellEdited.bind(this),
         width: 40
       },
     ];
@@ -202,7 +200,7 @@ export default class PlaceTable extends Table {
       `Could not delete place ${cell.getRow().getData().name}`);
   }
 
-  protected doCreate(cell: Tabulator.CellComponent, data: any): Promise<number> {
+  protected doCreate(cell: CellComponent, data: any): Promise<number> {
     if (!data.name) {
       return accept_dialog('Name must not be empty', '', {})
         .then(() => Promise.reject(cell.getRow().getIndex()));
@@ -227,7 +225,7 @@ export default class PlaceTable extends Table {
     });
   }
 
-  protected doSave(cell: Tabulator.CellComponent, data: any): Promise<boolean> {
+  protected doSave(cell: CellComponent, data: any): Promise<boolean> {
     if (data['geoloc.lng'] !== undefined || data['geoloc.lat'] !== undefined) {
       const lngval = ((typeof data['geoloc.lng']) !== 'number');
       const latval = ((typeof data['geoloc.lat']) !== 'number');

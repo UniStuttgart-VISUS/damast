@@ -1,4 +1,5 @@
-import Tabulator from 'tabulator-tables';
+import { Tabulator } from 'tabulator-tables';
+import type { ColumnDefinitionSorterParams, ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
 import * as _ from 'lodash';
 import * as d3 from 'd3';
 
@@ -38,7 +39,7 @@ export default class SourceTable extends Table {
     });
   }
 
-  protected getTableOptions(): Tabulator.Options {
+  protected getTableOptions(): Options {
     return {
       initialSort: [
         {column:'source_id', dir:'asc'}
@@ -47,18 +48,18 @@ export default class SourceTable extends Table {
     };
   }
 
-  protected getMainColumns(): Tabulator.ColumnDefinition[] {
+  protected getMainColumns(): ColumnDefinition[] {
     return [
         {
           title: 'Source',
           field: 'source_id',
           headerSort: true,
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.sources
           },
           headerFilterFunc: '=',
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.sources
           },
@@ -70,7 +71,7 @@ export default class SourceTable extends Table {
             values: this.sources
           },
           sorter: 'number',
-          cellEdited: this.onSourceFieldChanged.bind(this)
+          sorterParams: { thousandSeparator: ',', } as ColumnDefinitionSorterParams,
         },
         {
           title: 'Page',
@@ -81,7 +82,6 @@ export default class SourceTable extends Table {
           headerSort: true,
           headerFilter: 'input',
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Comment',
@@ -92,27 +92,30 @@ export default class SourceTable extends Table {
           headerSort: false,
           headerFilter: 'input',
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         },
         {
           title: 'Source confidence',
           field: 'source_confidence',
           headerSort: true,
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.confidence_values
           },
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.confidence_values_with_null
           },
           accessorDownload: Table.nullOrStringDownloadFormatter,
-          cellEdited: this.cellEdited.bind(this)
         }
     ];
   }
 
-  private onSourceFieldChanged(cell: Tabulator.CellComponent): void {
+  protected cellEdited(cell: CellComponent): void {
+    if (cell.getField() === 'source_id') return this.onSourceFieldChanged(cell);
+    return super.cellEdited(cell);
+  }
+
+  private onSourceFieldChanged(cell: CellComponent): void {
     if (cell.getRow().getData().newRow) {
       const val = cell.getValue();
       const conf = this.source_confidence.get(val);
@@ -169,7 +172,7 @@ export default class SourceTable extends Table {
     );
   }
 
-  protected doCreate(cell: Tabulator.CellComponent, data: any): Promise<number> {
+  protected doCreate(cell: CellComponent, data: any): Promise<number> {
     return this.createData(
       `../rest/source-instance/0`,
       data,
@@ -179,7 +182,7 @@ export default class SourceTable extends Table {
     });
   }
 
-  protected doSave(cell: Tabulator.CellComponent, data: any): Promise<boolean> {
+  protected doSave(cell: CellComponent, data: any): Promise<boolean> {
     return this.saveData(
       `../rest/source-instance/${cell.getRow().getIndex()}`,
       data,

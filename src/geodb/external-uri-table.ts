@@ -1,6 +1,5 @@
-import Tabulator from 'tabulator-tables';
-import * as _ from 'lodash';
-import * as d3 from 'd3';
+import { Tabulator } from 'tabulator-tables';
+import type { ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
 
 import Table from './table';
 import {confirm_dialog,choice_or_cancel_dialog,accept_dialog} from '../common/dialog';
@@ -110,6 +109,14 @@ export class ExternalPlaceUriTable extends Table {
     });
   }
 
+  protected addTableEventListeners(): void {
+    super.addTableEventListeners();
+
+    this.table.on('cellClick', (evt, cell) => {
+      if (cell.getField() === '@@externalLink') this.onExternalLinkClick(evt, cell);
+    });
+  }
+
   protected id_column(): string {
     return 'id';
   }
@@ -118,34 +125,32 @@ export class ExternalPlaceUriTable extends Table {
     return ['@@externalLink'];
   }
 
-  protected getTableOptions(): Tabulator.Options {
+  protected getTableOptions(): Options {
     return {
       initialSort: [
         {column:'id', dir:'asc'},
-        {column:'name', dir:'asc'},
       ],
       height: '300px'
     };
   }
 
-  protected getMainColumns(): Tabulator.ColumnDefinition[] {
+  protected getMainColumns(): ColumnDefinition[] {
     return [
         {
           title: 'URI Namespace',
           field: 'uri_namespace_id',
           headerSort: true,
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.uri_namespaces,
           },
           headerFilterFunc: '=',
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.uri_namespaces,
           },
           formatter: 'lookup',
           formatterParams: this.uri_namespaces.reduce((a, b) => { a[b.value] = b.label; return a; }, {}),
-          cellEdited: this.cellEdited.bind(this),
           accessorDownload: Table.lookupAccessor,
           accessorDownloadParams: {
             values: this.uri_namespaces,
@@ -156,7 +161,6 @@ export class ExternalPlaceUriTable extends Table {
           field: 'uri_fragment',
           headerSort: true,
           headerFilter: 'input',
-          cellEdited: this.cellEdited.bind(this),
           widthGrow: 3,
           // TODO: formatter
           formatter: uri_formatter,
@@ -172,7 +176,6 @@ export class ExternalPlaceUriTable extends Table {
           headerSort: true,
           headerFilter: 'input',
           editor: 'input',
-          cellEdited: this.cellEdited.bind(this),
           widthGrow: 2,
         },
         {
@@ -180,7 +183,6 @@ export class ExternalPlaceUriTable extends Table {
           formatterParams: {
             formatting_map: this.formatting_map as any,
           },
-          cellClick: this.onExternalLinkClick.bind(this),
           title: undefined,
           field: '@@externalLink',
           width: 30,
@@ -194,7 +196,7 @@ export class ExternalPlaceUriTable extends Table {
     ];
   }
 
-  protected cellEdited(cell: Tabulator.CellComponent) {
+  protected cellEdited(cell: CellComponent) {
     super.cellEdited(cell);
     cell.getRow().reformat();
   }
@@ -240,7 +242,7 @@ export class ExternalPlaceUriTable extends Table {
       `Could not delete external place with ID ${cell.getRow().getIndex()}`);
   }
 
-  protected doCreate(cell: Tabulator.CellComponent, data: any): Promise<number> {
+  protected doCreate(cell: CellComponent, data: any): Promise<number> {
     return this.createData(
       `../rest/uri/external-place-uri/0`,
       data,
@@ -250,7 +252,7 @@ export class ExternalPlaceUriTable extends Table {
       });
   }
 
-  protected doSave(cell: Tabulator.CellComponent, data: any): Promise<boolean> {
+  protected doSave(cell: CellComponent, data: any): Promise<boolean> {
     return this.saveData(
       `../rest/uri/external-place-uri/${cell.getRow().getIndex()}`,
       data,
@@ -272,7 +274,7 @@ export class ExternalPlaceUriTable extends Table {
     }
   }
 
-  private onExternalLinkClick(e: Event, cell: Tabulator.CellComponent) {
+  private onExternalLinkClick(e: Event, cell: CellComponent) {
     const id = cell.getRow().getData().uri_namespace_id;
     const uri_fragment = cell.getRow().getData().uri_fragment;
     if (id === null || !this.formatting_map.has(id) || !uri_fragment) return;

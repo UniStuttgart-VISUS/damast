@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
-import * as L from 'leaflet';
+import { CRS, point, } from 'leaflet';
+import type { Point, Map as LeafletMap } from 'leaflet';
 import * as T from './datatypes';
 import * as glyph from './map-data';
 import {MessageDataType} from './data-worker';
@@ -11,18 +12,18 @@ export default class MapGlyph {
   private _places_group: d3.Selection<SVGGElement, any, any, any>;
   private _blobs_group: d3.Selection<SVGGElement, any, any, any>;
 
-  private _center: L.Point;
+  private _center: Point;
 
   constructor(
     private _parent_layer: d3.Selection<SVGGElement, any, any, any>,
     private _data: glyph.MapGlyph,
-    private map: L.Map,
+    private map: LeafletMap,
     private _radius: number,
     private _brush_callback: (type: MessageDataType, data: any) => void,
     private readonly tooltipManager: TooltipManager,
     private map_mode: T.MapMode,
   ) {
-    const center_pos = L.CRS.EPSG3857.pointToLatLng(L.point(this._data.center.x, this._data.center.y), map.getZoom());
+    const center_pos = CRS.EPSG3857.pointToLatLng(point(this._data.center.x, this._data.center.y), map.getZoom());
     this._center = this.map.latLngToLayerPoint(center_pos);
 
     this._total_group = this._parent_layer.append('g')
@@ -102,7 +103,7 @@ export default class MapGlyph {
     this.tooltipManager.cancel();
   }
 
-  private create_location_indicators(map: L.Map): void {
+  private create_location_indicators(map: LeafletMap): void {
     this._data.geolocs.forEach(d => {
       const xy = map.latLngToLayerPoint(d);
       const x = xy.x - this._center.x;
@@ -124,7 +125,7 @@ export default class MapGlyph {
     this._total_group.classed('cluster--brushed', Array.from(this._data.place_ids).some(d => location_ids.has(d)));
   }
 
-  get center(): L.Point {
+  get center(): Point {
     return this._center;
   }
 

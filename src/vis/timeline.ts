@@ -52,10 +52,10 @@ export default class Timeline extends View<any, any> {
   private isBrushing: boolean = false;
 
   private filterBrushMoved: boolean = false;
-  constructor(worker: Worker, container: GoldenLayout.Container) {
+  constructor(worker: Worker, container: GoldenLayout.ComponentContainer) {
     super(worker, container, 'timeline');
 
-    const div = container.getElement()[0];
+    const div = container.element as HTMLDivElement;
 
     div.classList.add('timeline-container');
     div.innerHTML = timeline;

@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
-import * as L from 'leaflet';
+import { Control, PM, geoJSON, layerGroup, Layer, DomUtil, control, heatLayer, map as leafletMap, tileLayer } from 'leaflet';
+import type { Map as LeafletMap, HeatLayer, HeatMapOptions, TileLayerOptions } from 'leaflet';
 import 'leaflet.heat';
 import '@geoman-io/leaflet-geoman-free';
 import union from '@turf/union';
@@ -28,34 +29,34 @@ import { MapMode } from './datatypes';
 
 export default class MapPane extends View<any, Set<number> | null> {
   private mapdiv: HTMLDivElement;
-  private map: L.Map;
+  private map: LeafletMap;
   private svg: d3.Selection<SVGSVGElement, any, any, any>;
   private g: d3.Selection<SVGGElement, any, any, any>;
   private scales: ColorScales;
   private glyphs: Array<MapGlyph> = [];
   private geoFilter: Feature<MultiPolygon | Polygon> | null = null;
 
-  private layer: L.Layer;
-  private layerControl: L.Control.Layers;
+  private layer: Layer;
+  private layerControl: Control.Layers;
   private diversityLayer: DiversityLayer;
-  private evidenceCountHeatLayer: L.HeatLayer;
-  private evidenceCountHeatOptions: L.HeatMapOptions;
+  private evidenceCountHeatLayer: HeatLayer;
+  private evidenceCountHeatOptions: HeatMapOptions;
 
   private clusteringCheckbox: HTMLInputElement;
   private cachedMapMode: MapMode = map_mode;
 
   private map_styles: MapStyle[] = [];
-  private baseLayers: Map<string, L.Layer> = new Map<string, L.Layer>();
+  private baseLayers: Map<string, Layer> = new Map<string, Layer>();
 
   private readonly tooltipManager = new TooltipManager(500);
   private setupState: Promise<void>;
 
   private readonly onmoveend = () => this.transmitMapStateToData();
 
-  constructor(worker: Worker, container: GoldenLayout.Container) {
+  constructor(worker: Worker, container: GoldenLayout.ComponentContainer) {
     super(worker, container, 'map');
 
-    const div = container.getElement()[0];
+    const div = container.element as HTMLDivElement;
 
     div.classList.add('map-container');
     div.innerHTML = map;
@@ -96,7 +97,7 @@ export default class MapPane extends View<any, Set<number> | null> {
     this.geoFilter = data.filter;
     if (!this.geometryEditorOpen) {
       (<any>this.map.pm.getGeomanLayers()).forEach(d => d.remove());
-      if (this.geoFilter) L.geoJSON(this.geoFilter, { pmIgnore: false, ...this.map.pm.getGlobalOptions().pathOptions }).addTo(this.map);
+      if (this.geoFilter) geoJSON(this.geoFilter, { pmIgnore: false, ...this.map.pm.getGlobalOptions().pathOptions }).addTo(this.map);
       this.onEndGeometryEdit();
     }
 
@@ -186,32 +187,32 @@ export default class MapPane extends View<any, Set<number> | null> {
       maxBoundsViscosity: 0.7,
       zoomSnap: 0.25,
     };
-    this.map = L.map(div_, mapOptions).setView(initial_map_center, default_zoomlevel);
+    this.map = leafletMap(div_, mapOptions).setView(initial_map_center, default_zoomlevel);
 
     /* LAYERS */
-    this.layerControl = L.control.layers();
+    this.layerControl = control.layers();
     this.layerControl.addTo(this.map);
 
     // marker layer
-    const container = L.DomUtil.create('div', 'markers');
-    this.layer = new L.Layer();
+    const container = DomUtil.create('div', 'markers');
+    this.layer = new Layer();
     this.layer.onAdd = function(map) {
       var pane = map.getPane('marker') || map.createPane('marker');
       pane.appendChild(container);
       return this;
     };
     this.layer.onRemove = function(map) {
-      L.DomUtil.remove(container);
+      DomUtil.remove(container);
       return this;
     };
     this.layer.addTo(this.map);
     this.layerControl.addOverlay(this.layer, '<b>Markers:</b> Aggregated markers for location clusters');
 
     // clustering control pane
-    const clusteringControl = new L.Control({position: 'topright'});
+    const clusteringControl = new Control({position: 'topright'});
     const ref = this;
     clusteringControl.onAdd = function(_) {
-      const div = L.DomUtil.create('div', 'leaflet-control-clustering');
+      const div = DomUtil.create('div', 'leaflet-control-clustering');
       div.innerHTML = `
         <input type="checkbox" id="map-control-clustering">
         <label for="map-control-clustering">Cluster</label>
@@ -245,9 +246,9 @@ export default class MapPane extends View<any, Set<number> | null> {
 
 
     const mapbox_layers = new Set<string>();
-    const mapbox_attribution = new L.Control({position: 'bottomleft'});
+    const mapbox_attribution = new Control({position: 'bottomleft'});
     mapbox_attribution.onAdd = function(_) {
-      const div = L.DomUtil.create('div', 'attribution');
+      const div = DomUtil.create('div', 'attribution');
       div.innerHTML = `<a href="http://mapbox.com/about/maps" class='mapbox-wordmark' target="_blank">Mapbox</a>`;
       return div;
     };
@@ -292,7 +293,7 @@ export default class MapPane extends View<any, Set<number> | null> {
     this.layerControl.addOverlay(this.diversityLayer.markerLayer, '<b>Diversity Markers:</b> Places, colored by religious diversity');
     this.layerControl.addOverlay(this.diversityLayer.densityLayer, '<b>Diversity Distribution:</b> Density map of distinct religious denominations per place');
 
-    this.evidenceCountHeatLayer = L.heatLayer([], this.evidenceCountHeatOptions);
+    this.evidenceCountHeatLayer = heatLayer([], this.evidenceCountHeatOptions);
     this.layerControl.addOverlay(this.evidenceCountHeatLayer, '<b>Distribution:</b> Heatmap of count of evidence');
 
     // load map styles
@@ -302,7 +303,7 @@ export default class MapPane extends View<any, Set<number> | null> {
       this.map_styles.forEach((style) => {
         if (style.is_mapbox) mapbox_layers.add(style.name);
 
-        const layer = L.tileLayer(style.url, (style.options || {}) as L.TileLayerOptions);
+        const layer = tileLayer(style.url, (style.options || {}) as TileLayerOptions);
         this.layerControl.addBaseLayer(layer, style.name);
         if (style.default_) {
           layer.addTo(this.map);
@@ -315,7 +316,7 @@ export default class MapPane extends View<any, Set<number> | null> {
 
     // Geoman
     const o = this.map.pm.getGlobalOptions();
-    const l = L.layerGroup().addTo(this.map);
+    const l = layerGroup().addTo(this.map);
     o.layerGroup = l;
     o.templineStyle = {
       color: 'steelblue',
@@ -352,7 +353,7 @@ export default class MapPane extends View<any, Set<number> | null> {
       className: 'leaflet-pm-icon-revert-geometry',
       onClick: () => {
         (<any>this.map.pm.getGeomanLayers()).forEach(d => d.remove());
-        if (this.geoFilter) L.geoJSON(this.geoFilter, { pmIgnore: false, ...this.map.pm.getGlobalOptions().pathOptions }).addTo(this.map);
+        if (this.geoFilter) geoJSON(this.geoFilter, { pmIgnore: false, ...this.map.pm.getGlobalOptions().pathOptions }).addTo(this.map);
 
         this.onEndGeometryEdit();
       },
@@ -366,7 +367,7 @@ export default class MapPane extends View<any, Set<number> | null> {
       onClick: () => {
         this.geoFilter = this.toGeoJSON();
         (<any>this.map.pm.getGeomanLayers()).forEach(d => d.remove());
-        if (this.geoFilter) L.geoJSON(this.geoFilter, { pmIgnore: false, ...this.map.pm.getGlobalOptions().pathOptions }).addTo(this.map);
+        if (this.geoFilter) geoJSON(this.geoFilter, { pmIgnore: false, ...this.map.pm.getGlobalOptions().pathOptions }).addTo(this.map);
 
         this.sendToDataThread('set-map-filter', this.geoFilter);
         this.transmitMapStateToData();
@@ -383,7 +384,7 @@ export default class MapPane extends View<any, Set<number> | null> {
       toggle: false,
     });
 
-    if (this.geoFilter) L.geoJSON(this.geoFilter, { pmIgnore: false }).addTo(this.map);
+    if (this.geoFilter) geoJSON(this.geoFilter, { pmIgnore: false }).addTo(this.map);
 
     this.onEndGeometryEdit();
   }
@@ -392,7 +393,7 @@ export default class MapPane extends View<any, Set<number> | null> {
     const fs = (<any[]>this.map.pm.getGeomanLayers()).map(layer => {
         if (layer.pm._shape === 'Polygon') return layer.toGeoJSON();
         else if (layer.pm._shape === 'Rectangle') return layer.toGeoJSON();
-        else if (layer.pm._shape === 'Circle') return L.PM.Utils.circleToPolygon(layer).toGeoJSON();
+        else if (layer.pm._shape === 'Circle') return PM.Utils.circleToPolygon(layer).toGeoJSON();
         else throw new Error(`Unknown Geoman layer type: ${layer.pm._shape}`);
       });
     if (fs.length === 0) return null;

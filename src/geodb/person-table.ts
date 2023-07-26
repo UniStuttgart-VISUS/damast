@@ -1,6 +1,5 @@
-import Tabulator from 'tabulator-tables';
-import * as _ from 'lodash';
-import * as d3 from 'd3';
+import { Tabulator } from 'tabulator-tables';
+import type { ColumnDefinition, Options, CellComponent, RowComponent, ColumnComponent } from 'tabulator-tables';
 
 import Table from './table';
 import {confirm_dialog,choice_or_cancel_dialog,accept_dialog} from '../common/dialog';
@@ -20,7 +19,7 @@ export default class PersonTable extends Table {
     return [];
   }
 
-  protected getTableOptions(): Tabulator.Options {
+  protected getTableOptions(): Options {
     return {
       initialSort: [
         {column:'id', dir:'asc'},
@@ -30,7 +29,7 @@ export default class PersonTable extends Table {
     };
   }
 
-  protected getMainColumns(): Tabulator.ColumnDefinition[] {
+  protected getMainColumns(): ColumnDefinition[] {
     return [
         {
           title: 'Name',
@@ -50,25 +49,23 @@ export default class PersonTable extends Table {
           headerSort: true,
           headerFilter: 'input',
           editor: 'input',
-          cellEdited: this.cellEdited.bind(this),
           widthGrow: 2,
         },
         {
           title: 'Person type',
           field: 'person_type',
           headerSort: true,
-          headerFilter: 'select',
+          headerFilter: 'list',
           headerFilterParams: {
             values: this.person_types,
           },
           headerFilterFunc: '=',
-          editor: 'select',
+          editor: 'list',
           editorParams: {
             values: this.person_types,
           },
           formatter: 'lookup',
           formatterParams: this.person_types.reduce((a, b) => { a[b.value] = b.label; return a; }, {}),
-          cellEdited: this.cellEdited.bind(this),
           accessorDownload: Table.lookupAccessor,
           accessorDownloadParams: {
             values: this.person_types,
@@ -77,7 +74,7 @@ export default class PersonTable extends Table {
     ];
   }
 
-  protected cellEdited(cell: Tabulator.CellComponent) {
+  protected cellEdited(cell: CellComponent) {
     super.cellEdited(cell);
     cell.getRow().reformat();
   }
@@ -113,7 +110,7 @@ export default class PersonTable extends Table {
       `Could not delete person with ID ${cell.getRow().getIndex()}`);
   }
 
-  protected doCreate(cell: Tabulator.CellComponent, data: any): Promise<number> {
+  protected doCreate(cell: CellComponent, data: any): Promise<number> {
     return this.createData(
       `../rest/person/0`,
       data,
@@ -123,7 +120,7 @@ export default class PersonTable extends Table {
       });
   }
 
-  protected doSave(cell: Tabulator.CellComponent, data: any): Promise<boolean> {
+  protected doSave(cell: CellComponent, data: any): Promise<boolean> {
     return this.saveData(
       `../rest/person/${cell.getRow().getIndex()}`,
       data,
