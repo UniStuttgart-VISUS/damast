@@ -12,6 +12,8 @@ class NumericRangeEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, o)
 
 
+
+
 geoloc = re.compile(R"\((.*),\s*(.*)\)", re.ASCII)
 def parse_geoloc(s):
     if s is None:
