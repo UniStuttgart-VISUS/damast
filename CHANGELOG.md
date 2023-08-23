@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## v1.2.0+hotfix-json
+
+Release date: *2023-08-23*
+
+This hotfix resolves an issue with the REST API failing on JSON that returned PostgreSQL numeric range values ([#213](https://github.com/UniStuttgart-VISUS/damast/issues/213)).
+The issue was caused by a previous upgrade of Flask to >=2.3 in a Dependabot patch, at which point the API for providing a custom JSON encoder to Flask changed.
+
+
 ## v1.2.0
 
 Release date: *2023-07-26*

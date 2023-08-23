@@ -20,7 +20,6 @@ from contextlib import contextmanager
 import werkzeug.exceptions
 from .token import HTTPCookieTokenAuth
 from .user import User, default_visitor_roles, visitor
-from .postgres_rest_api.util import NumericRangeEncoder
 from .logging import BlueprintFilter
 from functools import lru_cache, partial
 from logging.handlers import TimedRotatingFileHandler
@@ -34,13 +33,14 @@ from .postgres_database import postgres_database
 from .annotator.suggestions import register_scheduler as register_scheduler_for_annotation_suggestions
 from .reporting.check_evict import register_scheduler as register_scheduler_for_report_eviction
 from .config import get_config
+from .customjsonprovider import CustomJSONProvider
 
 
 class FlaskApp(flask.Flask):
     def __init__(self, *args, **kwargs):
         kwargs.update(template_folder=None)
         super().__init__(*args, **kwargs)
-        self.json_encoder = NumericRangeEncoder
+        self.json = CustomJSONProvider(self)
 
         self.make_config()
 

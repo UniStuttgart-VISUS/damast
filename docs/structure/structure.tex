@@ -70,7 +70,7 @@
     \node [anchor=north west,inner sep=2pt] at (0,0) { \small Docker };
     \node [anchor=north east,inner sep=2pt] (docker-imagename) at (6,0) {\small \texttt{damast:\damastversion}};
     \node [anchor=north east,inner xsep=2pt,inner ysep=1pt] (docker-imagename-1) at (docker-imagename.south east) {\scriptsize Base: \texttt{continuumio/miniconda3} (\texttt{debian:latest}) };
-    \node [anchor=north east,inner xsep=2pt,inner ysep=1pt] (docker-imagename-2) at (docker-imagename-1.south east) {\scriptsize Flask 2.0.1 };
+    \node [anchor=north east,inner xsep=2pt,inner ysep=1pt] (docker-imagename-2) at (docker-imagename-1.south east) {\scriptsize Flask 2.3.2 };
 
     \draw [frame] ($ (docker-imagename-2.south east) + (-0.1, -0.1) $)
                         coordinate (damast-rect-north-east)
