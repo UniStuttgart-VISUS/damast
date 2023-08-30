@@ -425,6 +425,7 @@ export default class MapPane extends View<any, Set<number> | null> {
       drawMarker: false,
       drawCircleMarker: false,
       drawPolyline: false,
+      drawText: false,
       rotateMode: false,
 
       revertFilter: true,

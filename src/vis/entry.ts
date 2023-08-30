@@ -91,7 +91,16 @@ layout.on('itemCreated', function(item) {
 
   const stack = item.target as Stack;
   const elem = stack.header.controlsContainerElement;
-  elem.innerHTML = `<span class="modal-button" title="About this view"><i class="fa fa-fw fa-question-circle-o"></i></span>${elem.innerHTML}`;
+  const modalButton = document.createElement('span');
+  modalButton.classList.add('modal-button');
+  modalButton.setAttribute('title', 'About this view');
+  modalButton.addEventListener('click', () => {
+    const current = stack.getActiveComponentItem() as ComponentItem;
+    current.container.trigger('modal-button-clicked' as unknown as keyof EventEmitter.EventParamsMap);
+  });
+  modalButton.innerHTML = `<i class="fa fa-fw fa-question-circle-o"></i>`;
+
+  elem.replaceChildren(modalButton, ...Array.from(elem.childNodes));
 
   d3.select<HTMLElement, any>(elem)
     .select<HTMLButtonElement>('span.modal-button')

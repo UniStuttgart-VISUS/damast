@@ -1,5 +1,14 @@
 # CHANGELOG
 
+
+## v1.2.1
+
+Release date: *2023-08-30*
+
+Resolve an issue in the visualization with the map filters showing an "Add text" option ([#215](https://github.com/UniStuttgart-VISUS/damast/issues/215)).
+Resolve an issue in the visualization with the view maximization button not working ([#216](https://github.com/UniStuttgart-VISUS/damast/issues/216)).
+
+
 ## v1.2.0+hotfix-json
 
 Release date: *2023-08-23*
