@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { Control, PM, geoJSON, layerGroup, Layer, DomUtil, control, heatLayer, map as leafletMap, tileLayer } from 'leaflet';
+import { Control, PM, geoJSON, layerGroup, Layer, DomUtil, control, heatLayer, map as leafletMap, tileLayer, canvas } from 'leaflet';
 import type { Map as LeafletMap, HeatLayer, HeatMapOptions, TileLayerOptions } from 'leaflet';
 import 'leaflet.heat';
 import '@geoman-io/leaflet-geoman-free';
@@ -297,19 +297,80 @@ export default class MapPane extends View<any, Set<number> | null> {
     this.layerControl.addOverlay(this.evidenceCountHeatLayer, '<b>Distribution:</b> Heatmap of count of evidence');
 
     // load map styles
-    this.setupState = mapStyles().then(ms => {
-      this.map_styles = ms;
+    const stylePromise = mapStyles();
+    const geoJSONPromise = d3.json<GeoJSON.FeatureCollection & { crs: any }>('./water-features.geo.json')
 
+    this.setupState = Promise.all([stylePromise, geoJSONPromise]).then(([ms, geojson]) => {
+      // SRTM Hillshading + Natural Earth water features
+      const tileServerUrl = 'http://localhost:8001/tiles/{z}/{x}/{y}.png';
+      const renderer = canvas();
+
+      const lowLevelOfDetailTileLayer = tileLayer(tileServerUrl, {
+        minNativeZoom: 2,
+        maxNativeZoom: 8,
+        pane: 'tilePane',
+      });
+      const highLevelOfDetailTileLayer = tileLayer(tileServerUrl, {
+        minZoom: 9,
+        minNativeZoom: 9,
+        maxNativeZoom: 12,
+        pane: 'tilePane',
+      });
+
+      const { type, crs, features } = geojson;
+
+      const areas = {
+        type, crs,
+        features: features.filter(v => v.geometry.type === 'Polygon' || v.geometry.type === 'MultiPolygon'),
+      };
+      const lines = {
+        type, crs,
+        features: features.filter(v => v.geometry.type === 'LineString' || v.geometry.type === 'MultiLineString'),
+      };
+
+      const lineLayer = geoJSON(lines, {
+        style: {
+          stroke: true,
+          fill: false,
+          color: '#758591',
+          weight: 2,
+          renderer,
+          pmIgnore: true,  // do not use as GeoJSON filter
+        },
+        pane: 'tilePane',
+      });
+      const areaLayer = geoJSON(areas, {
+        style: {
+          stroke: false,
+          fill: true,
+          fillColor: '#758591',
+          fillOpacity: 1,
+          renderer,
+          pmIgnore: true,  // do not use as GeoJSON filter
+        },
+        pane: 'tilePane',
+      });
+
+      const srtmGroup = layerGroup([
+        lowLevelOfDetailTileLayer,
+        highLevelOfDetailTileLayer,
+        lineLayer,
+        areaLayer,
+      ], {
+        attribution: 'Made with Natural Earth. Map tiles &copy; <a href="" target="_blank">2023 Max Franke</a>',
+      });
+
+      this.layerControl.addBaseLayer(srtmGroup, 'Hill shades and water');
+      this.baseLayers.set('srtm', srtmGroup);
+      srtmGroup.addTo(this.map);
+
+      // other layers
+      this.map_styles = ms;
       this.map_styles.forEach((style) => {
         if (style.is_mapbox) mapbox_layers.add(style.name);
 
         const layer = tileLayer(style.url, (style.options || {}) as TileLayerOptions);
         this.layerControl.addBaseLayer(layer, style.name);
-        if (style.default_) {
-          layer.addTo(this.map);
-          if (style.is_mapbox) mapbox_attribution.addTo(this.map);
-        }
-
         this.baseLayers.set(style.key, layer);
       });
     });

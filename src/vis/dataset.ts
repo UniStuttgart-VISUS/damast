@@ -171,7 +171,7 @@ export class Dataset {
       lat: DefaultMapState.center[0],
       lng: DefaultMapState.center[1],
     },
-    base_layer: 'light',
+    base_layer: 'srtm',
     overlay_layers: [ 'markerLayer' ],
   };
   private _user: T.User = { user: null, readdb: false, writedb: false, geodb: false, dev: false, visitor: true }
