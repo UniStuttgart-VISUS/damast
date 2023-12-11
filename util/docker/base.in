@@ -1,4 +1,4 @@
-FROM continuumio/miniconda3
+FROM continuumio/miniconda3:4.10.3
 RUN conda install -c conda-forge cartopy
 
 ENV TZ="Europe/Berlin"
