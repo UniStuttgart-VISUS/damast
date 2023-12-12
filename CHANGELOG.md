@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v1.x.x
+
+Release date: *tba*
+
+Resolve an issue where the switch between the qualitative and quantitative timeline modes did nothing ([222](https://github.com/UniStuttgart-VISUS/damast/issues/222)).
+
 
 ## v1.2.1
 
