@@ -1,6 +1,13 @@
 # CHANGELOG
 
 
+## v1.3.0
+
+Release date: *2024-xx-xx*
+
+TBA
+
+
 ## v1.2.1
 
 Release date: *2023-08-30*
