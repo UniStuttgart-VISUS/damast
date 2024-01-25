@@ -5,6 +5,7 @@
 Release date: *2024-xx-xx*
 
 Resolve an issue with Python API changes that lead to errors in newly-built Docker images ([#221](https://github.com/UniStuttgart-VISUS/damast/issues/221)) by pinning the Docker base image version and using `urllib.parse.urlencode` instead of `werkzeug.urls.url_encode`.
+Resolve an issue where the switch between the qualitative and quantitative timeline modes did nothing ([222](https://github.com/UniStuttgart-VISUS/damast/issues/222)).
 
 
 ## v1.2.1
