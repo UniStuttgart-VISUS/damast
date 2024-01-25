@@ -419,8 +419,25 @@ export const sources = `
 // template for html/tags.template.html
 export const tags = `
 <div class="tags__header">
-  <button id="tags-filter-none" class="confidence__controls button button--white" title="Clear filters"><i class="fa fa-lg fa-trash"></i></button>
-  <button id="tags-filter-revert" class="confidence__controls button button--white" title="Revert filters"><i class="fa fa-lg fa-history"></i></button>
+  <button id="tags-filter-none" class="confidence__controls button button--white" title="Deselect all checkboxes"><i class="fa fa-lg fa-circle-o"></i></button>
+  <button id="tags-filter-invert" class="confidence__controls button button--white" title="Invert checkbox selection"><i class="fa fa-lg fa-rotate-90 fa-exchange"></i></button>
+  <button id="tags-filter-all" class="confidence__controls button button--white" title="Select all checkboxes"><i class="fa fa-lg fa-dot-circle-o"></i></button>
+  <div class="hierarchy__controls" id="tags-sort-controls">
+    <label class="switch__label" for="tags-sort-mode">
+      Name
+      <i class="fa fa-lg fa-fw fa-sort-alpha-asc"></i>
+    </label>
+    <label class="switch">
+      <input type="checkbox"
+             id="tags-sort-mode"
+             title="Sort list primarily by tag name (alphabetically), or by number of pieces of evidences (descending)">
+      <span class="slider round"></span>
+    </label>
+    <label class="switch__label" for="tags-sort-mode">
+      <i class="fa fa-lg fa-fw fa-sort-numeric-desc"></i>
+      Count
+    </label>
+  </div>
   <button id="tags-filter-apply" class="confidence__controls button button--accent">Apply</button>
 </div>
 <div id="tags" class="tags__body"></div>
