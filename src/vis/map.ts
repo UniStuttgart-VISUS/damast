@@ -301,6 +301,7 @@ export default class MapPane extends View<any, Set<number> | null> {
     const geoJSONPromise = d3.json<GeoJSON.FeatureCollection & { crs: any }>('./water-features.geo.json')
 
     this.setupState = Promise.all([stylePromise, geoJSONPromise]).then(([ms, geojson]) => {
+      // TODO: wrap vector features: https://stackoverflow.com/questions/48994873/wrap-geojson-objects-around-leaflet-js-map
       // SRTM Hillshading + Natural Earth water features
       const tileServerUrl = 'http://localhost:8001/tiles/{z}/{x}/{y}.png';
       const renderer = canvas();
