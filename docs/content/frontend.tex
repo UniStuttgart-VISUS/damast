@@ -1223,8 +1223,8 @@ This view shows \textbf{tags} which are associated with pieces of evidence (i.e.
 Tags were implemented to include additional information and to make further distinctions possible.
 For instance, the tag \emph{Bishopric} is attributed to pieces of evidence referring to bishoprics as distinguished from \emph{metropolitan sees.}
 This way, the visualized data can be filtered according to additional criteria.
-Note that, by default, all tags are \emph{deselected.}
-This means that no filters based on tags are active ((\cref{sec:tags-interaction}).
+Note that, by default, all tags are \emph{selected.}
+This means that no filters based on tags are active (\cref{sec:tags-interaction}).
 
 
 \subsubsection{Contents}
@@ -1242,8 +1242,11 @@ In what follows, the respective columns of one given row are described.
     Generally, the name should be self-explanatory.
     Further information is displayed when hovering with the mouse.
 
+  \item[Evidence Count]
+    The third column shows the active number of pieces of evidence with that tag.
+
   \item[Evidence Count Visualization]
-    The third column visualizes the count of pieces of evidence for each source.
+    The fourth column visualizes the count of pieces of evidence for each tag.
     The less saturated part of the bar represents pieces of evidence that are not active (i.e., do not match the current filters).
 \end{description}
 
@@ -1258,7 +1261,7 @@ Selecting a different row, or an element in a different view, will replace the s
 Only one tag at a time can be selected.
 
 \paragraph{Filtering.}
-The visualized data can be filtered according to one tag or multiple tags in all views by (un-)checking the appropriate checkbox or checkboxes.
+The visualized data can be filtered according to one tag or multiple tags in all views by \mbox{(un-)}checking the appropriate checkbox or checkboxes.
 Keep in mind that a piece of evidence can have no tag, one tag, or multiple tags.
 If, for instance, it has no tag, its visibility is not affected by the checkboxes.
 If, on the other hand, it has multiple tags, its visibility is only affected by (un-)checking all respective checkboxes.
@@ -1272,13 +1275,27 @@ for instance, if only tag X and religion Y are selected in the respective views,
 Two additional buttons in the top left corner make filtering more convenient:
 
 \begin{enumerate}
-  \item
-    Uncheck all checkboxes;
-    that is, remove all filters based on tags.
-    Note that this is not applied until the \emph{Apply} button is clicked.
-
-  \item Revert all checkboxes to represent the state of filters applied last.
+  \item Uncheck all checkboxes.
+  \item Invert all checkboxes:
+    Checked boxes are unchecked, unchecked boxes are checked.
+  \item Check all checkboxes.
 \end{enumerate}
+
+\paragraph*{Sorting.}
+
+The order of the shown tags can be changed using the sorting options switch in the center of the header of the view.
+The two options are:
+
+\begin{description}
+  \item[Name]
+    Sort the tags alphabetically, in ascending order, by their short name, which is shown in the second column of the list.
+  \item[Count]
+    Sort the tags first in descending order by the number of visible pieces of evidence derived from them. This is the default.
+\end{description}
+
+For both sorting modes, the other sorting criterion is considered as secondary criterion.
+More specifically, if the tags are ordered by count, and two tags have the same count, the tag that would come first alphabetically is listed first of the two.
+
 
 
 \section{GeoDB-Editor}
