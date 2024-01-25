@@ -61,7 +61,7 @@ export default class TagsPane extends View<any, any> {
 
   private resort() {
     const comparator = this.sort_mode === T.SourceViewSortMode.ByCountDescending
-      ? (a: T.TagData, b: T.TagData) => (b.active_count - a.active_count) || (b.active_count + b.inactive_count - a.active_count - a.inactive_count)
+      ? (a: T.TagData, b: T.TagData) => (b.active_count - a.active_count) || a.name.localeCompare(b.name)
       : (a: T.TagData, b: T.TagData) => a.name.localeCompare(b.name);
     this.body.selectAll<HTMLDivElement, T.TagData>('.tag')
       .sort(comparator)
