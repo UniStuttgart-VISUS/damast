@@ -1,8 +1,8 @@
 # CHANGELOG
 
-## v1.x.x
+## v1.3.0
 
-Release date: *tba*
+Release date: *2024-xx-xx*
 
 Resolve an issue with Python API changes that lead to errors in newly-built Docker images ([#221](https://github.com/UniStuttgart-VISUS/damast/issues/221)) by pinning the Docker base image version and using `urllib.parse.urlencode` instead of `werkzeug.urls.url_encode`.
 
