@@ -3,7 +3,7 @@ import type { FeatureGroup, Map, LatLngLiteral } from 'leaflet';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
 
-import { mapStyles, MapStyle } from '../common/map-styles';
+import { mapStyles, MapStyle, generateDefaultMapLayer } from '../common/map-styles';
 
 export default class MapPane {
   private readonly map: Map;
@@ -47,72 +47,15 @@ export default class MapPane {
 
     // load map styles
     const stylePromise = mapStyles();
-    const geoJSONPromise = d3.json<GeoJSON.FeatureCollection & { crs: any }>('../vis/water-features.geo.json')
+    const defaultMapPromise = generateDefaultMapLayer('../vis');
 
-    this.loadState = Promise.all([stylePromise, geoJSONPromise]).then(([ms, geojson]) => {
+    this.loadState = Promise.all([stylePromise, defaultMapPromise]).then(([ms, defaultMapLayer]) => {
       this.map_styles = ms;
 
       const layers = {};
 
-      // SRTM Hillshading + Natural Earth water features
-      const tileServerUrl = 'http://localhost:8001/tiles/{z}/{x}/{y}.png';
-      const renderer = canvas();
-
-      const lowLevelOfDetailTileLayer = tileLayer(tileServerUrl, {
-        minNativeZoom: 2,
-        maxNativeZoom: 8,
-        pane: 'tilePane',
-      });
-      const highLevelOfDetailTileLayer = tileLayer(tileServerUrl, {
-        minZoom: 9,
-        minNativeZoom: 9,
-        maxNativeZoom: 12,
-        pane: 'tilePane',
-      });
-
-      const { type, crs, features } = geojson;
-
-      const areas = {
-        type, crs,
-        features: features.filter(v => v.geometry.type === 'Polygon' || v.geometry.type === 'MultiPolygon'),
-      };
-      const lines = {
-        type, crs,
-        features: features.filter(v => v.geometry.type === 'LineString' || v.geometry.type === 'MultiLineString'),
-      };
-
-      const lineLayer = geoJSON(lines, {
-        style: {
-          stroke: true,
-          fill: false,
-          color: '#758591',
-          weight: 2,
-          renderer,
-        },
-        pane: 'tilePane',
-      });
-      const areaLayer = geoJSON(areas, {
-        style: {
-          stroke: false,
-          fill: true,
-          fillColor: '#758591',
-          fillOpacity: 1,
-          renderer,
-        },
-        pane: 'tilePane',
-      });
-
-      const srtmGroup = layerGroup([
-        lowLevelOfDetailTileLayer,
-        highLevelOfDetailTileLayer,
-        lineLayer,
-        areaLayer,
-      ], {
-        attribution: 'Made with Natural Earth. Map tiles &copy; <a href="" target="_blank">2023 Max Franke</a>',
-      });
-
-      layers['Hill shades and water'] = srtmGroup;
-      srtmGroup.addTo(this.map);
+      layers['Relief and water'] = defaultMapLayer;
+      defaultMapLayer.addTo(this.map);
 
       this.map_styles.forEach(layer => {
         if (layer.is_mapbox) mapbox_layers.add(layer.name);

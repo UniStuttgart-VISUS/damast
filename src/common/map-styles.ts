@@ -20,8 +20,8 @@ export async function mapStyles(): Promise<MapStyle[]> {
 
 
 // default map style
-export async function generateDefaultMapLayer(): Promise<L.LayerGroup> {
-  const waterFeatures = await json<GeoJSON.FeatureCollection & { crs: any }>('./water-features.geo.json')
+export async function generateDefaultMapLayer(relDir: string = '.'): Promise<L.LayerGroup> {
+  const waterFeatures = await json<GeoJSON.FeatureCollection & { crs: any }>(`${relDir}/water-features.geo.json`)
 
   // change the tile URL as required
   const tileUrl = `http://localhost:8001/tiles/{z}/{x}/{y}.png`;
