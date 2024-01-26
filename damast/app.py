@@ -439,7 +439,7 @@ class FlaskApp(flask.Flask):
         csps.append("frame-ancestors 'none'")
         csps.append("object-src 'none'")
 
-        scriptsrc = "'self'"
+        scriptsrc = "'self' blob:"  # blob for WebWorker code of Leaflet.VectorGrid
         if self.config['TESTING']:
             # webpack does eval in test mode
             scriptsrc += " 'unsafe-eval'"
