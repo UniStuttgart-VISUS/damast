@@ -1,9 +1,9 @@
-import { map, Control, DomUtil, tileLayer, control, featureGroup, icon, marker as leafletMarker } from 'leaflet';
+import { map, Control, DomUtil, tileLayer, control, featureGroup, icon, marker as leafletMarker, geoJSON, canvas, layerGroup } from 'leaflet';
 import type { FeatureGroup, Map, LatLngLiteral } from 'leaflet';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
 
-import { mapStyles, MapStyle } from '../common/map-styles';
+import { mapStyles, MapStyle, generateDefaultMapLayer } from '../common/map-styles';
 
 export default class MapPane {
   private readonly map: Map;
@@ -45,18 +45,30 @@ export default class MapPane {
       }
     });
 
-    this.loadState = mapStyles().then(ms => {
+    // load map styles
+    const stylePromise = mapStyles();
+    const defaultMapPromise = generateDefaultMapLayer('../vis');
+
+    this.loadState = Promise.all([stylePromise, defaultMapPromise]).then(([ms, defaultMapLayer]) => {
       this.map_styles = ms;
 
       const layers = {};
+
+      if (defaultMapLayer !== null) {
+        layers['Relief and water'] = defaultMapLayer;
+        defaultMapLayer.addTo(this.map);
+      }
+
       this.map_styles.forEach(layer => {
         if (layer.is_mapbox) mapbox_layers.add(layer.name);
         layers[layer.name] = tileLayer(layer.url, layer.options || {});
-        if (layer.default_) {
-          layers[layer.name].addTo(this.map);
-          if (layer.is_mapbox) mapbox_attribution.addTo(this.map);
-        }
       });
+
+      if (defaultMapLayer === null) {
+        const preferredLayer = this.map_styles.find(d => d.default_) ?? this.map_styles[0];
+        layers[preferredLayer.name].addTo(this.map);
+      }
+
       control.layers(layers).addTo(this.map);
     });
 

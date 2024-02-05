@@ -39,6 +39,7 @@
     "leaflet-canvasicon": "^0.1.6",
     "leaflet-color-number-markers": "^1.0.7",
     "leaflet.heat": "git://github.com/Leaflet/Leaflet.heat.git#d2871b3bda5398ed7966e6c055a8ce705cce96c7",
+    "leaflet.vectorgrid": "^1.3.0",
     "lodash": "^4.17.20",
     "tabulator-tables": "^5.4.4",
     "tslib": "^2.3.0",
@@ -47,6 +48,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.14.5",
+    "@types/leaflet.vectorgrid": "^1.3.5",
     "autoprefixer": "^10.2.5",
     "babel-loader": "^8.2.2",
     "breakpoint-sass": "^2.7.1",

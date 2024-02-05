@@ -178,6 +178,7 @@ The following configuration environment variables exist, although most have a se
 | `DAMAST_OVERRIDE_PATH` | `override_path` |  | A directory path under which a `template/` and `static/` directory can be placed. Templates within the `template/` directory will be prioritized over the internal ones. This can be used to provide a different template for a certain page, such as the impressum. |
 | `DAMAST_VISITOR_ROLES` | `visitor_roles` |  | If not empty, contains a comma-separated list of roles a visitor (not logged-in) to the site will receive, which in turn governs which pages will be available without user account. If the variable does not exist, visitors will only see public pages. |
 | `DAMAST_MAP_STYLES` | `map_styles` |  | If not empty, a relative filename (under `/data`) on the Docker filesystem to a JSON with map styles. These will be used in the Leaflet map. If not provided, the [default styles](./damast/map_styles.py) will be used. See also: [JSON schema](./src/assets/schemas/map-styles.json). |
+| `DAMAST_MAP_TILE_PATH` | `map_tile_path` |  | If not empty, a Leaflet tile URL template pointing to self-hosted [shaded relief-only tiles](https://darus.uni-stuttgart.de/dataset.xhtml?persistentId=doi%3A10.18419%2Fdarus-3837). If this is set, these tiles, along with water features from Natural Earth, will be used as the default map layer. |
 | `DAMAST_REPORT_EVICTION_DEFERRAL` | `report_eviction_deferral` |  | If not empty, the number of days of not being accessed before a reports' contents (HTML, PDF, map) are *evicted.* Evicted reports can always be regenerated from their state and filter JSON. Eviction happens to save space and improve performance on systems where many reports are anticipated. *This should not be activated on systems with changing databases!* |
 | `DAMAST_REPORT_EVICTION_MAXSIZE` | `report_eviction_maxsize` |  | If not empty, the file size in megabytes (MB) of report contents (HTML, PDF, map) above which reports will be evicted. If this is set and the sum of content sizes in the report database *after deferral eviction* is above this number, additional reports are evicted until the sum of sizes is lower than this number. Reports are evicted in ascending order of last access date (the least-recently accessed first). The same rules as above apply. |
 | `DAMAST_ANNOTATION_SUGGESTION_REBUILD` | `annotation_suggestion_rebuild` |  | If not empty, the number of days between annotation suggestion rebuilds. In that case, the suggestions are recreated over night every X days. If empty, the annotation suggestions are never recreated, which might be favorable on a system with a static database. |
@@ -261,3 +262,17 @@ The following contents must then be placed in the override folder in `templates/
 ```
 
 Alternatively, for an external URL, the contents of the `url()` statement would be the URL of the image (e.g., `url(https://example.org/bg.jpg)`).
+
+
+##### Using the Shaded Relief Map Tiles
+
+We have created a WebMercator tile set that only contains shaded relief, which is based on NASA SRTM topographic height data.
+This dataset is published [on DaRUS](https://darus.uni-stuttgart.de/dataset.xhtml?persistentId=doi%3A10.18419%2Fdarus-3837) under the [CC BY 4.0](http://creativecommons.org/licenses/by/4.0) license.
+These tiles, alongside the public domain map data of water features provided by Natural Earth, can be used as the default map layer in Damast, suitable for screenshots (only attribution needed).
+To enable this map layer, the configuration variable `map_tile_path` (see table above) must be set.
+Our recommendation is to download and host the tiles using the nginx proxy that also handles TLS.
+A download script is provided in [`util/shaded-relief-map-tiles`](./util/shaded-relief-tiles), alongside an amendment to the nginx configuration.
+If this nginx configuration is used, the configuration variable's value should be `${DAMAST_PROXYPREFIX}/tiles/{z}/{x}/{y}.png`.
+The provided download script will download tiles down to zoom level 12 within the rough coverage area of the *Dhimmis & Muslims* project, and down to level 6 outside of it.
+This results in a tile dataset size of about 10GB.
+A different subset of tiles, or the entire set (ca. 200GB), can be downloaded using the scripts provided in the [GitHub repository](https://zenodo.org/doi/10.5281/zenodo.10518202) associated with the DaRUS repository.

@@ -32,7 +32,7 @@ The Damast server does not handle SSL encryption, so it is sensible to put a rev
 Here, running the PostgreSQL server in a Docker container as well is assumed.
 The Damast docker container expects an internal \verb!/data! directory to exist, and to be readable and writable to the \verb!www! user in the container.
 This directory should be mounted to a directory on the host, and contains runtime configuration (\cref{sec:runtime-configuration}), server logs (\cref{sec:logging}), override blueprints (\cref{sec:override-blueprints}), and the user (\cref{sec:user-database}) and report (\cref{sec:report-database}) databases.
-The directory (\verb!/data!) in \cref{fig:structure}) must be readable and writable to the \verb!www! user in the container.
+The directory (\verb!/data! in \cref{fig:structure}) must be readable and writable to the \verb!www! user in the container.
 To facilitate the mapping of the volume and the access rights, this \verb!www! user should also exist on the host system, and the host directory should have the appropriate rights.
 The user ID and group ID of that user on the host system must then be passed to Docker when building the Docker image, using the \verb!USER_ID! and \verb!GROUP_ID! environment variables.
 
@@ -168,6 +168,12 @@ If an option is passed in multiple ways (e.g., default value and JSON config and
       {If not empty, a relative filename (under \texttt{/data}) on the Docker filesystem to a JSON with map styles. These will be used in the Leaflet map. If not provided, the default styles will be used.}
       \\\midrule
     \configentry%
+      {DAMAST\_MAP\_TILE\_PATH}%
+      {map\_tile\_path}%
+      {}%
+      {If not empty, a Leaflet tile URL template pointing to self-hosted shaded relief-only tiles~\cite{SRTM-tiles}. If this is set, these tiles, along with water features from Natural Earth, will be used as the default map layer. See \cref{subsec:srtm-map-tiles}.}
+      \\\midrule
+    \configentry%
       {DAMAST\_REPORT\_EVICTION\_DEFERRAL}%
       {report\_eviction\_deferral}%
       {}%
@@ -230,6 +236,21 @@ If an option is passed in multiple ways (e.g., default value and JSON config and
     \bottomrule[1pt]
 \end{longtable}
 }
+
+\subsection{Using the Shaded Relief Map Tiles}%
+\label{subsec:srtm-map-tiles}
+
+We have created a WebMercator tile set that only contains shaded relief, which is based on NASA SRTM topographic height data.
+This dataset is published on DaRUS~\cite{SRTM-tiles} under the CreativeCommons By-Attribution 4.0 (CC-BY-4.0) license.
+These tiles, alongside the public domain map data of water features provided by Natural Earth, can be used as the default map layer in Damast, suitable for screenshots (only attribution needed).
+To enable this map layer, the configuration variable \verb!map_tile_path! (see \cref{tab:configuration-variables}) must be set.
+Our recommendation is to download and host the tiles using the nginx proxy that also handles TLS.
+A download script is provided in \verb!util/shaded-relief-map-tiles!, alongside an amendment to the nginx configuration.
+If this nginx configuration is used, the configuration variable's value should be \verb!${DAMAST_PROXYPREFIX}/tiles/{z}/{x}/{y}.png!.
+The provided download script will download tiles down to zoom level 12 within the rough coverage area of the \emph{Dhimmis \& Muslims} project, and down to level 6 outside of it.
+This results in a tile dataset size of about 10\,GB.
+A different subset of tiles, or the entire set (ca.\ 200\,GB), can be downloaded using the scripts provided in the GitHub repository\footnote{\url{https://github.com/UniStuttgart-VISUS/generate-mercator-tiles-from-srtm}} associated with the DaRUS repository.
+
 
 \subsection{Logging}
 \label{sec:logging}
