@@ -21,7 +21,7 @@ export async function mapStyles(): Promise<MapStyle[]> {
 
 // default map style
 export async function generateDefaultMapLayer(relDir: string = '.'): Promise<L.LayerGroup | null> {
-  const mapTileRequest = await fetch('/vis/tile-path');
+  const mapTileRequest = await fetch(`${relDir}/tile-path`);
   if (!mapTileRequest.ok || mapTileRequest.status === 204) return null
 
   const tileUrl = await mapTileRequest.text();
