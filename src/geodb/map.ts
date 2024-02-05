@@ -54,13 +54,21 @@ export default class MapPane {
 
       const layers = {};
 
-      layers['Relief and water'] = defaultMapLayer;
-      defaultMapLayer.addTo(this.map);
+      if (defaultMapLayer !== null) {
+        layers['Relief and water'] = defaultMapLayer;
+        defaultMapLayer.addTo(this.map);
+      }
 
       this.map_styles.forEach(layer => {
         if (layer.is_mapbox) mapbox_layers.add(layer.name);
         layers[layer.name] = tileLayer(layer.url, layer.options || {});
       });
+
+      if (defaultMapLayer === null) {
+        const preferredLayer = this.map_styles.find(d => d.default_) ?? this.map_styles[0];
+        layers[preferredLayer.name].addTo(this.map);
+      }
+
       control.layers(layers).addTo(this.map);
     });
 

@@ -10,14 +10,18 @@ if (mapPane) {
     mapStyles(),
     generateDefaultMapLayer('../vis'),
   ]).then(([map_styles, defaultMapLayer]) => {
-        //tileLayer(map_styles[0].url, map_styles[0].options),
-    // TODO: make relief map optional
-    const bgTileLayer = defaultMapLayer;
+    let bgTileLayer;
+    const preferredLayer = map_styles.find(d => d.default_) ?? map_styles[0];
+    if (defaultMapLayer !== null) {
+      bgTileLayer = defaultMapLayer;
+    } else {
+      bgTileLayer = tileLayer(preferredLayer.url, preferredLayer.options);
+    }
 
     const map = leafletMap(mapPane, {
       zoomControl: false,
       center: [lat, lng],
-      zoom: 8,
+      zoom: 6,
       layers: [
         bgTileLayer,
         marker({lat, lng}, {
@@ -34,14 +38,14 @@ if (mapPane) {
       ],
     });
 
-    //if (map_styles[0].is_mapbox) {
-    //  const mapbox_attribution = new Control({position: 'bottomleft'});
-    //  mapbox_attribution.onAdd = function(_) {
-    //    const div = DomUtil.create('div', 'attribution');
-    //    div.innerHTML = `<a href="http://mapbox.com/about/maps" class='mapbox-wordmark' target="_blank">Mapbox</a>`;
-    //    return div;
-    //  };
-    //  mapbox_attribution.addTo(map);
-    //}
+    if (preferredLayer.is_mapbox && defaultMapLayer === null) {
+      const mapbox_attribution = new Control({position: 'bottomleft'});
+      mapbox_attribution.onAdd = function(_) {
+        const div = DomUtil.create('div', 'attribution');
+        div.innerHTML = `<a href="http://mapbox.com/about/maps" class='mapbox-wordmark' target="_blank">Mapbox</a>`;
+        return div;
+      };
+      mapbox_attribution.addTo(map);
+    }
   });
 }

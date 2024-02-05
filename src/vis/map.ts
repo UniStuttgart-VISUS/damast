@@ -302,9 +302,11 @@ export default class MapPane extends View<any, Set<number> | null> {
 
     this.setupState = Promise.all([stylePromise, defaultLayerPromise]).then(([ms, defaultMapLayer]) => {
       // TODO: make this conditional again, with configurable relief map availability
-      this.layerControl.addBaseLayer(defaultMapLayer, 'Relief and water');
-      this.baseLayers.set('srtm', defaultMapLayer);
-      defaultMapLayer.addTo(this.map);
+      if (defaultMapLayer !== null) {
+        this.layerControl.addBaseLayer(defaultMapLayer, 'Relief and water');
+        this.baseLayers.set('srtm', defaultMapLayer);
+        defaultMapLayer.addTo(this.map);
+      }
       // other layers
       this.map_styles = ms;
       this.map_styles.forEach((style) => {
@@ -314,6 +316,11 @@ export default class MapPane extends View<any, Set<number> | null> {
         this.layerControl.addBaseLayer(layer, style.name);
         this.baseLayers.set(style.key, layer);
       });
+
+      const preferredLayer = this.map_styles.find(d => d.default_) ?? this.map_styles[0];
+      if (defaultMapLayer === null) {
+        this.baseLayers.get(preferredLayer.key)?.addTo(this.map);
+      }
     });
 
     // Geoman

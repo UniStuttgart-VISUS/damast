@@ -97,3 +97,16 @@ def get_map_styles():
     GeoDB-Editor, and the place URI page.
     '''
     return flask.jsonify(_get_styles())
+
+
+@app.route('/tile-path', role='readdb')
+def get_tile_path():
+    '''
+    Get the path to the hosted default tiles.
+
+    If this is not set, they will be deactivated in the map.
+    '''
+    if conf.map_tile_path is None:
+        return '', 204
+
+    return conf.map_tile_path, 200

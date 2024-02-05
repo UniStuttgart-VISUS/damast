@@ -173,6 +173,14 @@ _config_entries = [
             ),
 
         ConfigEntry(
+            envvar = 'DAMAST_MAP_TILE_PATH',
+            varname = 'map_tile_path',
+            type = str,
+            default = None,
+            description = 'HTTP template path for default map tiles'
+            ),
+
+        ConfigEntry(
             envvar = 'DAMAST_REPORT_EVICTION_DEFERRAL',
             varname = 'report_eviction_deferral',
             type = int,

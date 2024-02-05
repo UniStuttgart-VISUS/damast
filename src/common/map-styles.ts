@@ -1,4 +1,4 @@
-import { json } from 'd3-fetch';
+import { json, text } from 'd3-fetch';
 import * as L from 'leaflet';
 import 'leaflet.vectorgrid';
 
@@ -20,11 +20,13 @@ export async function mapStyles(): Promise<MapStyle[]> {
 
 
 // default map style
-export async function generateDefaultMapLayer(relDir: string = '.'): Promise<L.LayerGroup> {
-  const waterFeatures = await json<GeoJSON.FeatureCollection & { crs: any }>(`${relDir}/water-features.geo.json`)
+export async function generateDefaultMapLayer(relDir: string = '.'): Promise<L.LayerGroup | null> {
+  const mapTileRequest = await fetch('/vis/tile-path');
+  if (!mapTileRequest.ok || mapTileRequest.status === 204) return null
 
-  // change the tile URL as required
-  const tileUrl = `http://localhost:8001/tiles/{z}/{x}/{y}.png`;
+  const tileUrl = await mapTileRequest.text();
+
+  const waterFeatures = await json<GeoJSON.FeatureCollection & { crs: any }>(`${relDir}/water-features.geo.json`)
 
   // `layerGroup` with two members. The lower one is always shown, the higher one only above the given zoom level.
   const lowTileLayer = L.tileLayer(tileUrl, {
