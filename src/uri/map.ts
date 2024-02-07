@@ -1,18 +1,29 @@
 import { map as leafletMap, marker, tileLayer, icon, Control, DomUtil } from 'leaflet';
-import { mapStyles } from '../common/map-styles';
+import { generateDefaultMapLayer, mapStyles } from '../common/map-styles';
 
 const mapPane: HTMLDivElement = document.querySelector('div.map:not(.map--none)');
 if (mapPane) {
   const lat = parseFloat(mapPane.getAttribute('data-lat'));
   const lng = parseFloat(mapPane.getAttribute('data-lng'));
 
-  mapStyles().then(map_styles => {
+  Promise.all([
+    mapStyles(),
+    generateDefaultMapLayer('../vis'),
+  ]).then(([map_styles, defaultMapLayer]) => {
+    let bgTileLayer;
+    const preferredLayer = map_styles.find(d => d.default_) ?? map_styles[0];
+    if (defaultMapLayer !== null) {
+      bgTileLayer = defaultMapLayer;
+    } else {
+      bgTileLayer = tileLayer(preferredLayer.url, preferredLayer.options);
+    }
+
     const map = leafletMap(mapPane, {
       zoomControl: false,
       center: [lat, lng],
-      zoom: 8,
+      zoom: 6,
       layers: [
-        tileLayer(map_styles[0].url, map_styles[0].options),
+        bgTileLayer,
         marker({lat, lng}, {
           icon: icon({
             iconUrl: '../uri/images/marker-icon-blue.png',
@@ -27,7 +38,7 @@ if (mapPane) {
       ],
     });
 
-    if (map_styles[0].is_mapbox) {
+    if (preferredLayer.is_mapbox && defaultMapLayer === null) {
       const mapbox_attribution = new Control({position: 'bottomleft'});
       mapbox_attribution.onAdd = function(_) {
         const div = DomUtil.create('div', 'attribution');

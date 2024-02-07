@@ -11,7 +11,8 @@
   }
 }
 
-.source__header {
+.source__header,
+.tags__header {
   display: grid;
   grid-template-columns: repeat(3, max-content) auto auto;
 
@@ -33,15 +34,6 @@
 
   & > :first-child {
     margin-right: auto;
-  }
-}
-
-.tags__header {
-  display: grid;
-  grid-template-columns: repeat(2, max-content) auto;
-
-  & > button:last-of-type {
-    margin-left: auto;
   }
 }
 

@@ -386,7 +386,7 @@ class FlaskApp(flask.Flask):
             this_url = flask.url_for(flask.request.endpoint,
                     **(flask.request.view_args if flask.request.view_args else dict()))
             if flask.request.args:
-                this_url += F'?{werkzeug.urls.url_encode(flask.request.args)}'
+                this_url += F'?{urllib.parse.urlencode(flask.request.args)}'
 
             return dict(
                     # inject user into every template
@@ -439,7 +439,7 @@ class FlaskApp(flask.Flask):
         csps.append("frame-ancestors 'none'")
         csps.append("object-src 'none'")
 
-        scriptsrc = "'self'"
+        scriptsrc = "'self' blob:"  # blob for WebWorker code of Leaflet.VectorGrid
         if self.config['TESTING']:
             # webpack does eval in test mode
             scriptsrc += " 'unsafe-eval'"

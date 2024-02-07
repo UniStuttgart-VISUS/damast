@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## v1.3.0
+
+Release date: *2024-xx-xx*
+
+This minor release includes two new features:
+- Add map material that is suitable for screenshots in publications ([224](https://github.com/UniStuttgart-VISUS/damast/issues/224)).
+  The map material added consists of WebMercator tiles showing only shaded relief ([repository](https://darus.uni-stuttgart.de/dataset.xhtml?persistentId=doi%253A10.18419%252Fdarus-3837)), which are licensed under CC-BY-4.0, and water features from Natural Earth, which are in the public domain.
+- Change the tags view header and filter behavior to match that of the sources view (select all, none, invert; sort by name or evidence count; no selection means no match) ([220](https://github.com/UniStuttgart-VISUS/damast/issues/220)).
+
+The release also includes updates to dependency versions, as well as two smaller bugfixes:
+- Resolve an issue with Python API changes that lead to errors in newly-built Docker images ([#221](https://github.com/UniStuttgart-VISUS/damast/issues/221)) by pinning the Docker base image version and using `urllib.parse.urlencode` instead of `werkzeug.urls.url_encode`.
+- Resolve an issue where the switch between the qualitative and quantitative timeline modes did nothing ([222](https://github.com/UniStuttgart-VISUS/damast/issues/222)).
+
 
 ## v1.2.1
 

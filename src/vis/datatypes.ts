@@ -155,7 +155,7 @@ export type TagData = Tag & {
 export interface MapState {
   zoom: number;
   center: Coordinate;
-  base_layer: 'light' | 'dare';
+  base_layer: 'light' | 'dare' | 'srtm';
   overlay_layers: ('markerLayer' | 'diversityMarkerLayer' | 'diversityDensityLayer' | 'evidenceCountHeatLayer')[];
 };
 

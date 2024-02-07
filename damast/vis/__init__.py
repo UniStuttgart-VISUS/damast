@@ -40,3 +40,10 @@ def _render_standalone_info(content=None):
 @app.route('/snippet/<path:path>', role=['vis', 'admin'])
 def get_snippet(path):
     return flask.render_template(F'vis/info/{path}')
+
+
+@app.route('/water-features.geo.json', role=['vis', 'geodb', 'admin'])
+def get_geojson():
+    resp = flask.send_file('reporting/map-data/features.geo.json.gz', 'application/json')
+    resp.headers['Content-Encoding'] = 'gzip'
+    return resp

@@ -1,4 +1,6 @@
-import { json } from 'd3-fetch';
+import { json, text } from 'd3-fetch';
+import * as L from 'leaflet';
+import 'leaflet.vectorgrid';
 
 export interface MapStyle {
   key: string;
@@ -12,29 +14,87 @@ export interface MapStyle {
   };
 };
 
-export const map_styles: MapStyle[] = [
-  {
-    key: "light",
-    url: 'https://api.mapbox.com/styles/v1/mfranke/ckg0r0rkg2gjr19of0s0ox6oq/tiles/256/{z}/{x}/{y}?access_token={accessToken}',
-    name: 'MapBox Custom Light',
-    default_: true,
-    is_mapbox: true,
-    options: {
-      accessToken: 'pk.eyJ1IjoibWZyYW5rZSIsImEiOiJjam0yNGFmd3EwYXFhM3B0YWpkd3ZsZGd0In0.NokTlNyaWNFG82lHN3eObg',
-      attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> <strong><a href="https://www.mapbox.com/map-feedback/" target="_blank">Improve this map</a></strong>',
-    },
-  },
-  {
-    key: "dare",
-    url: 'https://dh.gu.se/tiles/imperium/{z}/{x}/{y}.png',
-    name: 'Digital Atlas of the Roman Empire',
-    is_mapbox: false,
-    options: {
-      attribution: 'Creative Commons Attribution 4.0 International license (CC BY 4.0)',
-    },
-  },
-];
-
 export async function mapStyles(): Promise<MapStyle[]> {
   return json('./map-styles');
+}
+
+
+// default map style
+export async function generateDefaultMapLayer(relDir: string = '.'): Promise<L.LayerGroup | null> {
+  const mapTileRequest = await fetch(`${relDir}/tile-path`);
+  if (!mapTileRequest.ok || mapTileRequest.status === 204) return null
+
+  const tileUrl = await mapTileRequest.text();
+
+  const waterFeatures = await json<GeoJSON.FeatureCollection & { crs: any }>(`${relDir}/water-features.geo.json`)
+
+  // `layerGroup` with two members. The lower one is always shown, the higher one only above the given zoom level.
+  const lowTileLayer = L.tileLayer(tileUrl, {
+    maxNativeZoom: 6,
+  });
+  const highTileLayer = L.tileLayer(tileUrl, {
+    minZoom: 7,
+    maxNativeZoom: 12,
+  });
+
+  // make addable and removable without disturbing order
+  const highTileGroup = L.layerGroup([highTileLayer]);
+
+  const slicer = L.vectorGrid.slicer(waterFeatures, {
+    rendererFactory: L.svg.tile,
+    getFeatureId: feature => {
+      return (feature.type as unknown as string)
+    },
+  });
+  slicer.setFeatureStyle(2, {
+    stroke: true,
+    fill: false,
+    color: '#758591',
+    weight: 2,
+    pmIgnore: true,  // do not use as GeoJSON filter
+  });
+  slicer.setFeatureStyle(3, {
+    stroke: false,
+    fill: true,
+    fillColor: '#758591',
+    fillOpacity: 1,
+    pmIgnore: true,  // do not use as GeoJSON filter
+  });
+
+  const tileLayer = L.layerGroup([
+    lowTileLayer,
+    highTileGroup,
+    slicer,
+  ], {
+    attribution: 'Made with Natural Earth. Map tiles &copy; 2024 <a href="https://darus.uni-stuttgart.de/dataset.xhtml?persistentId=doi:10.18419/darus-3837" target="_blank">Max Franke</a>',
+  });
+
+  function onZoom() {
+    const zoom = this.getZoom();
+
+    if (zoom >= 7 && !highTileGroup.hasLayer(highTileLayer)) {
+      highTileGroup.addLayer(highTileLayer);
+      slicer.bringToFront();
+    }
+
+    if (zoom < 7 && highTileGroup.hasLayer(highTileLayer)) highTileGroup.removeLayer(highTileLayer);
+
+    slicer.setFeatureStyle(2, {
+      stroke: zoom >= 4,
+      fill: false,
+      color: '#758591',
+      pmIgnore: true,  // do not use as GeoJSON filter
+      weight: 2,
+    });
+  }
+
+  tileLayer.on('add', e => {
+    e.sourceTarget._map.on('zoom', onZoom);
+    onZoom.bind(e.sourceTarget._map)(e);
+  });
+  tileLayer.on('remove', e => {
+    e.sourceTarget._map.off('zoom', onZoom);
+  });
+
+  return tileLayer
 }

@@ -30,6 +30,7 @@ run() {
         --env DAMAST_VISITOR_ROLES="readdb,vis,reporting" \
         --env DAMAST_MAP_STYLES="map-styles.json" \
         --env DAMAST_REPORT_EVICTION_DEFERRAL=1 \
+        --env DAMAST_MAP_TILE_PATH=http://localhost:8001/tiles/{z}/{x}/{y}.png \
         $imagename
 
   sudo docker stop $dbimagename

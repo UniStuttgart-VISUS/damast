@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { Control, PM, geoJSON, layerGroup, Layer, DomUtil, control, heatLayer, map as leafletMap, tileLayer } from 'leaflet';
+import { Control, PM, geoJSON, layerGroup, Layer, DomUtil, control, heatLayer, map as leafletMap, tileLayer, canvas } from 'leaflet';
 import type { Map as LeafletMap, HeatLayer, HeatMapOptions, TileLayerOptions } from 'leaflet';
 import 'leaflet.heat';
 import '@geoman-io/leaflet-geoman-free';
@@ -19,7 +19,7 @@ import {ColorScales} from './colorscale';
 import * as modal from './modal';
 import View from './view';
 import { zoom_level as default_zoomlevel, center as initial_map_center, radius } from './default-map-zoomlevel';
-import { MapStyle, mapStyles } from '../common/map-styles';
+import { MapStyle, generateDefaultMapLayer, mapStyles } from '../common/map-styles';
 import { MessageData } from './data-worker';
 import TooltipManager from './tooltip';
 import DiversityLayer from './diversity-layer';
@@ -297,21 +297,30 @@ export default class MapPane extends View<any, Set<number> | null> {
     this.layerControl.addOverlay(this.evidenceCountHeatLayer, '<b>Distribution:</b> Heatmap of count of evidence');
 
     // load map styles
-    this.setupState = mapStyles().then(ms => {
-      this.map_styles = ms;
+    const stylePromise = mapStyles();
+    const defaultLayerPromise = generateDefaultMapLayer();
 
+    this.setupState = Promise.all([stylePromise, defaultLayerPromise]).then(([ms, defaultMapLayer]) => {
+      // TODO: make this conditional again, with configurable relief map availability
+      if (defaultMapLayer !== null) {
+        this.layerControl.addBaseLayer(defaultMapLayer, 'Relief and water');
+        this.baseLayers.set('srtm', defaultMapLayer);
+        defaultMapLayer.addTo(this.map);
+      }
+      // other layers
+      this.map_styles = ms;
       this.map_styles.forEach((style) => {
         if (style.is_mapbox) mapbox_layers.add(style.name);
 
         const layer = tileLayer(style.url, (style.options || {}) as TileLayerOptions);
         this.layerControl.addBaseLayer(layer, style.name);
-        if (style.default_) {
-          layer.addTo(this.map);
-          if (style.is_mapbox) mapbox_attribution.addTo(this.map);
-        }
-
         this.baseLayers.set(style.key, layer);
       });
+
+      const preferredLayer = this.map_styles.find(d => d.default_) ?? this.map_styles[0];
+      if (defaultMapLayer === null) {
+        this.baseLayers.get(preferredLayer.key)?.addTo(this.map);
+      }
     });
 
     // Geoman

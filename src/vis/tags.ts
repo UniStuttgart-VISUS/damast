@@ -19,12 +19,16 @@ export default class TagsPane extends View<any, any> {
   private div: d3.Selection<HTMLDivElement, any, any, any>;
   private body: d3.Selection<HTMLDivElement, any, any, any>;
 
+  private sort_mode_checkbox: HTMLInputElement;
+  private sort_mode: T.SourceViewSortMode = T.SourceViewSortMode.ByCountDescending;
+
   private _tag_filter: TagFilter;
+  private _tags: Array<T.TagData> = [];
   private readonly tooltipManager = new TooltipManager();
 
   constructor(
     worker: Worker,
-    container: GoldenLayout.ComponentContainer
+    container: GoldenLayout.ComponentContainer,
   ) {
     super(worker, container, 'tags');
 
@@ -34,6 +38,15 @@ export default class TagsPane extends View<any, any> {
     div.innerHTML = tags;
     this.div = d3.select(div);
     this.body = this.div.select('.tags__body');
+
+    this.sort_mode_checkbox = this.div.select<HTMLInputElement>('#tags-sort-mode').node();
+    this.sort_mode_checkbox.checked = this.sort_mode === T.SourceViewSortMode.ByCountDescending;
+    this.sort_mode_checkbox.addEventListener('input', (evt) => {
+      this.sort_mode = this.sort_mode_checkbox.checked
+        ? T.SourceViewSortMode.ByCountDescending
+        : T.SourceViewSortMode.ByShortNameAscending;
+      this.resort();
+    });
   }
 
   async linkData(data: any) {
@@ -46,13 +59,23 @@ export default class TagsPane extends View<any, any> {
     else sel.classed('tag--linked', d => data.has(d.id));
   }
 
+  private resort() {
+    const comparator = this.sort_mode === T.SourceViewSortMode.ByCountDescending
+      ? (a: T.TagData, b: T.TagData) => (b.active_count - a.active_count) || a.name.localeCompare(b.name)
+      : (a: T.TagData, b: T.TagData) => a.name.localeCompare(b.name);
+    this.body.selectAll<HTMLDivElement, T.TagData>('.tag')
+      .sort(comparator)
+  }
+
   async setData(data: {tags: T.TagData[], maximum: number, tag_filter: TagFilter}) {
     const {tags, maximum, tag_filter} = data;
     this._tag_filter = tag_filter;
+    this._tags = tags;
 
     this.initButtons();
     this.createElements(tags);
     this.checkActive();
+    this.resort();
 
     const scale = d3.scaleLinear()
       .domain([0, maximum]);
@@ -100,7 +123,8 @@ export default class TagsPane extends View<any, any> {
   private initButtons(): void {
     d3.select('#tags-filter-apply').on('click', () => this.onApply());
     d3.select('#tags-filter-none').on('click', () => this.checkNone());
-    d3.select('#tags-filter-revert').on('click', () => this.revertCheck());
+    d3.select('#tags-filter-invert').on('click', () => this.invertAll());
+    d3.select('#tags-filter-all').on('click', () => this.checkAll());
   }
 
   private collectSelected(): Set<number> {
@@ -119,9 +143,9 @@ export default class TagsPane extends View<any, any> {
     const selected = this.collectSelected();
     let unchanged = true;
 
-    if (selected.size > 0 && this._tag_filter === true) unchanged = false;
+    if (selected.size === this._tags.length && this._tag_filter === true) unchanged = true;
     else if (selected.size === 1 && typeof this._tag_filter === 'number' && !selected.has(this._tag_filter)) unchanged = false;
-    else if (selected.size !== 1 && typeof this._tag_filter === 'number') unchanged = false;
+    else if (selected.size !== 1 && (typeof this._tag_filter === 'number' || typeof this._tag_filter === 'boolean')) unchanged = false;
     else if (typeof this._tag_filter === 'object') {
       unchanged = Array.from(this._tag_filter).every(d => selected.has(d))
         && Array.from(selected).every(d => (this._tag_filter as Set<number>).has(d));
@@ -138,17 +162,16 @@ export default class TagsPane extends View<any, any> {
     });
   }
 
-  private revertCheck(): void {
-    if (this._tag_filter === true) this.checkNone();
-    else if (typeof this._tag_filter === 'number') {
-      this.applyLogicToAll(elem => {
-        elem.checked = d3.select<any, T.TagData>(elem).datum().id === this._tag_filter;
-      });
-    } else {
-      this.applyLogicToAll(elem => {
-        elem.checked = (this._tag_filter as Set<number>).has(d3.select<any, T.TagData>(elem).datum().id);
-      });
-    }
+  private checkAll(): void {
+    this.applyLogicToAll(elem => {
+      elem.checked = true;
+    });
+  }
+
+  private invertAll(): void {
+    this.applyLogicToAll(elem => {
+      elem.checked = !elem.checked;
+    });
   }
 
   private applyLogicToAll(fn: (elem: HTMLInputElement) => void): void {
@@ -175,8 +198,8 @@ export default class TagsPane extends View<any, any> {
     const selected = this.collectSelected();
 
     let filter: TagFilter;
-    if (selected.size === 0) filter = true;
-    else if (selected.size === 1) filter = Array.from(selected)[0];
+    if (selected.size === 1) filter = Array.from(selected)[0];
+    else if (selected.size === this._tags.length) filter = true;
     else filter = selected;
 
     this._tag_filter = filter;
@@ -215,7 +238,7 @@ export default class TagsPane extends View<any, any> {
           .append('input')
           .attr('type', 'checkbox')
           .each(function() {
-            if (ref._tag_filter === true) this.checked = false;
+            if (ref._tag_filter === true) this.checked = true;
             else this.checked = ((typeof ref._tag_filter === 'number' && ref._tag_filter === d.id)
               || (typeof ref._tag_filter === 'object' && ref._tag_filter.has(d.id)));
           })  // TODO
