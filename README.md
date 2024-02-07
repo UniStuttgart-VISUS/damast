@@ -275,4 +275,4 @@ A download script is provided in [`util/shaded-relief-map-tiles`](./util/shaded-
 If this nginx configuration is used, the configuration variable's value should be `${DAMAST_PROXYPREFIX}/tiles/{z}/{x}/{y}.png`.
 The provided download script will download tiles down to zoom level 12 within the rough coverage area of the *Dhimmis & Muslims* project, and down to level 6 outside of it.
 This results in a tile dataset size of about 10GB.
-A different subset of tiles, or the entire set (ca. 200GB), can be downloaded using the scripts provided in the [GitHub repository](https://zenodo.org/doi/10.5281/zenodo.10518202) associated with the DaRUS repository.
+A different subset of tiles, or the entire set (ca. 100GB), can be downloaded using the scripts provided in the [GitHub repository](https://zenodo.org/doi/10.5281/zenodo.10518202) associated with the DaRUS repository.
