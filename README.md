@@ -264,7 +264,7 @@ The following contents must then be placed in the override folder in `templates/
 Alternatively, for an external URL, the contents of the `url()` statement would be the URL of the image (e.g., `url(https://example.org/bg.jpg)`).
 
 
-##### Using the Shaded Relief Map Tiles
+#### Using the Shaded Relief Map Tiles
 
 We have created a WebMercator tile set that only contains shaded relief, which is based on NASA SRTM topographic height data.
 This dataset is published [on DaRUS](https://darus.uni-stuttgart.de/dataset.xhtml?persistentId=doi%3A10.18419%2Fdarus-3837) under the [CC BY 4.0](http://creativecommons.org/licenses/by/4.0) license.
