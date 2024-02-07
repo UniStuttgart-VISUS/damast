@@ -2,7 +2,7 @@
 
 ## v1.3.0
 
-Release date: *2024-xx-xx*
+Release date: *2024-02-07*
 
 This minor release includes two new features:
 - Add map material that is suitable for screenshots in publications ([224](https://github.com/UniStuttgart-VISUS/damast/issues/224)).
