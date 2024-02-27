@@ -72,6 +72,40 @@ def get_geojson():
                 geojson_places.append(feature)
 
 
+            if details:
+                for place_id, properties in geojson_place_properties.items():
+                    place_data = next(filter(lambda d: d.place.id == place_id, evidence_data['places']))
+
+                    properties['external_uris'] = [ d.uri for d in place_data.external_uris ]
+                    properties['alternative_names'] = [ d._asdict() for d in place_data.alternative_names ]
+
+                    # religious groups present (evidence)
+                    evidences = []
+                    for e_ in filter(lambda v: v.evidence.place_id == place_id, evidence_data['evidences']):
+                        e = e_.evidence
+                        evidence = dict(
+                            id=e.id,
+                            comment=e.evidence_comment,
+                            interpretation_confidence=e.interpretation_confidence,
+                            place_attribution_confidence=e.place_attribution_confidence,
+                            place_instance_comment=e.place_instance_comment,
+                            religion=e.religion,
+                            religion_confidence=e.religion_confidence,
+                            religion_instance_comment=e.religion_instance_comment,
+                            time_spans=[
+                                dict(
+                                    span=v['span'],
+                                    confidence=v['confidence'],
+                                    comment=v['comment'],
+                                ) for v in e.time_instances
+                            ],
+                        )
+
+                        evidences.append(evidence)
+
+                    properties['evidence'] = evidences
+
+
             current_user = flask.current_app.auth.current_user()
             username = current_user.name if not current_user.visitor else 'visitor'
             geojson = dict(
@@ -82,6 +116,7 @@ def get_geojson():
                     user=username,
                     time=datetime.datetime.utcnow().isoformat(sep='T'),
                     base_url=flask.request.base_url.removesuffix(flask.url_for('reporting.geojson.get_geojson')),
+                    # TODO: add copyright statement, how to cite
                 ),
                 features=geojson_places,
             )
