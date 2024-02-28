@@ -73,16 +73,18 @@ def get_geojson():
 
 
             if details:
-                for place_id, properties in geojson_place_properties.items():
-                    place_data = next(filter(lambda d: d.place.id == place_id, evidence_data['places']))
+                evidence_lut = { e.evidence.id: e.evidence for e in evidence_data['evidences'] }
+
+                for place_data in evidence_data['places']:
+                    properties = geojson_place_properties[place_data.place.id]
 
                     properties['external_uris'] = [ d.uri for d in place_data.external_uris ]
                     properties['alternative_names'] = [ d._asdict() for d in place_data.alternative_names ]
 
                     # religious groups present (evidence)
                     evidences = []
-                    for e_ in filter(lambda v: v.evidence.place_id == place_id, evidence_data['evidences']):
-                        e = e_.evidence
+                    for eid in place_data.place.evidence_ids:
+                        e = evidence_lut[eid]
                         evidence = dict(
                             id=e.id,
                             comment=e.evidence_comment,
@@ -108,15 +110,19 @@ def get_geojson():
 
             current_user = flask.current_app.auth.current_user()
             username = current_user.name if not current_user.visitor else 'visitor'
+            base_url=flask.request.base_url.removesuffix(flask.url_for('reporting.geojson.get_geojson'))
             geojson = dict(
                 type='FeatureCollection',
                 properties=dict(
-                    query_filter=filter_json['filters'],
+                    data_license='''Creative Commons By-Attribution 4.0 (CC BY 4.0)''',
+                    data_citation='''Weltecke, Dorothea; Koch, Steffen; Barczok, Ralph; Franke, Max; Vest, Bernd Andreas, 2022, "Data Collected During the Digital Humanities Project 'Dhimmis & Muslims - Analysing Multireligious Spaces in the Medieval Muslim World'", https://doi.org/10.18419/darus-2318, DaRUS, V1.''',
+                    how_to_cite=F'''Weltecke, Dorothea, Steffen Koch, Ralph Barczok, Max Franke, Florian Jäckel, and Bernd A. Vest, eds. Damast – A Research System to Analyze Multi-Religious Constellations in the Islamicate World. April 2022. Accessed {datetime.date.today():%B %_d, %Y}. {base_url}, data deposited at DaRUS, https://doi.org/10.18419/darus-2318.''',
+
                     damast_version=config.version,
                     user=username,
                     time=datetime.datetime.utcnow().isoformat(sep='T'),
-                    base_url=flask.request.base_url.removesuffix(flask.url_for('reporting.geojson.get_geojson')),
-                    # TODO: add copyright statement, how to cite
+                    base_url=base_url,
+                    query_filter=filter_json['filters'],
                 ),
                 features=geojson_places,
             )
