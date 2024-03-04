@@ -429,7 +429,7 @@ export const settings_pane = `
     The second variant also contains some additional information about the places (alternative names, external URIs), as well as evidence data (religious groups, time spans, confidence values, etc.).
   </p>
   <p>
-    For places with no position, the <code>coordinates</code> array is set to those of <a href="https://en.wikipedia.org/wiki/Null_Island" target="_blank"><em><q>Null Island</q></em></a> (0&deg;&thinsp;N, 0&deg;&thinsp;E).
+    For places with no position, the <code>coordinates</code> array is set to those of <a href="https://en.wikipedia.org/wiki/Null_Island" target="_blank"><em><q>Null Island</q></em></a> (N&nbsp;0&deg;, E&nbsp;0&deg;).
     Following the handling of <q>Null Island</q> of Natural Earth, all places without coordinates will have a <code>scale_rank</code> property of 100, so that they never appear in maps that respect that property.
     All places with coordinates have a scale rank of 0.
     The <code>properties</code> of each place will also have a Boolean attribute <code>has_coordinates</code> that indicates if the coordinates stored in the geometry are valid (although the <code>location_confidence=null</code> property indicates this as well).
