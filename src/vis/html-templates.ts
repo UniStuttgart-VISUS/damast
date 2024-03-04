@@ -59,6 +59,33 @@ Consider using the tooltips, and the links to the place URI pages in the locatio
 </form>
 `;
 
+export const confirmation_geojson_generation = `
+<p>
+You are requesting to generate a GeoJSON file with
+<strong id="place-count"></strong>&nbsp;places.
+This is a lot of data and might take a while.
+</p>
+
+<form method="dialog">
+  <div class="vertical-fill-buttons">
+    <button
+        value="no"
+        id="nevermind-no-geojson"
+        class="button button--medium">
+      <i class="fa fa-fw fa-times"></i>
+      Nevermind, do not generate the GeoJSON file.
+    </button>
+    <button
+        value="yes"
+        id="yes-geojson"
+        class="button button--medium button--blue">
+      <i class="fa fa-fw fa-map-marker"></i>
+      I understand. Please generate the GeoJSON file.
+    </button>
+  </div>
+</form>
+`;
+
 // template for html/location-list.template.html
 export const location_list = `
 <div class="location-list__search-bar">
