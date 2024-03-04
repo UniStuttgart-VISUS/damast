@@ -26,8 +26,7 @@ def get_geojson():
     if err is not None:
         return err
 
-    # TODO: as REST API parameter
-    details = True
+    details = 'details' in flask.request.args
 
     pg = postgres_database()
     try:
@@ -57,6 +56,9 @@ def get_geojson():
                     comment=place.place.comment,
                     location_confidence=place.place.confidence,
                     type=place.place.place_type,
+
+                    scale_rank=100 if coordinates is None else 0,
+                    has_coordinates=False if coordinates is None else True,
                 )
                 geojson_place_properties[place.place.id] = properties
 
@@ -124,6 +126,7 @@ def get_geojson():
                     time=datetime.datetime.utcnow().isoformat(sep='T'),
                     base_url=base_url,
                     query_filter=filter_json['filters'],
+                    requested_details=details,
                 ),
                 features=geojson_places,
             )

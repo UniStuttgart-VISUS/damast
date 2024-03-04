@@ -350,9 +350,11 @@ export const settings_pane = `
 <section>
   <h4>Layout Settings</h4>
 
-  You can save the current layout.
-  This setting will only persist for your current browser and computer (using <code>localStorage</code>).
-  You can also reset to the initial layout (<em>Note:</em> this will reload the page).
+  <p>
+    You can save the current layout.
+    This setting will only persist for your current browser and computer (using <code>localStorage</code>).
+    You can also reset to the initial layout (<em>Note:</em> this will reload the page).
+  </p>
 
   <div class="buttons">
     <button class="button button--smallish" id="save-layout">
@@ -369,10 +371,12 @@ export const settings_pane = `
 <section id="persist">
   <h4>Persist State</h4>
 
-  You can also save the current state of the visualization.
-  In particular, this will save the <em>filters</em> you currently have applied, the center point and zoom level of the <em>map,</em> and the <em>visualization settings</em> applied above.
-  These settings are <span class="no-break"><i class="fa fa-download"></i> <em>downloaded</em></span> as a file to your computer.
-  You can <span class="no-break"><i class="fa fa-upload"></i> <em>upload</em></span> such a file later to restore the state.
+  <p>
+    You can also save the current state of the visualization.
+    In particular, this will save the <em>filters</em> you currently have applied, the center point and zoom level of the <em>map,</em> and the <em>visualization settings</em> applied above.
+    These settings are <span class="no-break"><i class="fa fa-download"></i> <em>downloaded</em></span> as a file to your computer.
+    You can <span class="no-break"><i class="fa fa-upload"></i> <em>upload</em></span> such a file later to restore the state.
+  </p>
 
   <div class="buttons">
     <button class="button button--smallish" id="save-state">
@@ -384,6 +388,34 @@ export const settings_pane = `
     <button class="button button--smallish" id="load-state">
       <i class="fa fa-upload fa--pad-right"></i>
       Load visualization state
+    </button>
+  </div>
+</section>
+
+<section id="geojson">
+  <h4>Download GeoJSON</h4>
+
+  <p>
+    You can download a GeoJSON file with the currently-visible places (i.e., places with pieces of evidence that match the current filters).
+    Below, there are two buttons to download variants with fewer or more details.
+    The first variant only contains the places and their names.
+    The second variant also contains some additional information about the places (alternative names, external URIs), as well as evidence data (religious groups, time spans, confidence values, etc.).
+  </p>
+  <p>
+    For places with no position, the <code>coordinates</code> array is set to those of <a href="https://en.wikipedia.org/wiki/Null_Island" target="_blank"><em><q>Null Island</q></em></a> (0&deg;&thinsp;N, 0&deg;&thinsp;E).
+    Following the handling of <q>Null Island</q> of Natural Earth, all places without coordinates will have a <code>scale_rank</code> property of 100, so that they never appear in maps that respect that property.
+    All places with coordinates have a scale rank of 0.
+    The <code>properties</code> of each place will also have a Boolean attribute <code>has_coordinates</code> that indicates if the coordinates stored in the geometry are valid (although the <code>location_confidence=null</code> property indicates this as well).
+  </p>
+
+  <div class="buttons">
+    <button class="button button--smallish" id="download-geojson-no-details">
+      <i class="fa fa-download fa--pad-right"></i>
+      Download GeoJSON <em>without</em> details
+    </button>
+    <button class="button button--smallish" id="download-geojson-details">
+      <i class="fa fa-download fa--pad-right"></i>
+      Download GeoJSON <em>with</em> details
     </button>
   </div>
 </section>

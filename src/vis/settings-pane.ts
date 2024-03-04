@@ -108,11 +108,14 @@ export default class SettingsPane {
     d.select('#load-state').on('click', () => this.onClickLoadVisualizationState());
     d.select('#generate-report').on('click', () => this.onClickGenerateReport());
     d.select('#describe-filters').on('click', () => this.onClickDescribeFilters());
+    d.select('#download-geojson-no-details').on('click', () => this.onClickDownloadGeoJSON());
+    d.select('#download-geojson-details').on('click', () => this.onClickDownloadGeoJSON(true));
 
     d3.select('header #header__download-state').on('click', () => this.onClickSaveVisualizationState());
     d3.select('header #header__load-state').on('click', () => this.onClickLoadVisualizationState());
     d3.select('header #header__generate-report').on('click', () => this.onClickGenerateReport());
     d3.select('header #header__describe-filters').on('click', () => this.onClickDescribeFilters());
+    d3.select('header #header__download-geojson').on('click', () => this.onClickDownloadGeoJSON());
 
     this.data_worker.addEventListener('message', async e => {
       if (e.data?.type === 'export-visualization-state') await this.onExportEvent(e.data);
@@ -120,6 +123,7 @@ export default class SettingsPane {
       if (e.data?.type === 'generate-report') await this.onGenerateReportEvent(e.data);
       if (e.data?.type === 'set-settings-data') await this.onSettingsEvent(e.data);
       if (e.data?.type === 'describe-filters') await this.onFilterDescription(e.data);
+      if (e.data?.type === 'download-geojson') this.onGeoJSONData(e.data);
     });
   }
 
@@ -246,6 +250,30 @@ export default class SettingsPane {
     b.click();
     document.body.removeChild(form);
     form.remove();
+  }
+
+  private onClickDownloadGeoJSON(details: boolean = false) {
+    // TODO: set buttons to waiting
+
+    this.data_worker.postMessage({type: 'download-geojson', data: details});
+  }
+
+  private onGeoJSONData(eventData: MessageData<any>) {
+    const blob = new Blob([JSON.stringify(eventData.data)], {type: 'application/geo+json'});
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.download = `damast-${d3.timeFormat('%Y%m%dT%H%M%S')(new Date())}.geo.json`;
+    a.style.display = 'none';
+    a.href = url;
+
+    document.body.appendChild(a);
+    a.click();
+
+    window.URL.revokeObjectURL(url);
+    a.remove();
+
+    // TODO: set buttons to active
   }
 
   private async onClickLoadVisualizationState() {
