@@ -43,10 +43,7 @@ def get_geojson():
             for place in evidence_data['places']:
                 coordinates = parse_geoloc(place.place.geoloc)
 
-                uripath = os.path.normpath(os.path.join(
-                    config.proxyprefix,
-                    './' + flask.url_for('uri.place.get_place', place_id=place.place.id),  # must be relative
-                    ))
+                uripath = flask.url_for('uri.place.get_place', place_id=place.place.id)
                 uri = url._replace(query='', fragment='', path=uripath).geturl()
 
                 properties = dict(
@@ -112,14 +109,18 @@ def get_geojson():
 
             current_user = flask.current_app.auth.current_user()
             username = current_user.name if not current_user.visitor else 'visitor'
-            base_url=flask.request.base_url.removesuffix(flask.url_for('reporting.geojson.get_geojson'))
+
+            _url = urlparse(flask.request.base_url)
+            _path = flask.url_for('root-app.root')
+            base_url = _url._replace(query='', fragment='', path=_path).geturl()
+
             geojson = dict(
                 type='FeatureCollection',
                 properties=dict(
                     data_license='''Creative Commons By-Attribution 4.0 (CC BY 4.0)''',
                     data_citation='''Weltecke, Dorothea; Koch, Steffen; Barczok, Ralph; Franke, Max; Vest, Bernd Andreas, 2022, "Data Collected During the Digital Humanities Project 'Dhimmis & Muslims - Analysing Multireligious Spaces in the Medieval Muslim World'", https://doi.org/10.18419/darus-2318, DaRUS, V1.''',
                     how_to_cite=F'''Weltecke, Dorothea, Steffen Koch, Ralph Barczok, Max Franke, Florian Jäckel, and Bernd A. Vest, eds. Damast – A Research System to Analyze Multi-Religious Constellations in the Islamicate World. April 2022. Accessed {datetime.date.today():%B %_d, %Y}. {base_url}, data deposited at DaRUS, https://doi.org/10.18419/darus-2318.''',
-                    how_to_cite_see_also=F'{base_url}{flask.url_for("root-app.root")}#how-to-cite',
+                    how_to_cite_see_also=F'{base_url}#how-to-cite',
 
                     damast_version=config.version,
                     user=username,
