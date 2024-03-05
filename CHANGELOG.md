@@ -1,5 +1,13 @@
 # CHANGELOG
 
+
+## v1.3.1
+
+Release date: *2024-xx-xx*
+
+Add the option to specify minimum and maximum zoom levels (minZoom, maxZoom, minNativeZoom, maxNativeZoom, see [Leaflet documentation](https://leafletjs.com/reference.html#tilelayer)) to the configuration of map tile layers.
+
+
 ## v1.3.0
 
 Release date: *2024-02-07*
