@@ -1,7 +1,7 @@
 # CHANGELOG
 
 
-## next-release
+## v1.3.1
 
 Release date: *2024-xx-xx*
 
