@@ -303,7 +303,7 @@ export default class SettingsPane {
     const url = window.URL.createObjectURL(blob);
 
     const a = document.createElement('a');
-    a.download = `damast-${d3.timeFormat('%Y%m%dT%H%M%S')(new Date())}.geo.json`;
+    a.download = `damast-${d3.timeFormat('%Y%m%dT%H%M%S')(new Date())}.geojson`;
     a.style.display = 'none';
     a.href = url;
 
