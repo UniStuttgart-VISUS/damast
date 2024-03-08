@@ -229,29 +229,32 @@ Indented trees are often used in file managers to show directory structures, or 
 In Damast, an indented tree visualization is used to show the religion hierarchy (\cref{sec:religion-hierarchy}).
 
 
-\subsection{Settings Pane}
+\subsection{Settings Pane}%
 \label{sec:settings-pane}
-
-\begin{figure}[tb]
-  \centering
-  \includegraphics[width=0.3\textwidth]{../src/assets/visualization-documentation/settings.png}
-  \caption{
-    The settings pane.
-  }
-  \label{fig:settings}
-\end{figure}
 
 This pane shows different \textbf{settings} pertaining to the visualization.
 It also offers some \textbf{functionalities} to store or load these settings and to generate reports from the currently shown data.
+A few often-used settings and functionalities are also offered separately in the header of the visualization (see \cref{fig:settings}).
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.3\textwidth]{../src/assets/visualization-documentation/settings.png}%
+  \quad%
+  \includegraphics[width=0.65\textwidth]{../src/assets/visualization-documentation/settings-shortcuts.png}
+  \caption{
+    The settings pane (left), and the shortcut icons (right) in the header bar of the visualization.
+  }%
+  \label{fig:settings}
+\end{figure}
 
 
-\subsubsection{Visualization Settings}
+\subsubsection{Visualization Settings}%
 \label{sec:settings-vis-settings}
 
 These are settings that directly affect the visualization.
 In particular, they control which data is shown and in which way.
 
-\subsubsection{Show filtered data}
+\subsubsection{Show filtered data}%
 \label{sec:settings-all-data-only-active}
 
 This switch controls if data is visualized although it \textbf{does not match the currently applied filters.}
@@ -259,7 +262,7 @@ If \emph{All data} is selected, non-matched data is shown in less saturated colo
 Otherwise, it is not shown at all.
 
 
-\subsubsection{Display mode}
+\subsubsection{Display mode}%
 \label{sec:settings-display-mode}
 
 This switch controls \textbf{which aspect of the data} is mapped to color.
@@ -269,7 +272,7 @@ The \emph{aspect of confidence} used for the visualization can be selected in th
 there, the currently used aspect is indicated with an eye symbol below the column.
 
 
-\subsubsection{Timeline mode}
+\subsubsection{Timeline mode}%
 \label{sec:settings-timeline-mode}
 
 This switch controls whether the \emph{timeline} shows \textbf{a qualitative summary or quantitative information}.
@@ -278,7 +281,7 @@ The \emph{timeline} then looks like a \emph{stacked histogram.}
 If \emph{Qualitative} is selected, the \emph{timeline} only shows \emph{whether} there are pieces of evidence of that type each year.
 
 
-\subsubsection{Map mode}
+\subsubsection{Map mode}%
 \label{sec:settings-map-mode}
 
 This switch controls whether map glyphs are \textbf{\emph{clustered} or \emph{unclustered.}}
@@ -291,7 +294,7 @@ If glyphs are \emph{unclustered,} one small symbol per place and religion is sho
 \emph{Note:} This mode may lead to overlap of symbols when zooming out even to a relative small scale and should, thus, be used with due caution when interpreting the results.
 
 
-\subsection{Generate Report}
+\subsubsection{Generate Report}%
 \label{sec:generate-report}
 
 With this feature, a detailed \textbf{text report} can be generated, which presents all data matched by the currently applied filters.
@@ -306,7 +309,7 @@ Clicking this button will open a small window (a so-called modal window) that de
 This description is the same as the one at the top of a report.
 
 
-\subsection{Layout Settings}
+\subsubsection{Layout Settings}
 
 The \textbf{current layout} of the visualization; i.e., the arrangement of the views, can be saved.
 This feature is only available if the option \emph{All cookies} is accepted in the \emph{Cookie preferences} (accessible through the menu bar on top).
@@ -316,8 +319,8 @@ You can also reset the layout to the initial state. Note that this will reload t
 \emph{Note:} Depending on your browser settings, cookies may be deleted after closing the browser, which leads to the loss of the saved \emph{layout settings.}
 
 
-\subsubsection{Persist State}
-\label{sec:settings-persist-state}
+\subsubsection{Persist State}%
+\label{sec:settings-persist-state}%
 \label{sec:vis-reproducible}
 
 With this feature, the current \textbf{overall state} of the visualization can be saved.
@@ -334,7 +337,19 @@ Later, such a file can be \emph{uploaded} to restore the state.
 The file can also be shared to either present your results or to (re-)generate a report based on the filters.
 
 
-\subsection{History Tree}
+\subsubsection{Download GeoJSON}%
+\label{sec:vis-download-geojson}
+
+You can download a GeoJSON file with the currently-visible places (i.e., places with pieces of evidence that match the current filters).
+In the settings dialog, there are two buttons to download variants with fewer or more details.
+The first variant only contains the places and their names.
+The second variant also contains some additional information about the places (alternative names, external URIs), as well as evidence data (religious groups, time spans, confidence values, etc.).
+The first variant can also be accessed directly from the header shortcuts.
+For places with no position, the \verb!geometry! attribute is set to \verb!null!, as suggested in section 3.2 of RFC~7946\footnote{\url{https://www.rfc-editor.org/rfc/rfc7946\#section-3.2}}.
+The \emph{location confidence} of these places is also \verb!null!.
+
+
+\subsection{History Tree}%
 \label{sec:history-tree}
 
 These controls located in the header bar of the page control the \emph{interaction history} of the visualization.

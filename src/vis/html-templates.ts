@@ -59,6 +59,33 @@ Consider using the tooltips, and the links to the place URI pages in the locatio
 </form>
 `;
 
+export const confirmation_geojson_generation = `
+<p>
+You are requesting to generate a GeoJSON file with
+<strong id="place-count"></strong>&nbsp;places.
+This is a lot of data and might take a while.
+</p>
+
+<form method="dialog">
+  <div class="vertical-fill-buttons">
+    <button
+        value="no"
+        id="nevermind-no-geojson"
+        class="button button--medium">
+      <i class="fa fa-fw fa-times"></i>
+      Nevermind, do not generate the GeoJSON file.
+    </button>
+    <button
+        value="yes"
+        id="yes-geojson"
+        class="button button--medium button--blue">
+      <i class="fa fa-fw fa-map-marker"></i>
+      I understand. Please generate the GeoJSON file.
+    </button>
+  </div>
+</form>
+`;
+
 // template for html/location-list.template.html
 export const location_list = `
 <div class="location-list__search-bar">
@@ -350,9 +377,11 @@ export const settings_pane = `
 <section>
   <h4>Layout Settings</h4>
 
-  You can save the current layout.
-  This setting will only persist for your current browser and computer (using <code>localStorage</code>).
-  You can also reset to the initial layout (<em>Note:</em> this will reload the page).
+  <p>
+    You can save the current layout.
+    This setting will only persist for your current browser and computer (using <code>localStorage</code>).
+    You can also reset to the initial layout (<em>Note:</em> this will reload the page).
+  </p>
 
   <div class="buttons">
     <button class="button button--smallish" id="save-layout">
@@ -369,10 +398,12 @@ export const settings_pane = `
 <section id="persist">
   <h4>Persist State</h4>
 
-  You can also save the current state of the visualization.
-  In particular, this will save the <em>filters</em> you currently have applied, the center point and zoom level of the <em>map,</em> and the <em>visualization settings</em> applied above.
-  These settings are <span class="no-break"><i class="fa fa-download"></i> <em>downloaded</em></span> as a file to your computer.
-  You can <span class="no-break"><i class="fa fa-upload"></i> <em>upload</em></span> such a file later to restore the state.
+  <p>
+    You can also save the current state of the visualization.
+    In particular, this will save the <em>filters</em> you currently have applied, the center point and zoom level of the <em>map,</em> and the <em>visualization settings</em> applied above.
+    These settings are <span class="no-break"><i class="fa fa-download"></i> <em>downloaded</em></span> as a file to your computer.
+    You can <span class="no-break"><i class="fa fa-upload"></i> <em>upload</em></span> such a file later to restore the state.
+  </p>
 
   <div class="buttons">
     <button class="button button--smallish" id="save-state">
@@ -384,6 +415,30 @@ export const settings_pane = `
     <button class="button button--smallish" id="load-state">
       <i class="fa fa-upload fa--pad-right"></i>
       Load visualization state
+    </button>
+  </div>
+</section>
+
+<section id="geojson">
+  <h4>Download GeoJSON</h4>
+
+  <p>
+    You can download a GeoJSON file with the currently-visible places (i.e., places with pieces of evidence that match the current filters).
+    Below, there are two buttons to download variants with fewer or more details.
+    The first variant only contains the places and their names.
+    The second variant also contains some additional information about the places (alternative names, external URIs), as well as evidence data (religious groups, time spans, confidence values, etc.).
+    For places with no position, the <code>geometry</code> attribute is set to <code>null</code>, as suggested in <a href="https://www.rfc-editor.org/rfc/rfc7946#section-3.2" target="_blank">section 3.2</a> of RFC&nbsp;7946.
+    The <em>location confidence</em> of these places is also <code>null</code>.
+  </p>
+
+  <div class="buttons">
+    <button class="button button--smallish" id="download-geojson-no-details">
+      <i class="fa fa-download fa--pad-right"></i>
+      Download GeoJSON <em>without</em> details
+    </button>
+    <button class="button button--smallish" id="download-geojson-details">
+      <i class="fa fa-download fa--pad-right"></i>
+      Download GeoJSON <em>with</em> details
     </button>
   </div>
 </section>
