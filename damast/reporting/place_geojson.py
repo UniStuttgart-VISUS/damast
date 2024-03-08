@@ -53,9 +53,6 @@ def get_geojson():
                     comment=place.place.comment,
                     location_confidence=place.place.confidence,
                     type=place.place.place_type,
-
-                    scale_rank=100 if coordinates is None else 0,
-                    has_coordinates=False if coordinates is None else True,
                 )
                 geojson_place_properties[place.place.id] = properties
 
@@ -64,8 +61,8 @@ def get_geojson():
                     properties=properties,
                     geometry=dict(
                         type='Point',
-                        coordinates=[0,0] if coordinates is None else [coordinates['lng'], coordinates['lat']],
-                    ),
+                        coordinates=[coordinates['lng'], coordinates['lat']],
+                    ) if coordinates is not None else None,
                 )
 
                 geojson_places.append(feature)
