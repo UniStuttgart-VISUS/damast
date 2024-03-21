@@ -22,54 +22,23 @@ from ..postgres_rest_api.decorators import rest_endpoint
 from .verbalize_filters import verbalize, get_filter_description
 
 from .filters import blueprint as filter_blueprint
+from .place_geojson import blueprint as geojson_blueprint
 from .report_database import ReportTuple, get_report_database, start_report, update_report_access, recreate_report_after_evict, evict_report as do_evict_report
 from .datatypes import Evidence, Place
+from .init_post import init_post
 
 
 static = __path__[0] + '/static'
 template = './templates'
 app = AuthenticatedBlueprintPreparator('reporting', __name__, template_folder=template, static_folder=None)
 app.register_blueprint(filter_blueprint)
+app.register_blueprint(geojson_blueprint)
 
 @app.route('/', role=['reporting', 'dev', 'admin'], methods=['GET'])
 def root():
     return flask.render_template('reporting/index.html')
 
-def load_schema(uri):
-    root_path = 'https://www2.visus.uni-stuttgart.de/damast/vis/schemas/'
-    if uri.startswith(root_path):
-        path = uri.replace(root_path, '')
-        schema_path = os.path.join(flask.current_app.root_path, 'vis/static/schemas', path)
 
-        with open(schema_path) as f:
-            schema = json.load(f)
-            return schema
-
-    raise UserError(F'Could not load schema at {uri}')
-
-
-def init_post():
-    if flask.request.content_type is None:
-        raise werkzeug.exceptions.BadRequest('Request must have either a JSON payload or a JSON file attached as multipart/form-data.')
-
-    if 'application/json' in flask.request.content_type:
-        filter_json = flask.request.json
-    elif 'multipart/form-data' in flask.request.content_type:
-        filter_json = json.load(flask.request.files['filter_file'])
-    else:
-        raise werkzeug.exceptions.BadRequest('Request must have either a JSON payload or a JSON file attached as multipart/form-data.')
-
-    schema = load_schema('https://www2.visus.uni-stuttgart.de/damast/vis/schemas/exportable-filters.json')
-    r = jsonschema.RefResolver('https://www2.visus.uni-stuttgart.de/damast/vis/schemas/',
-        'https://www2.visus.uni-stuttgart.de/damast/vis/schemas/exportable-filters.json',
-        handlers=dict(http=load_schema, https=load_schema), cache_remote=False)
-    v = jsonschema.Draft7Validator(schema, resolver=r)
-
-    if not v.is_valid(filter_json):
-        errors = [ ( '/' + '/'.join(map(str, e.path)), e.message ) for e in v.iter_errors(filter_json) ]
-        return None, (flask.render_template('reporting/422.html', errors=errors), 422)
-
-    return filter_json, None
 
 
 def _start_report(filter_json):

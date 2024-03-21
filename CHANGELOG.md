@@ -1,5 +1,15 @@
 # CHANGELOG
 
+
+## v1.3.1
+
+Release date: *2024-03-21*
+
+Add the functionality to download a GeoJSON file of the currently-visible places ([231](https://github.com/UniStuttgart-VISUS/damast/issues/231)).
+Add the option to specify minimum and maximum zoom levels (minZoom, maxZoom, minNativeZoom, maxNativeZoom, see [Leaflet documentation](https://leafletjs.com/reference.html#tilelayer)) to the configuration of map tile layers.
+Fix a bug where it was not possible to drag the last item in a stack somewhere else in the visualization layout ([#233](https://github.com/UniStuttgart-VISUS/damast/issues/233)).
+
+
 ## v1.3.0
 
 Release date: *2024-02-07*

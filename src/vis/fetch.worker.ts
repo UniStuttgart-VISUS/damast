@@ -104,6 +104,9 @@ class FetchWorker extends DataWorker<any> {
     } else if (data.type === 'generate-report' || data.type === 'describe-filters') {
       const { filters, metadata } = this.data.getState();
       this.sendToMainThread({ type: data.type, data: { filters, metadata } });
+    } else if (data.type === 'download-geojson') {
+      const geoJson = await this.loadGeoJSON(data.data as boolean);
+      this.sendToMainThread({ type: data.type, data: geoJson });
     } else {
       throw data.type;
     }
@@ -606,6 +609,22 @@ class FetchWorker extends DataWorker<any> {
     }
 
     this.sendMessage({key: 'data-fetch.handleDatasetChange', state: false});
+  }
+
+  private async loadGeoJSON(details: boolean) {
+    const { filters, metadata } = this.data.getState();
+    const res = await fetch(`../reporting/geojson${details ? '?details' : ''}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', },
+      body: JSON.stringify({ filters, metadata }),
+    });
+    try {
+      const json = await res.json();
+      return json;
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
   }
 };
 

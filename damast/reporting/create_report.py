@@ -41,7 +41,7 @@ from .tex import render_tex_report
 from .html import render_html_report
 from .place_sort import sort_placenames, sort_alternative_placenames, sort_evidence
 from .eviction import does_evict
-from .collect_report_data import collect_report_data
+from .collect_report_data import collect_report_data, create_filter_list
 
 from ..config import get_config
 
@@ -86,64 +86,7 @@ def create_report(pg, filter_json, current_user, started, report_uuid, report_ur
     try:
         with pg.get_cursor(readonly=True) as cursor:
             filters = filter_json['filters']
-            q_filters = [
-                # visibility settings of evidence, place, and place type
-                cursor.mogrify('E.visible', tuple()),
-                cursor.mogrify('P.visible', tuple()),
-                cursor.mogrify('PT.visible', tuple()),
-                    ]
-
-            if filters['religion'] != True:
-                if filters['religion']['type'] == 'complex':
-                    # pre-select evidences with any of the contained religions
-                    all_religion_ids = set()
-                    for arr in filters['religion']['filter']:
-                        all_religion_ids.update(arr)
-                    all_religion_ids = list(all_religion_ids)
-                    q_filters.append(cursor.mogrify('RI.religion_id = ANY(%s)', (all_religion_ids,)))
-
-                else:
-                    # simple religion filter
-                    q_filters.append(cursor.mogrify('RI.religion_id = ANY(%s)', (filters['religion']['filter'],)))
-
-            for table, key, key2 in [
-                ('RI', 'religion_confidence', 'confidence'),
-                ('P', 'location_confidence', 'confidence'),
-                ('PI', 'place_attribution_confidence', 'confidence'),
-                ('TI', 'time_confidence', 'confidence'),
-                ('SI', 'source_confidences', 'source_confidence'),
-                ('E', 'interpretation_confidence', 'interpretation_confidence'),
-                    ]:
-                f = filters['confidence'][key]
-                if None in f:
-                    f2 = list(filter(lambda x: x is not None, f))
-                    q_filters.append(cursor.mogrify(F'({table}.{key2} IS NULL OR {table}.{key2} = ANY(%s::confidence_value[]))', (f2,)))
-                else:
-                    q_filters.append(cursor.mogrify(F'{table}.{key2} = ANY(%s::confidence_value[])', (f,)))
-
-            if filters['tags'] != True:
-                if type(filters['tags']) is int:
-                    q_filters.append(cursor.mogrify('%s = ANY(tag_ids)', (filters['tags'],)))
-                else:
-                    q_filters.append(cursor.mogrify('%s && tag_ids', (filters['tags'],)))
-
-            if filters['sources'] != None:
-                q_filters.append(cursor.mogrify('SI.source_id = ANY(%s)', (filters['sources'],)))
-
-            if filters['time'] != None:
-                q_filters.append(cursor.mogrify('(TI.span IS NOT NULL AND NOT (upper_inf(TI.span) OR lower_inf(TI.span)) AND TI.span && %s)',
-                    (psycopg2.extras.NumericRange(lower=filters['time'][0], upper=filters['time'][1], bounds='[]'), )))
-
-            if filters['location'] != None:
-                q_filters.append(cursor.mogrify("""( P.geoloc IS NULL
-                    OR ST_Contains(
-                        ST_SetSRID(ST_GeomFromGeoJSON(json(%s)->>'geometry'), 4326),
-                        ST_SetSRID(ST_Point(P.geoloc[1], P.geoloc[0]), 4326)
-                    ))""", (json.dumps(filters['location']),)))
-
-            if filters['places'] != None:
-                q_filters.append(cursor.mogrify('P.id = ANY(%s)', (filters['places'],)))
-
+            q_filters = create_filter_list(cursor, filters)
 
             evidence_ids = []
             evidence_data = collect_report_data(cursor, q_filters, filters['religion'])

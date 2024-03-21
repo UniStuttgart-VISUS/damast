@@ -32,6 +32,7 @@ export type MessageDataType =
   | 'generate-report'
   | 'describe-filters'
   | 'set-source-sort-mode'
+  | 'download-geojson'
 
   // history stuff
   | 'notify-history-tree-changed'

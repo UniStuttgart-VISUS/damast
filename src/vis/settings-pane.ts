@@ -1,7 +1,7 @@
 // @ts-ignore: Import not found
 import GoldenLayout from 'golden-layout';
 import * as d3 from 'd3';
-import { settings_pane } from './html-templates';
+import { confirmation_geojson_generation, settings_pane } from './html-templates';
 import { confirmation_report_generation } from './html-templates';
 
 import * as ViewModeDefaults from './view-mode-defaults';
@@ -108,11 +108,14 @@ export default class SettingsPane {
     d.select('#load-state').on('click', () => this.onClickLoadVisualizationState());
     d.select('#generate-report').on('click', () => this.onClickGenerateReport());
     d.select('#describe-filters').on('click', () => this.onClickDescribeFilters());
+    d.select('#download-geojson-no-details').on('click', (e) => this.onClickDownloadGeoJSON(e));
+    d.select('#download-geojson-details').on('click', (e) => this.onClickDownloadGeoJSON(e, true));
 
     d3.select('header #header__download-state').on('click', () => this.onClickSaveVisualizationState());
     d3.select('header #header__load-state').on('click', () => this.onClickLoadVisualizationState());
     d3.select('header #header__generate-report').on('click', () => this.onClickGenerateReport());
     d3.select('header #header__describe-filters').on('click', () => this.onClickDescribeFilters());
+    d3.select('header #header__download-geojson').on('click', (e) => this.onClickDownloadGeoJSON(e));
 
     this.data_worker.addEventListener('message', async e => {
       if (e.data?.type === 'export-visualization-state') await this.onExportEvent(e.data);
@@ -120,6 +123,7 @@ export default class SettingsPane {
       if (e.data?.type === 'generate-report') await this.onGenerateReportEvent(e.data);
       if (e.data?.type === 'set-settings-data') await this.onSettingsEvent(e.data);
       if (e.data?.type === 'describe-filters') await this.onFilterDescription(e.data);
+      if (e.data?.type === 'download-geojson') this.onGeoJSONData(e.data);
     });
   }
 
@@ -246,6 +250,81 @@ export default class SettingsPane {
     b.click();
     document.body.removeChild(form);
     form.remove();
+  }
+
+  private async onClickDownloadGeoJSON(e: MouseEvent, details: boolean = false) {
+    if (this.cachedPlaceCount >= 100) {
+      const doCreateGeoJSON = await new Promise<boolean>(async (resolve, _reject) => {
+        const descriptionPromise = Promise.resolve('');
+        const { content, close } = showInfoboxFromURL(
+          'Are you sure?',
+          async () => descriptionPromise,
+          false,
+          () => resolve(false),
+        );
+        const sel = await content;
+
+        sel.innerHTML = confirmation_geojson_generation;
+        sel.querySelector(':scope #place-count').innerHTML = this.cachedPlaceCount.toString();
+
+        sel.querySelector(':scope button#nevermind-no-geojson')
+          .addEventListener('click', () => {
+            resolve(false);
+          });
+
+        sel.querySelector(':scope button#yes-geojson')
+          .addEventListener('click', () => {
+            resolve(true);
+          });
+      });
+
+      if (!doCreateGeoJSON) return;
+    }
+
+    // set buttons to waiting
+    const d = d3.select<HTMLElement, any>(this.container.element as HTMLDivElement);
+    const buttons = [
+      d.select<HTMLButtonElement>('#download-geojson-no-details'),
+      d.select<HTMLButtonElement>('#download-geojson-details'),
+      d3.select('header #header__download-geojson') as d3.Selection<HTMLButtonElement, any, any, any>,
+    ];
+
+    buttons.forEach(b => {
+      b.attr('disabled', '');
+    });
+
+    document.body.style.cursor = 'wait';
+
+    this.data_worker.postMessage({type: 'download-geojson', data: details});
+  }
+
+  private onGeoJSONData(eventData: MessageData<any>) {
+    const blob = new Blob([JSON.stringify(eventData.data)], {type: 'application/geo+json'});
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.download = `damast-${d3.timeFormat('%Y%m%dT%H%M%S')(new Date())}.geojson`;
+    a.style.display = 'none';
+    a.href = url;
+
+    document.body.appendChild(a);
+    a.click();
+
+    window.URL.revokeObjectURL(url);
+    a.remove();
+
+    // set buttons to active
+    const d = d3.select<HTMLElement, any>(this.container.element as HTMLDivElement);
+    const buttons = [
+      d.select<HTMLButtonElement>('#download-geojson-no-details'),
+      d.select<HTMLButtonElement>('#download-geojson-details'),
+      d3.select('header #header__download-geojson') as d3.Selection<HTMLButtonElement, any, any, any>,
+    ];
+
+    buttons.forEach(b => {
+      b.attr('disabled', null);
+    });
+    document.body.style.cursor = null;
   }
 
   private async onClickLoadVisualizationState() {
