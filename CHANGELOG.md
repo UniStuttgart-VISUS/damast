@@ -3,7 +3,7 @@
 
 ## v1.3.1
 
-Release date: *2024-xx-xx*
+Release date: *2024-03-21*
 
 Add the functionality to download a GeoJSON file of the currently-visible places ([231](https://github.com/UniStuttgart-VISUS/damast/issues/231)).
 Add the option to specify minimum and maximum zoom levels (minZoom, maxZoom, minNativeZoom, maxNativeZoom, see [Leaflet documentation](https://leafletjs.com/reference.html#tilelayer)) to the configuration of map tile layers.
