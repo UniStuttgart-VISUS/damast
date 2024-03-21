@@ -1,0 +1,9 @@
+// The update to GoldenLayout version 3 meant that the non-closable views lead
+// to the stacks and rows/columns containing them not closing. It was not
+// possible to drag away the last view in a stack, row, or column. The solution
+// is to make them closable, but hide the close buttons. See also issue 233:
+// https://github.com/UniStuttgart-VISUS/damast/issues/233
+.lm_header .lm_close_tab {
+  visibility: hidden;
+  pointer-events: none;
+}
