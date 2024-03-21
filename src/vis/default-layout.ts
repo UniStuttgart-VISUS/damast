@@ -7,13 +7,11 @@ const ls_key = 'damast-vis-layout';
 // Increment this if there are breaking changes in the default layout so old
 // layouts are no longer loaded from localStorage. For example, if new views
 // emerge, the new default config should be loaded.
-const layout_version: string = '2';
+const layout_version: string = '3';
 
 const default_config: LayoutConfig = {
-  root: undefined,
   settings: {
     showPopoutIcon: false,
-    showCloseIcon: false,
     constrainDragToContainer: true,
   },
   labels: {
@@ -24,99 +22,89 @@ const default_config: LayoutConfig = {
     minItemWidth: 200,
     minItemHeight: 150,
   },
-  content: [
-    {
-      type: 'row',
-      content: [
-        {
-          type: 'column',
-          width: 20,
-          content: [
-            {
-              type: 'stack',
-              height: 30,
-              content: [
-                {
-                  type: 'component',
-                  componentType: 'confidence',
-                  isClosable: false,
-                  title: 'Confidence',
-                },
-                {
-                  type: 'component',
-                  componentType: 'source-list',
-                  isClosable: false,
-                  title: 'Sources',
-                },
-                {
-                  type: 'component',
-                  componentType: 'tags',
-                  isClosable: false,
-                  title: 'Tags',
-                },
-                {
-                  type: 'component',
-                  componentType: 'settings',
-                  isClosable: false,
-                  title: 'Settings'
-                },
-              ]
-            },
-            {
-              type: 'component',
-              componentType: 'religion',
-              isClosable: false,
-              title: 'Religion',
-              height: 70,
-            }
-          ],
-        },
-        {
-          type: 'column',
-          content: [
-            {
-              type: 'row',
-              height: 75,
-              content: [
-                {
-                  type: 'component',
-                  componentType: 'map',
-                  isClosable: false,
-                  title: 'Map',
-                  width: 80
-                },
-                {
-                  type: 'component',
-                  componentType: 'location-list',
-                  isClosable: false,
-                  title: 'Location List',
-                  width: 20
-                },
-              ]
-            },
-            {
-              type: 'stack',
-              content: [
-                {
-                  type: 'component',
-                  componentType: 'timeline',
-                  isClosable: false,
-                  title: 'Timeline',
-                  width: 85
-                },
-                {
-                  type: 'component',
-                  componentType: 'untimed',
-                  isClosable: false,
-                  title: 'Untimed Data',
-                },
-              ]
-            }
-          ],
-        },
-      ]
-    }
-  ]};
+  root: {
+    type: 'row',
+    content: [
+      {
+        type: 'column',
+        width: 20,
+        content: [
+          {
+            type: 'stack',
+            height: 30,
+            content: [
+              {
+                type: 'component',
+                componentType: 'confidence',
+                title: 'Confidence',
+              },
+              {
+                type: 'component',
+                componentType: 'source-list',
+                title: 'Sources',
+              },
+              {
+                type: 'component',
+                componentType: 'tags',
+                title: 'Tags',
+              },
+              {
+                type: 'component',
+                componentType: 'settings',
+                title: 'Settings'
+              },
+            ]
+          },
+          {
+            type: 'component',
+            componentType: 'religion',
+            title: 'Religion',
+            height: 70,
+          }
+        ],
+      },
+      {
+        type: 'column',
+        content: [
+          {
+            type: 'row',
+            height: 75,
+            content: [
+              {
+                type: 'component',
+                componentType: 'map',
+                title: 'Map',
+                width: 80
+              },
+              {
+                type: 'component',
+                componentType: 'location-list',
+                title: 'Location List',
+                width: 20
+              },
+            ]
+          },
+          {
+            type: 'stack',
+            content: [
+              {
+                type: 'component',
+                componentType: 'timeline',
+                title: 'Timeline',
+                width: 85
+              },
+              {
+                type: 'component',
+                componentType: 'untimed',
+                title: 'Untimed Data',
+              },
+            ]
+          }
+        ],
+      },
+    ]
+  }
+};
 
 interface ConfigProp {
   activeItemIndex?: number;
