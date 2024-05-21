@@ -10,6 +10,7 @@ The objective of this joint project was to develop a novel visualization approac
 In particular, information on multi-religious communities were researched and made available in a database accessible through interactive visualization as well as through a pilot web-based geo-temporal multi-view system to analyze and compare information from multiple sources.
 A publicly explorable version of the research is available at [Humboldt-Universität zu Berlin](https://damast.geschichte.hu-berlin.de/).
 An export of the data collected in the project can be found in [the data repository of the University of Stuttgart (DaRUS)](https://doi.org/10.18419/darus-2318).
+A runnable Docker image can be found [here](https://zenodo.org/doi/10.5281/zenodo.10849666).
 
 
 ## Publications
