@@ -1,4 +1,9 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7403750.svg)](https://doi.org/10.5281/zenodo.7403750)
+| Repository | Link |
+| :-- | --- |
+| Source code | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7403750.svg)](https://doi.org/10.5281/zenodo.7403750) |
+| Docker image | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10849667.svg)](https://doi.org/10.5281/zenodo.10849667) |
+| Standalone Docker image (demos only) | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11263965.svg)](https://doi.org/10.5281/zenodo.11263965) |
+
 
 # Damast
 
@@ -11,6 +16,7 @@ In particular, information on multi-religious communities were researched and ma
 A publicly explorable version of the research is available at [Humboldt-Universität zu Berlin](https://damast.geschichte.hu-berlin.de/).
 An export of the data collected in the project can be found in [the data repository of the University of Stuttgart (DaRUS)](https://doi.org/10.18419/darus-2318).
 A runnable Docker image can be found [here](https://zenodo.org/doi/10.5281/zenodo.10849666).
+A runnable, standalone Docker image (contains its own configuration and PostgreSQL server) for demo purposes (do not use in production!) can be found [here](https://doi.org/10.5281/zenodo.11263965).
 
 
 ## Publications
