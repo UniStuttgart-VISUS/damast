@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## v1.3.2
+
+Release date: *2024-06-13*
+
+Add the build instructions for a standalone Docker image (for demo purposes).
+Fix a vulnerability alert on `braces` ([GHSA-grv7-fg5c-xmjg](https://github.com/advisories/GHSA-grv7-fg5c-xmjg)).
+
 
 ## v1.3.1
 
