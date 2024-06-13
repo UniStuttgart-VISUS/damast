@@ -1,0 +1,34 @@
+server {
+    listen       @NGINX_PORT@         default_server;
+    listen       [::]:@NGINX_PORT@    default_server;
+
+    # shaded relief map tiles
+    location /tiles {
+        root /var/www/html;
+        error_page 404 /__empty-error-page__.html;
+        try_files $uri =404;
+        add_header X-file-copyright "Tile data (c) Max Franke 2024. https://doi.org/10.18419/darus-3837";
+    }
+
+    location = /__empty-error-page__.html {
+        internal;
+        return 200 "";
+    }
+
+
+    location / {
+        proxy_pass http://localhost:@DAMAST_PORT@/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Host  $host;
+        proxy_set_header X-Forwarded-Port  $server_port;
+        proxy_set_header X-Forwarded-Prefix /;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+}
