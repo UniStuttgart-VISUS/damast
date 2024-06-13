@@ -1,0 +1,12 @@
+{
+  "pgpassword": "apipassword",
+  "report_file": "/data/reports.db",
+  "access_log": "/data/access_log",
+  "error_log": "/data/error_log",
+  "environment": "PRODUCTION",
+  "proxycount": 1,
+  "proxyprefix": "/",
+  "override_path": "/data/override",
+  "annotation_suggestion_rebuild": 1,
+  "map_tile_path": "/tiles/{z}/{x}/{y}.png"
+}
